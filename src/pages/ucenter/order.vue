@@ -1,25 +1,25 @@
 <template >
 <view class="container">
     <view class="orders">
-        <navigator :url="'./orderDetail?id=' + item.id" class="order" v-for="(item, index) of orderList" :key="item.id" :data-index="index">
+        <navigator :url="'./orderDetail?Id=' + item.Id" class="order" v-for="(item, index) in orderList" :key="item.id" :data-index="index">
             <view class="h">
-                <view class="l">订单编号：{{item.order_sn}}</view>
-                <view class="r">{{item.order_status_text}}</view>
+                <view class="l">订单编号：{{item.Id}}</view>
+                <view class="r">{{item.OrderStatus}}</view>
             </view>
-            <view class="goods" v-for="(iitem, iindex) of item.goodsList" :key="iitem.id" :data-index="iindex">
+            <view class="goods" v-for="(iitem, iindex) in item.goodsList" :key="iitem.id" :data-index="iindex">
                 <view class="img">
-                    <image :src="iitem.list_pic_url"/>
+                    <image :src="iitem.ThumbnailsUrl"/>
                 </view>
                 <view class="info">
-                    <text class="name">{{iitem.goods_name}}</text>
-                    <text class="number">共{{iitem.number}}件商品</text>
+                    <text class="name">{{iitem.ProductName}}</text>
+                    <text class="number">共{{iitem.Quantity}}件商品</text>
                 </view>
                 <view class="status"></view>
             </view>
             <view class="b">
-                <view class="l">实付：￥{{item.actual_price}}</view>
+                <view class="l">实付：￥{{item.ProductTotalAmount}}</view>
                 <view class="r">
-                    <button class="btn" :data-order-index="index" @click="payOrder" v-if="item.handleOption.pay">去付款</button>
+                    <!-- <button class="btn" :data-order-index="index" @click="payOrder" v-if="item.handleOption.pay">去付款</button> -->
                 </view>
             </view>
         </navigator>
@@ -34,23 +34,37 @@ import wx from 'wx'
 export default {
   data () {
     return {
-      orderList: []
+      orderList: [],
+      goodsList: []
     }
   },
   async mounted () {
     await Promise.all([
-      this.getOrderList()
+      this.getUserOrderList()
     ])
   },
   methods: {
+         // 获取用户订单数据
+        async getUserOrderList () {
+            const openId = wx.getStorageSync('openId')
+            const res = await api.getUserOrderList({ openId: openId })               
+            const data = JSON.parse(res.data)      
+            if (res.success === true) {
+                this.orderList = data; 
+                this.goodsList = data;                        
+            }        
+        },
+
+
     // 获取订单数据
-    async getOrderList () {
-      const res = await api.getOrderList();
-      // console.log('我的订单,请求结果', res);
-      if (res.errno === 0) {
-        this.orderList = res.data.data;
-      }
-    },
+    // async getOrderList () {
+    //   const res = await api.getOrderList();
+    //   // console.log('我的订单,请求结果', res);
+    //   if (res.errno === 0) {
+    //     this.orderList = res.data.data;
+    //   }
+    // },
+
     // 点击“去付款”
     payOrder (event) {
       let currentOrder = this.orderList[event.target.dataset.orderIndex];
@@ -69,6 +83,8 @@ export default {
       path: '/pages/ucenter/order'
     }
   }
+
+  
 }
 </script>
 

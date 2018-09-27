@@ -273,7 +273,16 @@ const api = {
   // 获取购物车列表
   getShoppingCartList: (paramObj) => request.post('/Wxmobile/ShoppingCart/GetShoppingCartList', paramObj, {
     baseURL: ApiKiyUrl
-  })
+  }),
+  // 获取用户订单列表
+  getUserOrderList: (paramObj) => request.get('/Wxmobile/UserOrder/Index', paramObj, {
+    baseURL: ApiKiyUrl
+  }),
+
+  // 获取订单详细
+  getUserOrderDetail: (paramObj) => request.get('/Wxmobile/UserOrder/OrderDetail', paramObj, {
+    baseURL: ApiKiyUrl
+  }),
 }
 
 export default api

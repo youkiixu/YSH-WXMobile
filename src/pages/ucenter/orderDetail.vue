@@ -1,10 +1,10 @@
 <template >
-<view class="container">
-    <view class="order-info">
-        <view class="item-a">下单时间：{{orderInfo.add_time}}</view>
-        <view class="item-b">订单编号：{{orderInfo.order_sn}}</view>
+ <view class="container">
+    <view class="order-info" >
+        <view class="item-a">下单时间：{{orderInfo.OrderDate}}</view>
+        <view class="item-b">订单编号：{{orderInfo.Id}}</view>
         <view class="item-c">
-            <view class="l">实付：<text class="cost">￥{{orderInfo.actual_price}}</text></view>
+            <view class="l">实付：<text class="cost">￥{{orderInfo.ProductTotalAmount}}</text></view>
             <view class="r">
                 <view class="btn" @click="cancelOrder">取消订单</view>
                 <view class="btn active" @click="payOrder">去付款</view>
@@ -14,20 +14,20 @@
     <view class="order-goods">
         <view class="h">
             <view class="label">商品信息</view>
-            <view class="status">{{orderInfo.order_status_text}}</view>
+            <view class="status">{{orderInfo.OrderStatus}}</view>
         </view>
         <view class="goods">
-            <view class="item" v-for="(item, index) of orderGoods" :key="item.id" :data-index="index">
+            <view class="item" v-for="(item, index) in orderGoods" :key="item.id" :data-index="index">
                 <view class="img">
-                    <image :src="item.list_pic_url"/>
+                    <image :src="item.ThumbnailsUrl"/>
                 </view>
                 <view class="info">
                     <view class="t">
-                        <text class="name">{{item.goods_name}}</text>
-                        <text class="number">x{{item.number}}</text>
+                        <text class="name">{{item.ProductName}}</text>
+                        <text class="number">x{{item.Quantity}}</text>
                     </view>
-                    <view class="attr">{{item.goods_specifition_name_value}}</view>
-                    <view class="price">￥{{item.retail_price}}</view>
+                    <view class="attr">{{item.Production}}</view>
+                    <view class="price">￥{{item.ReceivedAmount}}</view>
                 </view>
             </view>
         </view>
@@ -35,27 +35,29 @@
     <view class="order-bottom">
         <view class="address">
             <view class="t">
-                <text class="name">{{orderInfo.consignee}}</text>
-                <text class="mobile">{{orderInfo.mobile}}</text>
+                <text class="name">{{orderInfo.Address}}</text>
+                <text class="mobile">{{orderInfo.CellPhone}}</text>
             </view>
-            <view class="b">{{orderInfo.full_region + orderInfo.address}}</view>
+            <view class="b">{{orderInfo.ShipTo + orderInfo.Address}}</view>
         </view>
         <view class="total">
             <view class="t">
                 <text class="label">商品合计：</text>
-                <text class="txt">￥{{orderInfo.goods_price}}</text>
+                <text class="txt">￥{{orderInfo.ProductTotalAmount}}</text>
             </view>
             <view class="t">
                 <text class="label">运费：</text>
-                <text class="txt">￥{{orderInfo.freight_price}}</text>
+                <text class="txt">￥{{orderInfo.ReceivedAmount}}</text>
             </view>
         </view>
         <view class="pay-fee">
             <text class="label">实付：</text>
-            <text class="txt">￥{{orderInfo.actual_price}}</text>
+            <text class="txt">￥{{orderInfo.ProductTotalAmount}}</text>
         </view>
     </view>
-</view>
+  
+</view> 
+
 </template>
 
 <script>
@@ -65,32 +67,40 @@ import wx from 'wx'
 export default {
   data () {
     return {
-      orderId: 0,
+      OrderId:'',
       orderInfo: {},
-      orderGoods: [],
-      handleOption: {}
+      orderGoods: []
     }
   },
   async mounted () {
-    if (this.$route.query.id) {
-      this.orderId = parseInt(this.$route.query.id);
-    }
     await Promise.all([
-      this.getOrderDetail()
+      this.getUserOrderDetail()
     ])
   },
   methods: {
-    // 获取订单数据
-    async getOrderDetail () {
-      const res = await api.getOrderDetail({ orderId: this.orderId });
-      // console.log('订单详情,请求结果', res);
-      if (res.errno === 0) {
-        this.orderInfo = res.data.orderInfo;
-        this.orderGoods = res.data.orderGoods;
-        this.handleOption = res.data.handleOption;
-        // this.payTimer();
+    // 获取用户订单数据
+    async getUserOrderDetail (e) {
+       const openId = wx.getStorageSync('openId')
+       this.OrderId = this.$route.query.Id 
+       const res = await api.getUserOrderDetail({ openId : openId, orderId : this.OrderId });
+       const data = JSON.parse(res.data)               
+      if (res.success === true) {
+        this.orderInfo = data[0];
+        this.orderGoods = data;   
       }
     },
+
+    // 获取订单数据
+    // async getOrderDetail () {
+    //   const res = await api.getOrderDetail({ orderId: this.orderId });
+    //   // console.log('订单详情,请求结果', res);
+    //   if (res.errno === 0) {
+    //     this.orderInfo = res.data.orderInfo;
+    //     this.orderGoods = res.data.orderGoods;
+    //     this.handleOption = res.data.handleOption;
+    //     // this.payTimer();
+    //   }
+    // },
     // 制作倒计时用的，暂时不需要
     payTimer () {
       let orderInfo = this.orderInfo;
