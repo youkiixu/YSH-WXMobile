@@ -1,0 +1,73 @@
+{
+  "pages": [
+    "pages/auto/autoquote",
+    "pages/index/index",
+    "pages/topic/topic",
+    "pages/catalog/catalog",
+    "pages/cart/cart",
+    "pages/ucenter/index",
+    "pages/category/category",
+    "pages/brand/brand",
+    "pages/brand/brandDetail",
+    "pages/newGoods/newGoods",
+    "pages/hotGoods/hotGoods",
+    "pages/topic/topicDetail",
+    "pages/topic/topicComment",
+    "pages/comment/comment",
+    "pages/comment/commentPost",
+    "pages/search/search",
+    "pages/goods/goods",
+    "pages/ucenter/order",
+    "pages/ucenter/orderDetail",
+    "pages/ucenter/coupon",
+    "pages/ucenter/collect",
+    "pages/ucenter/footprint",
+    "pages/ucenter/address",
+    "pages/ucenter/addressAdd",
+    "pages/ucenter/feedback",
+    "pages/ucenter/express",
+    "pages/shopping/checkout",
+    "pages/shopping/address",
+    "pages/pay/pay",
+    "pages/pay/payResult"
+  ],
+  "window": {
+    "backgroundTextStyle": "dark",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "sass商城",
+    "navigationBarTextStyle": "black",
+    "enablePullDownRefresh": true
+  },
+  "tabBar": {
+    "backgroundColor": "#fafafa",
+    "borderStyle": "white",
+    "selectedColor": "#b4282d",
+    "color": "#666",
+    "list": [{
+        "pagePath": "pages/index/index",
+        "iconPath": "static/images/ic_menu_choice_nor.png",
+        "selectedIconPath": "static/images/ic_menu_choice_pressed.png",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/catalog/catalog",
+        "iconPath": "static/images/ic_menu_sort_nor.png",
+        "selectedIconPath": "static/images/ic_menu_sort_pressed.png",
+        "text": "分类"
+      },
+      {
+        "pagePath": "pages/cart/cart",
+        "iconPath": "static/images/ic_menu_shoping_nor.png",
+        "selectedIconPath": "static/images/ic_menu_shoping_pressed.png",
+        "text": "购物车"
+      },
+      {
+        "pagePath": "pages/ucenter/index",
+        "iconPath": "static/images/ic_menu_me_nor.png",
+        "selectedIconPath": "static/images/ic_menu_me_pressed.png",
+        "text": "我的"
+      }
+    ]
+  },
+  "subPackages": []
+}

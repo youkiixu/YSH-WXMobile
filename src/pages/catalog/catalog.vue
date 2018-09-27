@@ -1,0 +1,270 @@
+<template >
+<view class="container">
+    <view class="search">
+        <navigator url="/pages/search/search" class="input">
+            <img class="icon"/>
+            <text class="txt">商品搜索, 共{{goodsCount}}款好物</text>
+        </navigator>
+    </view>
+    <view class="catalog">
+        <scroll-view class="nav" scroll-y="true">
+            <view :class="currentCategory.Id == item.Id ? 'active item' : 'item'" v-for="(item, index) of navList" :key="item.Id" :data-id="item.Id"
+                :data-index="index" @click="switchCateLog(index)">{{item.Name}}</view>
+        </scroll-view>
+        <scroll-view class="cate" scroll-y="true" >
+            <view v-for="( categoryChild , index1 ) of categoryList" :key="index1">
+              <view class="hd">
+                  <!-- <text class="line"></text> -->
+                  <text class="txt">{{categoryChild.Name}}分类</text>
+                  <!-- <text class="line"></text> -->
+              </view>
+              <view class="bd">
+                  <navigator @click="$router.push({ path: '/pages/category/category', query: { Id: item.Id ,categoryChild: JSON.stringify(categoryChild.SubCategories) } })"  :class="(index2+1) % 3 == 0 ? 'last item' : 'item'" v-for="(item, index2) of categoryChild.SubCategories"
+                      :key="item.Id">
+                      <img class="icon" :src="item.Image ?  'http://192.168.0.91:8008/'+ item.Image : 'http://www.kiy.cn/Areas/Mobile/Templates/Default/Images/default.png'"/>
+                      <text class="txt">{{item.Name}}</text>
+                  </navigator>
+              </view>
+            </view>
+        </scroll-view>
+    </view>
+</view>
+</template>
+
+<script>
+import api from '@/utils/api'
+import { formatCatelog } from '@/utils/format'
+import { mapState, mapActions } from 'vuex'
+
+export default {
+  data () {
+    return {
+      navList: [],
+      currentCategory: {},
+      scrollLeft: 0,
+      scrollTop: 0,
+      goodsCount: 0,
+      scrollHeight: 0
+    }
+  },
+  async mounted () {
+    await Promise.all([
+      this.getSassCateGory()
+    ])
+  },
+  computed: {
+    ...mapState([
+      'categoryList'
+    ])
+  },
+  methods: {
+    ...mapActions([
+      // 'getIndexData',
+      'getCategoryList'
+    ]),
+    // 获取SASS分类星系
+    async getSassCateGory() {
+      const res = await api.getSassCategory({});
+      if(res.success) {
+        // const catelogData = formatCatelog(res.data)
+        this.navList = res.data
+        this.switchCateLog(0)
+      }
+    }, 
+    // 选择不同分分类
+    switchCateLog(index) {
+        this.currentCategory = this.navList[index]
+        this.getCategoryList(this.currentCategory.SubCategories)
+      }
+    },
+    // 小程序原生下拉刷新
+    onPullDownRefresh: function() {
+      this.getSassCateGory()
+      wx.stopPullDownRefresh()
+    },
+    // 原生的分享功能？？
+    onShareAppMessage: function () {
+      return {
+        title: 'sassShop',
+        desc: '印生活SASS商城',
+        path: '/pages/index/index'
+      }
+    }
+  }
+</script>
+
+<style>
+page {
+  height: 100%;
+}
+
+.container {
+  background: #f9f9f9;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.search {
+  height: 88rpx;
+  width: 100%;
+  padding: 0 30rpx;
+  background: #fff;
+  display: flex;
+  align-items: center;
+}
+
+.search .input {
+  width: 690rpx;
+  height: 56rpx;
+  background: #ededed;
+  border-radius: 8rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 24rpx;
+}
+
+.search .icon {
+  background: url(http://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/search2-2fb94833aa.png) center no-repeat;
+  background-size: 100%;
+  width: 28rpx;
+  height: 28rpx;
+}
+
+.search .txt {
+  height: 42rpx;
+  line-height: 42rpx;
+  color: #666;
+  padding-left: 10rpx;
+  font-size: 30rpx;
+}
+
+
+.catalog {
+  flex: 1;
+  width: 100%;
+  background: #fff;
+  display: flex;
+  border-top: 1px solid #fafafa;
+}
+
+.catalog .nav {
+  width: 180rpx;
+  height: 100%;
+  background: #f1f1f1;
+}
+
+.catalog .nav .item {
+  text-align: center;
+  line-height: 100rpx;
+  width: 180rpx;
+  height: 100rpx;
+  color: #333;
+  font-size: 24rpx;
+  border-left: 6rpx solid #f1f1f1;
+  overflow: hidden;
+}
+
+.catalog .nav .item.active {
+  color: #20b2aa;
+  font-size: 28rpx;
+  border-left: 6rpx solid #20b2aa;
+  background: #fff;
+}
+
+.catalog .cate {
+  border-left: 1px solid #fafafa;
+  flex: 1;
+  height: 100%;
+  padding: 0 40rpx 0 40rpx;
+}
+
+.banner {
+  display: block;
+  height: 222rpx;
+  width: 100%;
+  position: relative;
+}
+
+.banner .image {
+  position: absolute;
+  top: 30rpx;
+  left: 0;
+  border-radius: 4rpx;
+  height: 192rpx;
+  width: 100%;
+}
+
+.banner .txt {
+  position: absolute;
+  top: 30rpx;
+  text-align: center;
+  color: #fff;
+  font-size: 28rpx;
+  left: 0;
+  height: 192rpx;
+  line-height: 192rpx;
+  width: 100%;
+}
+
+.catalog .hd {
+  height: 108rpx;
+  width: 100%;
+  display: flex;
+  /* justify-content: center; */
+  align-items: center;
+}
+
+.catalog .hd .txt {
+  font-size: 24rpx;
+  text-align: left;
+  color: #111111;
+  font-weight: 700;
+  padding: 0 10rpx;
+  width: auto;
+}
+
+.catalog .hd .line {
+  width: 40rpx;
+  height: 1px;
+  background: #d9d9d9;
+}
+
+.catalog .bd {
+  height: auto;
+  width: 100%;
+  overflow: hidden;
+}
+
+.catalog .bd .item {
+  display: block;
+  float: left;
+  height: 216rpx;
+  width: 127rpx;
+  margin-right: 50rpx;
+}
+
+.catalog .bd .item.last {
+  margin-right: 0;
+}
+
+.catalog .bd .item .icon {
+  height: 127rpx;
+  width: 127rpx;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.catalog .bd .item .txt {
+  display: block;
+  text-align: center;
+  font-size: 20rpx;
+  color: #666666;
+  font-weight: 500;
+  height: 72rpx;
+  width: 127rpx;
+}
+
+</style>

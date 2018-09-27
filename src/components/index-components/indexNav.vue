@@ -1,0 +1,56 @@
+<template>
+    <view class="m-menu">
+        <navigator  class="item" :url="'../../' + item.link" v-for="item of content.dataset" :key="item.id">
+            <img :src="'http://192.168.0.91:8008/'+ item.pic" background-size="cover" />
+            <text>{{item.showtitle}}</text>
+        </navigator>
+    </view>
+</template>
+
+<script>
+// 图片导航：8
+export default {
+    name: 'indexNav',
+    props: {
+        content: Object
+    }
+}
+</script>
+<style scoped>
+    .m-menu {
+        border-top-left-radius: 10rpx;
+        border-top-right-radius: 10rpx;
+        display: flex;
+        height: 150rpx;
+        width: 750rpx;
+        flex-flow: row nowrap;
+        align-items: center;
+        justify-content: space-between;
+        background-color: #fff;
+    }
+
+    .m-menu .item {
+        flex: 1;
+        display: block;
+        padding: 20rpx 0;
+    }
+
+    .m-menu image {
+        display: block;
+        width: 70rpx;
+        height: 70rpx;
+        margin: 0 auto;
+        margin-bottom: 12rpx;
+    }
+
+    .m-menu text {
+        display: block;
+        font-size: 24rpx;
+        text-align: center;
+        margin: 0 auto;
+        line-height: 1;
+        color: #666666;
+    }
+</style>
+
+
