@@ -7,10 +7,10 @@
 		"minified": true,
 		"newFeature": true
 	},
-	"miniprogramRoot": "./dist/",
+	"miniprogramRoot": "dist/",
 	"compileType": "miniprogram",
-	"appid": "wxe1c5fe5c72be84e6",
-	"projectname": "%E5%8D%B0%E7%94%9F%E6%B4%BB%E5%95%86%E5%9F%8E",
+	"appid": "wx9c20c7365b5c702f",
+	"projectname": "kiy-wx",
 	"libVersion": "2.3.0",
 	"condition": {
 		"search": {
