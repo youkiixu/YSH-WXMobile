@@ -26,7 +26,7 @@ export default {
         content: Object
     },
     mounted () {
-      console.log(this.content)
+      // console.log(this.content)
     }
 }
 </script>

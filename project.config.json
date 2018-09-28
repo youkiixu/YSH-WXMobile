@@ -30,18 +30,12 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 10,
+			"current": -1,
 			"list": [
 				{
 					"id": -1,
 					"name": "地址选择",
 					"pathName": "pages/ucenter/addressAdd",
-					"query": ""
-				},
-				{
-					"id": 1,
-					"name": "标准品报价页面webview",
-					"pathName": "pages/goods/goodsweb",
 					"query": ""
 				},
 				{
