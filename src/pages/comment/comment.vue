@@ -46,7 +46,8 @@ export default {
       allCommentList: [],
       picCommentList: [],
       typeId: 0,
-      valueId: 0,
+      ProductId: 0,
+      pageNo:1,
       showType: 0,
       allCount: 0,
       hasPicCount: 0,
@@ -76,17 +77,16 @@ export default {
         this.hasPicCount = res.data.hasPicCount;
       }
     },
+
     // 获得 评论详情
     async getCommentList () {
+      this.ProductId = this.$route.query.valueId     
       const res = await api.getCommentList({
-        valueId: this.valueId,
-        typeId: this.typeId,
-        size: this.size,
-        page: (this.showType === 0 ? this.allPage : this.picPage),
-        showType: this.showType
-      });
+        ProductId: this.ProductId,
+        pageNo: this.pageNo
+        });
       // console.log('评论详情', res);
-      if (res.errno === 0) {
+      if (res.success === true) {
         if (this.showType === 0) {
           this.allCommentList = this.allCommentList.concat(res.data.data);
           this.allPage = res.data.currentPage;
@@ -98,6 +98,29 @@ export default {
         }
       }
     },
+
+     // 获得 评论详情
+    // async getCommentList () {
+    //   const res = await api.getCommentList({
+    //     valueId: this.valueId,
+    //     typeId: this.typeId,
+    //     size: this.size,
+    //     page: (this.showType === 0 ? this.allPage : this.picPage),
+    //     showType: this.showType
+    //   });
+    //   // console.log('评论详情', res);
+    //   if (res.errno === 0) {
+    //     if (this.showType === 0) {
+    //       this.allCommentList = this.allCommentList.concat(res.data.data);
+    //       this.allPage = res.data.currentPage;
+    //       this.comments = this.allCommentList.concat(res.data.data);
+    //     } else {
+    //       this.picCommentList = this.picCommentList.concat(res.data.data);
+    //       this.picPage = res.data.currentPage;
+    //       this.comments = this.picCommentList.concat(res.data.data);
+    //     }
+    //   }
+    // },
     // “全部”和“有图”切换
     switchTab () {
       this.showType = this.showType === 1 ? 0 : 1;

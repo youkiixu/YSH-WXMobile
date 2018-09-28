@@ -13,7 +13,7 @@
     </view> -->
     <view class="goods-info">
         <view class="c clear">
-          <view class="c-price">￥{{detailInfo.Price}}</view>
+          <view class="c-price"><text class="price-icon">￥</text>{{detailInfo.Price}}</view>
           <view class="c-collect" @click="addCannelCollect">           
               <img class="icon" :src="collectBackImage"/>           
           </view>
@@ -90,7 +90,7 @@
 
       <view class="comments">
         <view class="h clear">
-          <navigator :url="'../comment/comment?valueId=' + goods.id + '&typeId=0'">
+          <navigator :url="'../comment/comment?valueId=' + id + '&typeId=0'">
               <text class="t">评价</text>
               <text class="i">查看全部评价</text>
               <!-- <view class="clear"></view> -->
@@ -173,7 +173,7 @@
             <img class="img" :src="gallery[0].img_url"/>
             <view class="info">
               <view class="c">
-                <view class="p">￥{{detailInfo.Price}}</view>
+                <view class="p"><text class="p-icon">￥</text>{{detailInfo.Price}}</view>
                 <view class="s">库存：{{Stock}}</view>
                 <view class="a">已选：<text>{{selectSkuStr.Color}} {{selectSkuStr.Size}} {{selectSkuStr.Version}} {{selectSkuStr.Material}} {{selectSkuStr.Fashion}} {{selectSkuStr.Grams}} {{selectSkuStr.Ensemble}}</text></view>
                 <!-- <view class="a" v-if="productList.length">已选择：{{checkedSpecText}}</view> -->
@@ -662,23 +662,26 @@ export default {
 .goods-info .c {
   margin-top: 30rpx;
   padding:0  30rpx;
-  height: 70rpx;
-  line-height: 70rpx;
+  height: 50rpx;
+  line-height: 50rpx;
 }
 .goods-info .c-price{ 
   color: #dc2121;
   font-size: 38rpx;
   float: left;
 }
+.c-price .price-icon{
+  font-size: 30rpx;
+}
 .goods-info .c-collect{
   float: right;
-  width: 50rpx;
-  height: 50rpx;
+  width: 30rpx;
+  height: 30rpx;
 
 }
 .goods-info .c-collect img{
-  width: 50rpx;
-  height: 50rpx;
+  width: 30rpx;
+  height: 30rpx;
   text-align: center;
 }
 .goods-info .con-text{
@@ -687,17 +690,16 @@ export default {
 }
 .con-text .desc{
   color: #282828;
-  font-size: 32rpx;
-  text-indent: 1em;
+  font-size: 24rpx;
 }
 .con-text .notes{
   margin-top: 15rpx;
   color: #828282;
-  font-size: 28rpx;
+  font-size: 20rpx;
 }
 .section-nav {
   width: 750rpx;
-  height: 108rpx;
+  height: 100rpx;
   background: #fff;
   margin-top: 30rpx;
 }
@@ -705,9 +707,9 @@ export default {
 .section-nav .t {
   float: left;
   width: 600rpx;
-  height: 108rpx;
-  line-height: 108rpx;
-  font-size: 32rpx;
+  height: 100rpx;
+  line-height: 100rpx;
+  font-size: 24rpx;
   color: #555555;
   margin-left: 31.25rpx;
 }
@@ -725,9 +727,9 @@ export default {
   display: flex;
   align-items: center;
   width: 600rpx;
-  height: 108rpx;
+  height: 100rpx;
   overflow: hidden;
-  line-height: 108rpx;
+  line-height: 100rpx;
   font-size: 29rpx;
   color: #999;
   margin-left: 31.25rpx;
@@ -770,9 +772,9 @@ export default {
 .address-nav .t {
   float: left;
   width: 600rpx;
-  height: 108rpx;
-  line-height: 108rpx;
-  font-size: 32rpx;
+  height: 100rpx;
+  line-height: 100rpx;
+  font-size: 24rpx;
   color: #555555;
   margin-left: 31.25rpx;
 }
@@ -794,8 +796,8 @@ export default {
 
 .comments .h {
   width: 750rpx;
-  height: 108rpx;
-  line-height: 108rpx;
+  height: 100rpx;
+  line-height: 100rpx;
   background-color: white;
   padding: 0 30rpx;
   box-sizing: border-box;
@@ -806,14 +808,14 @@ export default {
   display: block;
   float: left;
   width: 50%;
-  font-size: 32rpx;
+  font-size: 24rpx;
   color: #555555;
 }
 
 .comments .h .i {
   display: block;
   float: right;
-  font-size: 32rpx;
+  font-size: 20rpx;
   text-align: right;
   padding-right: 50rpx;
   color: #c5c5c5;
@@ -845,7 +847,7 @@ export default {
 .comments .user text {
   display: inline-block;
   width: auto;
-  font-size:32rpx;
+  font-size:24rpx;
   color: #555555;
 }
 
@@ -862,13 +864,13 @@ export default {
 
 .comments .content {
   line-height: 50rpx;
-  font-size: 30rpx;
+  font-size: 24rpx;
   color: #555555;
   padding: 15rpx 30rpx;
   box-sizing: border-box;
 }
 .comments .seeall{
-  font-size: 30rpx;
+  font-size: 24rpx;
   color: #555555;
   text-align: center;
 }
@@ -881,7 +883,7 @@ export default {
   height: 75rpx;
   line-height: 75rpx;
   text-align: center;
-  font-size: 32rpx;
+  font-size: 24rpx;
   color: #555555;
 }
 
@@ -1262,8 +1264,8 @@ export default {
 
 .attr-pop .img {
   float: left;
-  height: 177rpx;
-  width: 177rpx;
+  height: 175rpx;
+  width: 175rpx;
   background: #f4f4f4;
   margin-right: 31.25rpx;
   position: absolute;
@@ -1278,22 +1280,24 @@ export default {
   /* display: flex; */
   align-items: center;
 }
-
 .attr-pop .p {
-  font-size: 38rpx;
+  font-size: 34rpx;
   color: #dc2121;
   height: 32rpx;
   line-height: 32rpx;
   margin-bottom: 10rpx;
 }
+.attr-pop .p-icon{
+  font-size: 28rpx;
+}
 .attr-pop .s{
-  font-size: 24rpx;
+  font-size: 18rpx;
   color: #555555;
   height: 40rpx;
   line-height: 40rpx;
 }
 .attr-pop .a {
-  font-size: 28rpx;
+  font-size: 20rpx;
   color: #333;
   line-height: 35rpx;
 }
@@ -1311,7 +1315,7 @@ export default {
 .spec-con .name {
   height: 32rpx;
   margin-bottom: 22rpx;
-  font-size: 29rpx;
+  font-size: 24rpx;
   color: #555;
 }
 
@@ -1342,24 +1346,23 @@ export default {
 }
 
 .spec-con .value.selected {
-  border: 2rpx solid #b4282d;
-  color: #dc2121;
-  background-color: white;
+  background-color:#dc2121; 
+  color: white;
 }
 .spec-con .number-item{
-   height: 120rpx;
+   height: 100rpx;
    padding: 0 10rpx;
-   line-height: 120rpx;
+   line-height: 100rpx;
    border-bottom: 2rpx solid #ececec;
 }
 .number-item .name{
-  font-size: 29rpx;
+  font-size: 24rpx;
   color: #555;
   float: left;
 }
 .number-item .selnum {
   float: right;
-  margin-top: 35rpx;
+  margin-top: 22rpx;
   margin-right: 30rpx;
   width: 200rpx;
   height: 55rpx;

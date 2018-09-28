@@ -294,6 +294,15 @@ const api = {
   getDefaluExpress: (paramObj) => request.get('/Common/ExpressData/Search', paramObj, {
     baseURL: ApiKiyUrl
   }),
+
+  // 评论列表
+  getCommentList: (paramObj) => request.get('/Wxmobile/Product/GetCommentByProduct', paramObj, {
+    baseURL: ApiKiyUrl
+  }),
+  // 评论总数
+  getCommentCount: (paramObj) => request.get('/Wxmobile/Product/GetCommentsNumber', paramObj, {
+    baseURL: ApiKiyUrl
+  }),
 }
 
 export default api

@@ -30,7 +30,7 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 10,
+			"current": 11,
 			"list": [
 				{
 					"id": -1,
@@ -88,14 +88,20 @@
 				},
 				{
 					"id": -1,
-					"name": "订单列表",
-					"pathName": "pages/ucenter/order",
+					"name": "标准品报价页面",
+					"pathName": "pages/goods/goods",
 					"query": ""
 				},
 				{
-					"id": 10,
-					"name": "物流查询",
-					"pathName": "pages/ucenter/express",
+					"id": -1,
+					"name": "标准品报价页面",
+					"pathName": "pages/goods/goods",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "评论页",
+					"pathName": "pages/comment/comment",
 					"query": ""
 				}
 			]
