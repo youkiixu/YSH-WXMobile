@@ -278,9 +278,20 @@ const api = {
   getUserOrderList: (paramObj) => request.get('/Wxmobile/UserOrder/Index', paramObj, {
     baseURL: ApiKiyUrl
   }),
-
   // 获取订单详细
   getUserOrderDetail: (paramObj) => request.get('/Wxmobile/UserOrder/OrderDetail', paramObj, {
+    baseURL: ApiKiyUrl
+  }),
+  // 添加/修改/删除购物车信息
+  modifyShoppingCart: (paramObj) => request.get('/Wxmobile/ShoppingCart/ModifyShoppingCart', paramObj, {
+    baseURL: ApiKiyUrl
+  }),
+  //  查询印捷快递信息
+  getYinJieExpress: (paramObj) => request.get('/Common/ExpressData/GetLogisInfo', paramObj, {
+    baseURL: ApiKiyUrl
+  }),
+  //  查询印捷快递信息
+  getDefaluExpress: (paramObj) => request.get('/Common/ExpressData/Search', paramObj, {
     baseURL: ApiKiyUrl
   }),
 }

@@ -88,14 +88,14 @@
 				},
 				{
 					"id": -1,
-					"name": "标准品报价页面",
-					"pathName": "pages/goods/goods",
+					"name": "订单列表",
+					"pathName": "pages/ucenter/order",
 					"query": ""
 				},
 				{
-					"id": -1,
-					"name": "标准品报价页面",
-					"pathName": "pages/goods/goods",
+					"id": 10,
+					"name": "物流查询",
+					"pathName": "pages/ucenter/express",
 					"query": ""
 				}
 			]
