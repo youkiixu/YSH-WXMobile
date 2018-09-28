@@ -1203,6 +1203,7 @@ export default {
   color: #333;
   border-top: 1px solid #f4f4f4;
   border-bottom: 1px solid #f4f4f4;
+  
 }
 
 .bottom-btn .r {
