@@ -9,8 +9,8 @@
 	},
 	"miniprogramRoot": "./dist/",
 	"compileType": "miniprogram",
-	"appid": "wx9c20c7365b5c702f",
-	"projectname": "kiy-mp",
+	"appid": "wxe1c5fe5c72be84e6",
+	"projectname": "%E5%8D%B0%E7%94%9F%E6%B4%BB%E5%95%86%E5%9F%8E",
 	"libVersion": "2.3.0",
 	"condition": {
 		"search": {
@@ -30,7 +30,7 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": -1,
+			"current": 10,
 			"list": [
 				{
 					"id": -1,
@@ -84,6 +84,18 @@
 					"id": -1,
 					"name": "购物车",
 					"pathName": "pages/cart/cart",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "订单列表",
+					"pathName": "pages/ucenter/order",
+					"query": ""
+				},
+				{
+					"id": 10,
+					"name": "物流查询",
+					"pathName": "pages/ucenter/express",
 					"query": ""
 				}
 			]

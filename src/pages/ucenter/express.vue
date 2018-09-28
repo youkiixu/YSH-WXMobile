@@ -2,9 +2,10 @@
 <view class="container">
   <view class='express-header'>
     <view class="left">
-      <view class="txt">物流单号：{{expressInfo.logistic_code}}</view>
-      <view class="txt">物流公司：{{expressInfo.shipper_name}}</view>
-      <view class="txt">更新时间：{{expressInfo.request_time}}</view>
+      <view class="txt">订单编号：{{orderInfo.Id}}</view>
+      <view class="txt">物流单号：{{expressInfo.oid}}</view>
+      <view class="txt">物流公司：{{orderInfo.Remindtype != 0 ? '印捷物流' : '商家直邮'}}</view>
+      <view class="txt">配送状态：{{expressInfo.strStatus}}</view>
     </view>
     <view class='right' v-if="expressInfo.isFinish === 1">
       <view class='update-btn' @click="updateExpress">更新物流</view>
@@ -15,8 +16,8 @@
     <view :class="'express-item item-' + index" v-for="(item, index) of expressTraces" :key="index">
       <view class='left'></view>
       <view class='right'>
-        <view class="info">{{item.content}}</view>
-        <view class="time">{{item.datetime}}</view>
+        <view class="info">{{item.Remark}}</view>
+        <view class="time">{{item.strOper}}</view>
       </view>
     </view>
   </view>
@@ -25,33 +26,74 @@
 
 <script>
 import api from '@/utils/api'
-// import wx from 'wx'
+import { mapState } from 'vuex'
 
 export default {
   data () {
     return {
-      orderId: 1,
+      orderInfo: {},
       expressInfo: {},
       expressTraces: []
     }
   },
+  computed: {
+    ...mapState(['userInfo'])
+  },
   async mounted () {
+    if (this.$route.query.data) {
+      
+      this.orderInfo = JSON.parse(this.$route.query.data)
+    }
     await Promise.all([
       this.getExpressInfo()
     ])
   },
   methods: {
     // 获取物流信息
-    async getExpressInfo () {
-      const res = await api.getOrderExpress({ orderId: this.orderId });
-      console.log('物流查询,请求结果', res);
-      if (res.errno === 0) {
-        this.expressInfo = res.data;
-        this.expressTraces = res.data.traces;
+    getExpressInfo () {
+      if(this.orderInfo.Remindtype != 0) {
+        this.getYinJieExpress()
+      } else {
+        this.getDefaluExpress()
       }
     },
-    updateExpress () {
-      this.getExpressInfo();
+    // 查询印捷物流
+    async getYinJieExpress () {
+      
+      var par = {
+        UserId: this.userInfo.Id,
+        LogisticsOrderId: 1257322,
+        OrderId: 19502,
+        source: 'wxmobile'
+      }
+      try {
+        let res = await api.getYinJieExpress(par)
+        if(res.result == 'ok') {
+          var expressInfo = JSON.parse(res.orderInfo)
+          var expressTraces = JSON.parse(res.orderStatus)
+          this.expressInfo = expressInfo[0]
+          this.expressTraces = expressTraces.reverse()
+        }
+      } catch (error) {
+        this.errorEvent()
+      }
+    },
+    // 查询商家直邮
+    async getDefaluExpress() {
+      var par = {
+        ExpressCompanyName: this.orderInfo.ExpressCompanyName,
+        ShipOrderNumber: this.orderInfo.ShipOrderNumber
+      }
+      const res = await getDefaluExpress(par)
+      if(res.success) {
+        this.expressInfo = res.data
+      }
+    },
+    errorEvent () {
+      this.$wx.showErrorToast('物流查询失败')
+      setTimeout(() => {
+        this.$router.back()
+      }, 1500);
     }
   },
   // 原生的分享功能

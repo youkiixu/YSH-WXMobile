@@ -4,22 +4,28 @@
         <navigator :url="'./orderDetail?Id=' + item.Id" class="order" v-for="(item, index) in orderList" :key="item.id" :data-index="index">
             <view class="h">
                 <view class="l">订单编号：{{item.Id}}</view>
-                <view class="r">{{item.OrderStatus}}</view>
+                <view class="shop-name"> {{item.ShopName}}</view>
+                <view class="r">{{item.OrderDate}}</view>
             </view>
-            <view class="goods" v-for="(iitem, iindex) in item.goodsList" :key="iitem.id" :data-index="iindex">
+            <view class="goods">
                 <view class="img">
-                    <image :src="iitem.ThumbnailsUrl"/>
+                    <image :src="item.ThumbnailsUrl"/>
                 </view>
                 <view class="info">
-                    <text class="name">{{iitem.ProductName}}</text>
-                    <text class="number">共{{iitem.Quantity}}件商品</text>
+                    
+                    <text class="name">{{item.ProductName}}</text>
+                    <text class="number">共{{item.Quantity}}件商品</text>
                 </view>
                 <view class="status"></view>
             </view>
             <view class="b">
-                <view class="l">实付：￥{{item.ProductTotalAmount}}</view>
+                <view class="l">实付：￥{{item.SalePrice + item.Freight}}    (运费：{{item.Freight}})</view>
+                
                 <view class="r">
-                    <!-- <button class="btn" :data-order-index="index" @click="payOrder" v-if="item.handleOption.pay">去付款</button> -->
+                    <button class="btn" @click="payOrder">去付款</button>
+                </view>
+                <view class="r" style="margin-right: 10rpx;">
+                    <button class="btn" @click="checkExpress(item)">查物流</button>
                 </view>
             </view>
         </navigator>
@@ -35,7 +41,8 @@ export default {
   data () {
     return {
       orderList: [],
-      goodsList: []
+      pageNo: 1,
+      pageSize: 15,
     }
   },
   async mounted () {
@@ -44,26 +51,20 @@ export default {
     ])
   },
   methods: {
-         // 获取用户订单数据
-        async getUserOrderList () {
-            const openId = wx.getStorageSync('openId')
-            const res = await api.getUserOrderList({ openId: openId })               
-            const data = JSON.parse(res.data)      
-            if (res.success === true) {
-                this.orderList = data; 
-                this.goodsList = data;                        
-            }        
-        },
-
-
-    // 获取订单数据
-    // async getOrderList () {
-    //   const res = await api.getOrderList();
-    //   // console.log('我的订单,请求结果', res);
-    //   if (res.errno === 0) {
-    //     this.orderList = res.data.data;
-    //   }
-    // },
+    // 获取用户订单数据
+    async getUserOrderList () {
+        const openId = wx.getStorageSync('openId')
+        const res = await api.getUserOrderList({ openId: openId , pageNo: this.pageNo , pageSize: this.pageSize })               
+        const data = JSON.parse(res.data)      
+        if (res.success === true) {
+            this.orderList = data; 
+        }        
+        console.log(this.orderList[0])
+    },
+    // 查看物流
+    checkExpress (item) {
+        this.$router.push({path: './express' , query : {data : JSON.stringify(item)}})
+    },
 
     // 点击“去付款”
     payOrder (event) {
@@ -82,6 +83,18 @@ export default {
       desc: '印生活SASS商城',
       path: '/pages/ucenter/order'
     }
+  },
+  // 小程序原生上拉加载
+  onReachBottom () {
+    this.page++
+    this.getUserOrderList()
+  },
+  // 小程序原生下拉刷新
+  onPullDownRefresh: function() {
+    this.page = 1
+    this.orderList = []
+    this.getUserOrderList()
+    wx.stopPullDownRefresh()
   }
 
   
@@ -107,6 +120,7 @@ page{
 }
 
 .order .h{
+    display: flex;
     height: 83.3rpx;
     line-height: 83.3rpx;
     margin-left: 31.25rpx;
@@ -115,13 +129,15 @@ page{
     font-size: 30rpx;
     color: #333;
 }
-
+.order .h .shop-name {
+    padding: 0 15rpx;
+}
 .order .h .l{
-    float: left;
+    /* float: left; */
 }
 
 .order .h .r{
-    float: right;
+    /* float: right; */
     color: #b4282d;
     font-size: 24rpx;
 }

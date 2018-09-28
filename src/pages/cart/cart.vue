@@ -74,6 +74,7 @@ export default {
   },
   // 每次打开触发，更新数据
   onShow () {
+    this.cartGoods = []
     this.getCartList()
     
   },
@@ -278,6 +279,18 @@ export default {
       }
       this.checkedAllStatus = this.isCheckedAll();
     }
+  },
+    // 小程序原生上拉加载
+  onReachBottom () {
+    this.page++
+    this.getCartList()
+  },
+  // 小程序原生下拉刷新
+  onPullDownRefresh: function() {
+    this.page = 1
+    this.cartGoods = []
+    this.getCartList()
+    wx.stopPullDownRefresh()
   },
   // 原生的分享功能
   onShareAppMessage: function () {
