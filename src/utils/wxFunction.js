@@ -13,7 +13,8 @@ function showErrorToast(msg) {
 
 function showLoading(msg) {
   wx.showLoading({
-    title: msg ? msg : '正在加载...'
+    title: msg ? msg : '正在加载...',
+    mask: true
   })
 }
  
@@ -67,6 +68,9 @@ function toGoodsDetail (item , vm) {
     })
   }
 }
+
+
+
 
 const wxFun = {
     showSuccessToast,

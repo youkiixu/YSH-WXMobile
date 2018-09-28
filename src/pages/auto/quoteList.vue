@@ -51,7 +51,7 @@ export default {
         }
     },
     computed: {
-        ...mapState(['proSearchRst'])
+        ...mapState(['proSearchRst' , 'userInfo'])
     },
     mounted () {
         console.log(this.proSearchRst)
@@ -60,11 +60,13 @@ export default {
     methods: {
         ...mapActions(['SubmitByProductId2']),
         toDetail(item) {
+            const openId = wx.getStorageSync('openId')
             console.log(item)
             var par = {
+                openId: openId,
                 skuIds: item.ProductId + '_0_0_0_0_0_0_0',
                 counts: 1,
-                // regionId: 
+                regionId: this.userInfo.RegionId,
                 YjUse: item.YjUse,
                 price: item.Price,
                 quoteModel: item.QuoteLogInfoId,

@@ -256,7 +256,7 @@
         </view>
     </view>
     <view class="c" @click="SubmitByProduct">立即购买</view>
-    <view class="r" @click="addToCart">加入购物车</view>
+    <view class="r" @click="addToCart" >加入购物车</view>
     </view>
 </view>
 </template>
@@ -265,6 +265,7 @@
 import api from '@/utils/api'
 import wx from 'wx';
 import wxParse from 'mpvue-wxparse'
+import express from '@/utils/express'
 import { mapState, mapActions } from 'vuex'
 
 export default {
@@ -273,6 +274,7 @@ export default {
   },
   data () {
     return {
+      RequestUrl: '',
       detailInfo: {
         Material: [],
         Size: [],
@@ -342,6 +344,7 @@ export default {
       this.getGoodsDetail(),
       this.getGoodsDesc()
     ]);
+    // 选中默认选项
     this.getSkuPrice()
     // 默认选中配送方式
     this.selectWuliu()
@@ -370,6 +373,7 @@ export default {
         this.skuInfo = res.data
       }
     },
+    // 获取商品描述
     async getGoodsDesc() {
       var par = {
         ProductId : this.id
@@ -379,20 +383,18 @@ export default {
         this.goodDetailHTMLstr = res.ProductDescription
       }
     },
+    // 获取商品详情
     async getGoodsDetail () {
+      const openId = wx.getStorageSync('openId')
       var par = {
-        ProductId : this.id
+        ProductId : this.id,
+      }
+      if(openId) {
+        par = Object.assign(par ,{openId : openId})
       }
       const res = await api.getGoodsDetail(par)
+      this.RequestUrl = res.RequestUrl
       this.detailInfo = res.data
-    },
-    // 获得“相关商品推荐”信息
-    async getGoodsRelated () {
-      const res = await api.getGoodsRelated({ id: this.id });
-      // console.log('相关商品推荐', res);
-      if (res.errno === 0) {
-        this.relatedGoods = res.data.goodsList;
-      }
     },
     // 规格弹窗中，每个规则项的点击事件
     clickSkuValue (skuName , skuId , skuValue) {
@@ -410,6 +412,7 @@ export default {
       this.skuId = skuStr
       this.getSkuPrice()
     },
+    // 获取sku的价格
     getSkuPrice() {
       const skuId = this.skuId
       if(skuId == '') {
@@ -453,6 +456,9 @@ export default {
     getDefalutSelect() {
       const skuId = this.skuId
       const skuIdArr = skuId.split('_')
+      const selectSkuStr = this.selectSkuStr
+      const detailInfo = this.detailInfo
+      
       this.selectSku.Color = Number(skuIdArr[1])
       this.selectSku.Size = Number(skuIdArr[2])
       this.selectSku.Version = Number(skuIdArr[3])
@@ -460,7 +466,16 @@ export default {
       this.selectSku.Fashion = Number(skuIdArr[5])
       this.selectSku.Grams = Number(skuIdArr[6])
       this.selectSku.Ensemble = Number(skuIdArr[7])
-      
+      //文字
+      for(var key in selectSkuStr) {
+        if(detailInfo[key].length != 0) {
+          detailInfo[key].map(item => {
+            if(item.SkuId === this.selectSku[key]) {
+              this.selectSkuStr[key] = item.Value
+            }
+          })
+        }
+      }
     },
     
     // 打开商品规格选择弹窗
@@ -475,21 +490,21 @@ export default {
     },
     // 购物车的五角星，添加或是取消收藏
     async addCannelCollect () {
-      const res = await api.CollectAddOrDelete({ typeId: 0, valueId: this.id });
-      // console.log('添加或取消收藏', res);
-      if (res.errno === 0) {
-        if (res.data.type === 'add') {
-          this.collectBackImage = this.hasCollectImage;
-        } else {
-          this.collectBackImage = this.noCollectImage;
-        }
-      } else {
-        wx.showToast({
-          image: '/static/images/icon_error.png',
-          title: res.errmsg,
-          mask: true
-        });
-      }
+      // const res = await api.CollectAddOrDelete({ typeId: 0, valueId: this.id });
+      // // console.log('添加或取消收藏', res);
+      // if (res.errno === 0) {
+      //   if (res.data.type === 'add') {
+      //     this.collectBackImage = this.hasCollectImage;
+      //   } else {
+      //     this.collectBackImage = this.noCollectImage;
+      //   }
+      // } else {
+      //   wx.showToast({
+      //     image: '/static/images/icon_error.png',
+      //     title: res.errmsg,
+      //     mask: true
+      //   });
+      // }
     },
     // 跳转到购物车页面
     openCartPage () {
@@ -503,10 +518,7 @@ export default {
         // 打开规格选择弹窗
         this.openAttr = !this.openAttr;
       } else { 
-        if(this.number > this.Stock) {
-          this.$wx.showErrorToast('当前已选数量已超出商品库存量。') 
-          return
-        }
+        if(this.checkStock()) return
         var par = {
           skuIds: this.skuId,
           counts: this.number,
@@ -522,67 +534,61 @@ export default {
         // 打开规格选择弹窗
         this.openAttr = !this.openAttr;
       } else {
-
+        if(this.checkStock()) return
+        const openId = wx.getStorageSync('openId')
+        var par = {
+          openId: openId,
+          productId: this.id,
+          isCustom: false,//标准品
+          skuId: this.skuId,
+          quantity: this.number,
+          Yjtype: this.Yjtype
+          // YjUse: this.YjUse
+        }
+        this.$wx.showLoading()
+        const res = await api.modifyShoppingCart(par)
+        this.$wx.hideLoading()
+        if(res.success) {
+          this.$wx.showSuccessToast('加入购物车成功')
+        } else {
+          this.$wx.showErrorToast('加入购物车失败')
+        }
       }
     },
     selectWuliu(e) {
       const _this = this;
       const detailInfo =  this.detailInfo
-      var arr = []
-      if(detailInfo.IsYJPeiSong && detailInfo.YjUse) {
-        arr.push('印捷配送')
-        arr.push('代发快递')
-        arr.push('仓库自提')
+      // 加载信息
+      var info = {
+        isYJPeiSong : detailInfo.IsYJPeiSong,
+        YjUse: detailInfo.YjUse,
+        useFreightTempalate: detailInfo.UseFreightTempalate,
+        productId : detailInfo.ProductId
       }
-      if(detailInfo.YjUse && !detailInfo.IsYJPeiSong) {
-        if(detailInfo.UseFreightTempalate && detailInfo.ProductId == 2101) {
-          arr.push('商家直邮')
-        } else {
-          arr.push('代发快递')
-        }
-      }
-      if(detailInfo.UseFreightTempalate == 1 && detailInfo.ProductId != 2101) {
-          arr.push('商家直邮')
-      }
-      if(detailInfo.YjUse != 1 && detailInfo.UseFreightTempalate != 1) {
-          arr.push('商家直邮')
-      }
+      // 根据上面的信息，返回文字数组
+      var arr = express.selectExpress(info)
+
       // 第一次进来e是undefined
       if(e) {
         this.$wx.showActionSheet(arr).then(res => {
           _this.strYjtype = arr[res.tapIndex]
-          _this.Yjtype = _this.wuliuId(_this.strYjtype)
-          _this.YjUse = _this.checkYjUse(_this.Yjtype)
+          _this.Yjtype = express.wuliuId(_this.strYjtype)
+          _this.YjUse = express.checkYjUse(_this.Yjtype)
         })
       } else {
         _this.strYjtype = arr[0]
-        _this.Yjtype = _this.wuliuId(_this.strYjtype)
-        _this.YjUse = _this.checkYjUse(_this.Yjtype)
+        _this.Yjtype = express.wuliuId(_this.strYjtype)
+        _this.YjUse = express.checkYjUse(_this.Yjtype)
       }
     },
-    wuliuId (str) {
-      switch (str) {
-        case '印捷配送':
-            return 3
-          break;
-        case '代发快递':
-            return 1
-          break;
-        case '仓库自提':
-            return 2
-          break;
-        default://商家直邮
-            return 0
-          break;
+    // 检查库存
+    checkStock() {
+      let check = false
+      if(this.number > this.Stock) {
+        this.$wx.showErrorToast('超出库存') 
+        check = true
       }
-    },
-    checkYjUse(num) {
-      // 0是商家只有，0以上都是印捷
-      if(num == 0) {
-        return 0
-      } else {
-        return 1
-      }
+      return check
     },
     // 减少数量
     cutNumber () {
