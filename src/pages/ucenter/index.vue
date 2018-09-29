@@ -2,7 +2,7 @@
 <view class="container">
   <view class="profile-info">
     <view v-if="userInfo.Id" >
-      <img class="avatar" :src="'http://192.168.0.91:8008/'+userInfo.photo" @click="goLogin(true)"/>
+      <img class="avatar" :src="baseUrl+userInfo.photo" @click="goLogin(true)"/>
       <view class="info">
         <text class="name">{{userInfo.UserName}}</text>
       </view>
@@ -110,7 +110,10 @@ export default {
   computed: {
     ...mapState([
       'userInfo'
-    ])
+    ]),
+    baseUrl() {
+        return this.$wx.baseUrl
+    }
   },
   methods: {
     ...mapActions([

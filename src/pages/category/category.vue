@@ -18,7 +18,7 @@
             <view class="b">
                 <view v-for="item of goodsList" :key="item.ProductId" :class="(index + 1) % 2 === 0 ? 'item-b item' : 'item'"
                    @click="toGoods(item)" >
-                    <img class="img" :src=" 'http://192.168.0.91:8008/'+ item.imagePath" background-size="cover" />
+                    <img class="img" :src=" 'https://www.kiy.cn/'+ item.imagePath" background-size="cover" />
                     <text class="name">{{item.ProductName}}</text>
                     <text class="price">￥{{item.MinSalePrice}}</text>
                 </view>

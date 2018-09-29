@@ -2,7 +2,7 @@
     <swiper :class="{ 'banner ' : content.space == 0 , 'banner2': content.space == 1 }" indicator-dots="true" autoplay="true" interval="3000" duration="1000">
         <swiper-item v-for="item of content.dataset" :key="item.id">
         <navigator :url="item.link">
-            <img :class="{ 'full' : content.space == 0 , 'nofull': content.space == 1 }" :src="'http://192.168.0.91:8008/'+item.pic" background-size="cover" />
+            <img :class="{ 'full' : content.space == 0 , 'nofull': content.space == 1 }" :src="baseUrl+item.pic" background-size="cover" />
         </navigator>
         </swiper-item>
     </swiper>
@@ -15,6 +15,13 @@ export default {
     name: 'indexAd',
     props: {
         content: Object
+    },
+    mounted () {
+    },
+    computed: {
+        baseUrl() {
+            return this.$wx.baseUrl
+        }
     }
 }
 </script>

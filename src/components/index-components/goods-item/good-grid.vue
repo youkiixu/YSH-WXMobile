@@ -4,7 +4,7 @@
       <block v-for="(item,iindex) of content.goodslist" :key="item.item_id" :data-id="index">
         <view :class="  iindex % 2 == 0 ? 'item' : 'item item-b'">
           <navigator :url="'../goods/goods?id=' + item.item_id" class="a">
-            <img class="img" :src="'http://192.168.0.91:8008/'+ item.pic" background-size="cover" />
+            <img class="img" :src="baseUrl+ item.pic" background-size="cover" />
             <text class="name">{{item.title}}</text>
             <text class="price">￥{{item.price}}</text>
           </navigator>
@@ -25,8 +25,10 @@ export default {
     props: {
         content: Object
     },
-    mounted () {
-      // console.log(this.content)
+    computed: {
+        baseUrl() {
+            return this.$wx.baseUrl
+        }
     }
 }
 </script>

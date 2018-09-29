@@ -3,7 +3,7 @@
     <view class="b">
       <view class="item" v-for="item of content.goodslist" :key="item.item_id">
         <navigator :url="'../goods/goods?id='+ item.item_id">
-          <img class="img" :src="'http://192.168.0.91:8008/'+ item.pic" background-size="cover" />
+          <img class="img" :src="baseUrl+ item.pic" background-size="cover" />
           <text class="name">{{item.title}}</text>
           <text class="price">￥{{item.price}}</text>
         </navigator>
@@ -16,6 +16,11 @@ export default {
     name: 'a-new',
     props: {
         content: Object
+    },
+    computed: {
+        baseUrl() {
+            return this.$wx.baseUrl
+        }
     }
 }
 </script>

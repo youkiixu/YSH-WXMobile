@@ -1,7 +1,7 @@
 <template >
 <view class="container">
     <div class="ad">
-      <img class="ad-img" src="http://192.168.0.91:8008/Areas/wxMobile/Content/img/miniprogram/ad.png" alt="">
+      <img class="ad-img" :src="baseUrl + '/Areas/wxMobile/Content/img/miniprogram/ad.png'" alt="">
     </div>
     <view class="catalog">
         <scroll-view class="nav menu-ul" scroll-y="true" scroll-with-animation="true" :scroll-into-view="navId">
@@ -18,7 +18,7 @@
               <view class="bd">
                   <navigator @click="queryQuote(item)" :class="(index2+1) % 3 == 0 ? 'last item' : 'item'" v-for="(item, index2) of listItem.itemList"
                       :key="item.Code">
-                      <img class="icon" :src="item.Image ?  'http://192.168.0.91:8008/'+ item.Images : 'http://www.kiy.cn/Areas/Mobile/Templates/Default/Images/default.png'"/>
+                      <img class="icon" :src="item.Image ?  baseUrl+ item.Images : 'http://www.kiy.cn/Areas/Mobile/Templates/Default/Images/default.png'"/>
                       <text class="txt">{{item.qName}}</text>
                   </navigator>
               </view>
@@ -47,6 +47,11 @@ export default {
       contentHeight: []
     }
   },
+  computed: {
+        baseUrl() {
+            return this.$wx.baseUrl
+        }
+    },
   mounted () {
     this.getQitem()
   },

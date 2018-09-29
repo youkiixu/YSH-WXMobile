@@ -5,7 +5,7 @@
     <view class="b">
       <block v-for="(item, index) of goodsList" :key="index">
         <navigator :class="index % 2 == 0 ? 'item-b item' : 'item'" :url="'../goods/goods?id=' + item.ProductId">
-          <img class="img" :src="'http://192.168.0.91:8008/'+item.imagePath" background-size="cover"/>
+          <img class="img" :src="baseUrl+item.imagePath" background-size="cover"/>
           <text class="name">{{item.ProductName}}</text>
           <text class="price">￥{{item.MinSalePrice}}</text>
         </navigator>
@@ -17,6 +17,11 @@
 
 <script>
 export default {
+  computed: {
+        baseUrl() {
+            return this.$wx.baseUrl
+        }
+    },
   props: {
     currentSortType: {
       type: String,

@@ -4,7 +4,7 @@
       <view class="item item-1" v-for="item of content.goodslist" :key="item.item_id">
         <navigator :url="'/pages/brand/brandDetail?id='+item.item_id">
           <view class="wrap">
-            <img class="img" :src="'http://192.168.0.91:8008/'+ item.pic" mode="aspectFill" />
+            <img class="img" :src="baseUrl+ item.pic" mode="aspectFill" />
             <view class="mt">
               <text class="brand">{{item.title}}</text>
               <text class="price">{{item.price}}</text>
@@ -21,6 +21,11 @@ export default {
     name: 'a-brand',
     props: {
         content: Object
+    },
+    computed: {
+        baseUrl() {
+            return this.$wx.baseUrl
+        }
     }
 }
 </script>

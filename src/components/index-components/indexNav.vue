@@ -1,7 +1,7 @@
 <template>
     <view class="m-menu">
         <navigator  class="item" :url="'../../' + item.link" v-for="item of content.dataset" :key="item.id">
-            <img :src="'http://192.168.0.91:8008/'+ item.pic" background-size="cover" />
+            <img :src="baseUrl+ item.pic" background-size="cover" />
             <text>{{item.showtitle}}</text>
         </navigator>
     </view>
@@ -13,6 +13,11 @@ export default {
     name: 'indexNav',
     props: {
         content: Object
+    },
+    computed: {
+        baseUrl() {
+            return this.$wx.baseUrl
+        }
     }
 }
 </script>

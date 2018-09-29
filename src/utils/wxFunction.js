@@ -69,7 +69,7 @@ function toGoodsDetail (item , vm) {
   }
 }
 
-
+const baseUrl = 'http://www.kiy.cn/'
 
 
 const wxFun = {
@@ -80,7 +80,8 @@ const wxFun = {
     showModal,
     showActionSheet,
     formatBoolToInt,
-    toGoodsDetail
+    toGoodsDetail,
+    baseUrl
 }
 
 export default wxFun
