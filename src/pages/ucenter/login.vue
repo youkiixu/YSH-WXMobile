@@ -37,7 +37,7 @@ export default {
             isRegister: false
         }
     },
-    methods: {
+    methods: { 
         ...mapActions([
             'sassLogin'
         ]),

@@ -55,11 +55,14 @@ export default {
     async getUserOrderList () {
         const openId = wx.getStorageSync('openId')
         const res = await api.getUserOrderList({ openId: openId , pageNo: this.pageNo , pageSize: this.pageSize })               
-        const data = JSON.parse(res.data)      
-        if (res.success === true) {
+        if (res.success) {
+            const data = JSON.parse(res.data)      
             this.orderList = data; 
-        }        
-        console.log(this.orderList[0])
+        } else {
+            // 没有登陆请登录
+            this.$wx.toLogin()
+        }
+        
     },
     // 查看物流
     checkExpress (item) {
@@ -126,7 +129,7 @@ page{
     margin-left: 31.25rpx;
     padding-right: 31.25rpx;
     border-bottom: 1px solid #f4f4f4;
-    font-size: 30rpx;
+    font-size: 24rpx;
     color: #333;
 }
 .order .h .shop-name {

@@ -140,6 +140,7 @@ export default {
           })
           
         }).catch((err) => {
+          _this.$wx.hideLoading()
           console.log('登陆失败', err)
         });
       }

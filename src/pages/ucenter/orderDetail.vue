@@ -63,6 +63,7 @@
 <script>
 import api from '@/utils/api'
 import wx from 'wx'
+import { mapState } from 'vuex'
 
 export default {
   data () {
@@ -71,6 +72,9 @@ export default {
       orderInfo: {},
       orderGoods: []
     }
+  },
+  computed: {
+    ...mapState(['userInfo'])  
   },
   async mounted () {
     await Promise.all([
@@ -86,21 +90,10 @@ export default {
        const data = JSON.parse(res.data)               
       if (res.success === true) {
         this.orderInfo = data[0];
+        console.log(this.orderInfo)
         this.orderGoods = data;   
       }
     },
-
-    // 获取订单数据
-    // async getOrderDetail () {
-    //   const res = await api.getOrderDetail({ orderId: this.orderId });
-    //   // console.log('订单详情,请求结果', res);
-    //   if (res.errno === 0) {
-    //     this.orderInfo = res.data.orderInfo;
-    //     this.orderGoods = res.data.orderGoods;
-    //     this.handleOption = res.data.handleOption;
-    //     // this.payTimer();
-    //   }
-    // },
     // 制作倒计时用的，暂时不需要
     payTimer () {
       let orderInfo = this.orderInfo;
@@ -139,6 +132,27 @@ export default {
           url: '/pages/pay/payResult?status=0&orderId=' + that.orderId
         })
       }
+    },
+    // 点击取消订单
+    cancelOrder () {
+        const _this = this;
+        this.$wx.showModal({
+            content: `确认取消订单号为${this.OrderId}的订单?`,
+        }).then(res => {
+            _this.setOrderClose()
+        })
+    },
+    // 请求取消订单接口
+    async setOrderClose() {
+        let par = {
+            OrderId: this.OrderId,
+            UserId: this.userInfo.Id
+        }
+        debugger
+
+        const res = await api.setOrderClose(par)
+        console.log(res)
+
     }
   },
   // 原生的分享功能
