@@ -9,7 +9,7 @@
 	},
 	"miniprogramRoot": "dist/",
 	"compileType": "miniprogram",
-	"appid": "wx9c20c7365b5c702f",
+	"appid": "wxe1c5fe5c72be84e6",
 	"projectname": "kiy-wx",
 	"libVersion": "2.3.0",
 	"condition": {
@@ -30,11 +30,7 @@
 			"list": []
 		},
 		"miniprogram": {
-<<<<<<< HEAD
-			"current": 11,
-=======
 			"current": -1,
->>>>>>> 2a272f301e6f562cae0c14d4be0d54888035ca77
 			"list": [
 				{
 					"id": -1,
@@ -74,12 +70,6 @@
 				},
 				{
 					"id": -1,
-					"name": "标准品报价页面",
-					"pathName": "pages/goods/goods",
-					"query": ""
-				},
-				{
-					"id": -1,
 					"name": "购物车",
 					"pathName": "pages/cart/cart",
 					"query": ""
@@ -92,14 +82,20 @@
 				},
 				{
 					"id": -1,
-					"name": "标准品报价页面",
-					"pathName": "pages/goods/goods",
+					"name": "评论页",
+					"pathName": "pages/comment/comment",
+					"query": ""
+				},
+				{
+					"id": 9,
+					"name": "用户订单列表页",
+					"pathName": "pages/ucenter/order",
 					"query": ""
 				},
 				{
 					"id": -1,
-					"name": "评论页",
-					"pathName": "pages/comment/comment",
+					"name": "用户订单详情页",
+					"pathName": "pages/ucenter/orderDetail",
 					"query": ""
 				}
 			]

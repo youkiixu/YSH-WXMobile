@@ -1,6 +1,19 @@
 <template >
 <view>
     <view class="container">
+      <view class="goodshead">
+        <view class="head-classify">
+          <view class="classify-item produ">
+            <img src="/static/images/posi.png"/>
+            商品
+            </view>
+          <view class="classify-item com">评论</view>
+          <view class="classify-item detail">详情</view>
+        </view>
+        <view class="head-share">
+          <img src="/static/images/upload.png"/>
+        </view>
+      </view>
     <swiper class="goodsimgs" indicator-dots="true" autoplay="true" interval="3000" duration="1000">
         <swiper-item v-for="(item, index) of gallery" :key="item.id" :data-index="index">
         <img :src="item.img_url" background-size="cover"/>
@@ -15,7 +28,7 @@
         <view class="c clear">
           <view class="c-price"><text class="price-icon">￥</text>{{detailInfo.Price}}</view>
           <view class="c-collect" @click="addCannelCollect">           
-              <img class="icon" :src="collectBackImage"/>           
+              <img class="icon" :src="collectProduImage"/>           
           </view>
           <!-- <view class="clear"></view> -->
         </view>
@@ -114,7 +127,10 @@
               </view>
               <view class="spec">白色 2件</view>  -->
           </view>
-          <view class="seeall">查看全部评价</view>
+           <navigator :url="'../comment/comment?valueId=' + id + '&typeId=0'">
+             <view class="seeall">查看全部评价</view>
+          </navigator>
+          
         </view>   
       </view> 
 
@@ -245,7 +261,23 @@
           </view>
       </view>
     </view>
+
     <view class="bottom-btn">
+    <view class="l l-collect" @click="addCannelCollect">
+        <img class="icon" :src="collectBackImage"/>
+    </view>
+    <view class="l l-cart">
+        <view class="box">
+        <text class="cart-count">{{cartGoodsCount}}</text>
+        <img @click="openCartPage" class="icon" src="/static/images/shopping-car.png"/>
+        </view>
+    </view>
+    <view class="c" @click="SubmitByProduct">立即购买</view>
+    <view class="r" @click="addToCart" >加入购物车</view>
+    </view>
+
+
+    <!-- <view class="bottom-btn">
     <view class="l l-collect" @click="addCannelCollect">
         <img class="icon" :src="collectBackImage"/>
     </view>
@@ -257,7 +289,8 @@
     </view>
     <view class="c" @click="SubmitByProduct">立即购买</view>
     <view class="r" @click="addToCart" >加入购物车</view>
-    </view>
+    </view> -->
+
 </view>
 </template>
 
@@ -299,9 +332,10 @@ export default {
       number: 1,
       checkedSpecText: '请选择规格数量',
       openAttr: false,
+      collectProduImage:'/static/images/collect.png',
       noCollectImage: '/static/images/icon_collect.png',
       hasCollectImage: '/static/images/icon_collect_checked.png',
-      collectBackImage: '/static/images/icon_collect.png',
+      collectBackImage: '/static/images/share.png',
       goodDetailHTMLstr: '',
       skuInfo: [],
       selectSku: {
@@ -628,6 +662,49 @@ export default {
   clear: both;
   height:0;
 }
+.goodshead{
+  width: 750rpx;
+  height: 65rpx;
+  background-color: white;
+  position: relative;
+}
+.head-classify{
+  width: 380rpx;
+  height: 65rpx;
+  margin: 0 auto;
+  display: -webkit-box;
+  display: -webkit-flex;
+}
+.classify-item{
+  flex: 1;
+  text-align: center;
+  line-height: 65rpx;
+  color: #282828;
+  font-size: 28rpx;
+}
+.classify-item:first-child{
+  margin-left: 0;
+}
+.classify-item img{
+  width: 20rpx;
+  height: 25rpx;
+  text-align: left;
+  line-height: 65rpx;
+}
+.head-share{
+  width: 30rpx;
+  height: 30rpx;
+  position: absolute;
+  right: 47rpx;
+  top: 17rpx;
+  display: flex;
+  align-items:center;
+  justify-content: space-around;
+}
+.head-share img{
+   width: 30rpx;
+   height: 30rpx;
+}
 .goodsimgs {
   width: 750rpx;
   height: 750rpx;
@@ -681,6 +758,7 @@ export default {
 }
 .goods-info .c-collect{
   float: right;
+  margin-top: 3rpx;
   width: 30rpx;
   height: 30rpx;
 
@@ -1156,17 +1234,18 @@ export default {
 .bottom-btn .l {
   float: left;
   height: 100rpx;
-  width: 162rpx;
-  border: 1px solid #f4f4f4;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .bottom-btn .l.l-collect {
-  border-right: none;
-  border-left: none;
+  width: 100rpx;
+  border-right: 3rpx solid #f1f1f1;;
   text-align: center;
+}
+.bottom-btn .l.l-cart {
+  width: 130rpx;
 }
 
 .bottom-btn .l.l-cart .box {
@@ -1205,24 +1284,23 @@ export default {
 .bottom-btn .c {
   float: left;
   height: 100rpx;
-  line-height: 96rpx;
+  line-height: 100rpx;
   flex: 1;
   text-align: center;
-  color: #333;
-  border-top: 1px solid #f4f4f4;
-  border-bottom: 1px solid #f4f4f4;
-  
+  background-color: #ff9600;
+  color: #fff;
+  font-size: 24rpx;
 }
 
 .bottom-btn .r {
-  border: 1px solid #b4282d;
-  background: #b4282d;
+  background: #e93b3d;
   float: left;
   height: 100rpx;
-  line-height: 96rpx;
+  line-height: 100rpx;
   flex: 1;
   text-align: center;
   color: #fff;
+  font-size: 24rpx;
 }
 
 .attr-pop-box {
