@@ -9,7 +9,7 @@
         </view>
     </view>
   <view class="b">
-    <view class="item" v-for="(item, index) of comments" :key="item.id" :data-index="index">
+    <view class="item" v-for="(item, index) in comments" :key="item.id" :data-index="index">
       <view class="info">
         <view class="user">
           <img :src="item.Images"/>
@@ -88,8 +88,7 @@ export default {
       this.ProductId = this.$route.query.valueId     
       const res = await api.getCommentList({ ProductId: this.ProductId , pageNo: this.pageNo });      
       if (res.success === true) {
-       this.comments = res.comments;  
-      //  console.log(this.comments[0].UserName);
+       this.comments = res.comments;        
       }
     },
 

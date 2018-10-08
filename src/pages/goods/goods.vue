@@ -6,8 +6,10 @@
           <view class="classify-item produ">
             <img src="/static/images/posi.png"/>
             商品
-            </view>
-          <view class="classify-item com">评论</view>
+          </view>
+          <navigator :url="'../comment/comment?valueId=' + id + '&typeId=0'">
+            <view class="classify-item com">评论</view>
+          </navigator>          
           <view class="classify-item detail">详情</view>
         </view>
         <view class="head-share">
@@ -669,7 +671,7 @@ export default {
   position: relative;
 }
 .head-classify{
-  width: 380rpx;
+  width: 428rpx;
   height: 65rpx;
   margin: 0 auto;
   display: -webkit-box;
@@ -680,7 +682,7 @@ export default {
   text-align: center;
   line-height: 65rpx;
   color: #282828;
-  font-size: 28rpx;
+  font-size: 32rpx;
 }
 .classify-item:first-child{
   margin-left: 0;
@@ -750,22 +752,22 @@ export default {
 }
 .goods-info .c-price{ 
   color: #dc2121;
-  font-size: 38rpx;
+  font-size: 42rpx;
   float: left;
 }
 .c-price .price-icon{
-  font-size: 30rpx;
+  font-size: 34rpx;
 }
 .goods-info .c-collect{
   float: right;
   margin-top: 3rpx;
-  width: 30rpx;
-  height: 30rpx;
+  width: 44rpx;
+  height: 44rpx;
 
 }
 .goods-info .c-collect img{
-  width: 30rpx;
-  height: 30rpx;
+  width: 44rpx;
+  height: 44rpx;
   text-align: center;
 }
 .goods-info .con-text{
@@ -774,12 +776,12 @@ export default {
 }
 .con-text .desc{
   color: #282828;
-  font-size: 24rpx;
+  font-size: 32rpx;
 }
 .con-text .notes{
   margin-top: 15rpx;
   color: #828282;
-  font-size: 20rpx;
+  font-size: 22rpx;
 }
 .section-nav {
   width: 750rpx;
@@ -793,7 +795,7 @@ export default {
   width: 600rpx;
   height: 100rpx;
   line-height: 100rpx;
-  font-size: 24rpx;
+  font-size: 28rpx;
   color: #555555;
   margin-left: 31.25rpx;
 }
@@ -858,7 +860,7 @@ export default {
   width: 600rpx;
   height: 100rpx;
   line-height: 100rpx;
-  font-size: 24rpx;
+  font-size: 28rpx;
   color: #555555;
   margin-left: 31.25rpx;
 }
@@ -892,14 +894,14 @@ export default {
   display: block;
   float: left;
   width: 50%;
-  font-size: 24rpx;
+  font-size: 28rpx;
   color: #555555;
 }
 
 .comments .h .i {
   display: block;
   float: right;
-  font-size: 20rpx;
+  font-size: 22rpx;
   text-align: right;
   padding-right: 50rpx;
   color: #c5c5c5;
@@ -954,9 +956,10 @@ export default {
   box-sizing: border-box;
 }
 .comments .seeall{
-  font-size: 24rpx;
+  font-size: 28rpx;
   color: #555555;
   text-align: center;
+  margin-top: 5rpx;
 }
 .proDetail{
   margin-top: 30rpx;
@@ -967,7 +970,7 @@ export default {
   height: 75rpx;
   line-height: 75rpx;
   text-align: center;
-  font-size: 24rpx;
+  font-size: 28rpx;
   color: #555555;
 }
 
@@ -1289,7 +1292,7 @@ export default {
   text-align: center;
   background-color: #ff9600;
   color: #fff;
-  font-size: 24rpx;
+  font-size: 28rpx;
 }
 
 .bottom-btn .r {
@@ -1300,7 +1303,7 @@ export default {
   flex: 1;
   text-align: center;
   color: #fff;
-  font-size: 24rpx;
+  font-size: 28rpx;
 }
 
 .attr-pop-box {
@@ -1365,23 +1368,23 @@ export default {
   align-items: center;
 }
 .attr-pop .p {
-  font-size: 34rpx;
+  font-size: 38rpx;
   color: #dc2121;
   height: 32rpx;
   line-height: 32rpx;
   margin-bottom: 10rpx;
 }
 .attr-pop .p-icon{
-  font-size: 28rpx;
+  font-size: 30rpx;
 }
 .attr-pop .s{
-  font-size: 18rpx;
+  font-size: 20rpx;
   color: #555555;
   height: 40rpx;
   line-height: 40rpx;
 }
 .attr-pop .a {
-  font-size: 20rpx;
+  font-size: 24rpx;
   color: #333;
   line-height: 35rpx;
 }
@@ -1411,15 +1414,15 @@ export default {
 
 .spec-con .value {
   display: inline-block;
-  height: 50rpx;
-  line-height: 50rpx;
+  height: 55rpx;
+  line-height: 55rpx;
   text-align: center;
-  margin-right: 25rpx;
-  margin-bottom: 16.5rpx;
+  margin-right: 24rpx;
+  margin-bottom: 24rpx;
   padding: 0 26rpx;
   box-sizing: border-box;
   background-color: #f4f4f4;
-  font-size: 20rpx;
+  font-size: 24rpx;
   color: #242424;
   border-radius: 10rpx;
 }
@@ -1489,7 +1492,7 @@ export default {
   width: 100%;
   line-height: 100rpx;
   color: white;
-  font-size: 24rpx;
+  font-size: 28rpx;
   position:fixed;
   left: 0;
   bottom: 0;
