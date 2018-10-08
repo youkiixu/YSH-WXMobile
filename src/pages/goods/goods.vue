@@ -75,59 +75,51 @@
             <view class="imgs" v-if="comment.data.pic_list.length">
             <image class="img" v-for="(item, index) of comment.data.pic_list" :key="item.id" :data-index="index" :src="item.pic_url"/>
             </view>
-            <view class="spec">白色 2件</view>
-        </view>
-        </view>
-    </view> -->
-    <!-- <view class="goods-attr">
-        <view class="t">商品参数</view>
-        <view class="l">
-        <view class="item" v-for="(item, index) of attribute" :key="item.name" :data-index="index">
-            <text class="left">{{item.name}}</text>
-            <text class="right">{{item.value}}</text>
-        </view>
-        </view>
-    </view> -->
+            <!-- <view class="clear"></view> -->
+          </view>
+          <view class="con-text">
+            <view class="desc">{{detailInfo.ProductName}}</view>
+            <view class="notes">{{detailInfo.ShortDescription}}</view>
+          </view>       
+      </view>
 
-    <view class="address-nav address-attr clear" @click="switchAttrAddre">
-        <view class="t">配送地址</view>
-        <img class="i" src="/static/images/address_right.png" background-size="cover"/>
-        <!-- <view class="clear"></view> -->
-    </view>
-
-    <!-- <view class="comment">
-      <view class="comment-nav" @click="switchAttrSee">
-        <view class="t">评论<text class="t-percent">100%好评</text></view>
-        <img class="i" src="/static/images/address_right.png" background-size="cover"/>
-    </view>
-
-    </view> -->
-
-      <view class="comments">
-        <view class="h clear">
-          <navigator :url="'../comment/comment?valueId=' + id + '&typeId=0'">
-              <text class="t">评价</text>
-              <text class="i">查看全部评价</text>
-              <!-- <view class="clear"></view> -->
+      <view class="section-nav section-attr" @click="switchAttrPop">
+          <view class="t">规格:{{selectSkuStr.Color}} {{selectSkuStr.Size}} {{selectSkuStr.Version}} {{selectSkuStr.Material}} {{selectSkuStr.Fashion}} {{selectSkuStr.Grams}} {{selectSkuStr.Ensemble}}</view>
+          <img class="i" src="/static/images/address_right.png" background-size="cover"/>
+          <view class="clear"></view>
+      </view>
+      <!-- <view class="section-nav section-act">
+          <view class="t">
+              <view class="label">1个促销:</view>
+              <view class="tag">万圣趴</view>
+              <view class="text">全场满499，额外送糖果</view>
+          </view>
+          <img class="i" src="/static/images/address_right.png" background-size="cover"/>
+      </view> -->
+      <!-- <view class="comments" v-if="comment.count > 0">
+          <view class="h">
+          <navigator :url="'../comment/comment?valueId=' + goods.id + '&typeId=0'">
+              <text class="t">评价({{comment.count > 999 ? '999+' : comment.count}})</text>
+              <text class="i">查看全部</text>
           </navigator>
-        </view>
-        <view class="b">
+          </view>
+          <view class="b">
           <view class="item">
-            <view class="info clear">
+              <view class="info">
               <view class="user">
-                  <img />
-                  <text>1856*******</text>
+                  <img :src="comment.data.avatar"/>
+                  <text>{{comment.data.nickname}}</text>
               </view>
-              <view class="star">☆☆☆☆☆</view>
-              <!-- <view class="clear"></view> -->
-            </view>
-            <view class="content">
-            不错，速度很快，质量很好，好评！
-            </view>
-              <!-- <view class="imgs">
-              <image class="img"/>
+              <view class="time">{{comment.data.add_time}}</view>
               </view>
-              <view class="spec">白色 2件</view>  -->
+              <view class="content">
+              {{comment.data.content}}
+              </view>
+              <view class="imgs" v-if="comment.data.pic_list.length">
+              <image class="img" v-for="(item, index) of comment.data.pic_list" :key="item.id" :data-index="index" :src="item.pic_url"/>
+              </view>
+              <view class="spec">白色 2件</view>
+          </view>
           </view>
            <navigator :url="'../comment/comment?valueId=' + id + '&typeId=0'">
              <view class="seeall">查看全部评价</view>
@@ -136,51 +128,95 @@
         </view>   
       </view> 
 
-
-      <view class="proDetail">
-        <view class="title">商品详情</view>
-        <view class="content">
-          <wxParse :content="goodDetailHTMLstr" />
-        </view>
+      <view class="address-nav address-attr clear" @click="switchAttrAddre">
+          <view class="t">店铺地址:{{detailInfo.ShopAddress}}</view>
+          <img class="i" src="/static/images/address_right.png" background-size="cover"/>
+          <!-- <view class="clear"></view> -->
       </view>
 
+      <!-- <view class="comment">
+        <view class="comment-nav" @click="switchAttrSee">
+          <view class="t">评论<text class="t-percent">100%好评</text></view>
+          <img class="i" src="/static/images/address_right.png" background-size="cover"/>
+      </view>
 
-    <!-- <div>
-        <wxParse :content="goodDetailHTMLstr" />
-    </div> -->
-    <!-- <view class="common-problem">
-        <view class="h">
-        <view class="line"></view>
-        <text class="title">常见问题</text>
-        </view>
-        <view class="b">
-        <view class="item" v-for="(item, index) of issueList" :key="item.id" :data-index="index">
-            <view class="question-box">
-            <text class="spot"></text>
-            <text class="question">{{item.question}}</text>
-            </view>
-            <view class="answer">
-            {{item.answer}}
-            </view>
-        </view>
-        </view>
-    </view> -->
+      </view> -->
 
-    <!-- <view class="related-goods" v-if="relatedGoods.length">
-        <view class="h">
-        <view class="line"></view>
-        <text class="title">大家都在看</text>
-        </view>
-        <view class="b">
-        <view class="item" v-for="(item, index) of relatedGoods" :key="item.id" :data-index="index">
-            <navigator :url="'/pages/goods/goods?id=' + item.id">
-            <img class="img" :src="item.list_pic_url" background-size="cover"/>
-            <text class="name">{{item.name}}</text>
-            <text class="price">￥{{item.retail_price}}</text>
+        <view class="comments">
+          <view class="h clear">
+            <navigator :url="'../comment/comment?valueId=' + id + '&typeId=0'">
+                <text class="t">评价</text>
+                <text class="i">查看全部评价</text>
+                <!-- <view class="clear"></view> -->
             </navigator>
+          </view>
+          <view class="b">
+            <view class="item">
+              <view class="info clear">
+                <view class="user">
+                    <img />
+                    <text>1856*******</text>
+                </view>
+                <view class="star">☆☆☆☆☆</view>
+                <!-- <view class="clear"></view> -->
+              </view>
+              <view class="content">
+              不错，速度很快，质量很好，好评！
+              </view>
+                <!-- <view class="imgs">
+                <image class="img"/>
+                </view>
+                <view class="spec">白色 2件</view>  -->
+            </view>
+            <view class="seeall">查看全部评价</view>
+          </view>   
+        </view> 
+
+
+        <view class="proDetail">
+          <view class="title">商品详情</view>
+          <view class="content">
+            <wxParse :content="goodDetailHTMLstr" />
+          </view>
         </view>
-        </view>
-    </view> -->
+
+
+      <!-- <div>
+          <wxParse :content="goodDetailHTMLstr" />
+      </div> -->
+      <!-- <view class="common-problem">
+          <view class="h">
+          <view class="line"></view>
+          <text class="title">常见问题</text>
+          </view>
+          <view class="b">
+          <view class="item" v-for="(item, index) of issueList" :key="item.id" :data-index="index">
+              <view class="question-box">
+              <text class="spot"></text>
+              <text class="question">{{item.question}}</text>
+              </view>
+              <view class="answer">
+              {{item.answer}}
+              </view>
+          </view>
+          </view>
+      </view> -->
+
+      <!-- <view class="related-goods" v-if="relatedGoods.length">
+          <view class="h">
+          <view class="line"></view>
+          <text class="title">大家都在看</text>
+          </view>
+          <view class="b">
+          <view class="item" v-for="(item, index) of relatedGoods" :key="item.id" :data-index="index">
+              <navigator :url="'/pages/goods/goods?id=' + item.id">
+              <img class="img" :src="item.list_pic_url" background-size="cover"/>
+              <text class="name">{{item.name}}</text>
+              <text class="price">￥{{item.retail_price}}</text>
+              </navigator>
+          </view>
+          </view>
+      </view> -->
     </view>
     <view class="attr-pop-box" :hidden="!openAttr">
       <view class="attr-pop" >
@@ -258,8 +294,8 @@
           </view>
           </scroll-view>
           <view class="car-btn clear">
-              <view class="car-add" @click="SubmitByProduct">加入购物车</view>
-              <view class="car-buy" @click="addToCart">立即购买</view>
+              <view class="car-add" @click="addToCart">加入购物车</view>
+              <view class="car-buy" @click="SubmitByProduct">立即购买</view>
           </view>
       </view>
     </view>
@@ -365,7 +401,7 @@ export default {
       Stock: 0
     }
   },
-  async mounted () {
+  mounted () {
     this.id = 146
     if (this.$route.query.data) {
           const data = JSON.parse(this.$route.query.data);
@@ -374,18 +410,7 @@ export default {
           })
           this.id = data.ProductId
       }
-    this.$wx.showLoading()
-    await Promise.all([
-      this.getGoodsSkuInfo(),
-      this.getGoodsDetail(),
-      this.getGoodsDesc()
-    ]);
-    // 选中默认选项
-    this.getSkuPrice()
-    // 默认选中配送方式
-    this.selectWuliu()
-
-    this.$wx.hideLoading()
+    this.refresh()
   },
   computed: {
     selected() {
@@ -399,6 +424,20 @@ export default {
   },
   methods: {
     ...mapActions(['submitByProductId']),
+    async refresh() {
+      this.$wx.showLoading()
+      await Promise.all([
+        this.getGoodsSkuInfo(),
+        this.getGoodsDetail(),
+        this.getGoodsDesc()
+      ]);
+      // 选中默认选项
+      this.getSkuPrice()
+      // 默认选中配送方式
+      this.selectWuliu()
+
+      this.$wx.hideLoading()
+    },
     // 获取商品SKu详情
     async getGoodsSkuInfo () {
       var par = {
@@ -640,6 +679,10 @@ export default {
       this.getSkuInfoPirce()
     }
   },
+  onPullDownRefresh: function() {
+    this.refresh()
+    wx.stopPullDownRefresh()
+  },
   // 原生的分享功能
   onShareAppMessage: function () {
     return {
@@ -657,6 +700,7 @@ export default {
 .container {
   background-color: #f1f1f1;
   margin-bottom: 100rpx;
+  overflow: hidden;
 }
 .clear:after{
   display: block;
@@ -950,7 +994,7 @@ export default {
 
 .comments .content {
   line-height: 50rpx;
-  font-size: 24rpx;
+  font-size: 34rpx;
   color: #555555;
   padding: 15rpx 30rpx;
   box-sizing: border-box;
@@ -993,7 +1037,7 @@ export default {
   width: 720rpx;
   padding-right: 30rpx;
   line-height: 30rpx;
-  font-size: 24rpx;
+  font-size: 34rpx;
   color: #999;
   margin-bottom: 30rpx;
 } */
@@ -1266,7 +1310,7 @@ export default {
   right: 0;
   background: #b4282d;
   text-align: center;
-  font-size: 18rpx;
+  font-size: 28rpx;
   color: #fff;
   line-height: 28rpx;
   border-radius: 50%;
@@ -1402,7 +1446,7 @@ export default {
 .spec-con .name {
   height: 32rpx;
   margin-bottom: 22rpx;
-  font-size: 24rpx;
+  font-size: 34rpx;
   color: #555;
 }
 
@@ -1443,7 +1487,7 @@ export default {
    border-bottom: 2rpx solid #ececec;
 }
 .number-item .name{
-  font-size: 24rpx;
+  font-size: 34rpx;
   color: #555;
   float: left;
 }
@@ -1511,10 +1555,4 @@ export default {
   background-color: #dc2121;
 }
 
-.webview {
-  display: none;
-  width: 200rpx !important;
-  height: 100rpx !important;
-  overflow: hidden;
-}
 </style>

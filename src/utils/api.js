@@ -122,6 +122,10 @@ const api = {
   getCommentCount: (paramObj) => request.get('/Wxmobile/Product/GetCommentsNumber', paramObj, {
     baseURL: ApiKiyUrl
   }),
+  // 会员取消订单
+  setOrderClose: (paramObj) => request.get('/Wxmobile/UserOrder/CloseOrder', paramObj, {
+    baseURL: ApiKiyUrl
+  })
 }
 
 export default api

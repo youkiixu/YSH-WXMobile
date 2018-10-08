@@ -4,7 +4,7 @@
         <scroll-view scroll-x="true" class="list">
           <view class="item" v-for="item of content.goodslist" :key="item.item_id">
             <navigator :url="'../topic/topicDetail?id=' + item.item_id">
-              <img class="img" :src="'http://192.168.0.91:8008/'+ item.pic" background-size="cover" />
+              <img class="img" :src="baseUrl+ item.pic" background-size="cover" />
               <view class="np">
                 <text class="name">{{item.title}}</text>
                 <text class="price">￥{{item.price}}元起</text>
@@ -22,8 +22,10 @@ export default {
     props: {
         content: Object
     },
-    mounted () {
-      
+    computed: {
+        baseUrl() {
+            return this.$wx.baseUrl
+        }
     }
 }
 </script>

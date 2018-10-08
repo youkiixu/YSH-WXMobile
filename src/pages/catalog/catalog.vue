@@ -21,7 +21,7 @@
               <view class="bd">
                   <navigator @click="$router.push({ path: '/pages/category/category', query: { Id: item.Id ,categoryChild: JSON.stringify(categoryChild.SubCategories) } })"  :class="(index2+1) % 3 == 0 ? 'last item' : 'item'" v-for="(item, index2) of categoryChild.SubCategories"
                       :key="item.Id">
-                      <img class="icon" :src="item.Image ?  'http://192.168.0.91:8008/'+ item.Image : 'http://www.kiy.cn/Areas/Mobile/Templates/Default/Images/default.png'"/>
+                      <img class="icon" :src="item.Image ?  baseUrl + item.Image : 'http://www.kiy.cn/Areas/Mobile/Templates/Default/Images/default.png'"/>
                       <text class="txt">{{item.Name}}</text>
                   </navigator>
               </view>
@@ -55,7 +55,11 @@ export default {
   computed: {
     ...mapState([
       'categoryList'
-    ])
+    ]),
+    baseUrl() {
+        return this.$wx.baseUrl
+    }
+    
   },
   methods: {
     ...mapActions([

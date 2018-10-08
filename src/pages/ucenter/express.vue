@@ -59,20 +59,24 @@ export default {
     },
     // 查询印捷物流
     async getYinJieExpress () {
-      
       var par = {
         UserId: this.userInfo.Id,
-        LogisticsOrderId: 1257322,
-        OrderId: 19502,
+        // LogisticsOrderId: 1257322,
+        OrderId: this.orderInfo.Id,
         source: 'wxmobile'
       }
       try {
         let res = await api.getYinJieExpress(par)
+        if(typeof res == 'string') {
+          res = JSON.parse(res)
+        }
         if(res.result == 'ok') {
           var expressInfo = JSON.parse(res.orderInfo)
           var expressTraces = JSON.parse(res.orderStatus)
           this.expressInfo = expressInfo[0]
           this.expressTraces = expressTraces.reverse()
+        } else {
+          this.errorEvent()  
         }
       } catch (error) {
         this.errorEvent()
@@ -90,7 +94,7 @@ export default {
       }
     },
     errorEvent () {
-      this.$wx.showErrorToast('物流查询失败')
+      this.$wx.showErrorToast('暂无物流信息')
       setTimeout(() => {
         this.$router.back()
       }, 1500);

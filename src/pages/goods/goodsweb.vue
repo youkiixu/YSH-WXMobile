@@ -25,7 +25,7 @@ export default {
                 title: data.ProductName
             })
             // data.ProductId = 146
-            this.webUrl = 'http://192.168.0.91:8008/m-Mobile/Product/Detail/' + data.ProductId
+            this.webUrl = this.$wx.baseUrl + 'm-Mobile/Product/Detail/' + data.ProductId
         }
     },
     methods: {

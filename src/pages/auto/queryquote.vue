@@ -12,9 +12,9 @@ export default {
         }
     },
     mounted () {
-        
+        console.log(this.$route.query)
         if (this.$route.query.pid) {
-            this.quoteUrl = 'http://192.168.0.91:8008/m-mobile/autobaojia/index?pid=' + this.$route.query.pid
+            this.quoteUrl = 'https://www.kiy.cn//m-mobile/autobaojia/index?pid=' + this.$route.query.pid
             this.qitemCode = this.$route.query.pid
             wx.setNavigationBarTitle({
                 title: this.$route.query.title

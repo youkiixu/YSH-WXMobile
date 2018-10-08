@@ -61,7 +61,8 @@ const store = new Vuex.Store({
     },
     // 登陆
     async sassLogin(vm, data = {}) {
-      const openId = wx.getStorageSync('openId')
+      let openId = wx.getStorageSync('openId')
+      // openId = '1234567'
       if (openId) {
         data = Object.assign(data ,{ 'OpenId': openId})
       }

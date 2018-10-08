@@ -23,9 +23,22 @@ function hideLoading(msg) {
 }
 
 function showModal(data = {}) {
-  wx.showModal({
-
+  return new Promise((reslove , reject) => {
+    wx.showModal({
+      title: data.title ? data.title : '提示',
+      content: data.content ? data.content : '弹窗内容，告知当前状态、信息和解决方法，描述文字尽量控制在三行内',
+      confirmText: data.confirmText ? data.confirmText : '确定',
+      cancelText: data.cancelText ? data.cancelText : '取消',
+      success: function (res) {
+        if (res.confirm) {
+          reslove()
+        } else {
+          reject()
+        }
+      }
+    });
   })
+
 }
 function showActionSheet(arr) {
   return new Promise((reslove, reject) => {
@@ -69,8 +82,25 @@ function toGoodsDetail (item , vm) {
   }
 }
 
+function toLogin(isBack) {
+  showErrorToast('请先登陆')
+  setTimeout(() => {
+    if (isBack) {
+      wx.navigateTo({
+        url: '/pages/ucenter/login'
+      })
+    } else {
+        wx.redirectTo({
+          url: '/pages/ucenter/login'
+        })
+    }
+  }, 1500);
+
+}
 
 
+const baseUrl = 'http://192.168.0.91:8008/'
+// const baseUrl = 'http://www.kiy.cn/'
 
 const wxFun = {
     showSuccessToast,
@@ -80,7 +110,9 @@ const wxFun = {
     showModal,
     showActionSheet,
     formatBoolToInt,
-    toGoodsDetail
+    toGoodsDetail,
+    baseUrl,
+    toLogin
 }
 
 export default wxFun
