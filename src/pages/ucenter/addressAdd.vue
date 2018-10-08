@@ -3,20 +3,20 @@
   <view class="add-address">
       <view class="add-form">
           <view class="form-item">
-              <input class="input" @input="bindinputName" placeholder="姓名" :value="address.ShipTo" auto-focus/>
+              <input class="input"  placeholder="姓名" v-model="address.ShipTo" auto-focus/>
           </view>
           <view class="form-item">
-              <input class="input" @input="bindinputMobile" :value="address.Phone" placeholder="手机号码"/>
+              <input class="input"  v-model="address.Phone" placeholder="手机号码"/>
           </view> 
           <view class="form-item">
-              <input class="input" :value="address.full_region" disabled="true" @click="chooseRegion" placeholder="省份、城市、区县"/>
+              <input class="input" :value="address.RegionFullName" disabled="true" @click="chooseRegion" placeholder="省份、城市、区县"/>
           </view>
           <view class="form-item">
-              <input class="input" @input="bindinputAddress" :value="address.Address" placeholder="详细地址, 如街道、楼盘号等"/>
+              <input class="input"  v-model="address.Address" placeholder="详细地址, 如街道、楼盘号等"/>
           </view>
-          <view class="form-default">
+          <!-- <view class="form-default">
               <text @click="bindIsDefault" :class="address.IsDefault ? 'selected default-input' : 'default-input'">设为默认地址</text>
-          </view>
+          </view> -->
       </view>
       <view class="btns">
           <button class="cannel" @click="cancelAddress">取消</button>
@@ -25,16 +25,32 @@
       <view class="region-select" v-if="openSelectRegion">
         <view class="hd">
           <view class="region-selected">
-            <view :class="['item', { selected: item.type === address.type }]"
-            @click="selectRegionType" :data-region-type-index="index" v-for="(item, index) of selectRegionList" :key="item.id">
-            {{item.name}}</view>
+            <!-- <view :class="['item', { selected: item.id === selectRegionId }]"
+            @click="selectRegionType(item , index)"  v-for="(item, index) of selectRegionList" :key="index">
+              {{item.name}}
+            </view> -->
+            <view :class="['item', { selected: regionChina.id === selectRegionId }]" @click="selectRegionType('China' , -1)">
+              {{regionChina.name}}
+            </view>
+            <view :class="['item', { selected: regionProvince.id === selectRegionId }]" @click="selectRegionType('Province' , 0)">
+              {{regionProvince.name}}
+            </view>
+            <view :class="['item', { selected: regionCity.id === selectRegionId }]" @click="selectRegionType('City' , 1)">
+              {{regionCity.name}}
+            </view>
+            <view :class="['item', { selected: regionArea.id === selectRegionId }]" @click="selectRegionType('Area' ,2)">
+              {{regionArea.name}}
+            </view>
+            <view :class="['item', { selected: regionStreet.id === selectRegionId }]" @click="selectRegionType('Street' , 3)">
+              {{regionStreet.name}}
+            </view>
           </view>
-          <view :class="selectRegionDone ? 'done' : 'disabled done'" @click="doneSelectRegion">确定</view>
+          <view :class="regionStreet.id != undefined ? 'done' : 'disabled done'" @click="doneSelectRegion">确定</view>
         </view>
         <view class="bd">
           <view class="region-list">
-            <view :class="item.selected ? 'selected item' : 'item'" @click="selectRegion" :data-region-index="index"
-            v-for="(item, index) of regionList" :key="item.id">{{item.name}}</view>
+            <view :class="item.selected ? 'selected item' : 'item'" @click="selectRegion(item)"
+            v-for="(item, index) of regionList" :key="index">{{item.name}}</view>
           </view>
         </view>
       </view>
@@ -52,39 +68,74 @@ import { mapState , mapMutations } from 'vuex'
 export default {
   data () {
     return {
-      // address: {},
+      address: {},
       addressId: 0,
       openSelectRegion: false,
-      selectRegionList: [],
-      regionType: 1,
+      selectRegionId : 0,
+      selectRegionList: [{
+        name : '省',
+        id: 0,
+        parent: 0
+      }],
+      regionType: 0,
       regionList: [],
-      selectRegionDone: false
+
+      selectRegionDone: false,
+      regionChina: {
+        name : '全国',
+        id: 0
+      },
+      regionProvince: {
+        name : '省'
+      },
+      regionCity: {
+        name: '城市'
+      },
+      regionArea: {
+        name: '区'
+      },
+      regionStreet:{
+        name: '街道'
+      }
     }
   },
   async mounted () {
-    this.getRegionList(0);
+    this.$wx.showLoading()
+    if(this.$route.query.address && this.$route.query.address != '{}') {
+      this.address = JSON.parse(this.$route.query.address)
+      this.init()
+    } else {
+      this.address = {}
+    }
+    await Promise.all([
+      this.getRegionList(0)
+    ])
+    this.$wx.hideLoading()
   },
   computed: {
     ...mapState([
       'userInfo' ,
-      'address'
     ])
+  },
+  created () {
+    // this.$wx.showLoading()
   },
   methods: {
     ...mapMutations(['set_address']),
+    // init
+    init() {
+      const address = this.address
+      let RegionIdPath = address.RegionIdPath
+      const RegionIdPathArr =  RegionIdPath.split(',')
+      this.provinceInit({name: address.Province , id : RegionIdPathArr[0]})
+      this.cityInit({name: address.City , id : RegionIdPathArr[1]})
+      this.areaInit({name: address.Area , id : RegionIdPathArr[2]})
+      this.streetInit({name: address.Street , id : RegionIdPathArr[3]})
+    },
     // 获得对应级别的地市信息
     async getRegionList (regionId) {
-      let regionType = this.regionType;
       const res = await api.getYinJieRegion({id: regionId});
-        this.regionList = res.map(item => {
-          // 找到已选择的
-          if (regionType === item.type && this.selectRegionList[regionType - 1].id === item.id) {
-            item.selected = true;
-          } else {
-            item.selected = false;
-          }
-          return item;
-        })
+      this.regionList = res
     },
     // 获得输入的电话号码
     bindinputMobile (event) {
@@ -114,177 +165,133 @@ export default {
       address.is_default = !address.is_default;
       this.address = address;
     },
-    // 计算3级地市是否都已选好
-    setRegionDoneStatus () {
-      let doneStatus = this.selectRegionList.every(item => {
-        return item.id !== 0;
-      });
-      this.selectRegionDone = doneStatus;
-    },
     // 展开地市选择浮窗
     chooseRegion () {
       this.openSelectRegion = !this.openSelectRegion;
-      // 设置区域选择数据
-      let address = this.address;
-      if (address.province_id > 0 && address.city_id > 0 && address.district_id > 0) {
-        let selectRegionList = this.selectRegionList;
-        selectRegionList[0].id = address.province_id;
-        selectRegionList[0].name = address.province_name;
-        selectRegionList[0].parent_id = 1;
-        selectRegionList[1].id = address.city_id;
-        selectRegionList[1].name = address.city_name;
-        selectRegionList[1].parent_id = address.province_id;
-        selectRegionList[2].id = address.district_id;
-        selectRegionList[2].name = address.district_name;
-        selectRegionList[2].parent_id = address.city_id;
-        this.selectRegionList = selectRegionList;
-        this.regionType = 3;
-        this.getRegionList(address.city_id);
-      } else {
-        this.selectRegionList = [
 
-        ];
-        this.regionType = 0;
-        this.getRegionList(0);
-      }
-      this.setRegionDoneStatus();
     },
     // 选择不同级别的地市信息
-    selectRegionType (event) {
-      let regionTypeIndex = event.target.dataset.regionTypeIndex;
-      let selectRegionList = this.selectRegionList;
-      // 判断是否可点击
-      if (regionTypeIndex + 1 === this.regionType || (regionTypeIndex - 1 >= 0 && selectRegionList[regionTypeIndex - 1].id <= 0)) {
-        return false;
+    selectRegionType (type , num) {
+      var typeItem = `region${type}`
+      var typeObj = this[typeItem]
+      if(typeObj.id != undefined) {
+        this.regionType = num
+        this.selectRegion(typeObj , true)
       }
-      this.regionType = regionTypeIndex + 1;
-      let selectRegionItem = selectRegionList[regionTypeIndex];
-      this.getRegionList(selectRegionItem.parent_id);
-      this.setRegionDoneStatus();
+      
     },
-    // 点击某一个地市名字
-    selectRegion (event) {
-      let regionIndex = event.target.dataset.regionIndex;
-      let regionItem = this.regionList[regionIndex];
-      let len = this.selectRegionList.length;
-      console.log(len)
-      if(len <= 4) {
-        this.selectRegionList[len] = {
-          id: regionItem.id,
-          name: regionItem.name,
-          type: len
-        }
-        this.address = this.selectRegionList[len]
-        this.getRegionList(regionItem.id)
-      } else {
-        this.selectRegionList[4] = {
-          id: regionItem.id,
-          name: regionItem.name,
-          type: len
-        }
-        this.address = this.selectRegionList[len]
-        this.getRegionList(regionItem.id)
+    // 点击列表中某一个地市名字
+    selectRegion (item , titleClick) {
+      // 获取地址类型
+      this.regionType++
+      if(this.regionType > 4 ) {
+        this.regionType = 4
       }
-      
-      // let regionType = regionItem.type ? regionItem.type : 0;
-      // let selectRegionList = this.selectRegionList;
-      // debugger
-      
-      // selectRegionList[regionType] = regionItem;
-      // if (regionType !== 3) {
-      //   this.selectRegionList = selectRegionList;
-      //   this.regionType = regionType ? regionType + 1 : 1;
-      //   this.getRegionList(regionItem.id);
-      // } else {
-      //   this.selectRegionList = selectRegionList;
-      // }
-      // //                                                                                                                                                                      
-      // selectRegionList.map((item, index) => {
-      //   if (index > regionType - 1) {
-      //     item.id = 0;
-      //     item.name = index === 1 ? '城市' : '区县';
-      //     item.parent_id = 0;
-      //   }
-      //   return item;
-      // });
-      // this.selectRegionList = selectRegionList;
-      // this.regionList = this.regionList.map(item => {
-      //   // 找到已选择的
-      //   if (this.regionType === item.type && this.selectRegionList[this.regionType - 1].id === item.id) {
-      //     item.selected = true;
-      //   } else {
-      //     item.selected = false;
-      //   }
-      //   return item;
-      // })
-      // this.setRegionDoneStatus();
+      this.selectRegionId = item.id
+      // 如果选到第四级不用加载数据
+      if(this.regionType != 4 ) {
+        this.getRegionList(item.id)
+      }
+      if(titleClick != true) {
+        switch (this.regionType) {
+          case 1:
+            this.regionCity = {name: '城市'}
+            this.regionArea = {name: '区'}
+            this.regionStreet = {name: '街道'}
+            this.provinceInit(item)
+            break;
+          case 2:
+            this.regionArea = {name: '区'}
+            this.regionStreet = {name: '街道'}
+            this.cityInit(item)
+            break;
+          case 3:
+            this.regionStreet = {name: '街道'}
+            this.areaInit(item)
+            break;
+          case 4:
+            this.streetInit(item)
+            break;
+          default:
+            break;
+        }
+      }
     },
     // 点击浮窗的确定
     doneSelectRegion () {
-      if (this.selectRegionDone === false) {
-        return false;
+      if(this.regionStreet.id != undefined) {
+        this.openSelectRegion = false;
+        this.address.RegionFullName = `${this.regionProvince.name} ${this.regionCity.name} ${this.regionArea.name} ${this.regionStreet.name}`
       }
-      let address = this.address;
-      let selectRegionList = this.selectRegionList;
-      address.province_id = selectRegionList[0].id;
-      address.city_id = selectRegionList[1].id;
-      address.district_id = selectRegionList[2].id;
-      address.province_name = selectRegionList[0].name;
-      address.city_name = selectRegionList[1].name;
-      address.district_name = selectRegionList[2].name;
-      address.full_region = selectRegionList.map(item => {
-        return item.name;
-      }).join('');
-      this.address = address;
-      this.openSelectRegion = false;
+    },
+    // 读取省
+    provinceInit(item) {
+      this.regionProvince = item
+    },
+    // 读取城市
+    cityInit(item) {
+      this.regionCity = item
+    },
+    // 读取区
+    areaInit(item) {
+      this.regionArea = item
+    },
+    // 去读街道
+    streetInit(item) {
+      this.regionStreet = item
     },
     // 点击浮窗的背景遮罩，取消地市选择
     cancelSelectRegion () {
       this.openSelectRegion = false;
-      this.regionType = this.regionDoneStatus ? 3 : 1;
+      // this.regionType = this.regionDoneStatus ? 3 : 1;
     },
     // 点击底部“取消按钮”退出本页面
     cancelAddress () {
-      wx.navigateTo({
-        url: '../ucenter/address'
-      })
+      this.$router.back()
     },
     // 点击底部“保存按钮”保存地址
     async saveAddress () {
       // console.log(this.address)
       let address = this.address;
-      if (address.name === '') {
+      if (address.ShipTo === '') {
         util.showErrorToast('请输入姓名');
         return false;
       }
-      if (address.mobile === '') {
+      if (address.Phone === '') {
         util.showErrorToast('请输入手机号码');
         return false;
       }
-      if (address.district_id === 0) {
-        util.showErrorToast('请输入省市区');
+      if (this.regionStreet.id == undefined) {
+        util.showErrorToast('请完善四级地址');
         return false;
       }
       if (address.address === '') {
         util.showErrorToast('请输入详细地址');
         return false;
       }
-      const res = await api.AddressSave({
-        id: address.id,
-        name: address.name,
-        mobile: address.mobile,
-        province_id: address.province_id,
-        city_id: address.city_id,
-        district_id: address.district_id,
-        address: address.address,
+      var par = {
+        UserId: this.userInfo.Id,
+        ShipTo: address.ShipTo,
+        Phone: address.Phone,
+        RegionId: this.regionStreet.id,
+        Address: address.Address,
         is_default: address.is_default
-      });
-      // console.log('保存地址,请求结果', res);
-      if (res.errno === 0) {
-        wx.navigateTo({
-          url: '../ucenter/address'
-        })
       }
+      if(address.Id) {
+        par = Object.assign(par , {Id : address.Id , rowState: 'M'})
+
+      } else {
+        par = Object.assign(par , { Id : 0 , rowState: null})
+      }
+      console.log(JSON.stringify(par))
+      const res = await api.modifyUserAddress(par);
+      
+      // // console.log('保存地址,请求结果', res);
+      // if (res.errno === 0) {
+      //   wx.navigateTo({
+      //     url: '../ucenter/address'
+      //   })
+      // }
     }
   },
   // 原生的分享功能

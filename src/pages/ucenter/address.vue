@@ -62,8 +62,7 @@ export default {
         const data = JSON.parse(res.data)
         par = data[0];
       }
-      this.set_address(par)
-      this.$router.push({path: '../ucenter/addressAdd'})
+      this.$router.push({path: '../ucenter/addressAdd' , query: {address: JSON.stringify(par)}})
     },
     // 点击删除图标
     async deleteAddress (event) {

@@ -71,6 +71,9 @@ export default {
 </script>
 
 <style scoped>
+.container {
+  overflow: hidden;
+}
 .index-searchbar {
   position: absolute;
   top: 20rpx;

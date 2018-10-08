@@ -123,9 +123,13 @@ const api = {
     baseURL: ApiKiyUrl
   }),
   // 会员取消订单
-  setOrderClose: (paramObj) => request.get('/Wxmobile/UserOrder/CloseOrder', paramObj, {
+  setOrderClose: (paramObj) => request.post('/Wxmobile/UserOrder/CloseOrder', paramObj, {
     baseURL: ApiKiyUrl
-  })
+  }),
+  // 添加或修改用户地址信息
+  modifyUserAddress: (paramObj) => request.post('/Wxmobile/UserInfos/ModifyUserAddress', paramObj, {
+    baseURL: ApiKiyUrl
+  }),
 }
 
 export default api

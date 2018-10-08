@@ -57,11 +57,16 @@ export default {
       }
     },
     // 点击修改图标，或者底部“新建”
-    addressAddOrUpdate (event) {
-      // console.log('点击修改/新建地址', event)
-      wx.navigateTo({
-        url: '../ucenter/addressAdd?id=' + event.currentTarget.dataset.addressId
-      })
+    async addressAddOrUpdate (event) {
+      var addressId = event.currentTarget.dataset.addressId
+        var par = {}
+      if(addressId != 0) {
+        const res = await api.getSassUserAddress({ Id: addressId , UserId: this.userInfo.Id});
+        const data = JSON.parse(res.data)
+        par = data[0];
+      }
+      this.$router.push({path: '../ucenter/addressAdd' , query: {address: JSON.stringify(par)}})
+
     },
     // 点击选中某个地址,返回checkout页
     selectAddress (item) {
