@@ -1,7 +1,7 @@
 {
 	"description": "项目配置文件。",
 	"setting": {
-		"urlCheck": true,
+		"urlCheck": false,
 		"es6": false,
 		"postcss": true,
 		"minified": true,
@@ -30,7 +30,7 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 11,
+			"current": 9,
 			"list": [
 				{
 					"id": -1,
@@ -82,21 +82,14 @@
 				},
 				{
 					"id": -1,
-					"name": "标准品报价页面",
-					"pathName": "pages/goods/goods",
-					"query": ""
-				},
-				{
-					"id": -1,
-					"name": "标准品报价页面",
-					"pathName": "pages/goods/goods",
-					"query": ""
-				},
-				{
-					"id": -1,
 					"name": "评论页",
 					"pathName": "pages/comment/comment",
 					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "新增地址",
+					"pathName": "pages/ucenter/addressAdd"
 				}
 			]
 		}
