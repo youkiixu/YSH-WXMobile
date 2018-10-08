@@ -1,5 +1,85 @@
 <template >
 <view class="container">
+
+  <view class="profile-info clear">
+    <view class="user_info clear" v-if="userInfo.Id">
+      <view class="user_info_img">
+        <img :src="baseUrl+userInfo.photo" @click="goLogin(true)"/>
+      </view>
+      <view class="user_info_txt">
+        <view class="info_name">{{userInfo.UserName}}</view>
+        <view class="info_member">金牌会员</view>
+      </view>
+    </view>
+
+     <view v-else class="user_info clear">     
+      <view class="user_info_img NotLogged">
+        <img class="icon" src="/static/images/ic_menu_me_pressed.png"/>
+      </view>
+      <view class="user_info_txt">
+        <button v-if="canIUse" open-type="getUserInfo" @getuserinfo="goLogin" class="goLoginBtn" >点击，授权登录~</button>   
+      </view>
+      </view>
+      
+    <view class="set">
+      <img src="/static/images/ic_me_set.png"/>
+    </view>
+  </view>
+  <view class="myOrder">
+      <view class="h clear">
+          <navigator>
+              <text class="t">我的订单</text>
+              <text class="i">查看全部订单</text>            
+          </navigator>
+      </view>
+      <view class="myOrder_con">
+        <view class="con_item">
+          <img src="/static/images/ic_me_pay.png"/>
+          <text class="item_t">待付款</text>
+        </view>
+        <view class="con_item">
+          <img src="/static/images/ic_me_deliver.png"/>
+          <text class="item_t">待发货</text>
+        </view>
+        <view class="con_item">
+          <img src="/static/images/ic_me_collect.png"/>
+          <text class="item_t">待收货</text>
+        </view>
+        <view class="con_item">
+          <img src="/static/images/ic_me_complete.png"/>
+          <text class="item_t">已完成</text>
+        </view>
+      </view>
+
+  </view>
+
+  <view class="ShoppingCar list clear">    
+        <view class="t">购物车</view>
+        <img class="i" src="/static/images/address_right.png" background-size="cover"/>       
+  </view>
+  <view class="collection list clear">    
+        <view class="t">我的收藏</view>
+        <img class="i" src="/static/images/address_right.png" background-size="cover"/>       
+  </view>
+   <view class="integral list clear">    
+        <view class="t">我的积分</view>
+        <img class="i" src="/static/images/address_right.png" background-size="cover"/>       
+  </view>
+   <view class="footprint list clear">    
+        <view class="t">我的足迹</view>
+        <img class="i" src="/static/images/address_right.png" background-size="cover"/>       
+  </view>
+   <view class="address list clear">    
+        <view class="t">地址管理</view>
+        <img class="i" src="/static/images/address_right.png" background-size="cover"/>       
+  </view>
+   <view class="service list clear">    
+        <view class="t">售后客服</view>
+        <img class="i" src="/static/images/address_right.png" background-size="cover"/>       
+  </view>
+
+</view>
+<!-- <view class="container">
   <view class="profile-info">
     <view v-if="userInfo.Id" >
       <img class="avatar" :src="baseUrl+userInfo.photo" @click="goLogin(true)"/>
@@ -88,7 +168,7 @@
     </view>
   </view>
   <view v-if="userInfo.avatar" class="logout" @click="exitLogin">退出登录</view>
-</view>
+</view> -->
 </template>
 
 <script>
@@ -176,14 +256,20 @@ export default {
 page{
     height: 100%;
     width: 100%;
-    background: #f4f4f4;
+    background: #f1f1f1;
 }
 .container{
-    background: #f4f4f4;
+    background: #f1f1f1;
     height: auto;
     overflow: hidden;
     width: 100%;
 }
+ .clear:after{
+    display: block;
+    content:'';
+    clear: both;
+    height:0;
+    }
 .profile-info{
     width: 100%;
     height: 240rpx;
@@ -192,161 +278,164 @@ page{
     flex-wrap: wrap;
     align-items: center;
     justify-content: flex-start;
-    padding: 40rpx 30.25rpx 0;
-    background: #333;
-}
-
-.profile-info .icon{
-    position: absolute;
-    left: 80rpx;
-    top: 83rpx;
-    height: 100rpx;
-    width: 100rpx;
-}
-
-.profile-info .goLogin{
-    /* margin-left: 185rpx; */
-}
-
-.profile-info .goLoginBtn{
-    background-color: #333;
-    color: #fff;
-}
-
-.profile-info .avatar{
-    height: 148rpx;
-    width: 148rpx;
-    border-radius: 50%;
-    /* margin-left: 60rpx; */
-}
-
-.profile-info .info{
-    flex: 1;
-    height: 50rpx;
-    /* margin-left: 70rpx; */
-}
-
-.profile-info .name{
-    display: block;
-    height: 45rpx;
-    line-height: 45rpx;
-    color: #fff;
-    font-size: 37.5rpx;
-    margin-bottom: 10rpx;
-}
-
-.profile-info .level{
-    display: block;
-    height: 30rpx;
-    line-height: 30rpx;
-    margin-bottom: 10rpx;
-    color: #7f7f7f;
-    font-size: 30rpx;
-}
-
-.user-menu{
-    width: 100%;
-    height: auto;
-    overflow: hidden;
+    padding: 0 20rpx;
+    box-sizing: border-box;
     background: #fff;
 }
-
-.user-menu .item{
-    float: left;
-    width: 33%;
-    height: 187.5rpx;
-    border-right: 1px solid rgba(0,0,0,.15);
-    border-bottom: 1px solid rgba(0,0,0,.15);
-    text-align: center;
-}
-
-.user-menu .item .a{
-  display: flex;
-  width: 100%;
+.user_info{
+  width: 80%;
   height: 100%;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  float: left;
+  padding: 40rpx 0;
+  box-sizing: border-box;
+}
+.user_info .user_info_img{
+  width: 160rpx;
+  height: 160rpx;
+  float: left;
+  border-radius: 80rpx;
+}
+.user_info_img img{
+  width: 160rpx;
+  height: 160rpx;
+  text-align: center;
+}
+.user_info_txt{
+  float: left;
+  margin-left: 20rpx;
+  color: #000;
+  font-size: 28rpx;
+  padding: 30rpx 0;
+  box-sizing: border-box;
+}
+ button::after{ 
+    border: none;
+    border-radius: 0;
+} 
+.NotLogged{
+  width: 100rpx;
+  height: 100rpx;
+}
+.NotLogged img{
+  width: 120rpx;
+  height: 120rpx;
+}
+.user_info_txt button{
+  color: #000;
+  font-size: 28rpx;
+  background-color: transparent;
+}
+.info_member{
+  height: 30rpx;
+  padding: 0 12rpx;
+  line-height: 30rpx;
+  font-size: 20rpx;
+  color: #fff;
+  background-color: #dcae71;
+  border-radius: 5rpx;
+  margin-top: 5rpx;
+}
+.profile-info .set{
+  width: 12%;
+  height: 100%;
+  float: right;
+}
+.set img{
+  width: 40rpx;
+  height: 40rpx;
+  text-align: center;
+}
+.myOrder{
+  height: 240rpx;
+  width: 100%;
+  margin-top: 20rpx; 
+  padding: 0 20rpx;
+  box-sizing: border-box;
+  background-color: #fff;
+}
+.myOrder .h {
+  width: 750rpx;
+  height: 75rpx;
+  line-height: 75rpx;
+  background-color: white;
 }
 
-.user-menu .item.no-border {
-    border-right: 0;
+.myOrder .h .t {
+  display: block;
+  float: left;
+  font-size: 28rpx;
+  color: #111111;
 }
 
-.user-menu .item.item-bottom {
-    border-bottom: none;
+.myOrder .h .i {
+  display: block;
+  float: right;
+  font-size: 22rpx;
+  text-align: right;
+  padding-right: 60rpx;
+  color: #c5c5c5;
+  background: url(http://nos.netease.com/mailpub/hxm/yanxuan-wap/p/20150730/style/img/icon-normal/address-right-990628faa7.png) right center no-repeat;
+  background-size: 45rpx;
+  background-position: 85% 48%;
+}
+.myOrder_con{
+  width: 100%;
+  height: 165rpx;
+  padding: 35rpx 0;
+  box-sizing: border-box;
+  display: -webkit-box;
+  display: -webkit-flex;
+}
+.con_item{
+  flex: 1; 
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
+}
+.con_item img{
+  width: 44rpx;
+  height: 44rpx;
+  
+}
+.con_item .item_t{
+  display: block;
+  box-sizing: border-box;
+  font-size: 24rpx;
+  color: #333;
+}
+.ShoppingCar{
+  margin-top: 20rpx;
+}
+.list {
+  width: 750rpx;
+  height: 85rpx;
+  background: #fff;
+  padding: 0 20rpx;
+  box-sizing: border-box; 
 }
 
-.user-menu .icon{
-    margin: 0 auto;
-    display: block;
-    height: 52.803rpx;
-    width: 52.803rpx;
-    margin-bottom: 16rpx;
+.list .t {
+  float: left;
+  width: 600rpx;
+  height: 85rpx;
+  line-height: 85rpx;
+  font-size: 28rpx;
+  color: #111111;
+ 
 }
-
-.user-menu image {
-    opacity: 0.6;
+.list .i {
+  float: right;
+  width: 44rpx;
+  height: 44rpx;
+  margin-top: 20rpx;
 }
-
-.user-menu .icon.order{
-    background: url(http://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/sprites/ucenter-sdf6a55ee56-f2c2b9c2f0.png) 0 -437.5rpx no-repeat;
-    background-size: 52.803rpx;
+.collection{
+  margin-top: 20rpx;
 }
-
-
-.user-menu .icon.coupon{
-    background: url(http://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/sprites/ucenter-sdf6a55ee56-f2c2b9c2f0.png) 0 -62.4997rpx no-repeat;
-    background-size: 52.803rpx;
+.list{
+  border-top: 2rpx solid #f1f1f1;
 }
-
-.user-menu .icon.gift{
-    background: url(http://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/sprites/ucenter-sdf6a55ee56-f2c2b9c2f0.png) 0 -187.5rpx no-repeat;
-    background-size: 52.803rpx;
+.list:nth-child(0),list:nth-child(1){
+  border: none;
 }
-
-.user-menu .icon.address{
-    background: url(http://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/sprites/ucenter-sdf6a55ee56-f2c2b9c2f0.png) 0 0 no-repeat;
-    background-size: 52.803rpx;
-}
-
-.user-menu .icon.security{
-    background: url(http://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/sprites/ucenter-sdf6a55ee56-f2c2b9c2f0.png) 0 -500rpx no-repeat;
-    background-size: 52.803rpx;
-}
-
-.user-menu .icon.kefu{
-    background: url(http://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/sprites/ucenter-sdf6a55ee56-f2c2b9c2f0.png) 0 -312.5rpx no-repeat;
-    background-size: 52.803rpx;
-}
-
-.user-menu .icon.help{
-    background: url(http://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/sprites/ucenter-sdf6a55ee56-f2c2b9c2f0.png) 0 -250rpx no-repeat;
-    background-size: 52.803rpx;
-}
-
-.user-menu .icon.feedback{
-    background: url(http://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/sprites/ucenter-sdf6a55ee56-f2c2b9c2f0.png) 0 -125rpx no-repeat;
-    background-size: 52.803rpx;
-}
-
-.user-menu .txt{
-    display: block;
-    height: 24rpx;
-    width: 100%;
-    font-size: 24rpx;
-    color:#333;
-}
-
-.logout{
-    margin-top: 50rpx;
-    height: 101rpx;
-    width: 100%;
-    line-height: 101rpx;
-    text-align: center;
-    background: #fff;
-    color: #ea3732;
-    font-size: 30rpx;
-}
-
 </style>

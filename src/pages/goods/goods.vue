@@ -21,11 +21,6 @@
         <img :src="item.img_url" background-size="cover"/>
         </swiper-item>
     </swiper>
-    <!-- <view class="service-policy">
-        <view class="item">30天无忧退货</view>
-        <view class="item">48小时快速退款</view>
-        <view class="item">满88元免邮费</view>
-    </view> -->
     <view class="goods-info">
         <view class="c clear">
           <view class="c-price"><text class="price-icon">￥</text>{{detailInfo.Price}}</view>
@@ -45,6 +40,13 @@
         <img class="i" src="/static/images/address_right.png" background-size="cover"/>
         <view class="clear"></view>
     </view>
+
+
+     <view class="address-nav address-attr clear" @click="switchAttrAddre">
+        <view class="t">配送地址<text class="td">{{detailInfo.ShopAddress}}</text></view>
+        <img class="i" src="/static/images/address_right.png" background-size="cover"/>       
+    </view>
+
     <!-- <view class="section-nav section-act">
         <view class="t">
             <view class="label">1个促销:</view>
@@ -52,8 +54,8 @@
             <view class="text">全场满499，额外送糖果</view>
         </view>
         <img class="i" src="/static/images/address_right.png" background-size="cover"/>
-    </view> -->
-    <!-- <view class="comments" v-if="comment.count > 0">
+    </view> 
+     <view class="comments" v-if="comment.count > 0">
         <view class="h">
         <navigator :url="'../comment/comment?valueId=' + goods.id + '&typeId=0'">
             <text class="t">评价({{comment.count > 999 ? '999+' : comment.count}})</text>
@@ -75,7 +77,7 @@
             <view class="imgs" v-if="comment.data.pic_list.length">
             <image class="img" v-for="(item, index) of comment.data.pic_list" :key="item.id" :data-index="index" :src="item.pic_url"/>
             </view>
-            <!-- <view class="clear"></view> -->
+            
           </view>
           <view class="con-text">
             <view class="desc">{{detailInfo.ProductName}}</view>
@@ -88,15 +90,15 @@
           <img class="i" src="/static/images/address_right.png" background-size="cover"/>
           <view class="clear"></view>
       </view>
-      <!-- <view class="section-nav section-act">
+      <view class="section-nav section-act">
           <view class="t">
               <view class="label">1个促销:</view>
               <view class="tag">万圣趴</view>
               <view class="text">全场满499，额外送糖果</view>
           </view>
           <img class="i" src="/static/images/address_right.png" background-size="cover"/>
-      </view> -->
-      <!-- <view class="comments" v-if="comment.count > 0">
+      </view> 
+       <view class="comments" v-if="comment.count > 0">
           <view class="h">
           <navigator :url="'../comment/comment?valueId=' + goods.id + '&typeId=0'">
               <text class="t">评价({{comment.count > 999 ? '999+' : comment.count}})</text>
@@ -131,16 +133,26 @@
       <view class="address-nav address-attr clear" @click="switchAttrAddre">
           <view class="t">店铺地址:{{detailInfo.ShopAddress}}</view>
           <img class="i" src="/static/images/address_right.png" background-size="cover"/>
-          <!-- <view class="clear"></view> -->
-      </view>
+          
+      </view> 
 
-      <!-- <view class="comment">
+       <view class="comment">
         <view class="comment-nav" @click="switchAttrSee">
           <view class="t">评论<text class="t-percent">100%好评</text></view>
           <img class="i" src="/static/images/address_right.png" background-size="cover"/>
       </view>
 
-      </view> -->
+      </view>  -->
+
+
+
+
+
+
+
+
+
+
 
         <view class="comments">
           <view class="h clear">
@@ -217,7 +229,9 @@
           </view>
           </view>
       </view> -->
+    
     </view>
+
     <view class="attr-pop-box" :hidden="!openAttr">
       <view class="attr-pop" >
           <view class="close" @click="closeAttr">
@@ -310,8 +324,8 @@
         <img @click="openCartPage" class="icon" src="/static/images/shopping-car.png"/>
         </view>
     </view>
-    <view class="c" @click="SubmitByProduct">立即购买</view>
-    <view class="r" @click="addToCart" >加入购物车</view>
+    <view class="c" @click="SubmitByProduct">加入购物车</view>
+    <view class="r" @click="addToCart" >立即购买</view>
     </view>
 
 
@@ -908,6 +922,11 @@ export default {
   color: #555555;
   margin-left: 31.25rpx;
 }
+.address-nav .t .td{
+  color: #282828;
+  padding-left: 25rpx;
+  box-sizing: border-box;
+}
 
 .address-nav .i {
   float: right;
@@ -1334,13 +1353,13 @@ export default {
   line-height: 100rpx;
   flex: 1;
   text-align: center;
-  background-color: #ff9600;
-  color: #fff;
+  background-color: #e3fffe;
+  color: #009e96;
   font-size: 28rpx;
 }
 
 .bottom-btn .r {
-  background: #e93b3d;
+  background: #009e96;
   float: left;
   height: 100rpx;
   line-height: 100rpx;
@@ -1477,7 +1496,7 @@ export default {
 }
 
 .spec-con .value.selected {
-  background-color:#dc2121; 
+  background-color:#009e96; 
   color: white;
 }
 .spec-con .number-item{
@@ -1546,13 +1565,14 @@ export default {
   float: left;
   width: 50%;
   text-align: center;
-  background-color: #ff9600;
+  color: #009e96;
+  background-color: #e3fffe;
 }
 .car-btn .car-buy{
   width: 50%;
   float: left;
   text-align: center;
-  background-color: #dc2121;
+  background-color: #009e96;
 }
 
 </style>
