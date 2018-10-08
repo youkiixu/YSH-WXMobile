@@ -1,10 +1,11 @@
 <template >
 <view class="comments">
     <view class="h">
-        <view :class="showType == 0 ? 'active item' : 'item'" @click="switchTab">
+        <view :class="commentType == 1 ? 'active item' : 'item'" @click="switchTab(1)">
             <view class="txt">全部({{allCount}})</view>
         </view>
-        <view :class="showType == 0 ? 'item' : 'active item'" @click="switchTab">
+
+        <view :class="commentType == 4 ? 'active item' : 'item'" @click="switchTab(4)">
             <view class="txt">有图({{hasPicCount}})</view>
         </view>
     </view>
@@ -12,24 +13,24 @@
     <view class="item" v-for="(item, index) in comments" :key="item.id" :data-index="index">
       <view class="info">
         <view class="user">
-          <img :src="item.Images"/>
+          <img :src="baseUrl + item.Images"/>
           <text>{{item.UserName}}</text>
         </view>
-        <view class="time">{{item.AppendDate}}</view>
+        <view class="time">{{item.FinishDate}}</view>
       </view>
-      <view class="comment">{{item.AppendContent}}</view>
-      <view class="imgs">
-        <image class="img" v-for="(iitem, iindex) in item.AppendImages" :key="iitem.id" :src="iitem.AppendImages" :data-index="iindex"/>
+      <view class="comment">{{item.ReviewContent}}</view>
+      <view class="imgs" v-if="item.Images">
+        <image class="img" v-for="(iitem, iindex) in item.AppendImages" :key="iitem.id" :src="baseUrl + iitem.AppendImages" :data-index="iindex"/>
       </view>
       <!-- <view class="imgs" v-if="item.AppendImages.length">
         <image class="img" v-for="(iitem, iindex) of item.AppendImages" :key="iitem.id" :src="iitem.AppendImages" :data-index="iindex"/>
       </view> -->
-      <view class="spec">
+      <!-- <view class="spec">
         <text class="item">{{item.Material}}</text>
-      </view>
-      <view class="customer-service" v-if="item.commentReplyVO">
+      </view> -->
+      <view class="customer-service" v-if="item.ReplyContent">
         <text class="u">卖家回复：</text>
-        <text class="c">{{item.commentReplyVO.ReplyContent}}</text>
+        <text class="c">{{item.ReplyContent}}</text>
       </view>
     </view>
   </view>
@@ -50,13 +51,15 @@ export default {
       picCommentList: [],
       typeId: 0,
       ProductId: 0,
-      pageNo:1,
+      pageNo:0,
       showType: 0,
       allCount: 0,
       hasPicCount: 0,
       allPage: 1,
       picPage: 1,
-      size: 20
+      size: 20,
+      commentType: 1,
+      baseUrl: ''
     }
   },
   async mounted () {
@@ -79,16 +82,17 @@ export default {
         // this.allCount = res.data.allCount;
         // this.hasPicCount = res.data.hasPicCount;
         this.allCount = res.Comments;
-         console.log(res.Comments);
       }
     },
 
     // 获得 评论详情
     async getCommentList () {
       this.ProductId = this.$route.query.valueId     
-      const res = await api.getCommentList({ ProductId: this.ProductId , pageNo: this.pageNo });      
+      this.pageNo++
+      const res = await api.getCommentList({ ProductId: this.ProductId , pageNo: this.pageNo , commentType: this.commentType});      
       if (res.success === true) {
-       this.comments = res.comments;        
+        this.baseUrl = res.RequestUrl
+       this.comments = this.comments.concat(res.comments)        
       }
     },
 
@@ -115,25 +119,15 @@ export default {
     //   }
     // },
     // “全部”和“有图”切换
-    switchTab () {
-      this.showType = this.showType === 1 ? 0 : 1;
+    switchTab (num) {
+      this.commentType = num
+      this.comments = []
+      this.pageNo = 0
       this.getCommentList();
     }
   },
   // 原生的触底加载
   onReachBottom: function () {
-    // console.log('onPullDownRefresh');
-    if (this.showType === 0) {
-      if (this.allCount / this.size < this.allPage) {
-        return false;
-      }
-      this.allPage = this.allPage + 1;
-    } else {
-      if (this.hasPicCount / this.size < this.picPage) {
-        return false;
-      }
-      this.picPage = this.picPage + 1;
-    }
     this.getCommentList();
   },
   // 原生的分享功能
@@ -210,9 +204,9 @@ export default {
 }
 
 .comments .info{
-    height: 127rpx;
+    height: 60rpx;
     width: 100%;
-    padding: 33rpx 0 27rpx 0;
+    padding: 12rpx 0 12rpx 0;
 }
 
 .comments .user{

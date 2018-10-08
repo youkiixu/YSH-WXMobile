@@ -15,18 +15,18 @@
     <view class="list">
       <view class="group-item">
         <view class="goods">
-          <view :class="isEditCart ? 'edit item' : 'item'" v-for="(item, index) of cartGoods" :key="item.Id">
-            <view :class="item.checked ? 'checked checkbox' : 'checkbox'" @click="checkedItem" :data-item-index="index"></view>
+          <view :class="isEditCart ? 'edit item' : 'item'" v-for="(item, index) of cartGoods" :key="item.Id" @click="checkedItem(item)">
+            <view :class="selectGoods.Id == item.Id ? 'checked checkbox' : 'checkbox'"  :data-item-index="index"></view>
             <view class="cart-goods">
-              <img class="img" :src="item.ImagePath"/>
+              <img class="img" :src="baseUrl + item.ImagePath"/>
               <view class="info">
                 <view class="t">
                   <text class="name">{{item.ProductName}}</text>
-                  <text class="num">x{{item.number}}</text>
+                  <text class="num">x{{item.Quantity}}</text>
                 </view>
-                <view class="attr">{{ isEditCart ? '已选择:' : ''}}{{item.goods_specifition_name_value}}</view>
+                <view class="attr">{{item.Color}} {{item.Size}} {{item.Version}} {{item.Material}} {{item.Fashion}} {{item.Grams}} {{item.Ensemble}}</view>
                 <view class="b">
-                  <text class="price">￥{{item.retail_price}}</text>
+                  <text class="price">￥{{item.Price}}</text>
                   <!-- <view class="selnum">
                     <view class="cut" @click="cutNumber" :data-item-index="index">-</view>
                     <input :value="item.number" class="number" disabled="true" type="number" />
@@ -40,9 +40,9 @@
       </view>
     </view>
     <view class="cart-bottom">
-      <view :class="checkedAllStatus ? 'checked checkbox' : 'checkbox'" @click="checkedAll">全选({{cartTotal.checkedGoodsCount}})</view>
-      <view class="total">{{!isEditCart ? '￥'+cartTotal.checkedGoodsAmount : ''}}</view>
-      <!-- <view class="delete" @click="editCart">{{!isEditCart ? '编辑' : '完成'}}</view> -->
+      <!-- <view :class="checkedAllStatus ? 'checked checkbox' : 'checkbox'" @click="checkedAll">全选({{cartTotal.checkedGoodsCount}})</view> -->
+      <view class="total">{{!isEditCart ? '￥'+selectGoods.Price : ''}}</view>
+      <view class="delete" @click="editCart">{{!isEditCart ? '编辑' : '完成'}}</view>
       <view class="checkout" @click="deleteCart" v-if="isEditCart">删除所选</view>
       <view class="checkout" @click="checkoutOrder" v-if="!isEditCart">下单</view>
     </view>
@@ -67,7 +67,7 @@ export default {
       },
       isEditCart: false,
       checkedAllStatus: true,
-      editCartList: [],
+      selectGoods: {},
       pageNo: 1,
       pageSize: 15
     }
@@ -86,14 +86,14 @@ export default {
   methods: {
     // 请求购物车数据
     async getCartList () {
+      const openId = wx.getStorageSync('openId')
       var par = {
-        UserId : this.userInfo.Id,
+        openId : openId,
         pageNo : this.pageNo,
         pageSize : this.pageSize
       }
-      console.log(par)
       const res = await api.getShoppingCartList(par);
-      // console.log('购物车数据,请求结果', res);
+      this.baseUrl = res.RequestUrl
       if(res.success) {
         var resData = JSON.parse(res.data)
         this.cartGoods = this.cartGoods.concat(resData.Table)
@@ -112,29 +112,31 @@ export default {
       });
     },
     // checkbox的点击事件
-    async checkedItem (event) {
-      let itemIndex = event.currentTarget.dataset.itemIndex;
-      // 非编辑状态，发请求后台node进行计算
-      if (!this.isEditCart) {
-        const res = await api.CartChecked({ productIds: this.cartGoods[itemIndex].product_id, isChecked: this.cartGoods[itemIndex].checked ? 0 : 1 });
-        // console.log('点击checkbox后台重新计算,请求结果', res);
-        if (res.errno === 0) {
-          this.cartGoods = res.data.cartList;
-          this.cartTotal = res.data.cartTotal;
-        }
-        this.checkedAllStatus = this.isCheckedAll();
-      } else {
-        // 编辑状态，前端进行简单计算
-        let tmpCartData = this.cartGoods.map(function (element, index, array) {
-          if (index === itemIndex) {
-            element.checked = !element.checked;
-          }
-          return element;
-        });
-        this.cartGoods = tmpCartData;
-        this.checkedAllStatus = this.isCheckedAll();
-        this.cartTotal.checkedGoodsCount = this.getCheckedGoodsCount();
-      }
+    async checkedItem (item) {
+      this.selectGoods = item
+
+      // let itemIndex = event.currentTarget.dataset.itemIndex;
+      // // 非编辑状态，发请求后台node进行计算
+      // if (!this.isEditCart) {
+      //   const res = await api.CartChecked({ productIds: this.cartGoods[itemIndex].product_id, isChecked: this.cartGoods[itemIndex].checked ? 0 : 1 });
+      //   // console.log('点击checkbox后台重新计算,请求结果', res);
+      //   if (res.errno === 0) {
+      //     this.cartGoods = res.data.cartList;
+      //     this.cartTotal = res.data.cartTotal;
+      //   }
+      //   this.checkedAllStatus = this.isCheckedAll();
+      // } else {
+      //   // 编辑状态，前端进行简单计算
+      //   let tmpCartData = this.cartGoods.map(function (element, index, array) {
+      //     if (index === itemIndex) {
+      //       element.checked = !element.checked;
+      //     }
+      //     return element;
+      //   });
+      //   this.cartGoods = tmpCartData;
+      //   this.checkedAllStatus = this.isCheckedAll();
+      //   this.cartTotal.checkedGoodsCount = this.getCheckedGoodsCount();
+      // }
     },
     // 计算选中的商品数量
     getCheckedGoodsCount () {
@@ -441,9 +443,9 @@ page{
 
 
 .cart-view .item .name{
-    height: 28rpx;
+    height: 30rpx;
     max-width: 310rpx;
-    line-height: 28rpx;
+    line-height: 30rpx;
     font-size: 25rpx;
     color: #333;
     overflow: hidden;

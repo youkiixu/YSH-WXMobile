@@ -43,24 +43,22 @@ export default {
       navulHeight: 0,
       navItemHeight: 0,
       listHeight: [],
-      contentHeight: []
+      baseUrl: ''
     }
   },
-  computed: {
-        baseUrl() {
-            return this.$wx.baseUrl
-        }
-    },
   mounted () {
     this.getQitem()
   },
   methods: {
       async getQitem () {
           const res = await api.getQitem({})
+          this.baseUrl = res.RequestUrl
           this.qitemList = JSON.parse(res.data)
+          console.log(this.qitemList.length)
           this.formatData()
       },
       formatData () {
+
           var categoryList = []
           var itemList = this.qitemList
           itemList.map(item => {
@@ -79,6 +77,7 @@ export default {
 
           this.list = this.diff(itemList , arr)
           this.getFoodHeight()
+
       },
       diff (arr1 , arr2) {
         arr1.map(item => {
@@ -88,6 +87,7 @@ export default {
             }
           })
         })
+        console.log(arr2)
         return arr2
       },
       getFoodHeight() {

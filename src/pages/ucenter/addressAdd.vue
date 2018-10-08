@@ -112,6 +112,10 @@ export default {
     ])
     this.$wx.hideLoading()
   },
+  // 每次打开触发，更新数据
+  onShow () {
+    this.address = {}
+  },
   computed: {
     ...mapState([
       'userInfo' ,

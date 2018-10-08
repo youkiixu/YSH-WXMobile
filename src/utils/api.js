@@ -2,7 +2,7 @@ import request from './request'
 
 let ApiKiyUrl = 'http://192.168.0.91:8008/'
 // const ApiKiyUrl = 'http://localhost:7634/'
-// ApiKiyUrl = 'https://www.kiy.cn/'
+ApiKiyUrl = 'https://www.kiy.cn/'
 
 const api = {
   //获取sass首页
@@ -128,6 +128,14 @@ const api = {
   }),
   // 添加或修改用户地址信息
   modifyUserAddress: (paramObj) => request.post('/Wxmobile/UserInfos/ModifyUserAddress', paramObj, {
+    baseURL: ApiKiyUrl
+  }),
+  // 检测二维码是否付款
+  checkSQRCode: (paramObj) => request.post('/Wxmobile/Pay/CheckSQRCode', paramObj, {
+    baseURL: ApiKiyUrl
+  }),
+  // 获取支付二维码
+  getSaaSQRCode: (paramObj) => request.post('/Wxmobile/Pay/GetSaaSQRCode', paramObj, {
     baseURL: ApiKiyUrl
   }),
 }

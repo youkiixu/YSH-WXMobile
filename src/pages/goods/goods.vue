@@ -21,18 +21,12 @@
         <img :src="item.img_url" background-size="cover"/>
         </swiper-item>
     </swiper>
-    <!-- <view class="service-policy">
-        <view class="item">30天无忧退货</view>
-        <view class="item">48小时快速退款</view>
-        <view class="item">满88元免邮费</view>
-    </view> -->
     <view class="goods-info">
         <view class="c clear">
           <view class="c-price"><text class="price-icon">￥</text>{{detailInfo.Price}}</view>
           <view class="c-collect" @click="addCannelCollect">           
               <img class="icon" :src="collectProduImage"/>           
           </view>
-          <!-- <view class="clear"></view> -->
         </view>
         <view class="con-text">
           <view class="desc">{{detailInfo.ProductName}}</view>
@@ -40,107 +34,19 @@
         </view>       
     </view>
 
+
     <view class="section-nav section-attr" @click="switchAttrPop">
-        <view class="t">请选择规格数量</view>
+        <view class="t">规格:{{selectSkuStr.Color}} {{selectSkuStr.Size}} {{selectSkuStr.Version}} {{selectSkuStr.Material}} {{selectSkuStr.Fashion}} {{selectSkuStr.Grams}} {{selectSkuStr.Ensemble}}</view>
         <img class="i" src="/static/images/address_right.png" background-size="cover"/>
         <view class="clear"></view>
     </view>
-    <!-- <view class="section-nav section-act">
-        <view class="t">
-            <view class="label">1个促销:</view>
-            <view class="tag">万圣趴</view>
-            <view class="text">全场满499，额外送糖果</view>
-        </view>
+
+    <view class="section-nav section-attr">
+        <view class="t">商家地址:{{detailInfo.ShopAddress}}</view>
         <img class="i" src="/static/images/address_right.png" background-size="cover"/>
-    </view> -->
-    <!-- <view class="comments" v-if="comment.count > 0">
-        <view class="h">
-        <navigator :url="'../comment/comment?valueId=' + goods.id + '&typeId=0'">
-            <text class="t">评价({{comment.count > 999 ? '999+' : comment.count}})</text>
-            <text class="i">查看全部</text>
-        </navigator>
-        </view>
-        <view class="b">
-        <view class="item">
-            <view class="info">
-            <view class="user">
-                <img :src="comment.data.avatar"/>
-                <text>{{comment.data.nickname}}</text>
-            </view>
-            <view class="time">{{comment.data.add_time}}</view>
-            </view>
-            <view class="content">
-            {{comment.data.content}}
-            </view>
-            <view class="imgs" v-if="comment.data.pic_list.length">
-            <image class="img" v-for="(item, index) of comment.data.pic_list" :key="item.id" :data-index="index" :src="item.pic_url"/>
-            </view>
-            <!-- <view class="clear"></view> -->
-          </view>
-          <view class="con-text">
-            <view class="desc">{{detailInfo.ProductName}}</view>
-            <view class="notes">{{detailInfo.ShortDescription}}</view>
-          </view>       
-      </view>
-
-      <view class="section-nav section-attr" @click="switchAttrPop">
-          <view class="t">规格:{{selectSkuStr.Color}} {{selectSkuStr.Size}} {{selectSkuStr.Version}} {{selectSkuStr.Material}} {{selectSkuStr.Fashion}} {{selectSkuStr.Grams}} {{selectSkuStr.Ensemble}}</view>
-          <img class="i" src="/static/images/address_right.png" background-size="cover"/>
-          <view class="clear"></view>
-      </view>
-      <!-- <view class="section-nav section-act">
-          <view class="t">
-              <view class="label">1个促销:</view>
-              <view class="tag">万圣趴</view>
-              <view class="text">全场满499，额外送糖果</view>
-          </view>
-          <img class="i" src="/static/images/address_right.png" background-size="cover"/>
-      </view> -->
-      <!-- <view class="comments" v-if="comment.count > 0">
-          <view class="h">
-          <navigator :url="'../comment/comment?valueId=' + goods.id + '&typeId=0'">
-              <text class="t">评价({{comment.count > 999 ? '999+' : comment.count}})</text>
-              <text class="i">查看全部</text>
-          </navigator>
-          </view>
-          <view class="b">
-          <view class="item">
-              <view class="info">
-              <view class="user">
-                  <img :src="comment.data.avatar"/>
-                  <text>{{comment.data.nickname}}</text>
-              </view>
-              <view class="time">{{comment.data.add_time}}</view>
-              </view>
-              <view class="content">
-              {{comment.data.content}}
-              </view>
-              <view class="imgs" v-if="comment.data.pic_list.length">
-              <image class="img" v-for="(item, index) of comment.data.pic_list" :key="item.id" :data-index="index" :src="item.pic_url"/>
-              </view>
-              <view class="spec">白色 2件</view>
-          </view>
-          </view>
-           <navigator :url="'../comment/comment?valueId=' + id + '&typeId=0'">
-             <view class="seeall">查看全部评价</view>
-          </navigator>
-          
-        </view>   
-      </view> 
-
-      <view class="address-nav address-attr clear" @click="switchAttrAddre">
-          <view class="t">店铺地址:{{detailInfo.ShopAddress}}</view>
-          <img class="i" src="/static/images/address_right.png" background-size="cover"/>
-          <!-- <view class="clear"></view> -->
-      </view>
-
-      <!-- <view class="comment">
-        <view class="comment-nav" @click="switchAttrSee">
-          <view class="t">评论<text class="t-percent">100%好评</text></view>
-          <img class="i" src="/static/images/address_right.png" background-size="cover"/>
-      </view>
-
-      </view> -->
+        <view class="clear"></view>
+    </view>
+      
 
         <view class="comments">
           <view class="h clear">
@@ -179,44 +85,6 @@
             <wxParse :content="goodDetailHTMLstr" />
           </view>
         </view>
-
-
-      <!-- <div>
-          <wxParse :content="goodDetailHTMLstr" />
-      </div> -->
-      <!-- <view class="common-problem">
-          <view class="h">
-          <view class="line"></view>
-          <text class="title">常见问题</text>
-          </view>
-          <view class="b">
-          <view class="item" v-for="(item, index) of issueList" :key="item.id" :data-index="index">
-              <view class="question-box">
-              <text class="spot"></text>
-              <text class="question">{{item.question}}</text>
-              </view>
-              <view class="answer">
-              {{item.answer}}
-              </view>
-          </view>
-          </view>
-      </view> -->
-
-      <!-- <view class="related-goods" v-if="relatedGoods.length">
-          <view class="h">
-          <view class="line"></view>
-          <text class="title">大家都在看</text>
-          </view>
-          <view class="b">
-          <view class="item" v-for="(item, index) of relatedGoods" :key="item.id" :data-index="index">
-              <navigator :url="'/pages/goods/goods?id=' + item.id">
-              <img class="img" :src="item.list_pic_url" background-size="cover"/>
-              <text class="name">{{item.name}}</text>
-              <text class="price">￥{{item.retail_price}}</text>
-              </navigator>
-          </view>
-          </view>
-      </view> -->
     </view>
     <view class="attr-pop-box" :hidden="!openAttr">
       <view class="attr-pop" >
@@ -293,9 +161,12 @@
               </view>
           </view>
           </scroll-view>
-          <view class="car-btn clear">
+          <view class="car-btn clear" v-if="!SubmitByProductType">
               <view class="car-add" @click="addToCart">加入购物车</view>
               <view class="car-buy" @click="SubmitByProduct">立即购买</view>
+          </view>
+          <view class="car-btn clear" v-if="SubmitByProductType">
+              <view class="car-buy" style="width:100%;" @click="SubmitByProduct">立即购买</view>
           </view>
       </view>
     </view>
@@ -310,24 +181,11 @@
         <img @click="openCartPage" class="icon" src="/static/images/shopping-car.png"/>
         </view>
     </view>
-    <view class="c" @click="SubmitByProduct">立即购买</view>
-    <view class="r" @click="addToCart" >加入购物车</view>
+    <view class="c" @click="addToCart">加入购物车</view>
+    <view class="r" @click="SubmitByProduct" >立即购买</view>
     </view>
 
 
-    <!-- <view class="bottom-btn">
-    <view class="l l-collect" @click="addCannelCollect">
-        <img class="icon" :src="collectBackImage"/>
-    </view>
-    <view class="l l-cart">
-        <view class="box">
-        <text class="cart-count">{{cartGoodsCount}}</text>
-        <img @click="openCartPage" class="icon" src="/static/images/ic_menu_shoping_nor.png"/>
-        </view>
-    </view>
-    <view class="c" @click="SubmitByProduct">立即购买</view>
-    <view class="r" @click="addToCart" >加入购物车</view>
-    </view> -->
 
 </view>
 </template>
@@ -371,8 +229,6 @@ export default {
       checkedSpecText: '请选择规格数量',
       openAttr: false,
       collectProduImage:'/static/images/collect.png',
-      noCollectImage: '/static/images/icon_collect.png',
-      hasCollectImage: '/static/images/icon_collect_checked.png',
       collectBackImage: '/static/images/share.png',
       goodDetailHTMLstr: '',
       skuInfo: [],
@@ -398,7 +254,8 @@ export default {
       strYjtype: '请选择配送方式',
       Yjtype: 0,
       YjUse: 0,
-      Stock: 0
+      Stock: 0,
+      SubmitByProductType: false
     }
   },
   mounted () {
@@ -435,7 +292,6 @@ export default {
       this.getSkuPrice()
       // 默认选中配送方式
       this.selectWuliu()
-
       this.$wx.hideLoading()
     },
     // 获取商品SKu详情
@@ -556,6 +412,7 @@ export default {
     // 打开商品规格选择弹窗
     switchAttrPop () {
       if (this.openAttr === false) {
+        this.SubmitByProductType = false
         this.openAttr = !this.openAttr;
       }
     },
@@ -565,21 +422,7 @@ export default {
     },
     // 购物车的五角星，添加或是取消收藏
     async addCannelCollect () {
-      // const res = await api.CollectAddOrDelete({ typeId: 0, valueId: this.id });
-      // // console.log('添加或取消收藏', res);
-      // if (res.errno === 0) {
-      //   if (res.data.type === 'add') {
-      //     this.collectBackImage = this.hasCollectImage;
-      //   } else {
-      //     this.collectBackImage = this.noCollectImage;
-      //   }
-      // } else {
-      //   wx.showToast({
-      //     image: '/static/images/icon_error.png',
-      //     title: res.errmsg,
-      //     mask: true
-      //   });
-      // }
+
     },
     // 跳转到购物车页面
     openCartPage () {
@@ -591,6 +434,7 @@ export default {
     SubmitByProduct () {
       if (this.openAttr === false) {
         // 打开规格选择弹窗
+        this.SubmitByProductType = true
         this.openAttr = !this.openAttr;
       } else { 
         if(this.checkStock()) return
@@ -600,6 +444,7 @@ export default {
           Yjtype: this.Yjtype
           // YjUse: this.YjUse
         }
+        
         this.submitByProductId(par)
       }
     },
@@ -607,6 +452,7 @@ export default {
     async addToCart () {
       if (this.openAttr === false) {
         // 打开规格选择弹窗
+        this.SubmitByProductType = false
         this.openAttr = !this.openAttr;
       } else {
         if(this.checkStock()) return
@@ -621,7 +467,9 @@ export default {
           // YjUse: this.YjUse
         }
         this.$wx.showLoading()
+        console.log(JSON.stringify(par))
         const res = await api.modifyShoppingCart(par)
+        
         this.$wx.hideLoading()
         if(res.success) {
           this.$wx.showSuccessToast('加入购物车成功')
@@ -690,7 +538,11 @@ export default {
       desc: '印生活SASS商城',
       path: '/pages/goods/goods'
     }
-  }
+  },
+    // 每次打开触发，更新数据
+  onShow () {
+    this.openAttr === false
+  },
 }
 </script>
 

@@ -98,6 +98,39 @@ function toLogin(isBack) {
 
 }
 
+function orderStatus(status) {
+  switch (status) {
+    case 1:
+      return '待付款'
+      break;
+    case 2:
+      return '待发货'
+      break;
+    case 3:
+      return '待收货'
+      break;
+    case 4:
+      return '已关闭'
+      break;
+    case 5:
+      return '已完成'
+      break;
+    
+    case 7:
+      return '未评价'
+    break;
+    case 8:
+      return '已审稿'
+    break;
+    case 0:
+      return '待审稿'
+    break;
+    default:
+      return '暂无状态'
+      break;
+  }
+}
+
 
 const baseUrl = 'http://192.168.0.91:8008/'
 // const baseUrl = 'http://www.kiy.cn/'
@@ -112,7 +145,8 @@ const wxFun = {
     formatBoolToInt,
     toGoodsDetail,
     baseUrl,
-    toLogin
+    toLogin,
+    orderStatus
 }
 
 export default wxFun

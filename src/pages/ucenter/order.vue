@@ -54,10 +54,12 @@ export default {
     // 获取用户订单数据
     async getUserOrderList () {
         const openId = wx.getStorageSync('openId')
+        this.$wx.showLoading()
         const res = await api.getUserOrderList({ openId: openId , pageNo: this.pageNo , pageSize: this.pageSize })               
+        this.$wx.hideLoading()
         if (res.success) {
             const data = JSON.parse(res.data)      
-            this.orderList = data; 
+            this.orderList = this.orderList.concat(data)
         } else {
             // 没有登陆请登录
             this.$wx.toLogin()
@@ -176,6 +178,7 @@ page{
     line-height: 44rpx;
     color: #333;
     font-size: 30rpx;
+    overflow: hidden;
 }
 
 .order .goods .number{

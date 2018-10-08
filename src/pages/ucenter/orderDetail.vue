@@ -6,15 +6,15 @@
         <view class="item-c">
             <view class="l">实付：<text class="cost">￥{{orderInfo.ProductTotalAmount}}</text></view>
             <view class="r">
-                <view class="btn" @click="cancelOrder">取消订单</view>
-                <view class="btn active" @click="payOrder">去付款</view>
+                <view class="btn" @click="cancelOrder" v-if="orderInfo.OrderStatus != 4">取消订单</view>
+                <view class="btn active" @click="payOrder" v-if="orderInfo.OrderStatus != 4">去付款</view>
             </view>
         </view>
     </view>
     <view class="order-goods">
         <view class="h">
             <view class="label">商品信息</view>
-            <view class="status">{{orderInfo.OrderStatus}}</view>
+            <view class="status">{{orderInfo.OrderStatusStr}}</view>
         </view>
         <view class="goods">
             <view class="item" v-for="(item, index) in orderGoods" :key="item.id" :data-index="index">
@@ -23,11 +23,12 @@
                 </view>
                 <view class="info">
                     <view class="t">
-                        <text class="name">{{item.ProductName}}</text>
-                        <text class="number">x{{item.Quantity}}</text>
+                        <text class="name">{{orderInfo.ProductName}}</text>
+                        
+                        <text class="number">x{{orderInfo.Quantity}}</text>
                     </view>
-                    <view class="attr">{{item.Production}}</view>
-                    <view class="price">￥{{item.ReceivedAmount}}</view>
+                    <view class="attr">{{item.ParaStr}}</view>
+                    <!-- <view class="price">￥{{item.ReceivedAmount}}</view> -->
                 </view>
             </view>
         </view>
@@ -35,10 +36,10 @@
     <view class="order-bottom">
         <view class="address">
             <view class="t">
-                <text class="name">{{orderInfo.Address}}</text>
+                <text class="name">{{orderInfo.ShipTo}}</text>
                 <text class="mobile">{{orderInfo.CellPhone}}</text>
             </view>
-            <view class="b">{{orderInfo.ShipTo + orderInfo.Address}}</view>
+            <view class="b">{{orderInfo.RegionFullName + orderInfo.Address}}</view>
         </view>
         <view class="total">
             <view class="t">
@@ -77,38 +78,47 @@ export default {
     ...mapState(['userInfo'])  
   },
   async mounted () {
+    this.OrderId = this.$route.query.Id 
     await Promise.all([
       this.getUserOrderDetail()
     ])
+  },
+  // 每次打开触发，更新数据
+  onShow () {
+    this.orderInfo = [];
+    this.orderGoods = []; 
   },
   methods: {
     // 获取用户订单数据
     async getUserOrderDetail (e) {
        const openId = wx.getStorageSync('openId')
-       this.OrderId = this.$route.query.Id 
-       const res = await api.getUserOrderDetail({ openId : openId, orderId : this.OrderId });
-       const data = JSON.parse(res.data)               
-      if (res.success === true) {
-        this.orderInfo = data[0];
-        console.log(this.orderInfo)
-        this.orderGoods = data;   
-      }
-    },
-    // 制作倒计时用的，暂时不需要
-    payTimer () {
-      let orderInfo = this.orderInfo;
-      setInterval(() => {
-        // console.log(orderInfo);
-        orderInfo.add_time -= 1;
-        this.orderInfo = orderInfo;
-      }, 1000);
+        this.$wx.showLoading()
+        const res = await api.getUserOrderDetail({ openId : openId, orderId : this.OrderId });
+        this.$wx.hideLoading()
+
+        if (res.success === true) {
+        const data = JSON.parse(res.data)               
+            this.orderInfo = data[0];
+            this.orderGoods = data[1].QuoteRecord;   
+            this.orderInfo.OrderStatusStr = this.$wx.orderStatus(this.orderInfo.OrderStatus)
+            console.log(data[0])
+        }
     },
     // 点击“去付款”
     async payOrder () {
       let that = this;
-      const res = await api.PayPrepayIdFunc({ orderId: this.orderId || 15 });
+      const openId = wx.getStorageSync('openId')
+      const miniProgram = wx.getAccountInfoSync()
+      var par = {
+          openId: openId,
+          pappid: miniProgram.miniProgram.appId,
+          orderIds: this.OrderId
+      }
+      console.log(JSON.stringify(par))
+      const res = await api.getSaaSQRCode(par);
+      console.log(res)
       // console.log('订单详情页去付款,请求结果', res);
-      if (res.errno === 0) {
+      if (res.success) {
         // 原生的支付方法
         wx.requestPayment({
           'timeStamp': res.data.timeStamp,
@@ -117,11 +127,13 @@ export default {
           'signType': res.data.signType,
           'paySign': res.data.paySign,
           'success': function (res) {
+              console.log(res)
             wx.redirectTo({
               url: '../pay/payResult?status=1&orderId=' + that.orderId
             })
           },
           'fail': function (res) {
+              console.log(res)
             wx.redirectTo({
               url: '../pay/payResult?status=0&orderId=' + that.orderId
             })
@@ -148,10 +160,13 @@ export default {
             OrderId: this.OrderId,
             UserId: this.userInfo.Id
         }
-        debugger
-
         const res = await api.setOrderClose(par)
-        console.log(res)
+        if(res.success){
+            this.$wx.showSuccessToast(res.msg)
+            this.getUserOrderDetail()
+        } else {
+            this.$wx.showSuccessToast(res.msg)
+        }
 
     }
   },
