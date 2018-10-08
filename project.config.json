@@ -9,7 +9,7 @@
 	},
 	"miniprogramRoot": "dist/",
 	"compileType": "miniprogram",
-	"appid": "wx9c20c7365b5c702f",
+	"appid": "wxe1c5fe5c72be84e6",
 	"projectname": "kiy-wx",
 	"libVersion": "2.3.0",
 	"condition": {
@@ -66,12 +66,6 @@
 					"id": -1,
 					"name": "全部分类",
 					"pathName": "pages/catalog/catalog",
-					"query": ""
-				},
-				{
-					"id": -1,
-					"name": "标准品报价页面",
-					"pathName": "pages/goods/goods",
 					"query": ""
 				},
 				{

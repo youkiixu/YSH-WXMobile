@@ -1,21 +1,79 @@
 <template >
 <view>
     <view class="container">
-      <swiper class="goodsimgs" indicator-dots="true" autoplay="true" interval="3000" duration="1000">
-          <swiper-item v-for="(item, index) of gallery" :key="item.id" :data-index="index">
-          <img :src="item.img_url" background-size="cover"/>
-          </swiper-item>
-      </swiper>
-      <!-- <view class="service-policy">
-          <view class="item">30天无忧退货</view>
-          <view class="item">48小时快速退款</view>
-          <view class="item">满88元免邮费</view>
-      </view> -->
-      <view class="goods-info">
-          <view class="c clear">
-            <view class="c-price"><text class="price-icon">￥</text>{{detailInfo.Price}}</view>
-            <view class="c-collect" @click="addCannelCollect">           
-                <img class="icon" :src="collectBackImage"/>           
+      <view class="goodshead">
+        <view class="head-classify">
+          <view class="classify-item produ">
+            <img src="/static/images/posi.png"/>
+            商品
+          </view>
+          <navigator :url="'../comment/comment?valueId=' + id + '&typeId=0'">
+            <view class="classify-item com">评论</view>
+          </navigator>          
+          <view class="classify-item detail">详情</view>
+        </view>
+        <view class="head-share">
+          <img src="/static/images/upload.png"/>
+        </view>
+      </view>
+    <swiper class="goodsimgs" indicator-dots="true" autoplay="true" interval="3000" duration="1000">
+        <swiper-item v-for="(item, index) of gallery" :key="item.id" :data-index="index">
+        <img :src="item.img_url" background-size="cover"/>
+        </swiper-item>
+    </swiper>
+    <!-- <view class="service-policy">
+        <view class="item">30天无忧退货</view>
+        <view class="item">48小时快速退款</view>
+        <view class="item">满88元免邮费</view>
+    </view> -->
+    <view class="goods-info">
+        <view class="c clear">
+          <view class="c-price"><text class="price-icon">￥</text>{{detailInfo.Price}}</view>
+          <view class="c-collect" @click="addCannelCollect">           
+              <img class="icon" :src="collectProduImage"/>           
+          </view>
+          <!-- <view class="clear"></view> -->
+        </view>
+        <view class="con-text">
+          <view class="desc">{{detailInfo.ProductName}}</view>
+          <view class="notes">{{detailInfo.ShortDescription}}</view>
+        </view>       
+    </view>
+
+    <view class="section-nav section-attr" @click="switchAttrPop">
+        <view class="t">请选择规格数量</view>
+        <img class="i" src="/static/images/address_right.png" background-size="cover"/>
+        <view class="clear"></view>
+    </view>
+    <!-- <view class="section-nav section-act">
+        <view class="t">
+            <view class="label">1个促销:</view>
+            <view class="tag">万圣趴</view>
+            <view class="text">全场满499，额外送糖果</view>
+        </view>
+        <img class="i" src="/static/images/address_right.png" background-size="cover"/>
+    </view> -->
+    <!-- <view class="comments" v-if="comment.count > 0">
+        <view class="h">
+        <navigator :url="'../comment/comment?valueId=' + goods.id + '&typeId=0'">
+            <text class="t">评价({{comment.count > 999 ? '999+' : comment.count}})</text>
+            <text class="i">查看全部</text>
+        </navigator>
+        </view>
+        <view class="b">
+        <view class="item">
+            <view class="info">
+            <view class="user">
+                <img :src="comment.data.avatar"/>
+                <text>{{comment.data.nickname}}</text>
+            </view>
+            <view class="time">{{comment.data.add_time}}</view>
+            </view>
+            <view class="content">
+            {{comment.data.content}}
+            </view>
+            <view class="imgs" v-if="comment.data.pic_list.length">
+            <image class="img" v-for="(item, index) of comment.data.pic_list" :key="item.id" :data-index="index" :src="item.pic_url"/>
             </view>
             <!-- <view class="clear"></view> -->
           </view>
@@ -63,16 +121,12 @@
               <view class="spec">白色 2件</view>
           </view>
           </view>
-      </view> -->
-      <!-- <view class="goods-attr">
-          <view class="t">商品参数</view>
-          <view class="l">
-          <view class="item" v-for="(item, index) of attribute" :key="item.name" :data-index="index">
-              <text class="left">{{item.name}}</text>
-              <text class="right">{{item.value}}</text>
-          </view>
-          </view>
-      </view> -->
+           <navigator :url="'../comment/comment?valueId=' + id + '&typeId=0'">
+             <view class="seeall">查看全部评价</view>
+          </navigator>
+          
+        </view>   
+      </view> 
 
       <view class="address-nav address-attr clear" @click="switchAttrAddre">
           <view class="t">店铺地址:{{detailInfo.ShopAddress}}</view>
@@ -245,7 +299,23 @@
           </view>
       </view>
     </view>
+
     <view class="bottom-btn">
+    <view class="l l-collect" @click="addCannelCollect">
+        <img class="icon" :src="collectBackImage"/>
+    </view>
+    <view class="l l-cart">
+        <view class="box">
+        <text class="cart-count">{{cartGoodsCount}}</text>
+        <img @click="openCartPage" class="icon" src="/static/images/shopping-car.png"/>
+        </view>
+    </view>
+    <view class="c" @click="SubmitByProduct">立即购买</view>
+    <view class="r" @click="addToCart" >加入购物车</view>
+    </view>
+
+
+    <!-- <view class="bottom-btn">
     <view class="l l-collect" @click="addCannelCollect">
         <img class="icon" :src="collectBackImage"/>
     </view>
@@ -257,7 +327,8 @@
     </view>
     <view class="c" @click="SubmitByProduct">立即购买</view>
     <view class="r" @click="addToCart" >加入购物车</view>
-    </view>
+    </view> -->
+
 </view>
 </template>
 
@@ -299,9 +370,10 @@ export default {
       number: 1,
       checkedSpecText: '请选择规格数量',
       openAttr: false,
+      collectProduImage:'/static/images/collect.png',
       noCollectImage: '/static/images/icon_collect.png',
       hasCollectImage: '/static/images/icon_collect_checked.png',
-      collectBackImage: '/static/images/icon_collect.png',
+      collectBackImage: '/static/images/share.png',
       goodDetailHTMLstr: '',
       skuInfo: [],
       selectSku: {
@@ -636,6 +708,49 @@ export default {
   clear: both;
   height:0;
 }
+.goodshead{
+  width: 750rpx;
+  height: 65rpx;
+  background-color: white;
+  position: relative;
+}
+.head-classify{
+  width: 428rpx;
+  height: 65rpx;
+  margin: 0 auto;
+  display: -webkit-box;
+  display: -webkit-flex;
+}
+.classify-item{
+  flex: 1;
+  text-align: center;
+  line-height: 65rpx;
+  color: #282828;
+  font-size: 32rpx;
+}
+.classify-item:first-child{
+  margin-left: 0;
+}
+.classify-item img{
+  width: 20rpx;
+  height: 25rpx;
+  text-align: left;
+  line-height: 65rpx;
+}
+.head-share{
+  width: 30rpx;
+  height: 30rpx;
+  position: absolute;
+  right: 47rpx;
+  top: 17rpx;
+  display: flex;
+  align-items:center;
+  justify-content: space-around;
+}
+.head-share img{
+   width: 30rpx;
+   height: 30rpx;
+}
 .goodsimgs {
   width: 750rpx;
   height: 750rpx;
@@ -681,21 +796,22 @@ export default {
 }
 .goods-info .c-price{ 
   color: #dc2121;
-  font-size: 48rpx;
+  font-size: 42rpx;
   float: left;
 }
 .c-price .price-icon{
-  font-size: 30rpx;
+  font-size: 34rpx;
 }
 .goods-info .c-collect{
   float: right;
-  width: 30rpx;
-  height: 30rpx;
+  margin-top: 3rpx;
+  width: 44rpx;
+  height: 44rpx;
 
 }
 .goods-info .c-collect img{
-  width: 30rpx;
-  height: 30rpx;
+  width: 44rpx;
+  height: 44rpx;
   text-align: center;
 }
 .goods-info .con-text{
@@ -704,13 +820,12 @@ export default {
 }
 .con-text .desc{
   color: #282828;
-  font-size: 34rpx;
-  font-size: 700;
+  font-size: 32rpx;
 }
 .con-text .notes{
   margin-top: 15rpx;
   color: #828282;
-  font-size: 30rpx;
+  font-size: 22rpx;
 }
 .section-nav {
   width: 750rpx;
@@ -724,7 +839,7 @@ export default {
   width: 600rpx;
   height: 100rpx;
   line-height: 100rpx;
-  font-size: 34rpx;
+  font-size: 28rpx;
   color: #555555;
   margin-left: 31.25rpx;
 }
@@ -789,7 +904,7 @@ export default {
   width: 600rpx;
   height: 100rpx;
   line-height: 100rpx;
-  font-size: 34rpx;
+  font-size: 28rpx;
   color: #555555;
   margin-left: 31.25rpx;
 }
@@ -823,14 +938,14 @@ export default {
   display: block;
   float: left;
   width: 50%;
-  font-size: 34rpx;
+  font-size: 28rpx;
   color: #555555;
 }
 
 .comments .h .i {
   display: block;
   float: right;
-  font-size: 30rpx;
+  font-size: 22rpx;
   text-align: right;
   padding-right: 50rpx;
   color: #c5c5c5;
@@ -885,9 +1000,10 @@ export default {
   box-sizing: border-box;
 }
 .comments .seeall{
-  font-size: 34rpx;
+  font-size: 28rpx;
   color: #555555;
   text-align: center;
+  margin-top: 5rpx;
 }
 .proDetail{
   margin-top: 30rpx;
@@ -898,7 +1014,7 @@ export default {
   height: 75rpx;
   line-height: 75rpx;
   text-align: center;
-  font-size: 34rpx;
+  font-size: 28rpx;
   color: #555555;
 }
 
@@ -1165,17 +1281,18 @@ export default {
 .bottom-btn .l {
   float: left;
   height: 100rpx;
-  width: 162rpx;
-  border: 1px solid #f4f4f4;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .bottom-btn .l.l-collect {
-  border-right: none;
-  border-left: none;
+  width: 100rpx;
+  border-right: 3rpx solid #f1f1f1;;
   text-align: center;
+}
+.bottom-btn .l.l-cart {
+  width: 130rpx;
 }
 
 .bottom-btn .l.l-cart .box {
@@ -1214,24 +1331,23 @@ export default {
 .bottom-btn .c {
   float: left;
   height: 100rpx;
-  line-height: 96rpx;
+  line-height: 100rpx;
   flex: 1;
   text-align: center;
-  color: #333;
-  border-top: 1px solid #f4f4f4;
-  border-bottom: 1px solid #f4f4f4;
-  
+  background-color: #ff9600;
+  color: #fff;
+  font-size: 28rpx;
 }
 
 .bottom-btn .r {
-  border: 1px solid #b4282d;
-  background: #b4282d;
+  background: #e93b3d;
   float: left;
   height: 100rpx;
-  line-height: 96rpx;
+  line-height: 100rpx;
   flex: 1;
   text-align: center;
   color: #fff;
+  font-size: 28rpx;
 }
 
 .attr-pop-box {
@@ -1296,23 +1412,23 @@ export default {
   align-items: center;
 }
 .attr-pop .p {
-  font-size: 40rpx;
+  font-size: 38rpx;
   color: #dc2121;
   height: 32rpx;
   line-height: 32rpx;
   margin-bottom: 10rpx;
 }
 .attr-pop .p-icon{
-  font-size: 28rpx;
+  font-size: 30rpx;
 }
 .attr-pop .s{
-  font-size: 28rpx;
+  font-size: 20rpx;
   color: #555555;
   height: 40rpx;
   line-height: 40rpx;
 }
 .attr-pop .a {
-  font-size: 30rpx;
+  font-size: 24rpx;
   color: #333;
   line-height: 35rpx;
 }
@@ -1342,15 +1458,15 @@ export default {
 
 .spec-con .value {
   display: inline-block;
-  height: 80rpx;
-  line-height: 80rpx;
+  height: 55rpx;
+  line-height: 55rpx;
   text-align: center;
-  margin-right: 22rpx;
-  margin-bottom: 22rpx;
-  padding: 0 44rpx;
+  margin-right: 24rpx;
+  margin-bottom: 24rpx;
+  padding: 0 26rpx;
   box-sizing: border-box;
   background-color: #f4f4f4;
-  font-size: 30rpx;
+  font-size: 24rpx;
   color: #242424;
   border-radius: 10rpx;
 }
@@ -1420,7 +1536,7 @@ export default {
   width: 100%;
   line-height: 100rpx;
   color: white;
-  font-size: 34rpx;
+  font-size: 28rpx;
   position:fixed;
   left: 0;
   bottom: 0;

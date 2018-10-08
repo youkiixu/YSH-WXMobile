@@ -9,24 +9,27 @@
         </view>
     </view>
   <view class="b">
-    <view class="item" v-for="(item, index) of comments" :key="item.id" :data-index="index">
+    <view class="item" v-for="(item, index) in comments" :key="item.id" :data-index="index">
       <view class="info">
         <view class="user">
-          <img :src="item.user_info.avatar"/>
-          <text>{{item.user_info.nickname}}</text>
+          <img :src="item.Images"/>
+          <text>{{item.UserName}}</text>
         </view>
-        <view class="time">{{item.add_time}}</view>
+        <view class="time">{{item.AppendDate}}</view>
       </view>
-      <view class="comment">{{item.content}}</view>
-      <view class="imgs" v-if="item.pic_list.length">
-        <image class="img" v-for="(iitem, iindex) of item.pic_list" :key="iitem.id" :src="iitem.pic_url" :data-index="iindex"/>
+      <view class="comment">{{item.AppendContent}}</view>
+      <view class="imgs">
+        <image class="img" v-for="(iitem, iindex) in item.AppendImages" :key="iitem.id" :src="iitem.AppendImages" :data-index="iindex"/>
       </view>
+      <!-- <view class="imgs" v-if="item.AppendImages.length">
+        <image class="img" v-for="(iitem, iindex) of item.AppendImages" :key="iitem.id" :src="iitem.AppendImages" :data-index="iindex"/>
+      </view> -->
       <view class="spec">
-        <text class="item">白色 2件</text>
+        <text class="item">{{item.Material}}</text>
       </view>
       <view class="customer-service" v-if="item.commentReplyVO">
         <text class="u">卖家回复：</text>
-        <text class="c">{{item.commentReplyVO.replyContent}}</text>
+        <text class="c">{{item.commentReplyVO.ReplyContent}}</text>
       </view>
     </view>
   </view>
@@ -57,10 +60,10 @@ export default {
     }
   },
   async mounted () {
-    if (this.$route.query.typeId && this.$route.query.valueId) {
-      this.typeId = parseInt(this.$route.query.typeId);
-      this.valueId = parseInt(this.$route.query.valueId);
-    }
+    // if (this.$route.query.typeId && this.$route.query.valueId) {
+    //   this.typeId = parseInt(this.$route.query.typeId);
+    //   this.valueId = parseInt(this.$route.query.valueId);
+    // }
     await Promise.all([
       this.getCommentCount(),
       this.getCommentList()
@@ -70,32 +73,22 @@ export default {
   methods: {
     // 获得 评论数量
     async getCommentCount () {
-      const res = await api.getCommentCount({ valueId: this.valueId, typeId: this.typeId });
-      // console.log('评论数量', res);
-      if (res.errno === 0) {
-        this.allCount = res.data.allCount;
-        this.hasPicCount = res.data.hasPicCount;
+      this.ProductId = this.$route.query.valueId      
+      const res = await api.getCommentCount({ ProductId: this.ProductId });
+      if (res.success === true) {
+        // this.allCount = res.data.allCount;
+        // this.hasPicCount = res.data.hasPicCount;
+        this.allCount = res.Comments;
+         console.log(res.Comments);
       }
     },
 
     // 获得 评论详情
     async getCommentList () {
       this.ProductId = this.$route.query.valueId     
-      const res = await api.getCommentList({
-        ProductId: this.ProductId,
-        pageNo: this.pageNo
-        });
-      // console.log('评论详情', res);
+      const res = await api.getCommentList({ ProductId: this.ProductId , pageNo: this.pageNo });      
       if (res.success === true) {
-        if (this.showType === 0) {
-          this.allCommentList = this.allCommentList.concat(res.data.data);
-          this.allPage = res.data.currentPage;
-          this.comments = this.allCommentList.concat(res.data.data);
-        } else {
-          this.picCommentList = this.picCommentList.concat(res.data.data);
-          this.picPage = res.data.currentPage;
-          this.comments = this.picCommentList.concat(res.data.data);
-        }
+       this.comments = res.comments;        
       }
     },
 

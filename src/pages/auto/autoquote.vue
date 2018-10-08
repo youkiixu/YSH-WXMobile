@@ -26,8 +26,7 @@
         </scroll-view>
     </view>
 </view>
-</template>
-
+</template> 
 <script>
 import api from '@/utils/api'
 function newObj (name) {
