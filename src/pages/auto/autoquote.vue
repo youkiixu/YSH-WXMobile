@@ -201,7 +201,7 @@ page {
   width: 180rpx;
   height: 100rpx;
   color: #333;
-  font-size: 24rpx;
+  font-size: 28rpx;
   border-left: 6rpx solid #f1f1f1;
   overflow: hidden;
 }
@@ -257,7 +257,7 @@ page {
 }
 
 .catalog .hd .txt {
-  font-size: 24rpx;
+  font-size: 28rpx;
   text-align: left;
   color: #111111;
   font-weight: 700;
@@ -299,7 +299,7 @@ page {
 .catalog .bd .item .txt {
   display: block;
   text-align: center;
-  font-size: 20rpx;
+  font-size: 24rpx;
   color: #666666;
   font-weight: 500;
   height: 72rpx;

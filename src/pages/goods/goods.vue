@@ -41,8 +41,8 @@
         <view class="clear"></view>
     </view>
 
-    <view class="section-nav section-attr">
-        <view class="t">商家地址:{{detailInfo.ShopAddress}}</view>
+    <view class="address-nav address-attr clear">
+        <view class="t">商家地址:<text class="td">{{detailInfo.ShopAddress}}</text></view>
         <img class="i" src="/static/images/address_right.png" background-size="cover"/>
         <view class="clear"></view>
     </view>
@@ -86,6 +86,7 @@
           </view>
         </view>
     </view>
+
     <view class="attr-pop-box" :hidden="!openAttr">
       <view class="attr-pop" >
           <view class="close" @click="closeAttr">
@@ -760,6 +761,11 @@ export default {
   color: #555555;
   margin-left: 31.25rpx;
 }
+.address-nav .t .td{
+  color: #282828;
+  padding-left: 25rpx;
+  box-sizing: border-box;
+}
 
 .address-nav .i {
   float: right;
@@ -1186,13 +1192,13 @@ export default {
   line-height: 100rpx;
   flex: 1;
   text-align: center;
-  background-color: #ff9600;
-  color: #fff;
+  background-color: #e3fffe;
+  color: #009e96;
   font-size: 28rpx;
 }
 
 .bottom-btn .r {
-  background: #e93b3d;
+  background: #009e96;
   float: left;
   height: 100rpx;
   line-height: 100rpx;
@@ -1329,7 +1335,7 @@ export default {
 }
 
 .spec-con .value.selected {
-  background-color:#dc2121; 
+  background-color:#009e96; 
   color: white;
 }
 .spec-con .number-item{
@@ -1398,13 +1404,14 @@ export default {
   float: left;
   width: 50%;
   text-align: center;
-  background-color: #ff9600;
+  color: #009e96;
+  background-color: #e3fffe;
 }
 .car-btn .car-buy{
   width: 50%;
   float: left;
   text-align: center;
-  background-color: #dc2121;
+  background-color: #009e96;
 }
 
 </style>

@@ -1,5 +1,51 @@
 <template>
-    <view class="login">
+    <view class="content">
+        <!-- 注册 -->
+        <view class="register" v-if="isRegister">
+            <view class="phone clear">
+                <button class="phone_btn">+86</button>
+                <view class="phone_num">
+                    <input v-model="registerInfo.CellPhone" placeholder="请输入手机号码" number confirm-type="done">
+                </view>
+            </view>
+            <view class="VerCode clear">
+                <view class="VerCode_num">
+                     <input v-model="registerInfo.Code" placeholder="请输入验证码" confirm-type="done">
+                </view>
+                <button class="VerCode_btn"  @click="getCode">获取验证码</button>                
+            </view>
+            <view class="register_pwd">
+               <input v-model="userInfo.Password" placeholder="请输入密码" password confirm-type="done">         
+            </view>
+            <view  class="register_btn">
+                <button @click="btnHandler">注册</button>
+            </view>                       
+        </view>
+
+        <!-- 登录 -->
+        <view class="login" v-if="!isRegister">
+            <view class="login_phone">
+               <input v-model="userInfo.UserId" placeholder="请输入账号/手机号" password confirm-type="done">         
+            </view>
+            <view class="login_pwd clear">
+                <view class="login_pwdInput">
+                     <input v-model="userInfo.Password" placeholder="请输入密码" confirm-type="done">
+                </view>
+                <button class="pwd_btn"  @click="forgetPwd">忘记密码</button>                
+            </view>            
+            <view  class="login_btn">
+                <button @click="btnHandler">登录</button>
+            </view>   
+             <view  class="to_register">
+                <button @click="transferText">立即注册</button>
+            </view>                       
+        </view>
+
+
+    </view>
+
+
+    <!-- <view class="login">
         <view class="name" v-if="!isRegister">
             <input v-model="userInfo.UserId" placeholder="请输入账号" confirm-type="next">
         </view>
@@ -16,7 +62,7 @@
         <button class="weui-btn mini-btn code-btn" size="mini" type="primary" v-if="isRegister" @click="getCode">获取验证码</button>
         <button class="btn" @click="btnHandler">{{isRegister ? '注册' : '登陆'}}</button>
         <text class="btn-transfer" @click="transferText">{{isRegister ? '已有账号?去登陆...' : '没有账号?去注册...'}}</text>
-    </view>
+    </view> -->
 </template>
 <script>
 import api from '@/utils/api'
@@ -96,10 +142,195 @@ export default {
 }
 </script>
 <style scoped>
-    .login {
-        text-align: center;
+    .content {
+        width: 750rpx;
+        padding: 30rpx 20rpx;
     }
-    .name {
+    .clear:after{
+    display: block;
+    content:'';
+    clear: both;
+    height:0;
+    }
+    .register .phone, .register .VerCode{
+        height: 80rpx;
+        width: 705rpx;
+    }   
+    button::after{ 
+        border: none;
+        border-radius: 0;
+    } 
+    button{
+    border-radius: 0;
+    }
+    .phone_btn{
+        width: 85rpx;
+        height: 80rpx;
+        text-align: center;
+        line-height: 80rpx;
+        color: #666;
+        font-size: 22rpx;
+        background-color: #fff;
+        border-bottom: 2rpx solid #e5e5e5;
+        float: left;
+    }
+    .phone_num{
+        float: left;
+        margin-left: 10rpx;
+        width: 605rpx;
+        height: 80rpx;       
+        background-color: #f7f7f7;
+        padding: 0 12rpx;
+        box-sizing: border-box;
+    }
+    .phone_num input{
+        height: 100%;
+        width: 100%;
+        line-height: 80rpx;
+        font-size: 24rpx;
+        color: #b5b5bc;
+    }
+    .VerCode{
+        margin-top: 30rpx;
+    }
+    .VerCode_num{
+        float: left;
+        width: 570rpx;
+        height: 80rpx;       
+        background-color: #f7f7f7;
+        padding: 0 12rpx;
+        box-sizing: border-box;       
+    }
+    .VerCode_num input{
+        height: 100%;
+        width: 100%;
+        line-height: 80rpx;
+        font-size: 24rpx;
+        color: #b5b5bc;
+    }
+    .VerCode_btn{
+        width: 135rpx;
+        height: 80rpx;
+        text-align: center;
+        line-height: 80rpx;
+        color: #666;
+        font-size: 22rpx;
+        background-color: #e5e5e5;       
+        float: left;
+        border-style: none;
+        padding: 0;
+    }
+    .register_pwd{
+        margin-top: 30rpx;
+        padding: 0 12rpx;
+        box-sizing: border-box;
+        width: 705rpx;
+        height: 80rpx;       
+        background-color: #f7f7f7;
+    }
+    .register_pwd input{
+        height: 100%;
+        width: 100%;
+        line-height: 80rpx;
+        font-size: 24rpx;
+        color: #b5b5bc;
+    }
+    .register_btn{
+        margin-top: 30rpx;       
+        width: 705rpx;
+        height: 80rpx;               
+    }
+    .register_btn button{
+        border-radius: 10rpx;    
+        width: 100%; 
+        height: 100%;
+        line-height: 80rpx;
+        text-align: center;
+        font-size: 28rpx;
+        background-color: #009e96;
+        color: #fff;
+    }
+
+     .login .login_phone, .login .login_pwd{
+        height: 80rpx;
+        width: 705rpx;
+    }
+     .login_phone{
+        margin-top: 30rpx;
+        padding: 0 12rpx;
+        box-sizing: border-box;
+        width: 705rpx;
+        height: 80rpx;       
+        background-color: #f7f7f7;
+    }
+    .login_phone input{
+        height: 100%;
+        width: 100%;
+        line-height: 80rpx;
+        font-size: 24rpx;
+        color: #b5b5bc;
+    }
+    .login_pwd{
+        margin-top: 30rpx;
+    }
+    .login_pwdInput{
+        float: left;
+        width: 570rpx;
+        height: 80rpx;       
+        background-color: #f7f7f7;
+        padding: 0 12rpx;
+        box-sizing: border-box;       
+    }
+    .login_pwdInput input{
+        height: 100%;
+        width: 100%;
+        line-height: 80rpx;
+        font-size: 24rpx;
+        color: #b5b5bc;
+    }
+    .pwd_btn{
+        width: 135rpx;
+        height: 80rpx;
+        text-align: center;
+        line-height: 80rpx;
+        color: #666;
+        font-size: 22rpx;
+        background-color: #e5e5e5;       
+        float: left;
+        border-style: none;
+        padding: 0;
+    }
+     .login_btn{
+        margin-top: 30rpx;       
+        width: 705rpx;
+        height: 80rpx;               
+    }
+    .login_btn button{
+        border-radius: 10rpx;    
+        width: 100%; 
+        height: 100%;
+        line-height: 80rpx;
+        text-align: center;
+        font-size: 28rpx;
+        background-color: #009e96;
+        color: #fff;
+    }
+    .to_register{
+        margin-top: 30rpx;       
+        width: 705rpx;
+        height: 80rpx;    
+    }
+    .to_register button{    
+        width: 100%; 
+        height: 100%;
+        line-height: 80rpx;
+        text-align: center;
+        font-size: 28rpx;
+        color: #009e96;
+        background-color:transparent;
+    }
+
+    /* .name {
         width: 700rpx;
         margin: 500rpx auto 50rpx;
         border-bottom: 1px solid #999;
@@ -126,7 +357,7 @@ export default {
         display:block;
         font-size: 26rpx;
         color: red;
-    }
+    } */
 </style>
 
 
