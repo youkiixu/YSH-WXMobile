@@ -225,13 +225,16 @@ export default {
         if(e) {
             this.$wx.showActionSheet(arr).then(res => {
                 var wuliuStr = arr[res.tapIndex]
+                console.log(wuliuStr)
                 _this.checkOutOther.Remindtype = express.wuliuId(wuliuStr)
+                console.log(_this.checkOutOther.Remindtype)
                 _this.checkOutOther.RemindtypeStr = wuliuStr
                 _this.getYunFeiEvent(wuliuStr)
             })
         } else {
             var wuliuStr = arr[0]
             _this.checkOutOther.Remindtype = express.wuliuId(wuliuStr)
+            console.log(_this.checkOutOther.Remindtype)
             _this.checkOutOther.RemindtypeStr = wuliuStr
             _this.getYunFeiEvent(wuliuStr)
         }
@@ -288,7 +291,7 @@ export default {
         //   标准品提交订单
         let par = {
             openId : openId,
-            Remindtype: this.checkOutInfo.Remindtype,
+            Remindtype: this.checkOutOther.Remindtype,//配送类型
             skuIds : this.checkOutInfo.products.Id,
             counts: this.checkOutInfo.Count,
             userAddressId: this.address.Id,
@@ -323,6 +326,7 @@ export default {
     },
     async submitOrderByProductId (par) {
         this.$wx.showLoading()
+        console.log(JSON.stringify(par))
         const res = await api.submitOrderByProductId(par)
         this.$wx.hideLoading()
         this.submitAfter(res)
@@ -341,7 +345,7 @@ export default {
             // url: '../pay/payResult?status=1&orderId=' + res.data
             // });
             this.$router.replace({
-                path: '../pay/payResult?status=1&Id=' + res.data
+                path: '../pay/payResult?status=1&isShopping=1&Id=' + res.data
             })
         } else {
             this.$wx.showErrorToast(res.msg)

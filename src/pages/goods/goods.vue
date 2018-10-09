@@ -158,7 +158,7 @@
               <view class="name">数量</view>
               <view class="selnum">
               <view class="cut" @click="cutNumber">-</view>
-              <input :value="number" class="number" disabled="true" type="number" />
+              <input v-model="number" class="number"  type="number" confirm-type="done"/>
               <view class="add" @click="addNumber">+</view>
               </view>
           </view>
@@ -197,6 +197,7 @@ import api from '@/utils/api'
 import wx from 'wx';
 import wxParse from 'mpvue-wxparse'
 import express from '@/utils/express'
+import util from '@/utils/util'
 import { mapState, mapActions } from 'vuex'
 
 export default {
@@ -229,6 +230,7 @@ export default {
       cartGoodsCount: 0,
       userHasCollect: 0,
       number: 1,
+      saleNumber: 1,
       checkedSpecText: '请选择规格数量',
       openAttr: false,
       collectProduImage:'/static/images/collect.png',
@@ -329,6 +331,7 @@ export default {
       const res = await api.getGoodsDetail(par)
       this.RequestUrl = res.RequestUrl
       this.detailInfo = res.data
+      this.number = Number(this.detailInfo.SaleNumber)
     },
     // 规格弹窗中，每个规则项的点击事件
     clickSkuValue (skuName , skuId , skuValue) {
@@ -378,10 +381,11 @@ export default {
     getSkuInfoPirce() {
       const skuInfo = this.skuInfo
       const skuId = this.skuId
+        this.number = Number(this.number)
         skuInfo.map(item => {
           if(item.SkuId === skuId) {
               this.Stock = item.Stock
-              this.detailInfo.Price = item.Price * this.number
+              this.detailInfo.Price = util.accMul(item.Price , this.number)
             
           }
         })
@@ -447,7 +451,7 @@ export default {
           Yjtype: this.Yjtype
           // YjUse: this.YjUse
         }
-        
+        this.openAttr = false
         this.submitByProductId(par)
       }
     },
@@ -518,10 +522,11 @@ export default {
     },
     // 减少数量
     cutNumber () {
-      this.number = (this.number - 1 > 1) ? this.number - 1 : 1;
+      this.number = this.number - 1 
     },
     // 增加数量
     addNumber () {
+      console.log(this.number)
       this.number = this.number + 1;
     },
     // 滚动到某位置
@@ -532,6 +537,9 @@ export default {
   },
   watch: {
     number (e , b) {
+      if(Number(e) < Number(this.detailInfo.SaleNumber)) {
+        this.number = Number(this.detailInfo.SaleNumber)
+      }
       this.getSkuInfoPirce()
     }
   },

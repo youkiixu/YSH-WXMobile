@@ -4,12 +4,12 @@
         <view class="item" v-for="(item, index) of addressList" :key="item.Id" @click="selectAddress(item)"
           :data-address-id="item.Id" :data-index="index">
             <view class="l">
-                <!-- <view class="name">{{item.ShipTo}}</view> -->
+                <view class="name">{{item.ShipTo}}</view>
                 <view class="default" v-if="item.IsDefault">默认</view>
             </view>
             <view class="c">
-                <view class="name">{{item.ShipTo}} <span class="mobile">{{item.Phone}}</span></view>
-                <view class="address">{{item.RegionFullName + item.Address}}</view>
+                <view class="mobile">{{item.Phone}}</view>
+                <view class="address">{{item.RegionFullName}} {{item.Address}}</view>
             </view>
             <view class="r">
                 <image @click.stop="addressAddOrUpdate" :data-address-id="item.Id" class="del" src="http://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/address-edit-7fee7b0d63.png"/>
@@ -101,15 +101,14 @@ page{
 }
 
 .address-list{
-    /* padding-left: 31.25rpx; */
+    padding-left: 31.25rpx;
     background: #fff url(http://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/address-bg-bd30f2bfeb.png) 0 0 repeat-x;
     background-size: auto 10.5rpx;
-    padding-top: 20rpx;
     margin-bottom: 90rpx;
 }
 
 .address-list .item{
-    height: 160rpx;
+    height: 156.55rpx;
     align-items: center;
     display: flex;
     border-bottom: 1rpx solid #DCD9D9;
@@ -121,18 +120,18 @@ page{
 }
 
 .address-list .l{
-    width: 76rpx;
-    height: 160rpx;
+    width: 125rpx;
+    height: 85rpx;
     overflow: hidden;
 }
 
 .address-list .name{
-    width: 500rpx;
+    width: 125rpx;
     height: 43rpx;
     font-size: 29rpx;
     color: #333;
     margin-bottom: 5.2rpx;
-    text-overflow: ellipsis;
+        text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
 }
@@ -151,27 +150,22 @@ page{
 
 .address-list .c{
     flex: 1;
-    height: 160rpx;
-    align-items:center;
+    height: 85rpx;
     overflow: hidden;
 }
 
-.address-list .name{
+.address-list .mobile{
 
     height: 29rpx;
-    font-size: 28rpx;
+    font-size: 29rpx;
     line-height: 29rpx;
     overflow: hidden;
     color: #333;
     margin-bottom: 6.25rpx;
 }
-.address-list .mobile {
-  font-size: 24rpx;
-  color: #898989;
-}
 
 .address-list .address{
-    height: 84rpx;
+    height: 37rpx;
     font-size: 25rpx;
     line-height: 37rpx;
     overflow: hidden;

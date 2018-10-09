@@ -2,7 +2,7 @@
 <view class="container">
   <view class="pay-result">
     <view class="success" v-if="status == true">
-      <view class="msg">付款成功</view>
+      <view class="msg">{{isShopping ? '下单成功' : '付款成功'}}</view>
       <view class="btns">
         <navigator class="btn" url="../ucenter/order" open-type="redirect">查看订单</navigator>
         <navigator class="btn" url="../index/index" open-type="switchTab">继续逛</navigator>
@@ -34,12 +34,17 @@ export default {
   data () {
     return {
       status: false,
-      orderId: 0
+      orderId: 0,
+      isShopping: false
     }
   },
   async mounted () {
     if (this.$route.query.status) {
       this.status = this.$route.query.status;
+    }
+    // 如果是下单页跳转过来
+    if(this.$route.query.isShopping) {
+      this.isShopping = this.$route.query.isShopping
     }
     this.orderId = this.$route.query.Id
   },

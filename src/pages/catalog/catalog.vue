@@ -8,12 +8,7 @@
     </view> -->
 
     <view class="index-searchbar">
-      <view class="search">
-          <navigator url="/pages/search/search" class="input">
-              <img class="icon"/>
-              <text class="txt">商品搜索</text>
-          </navigator>
-      </view>
+      <searchBar></searchBar>
     </view>
     
 
@@ -46,8 +41,12 @@
 import api from '@/utils/api'
 import { formatCatelog } from '@/utils/format'
 import { mapState, mapActions } from 'vuex'
+import searchBar from '@/components/indexSearchBar'
 
 export default {
+  components: {
+    searchBar
+  },
   data () {
     return {
       navList: [],
@@ -119,45 +118,12 @@ page {
   width: 100%;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 .index-searchbar {
   position: absolute;
   z-index: 99;
-}
-.search {
-  height: 60rpx;
-  width: 100%;
-  padding: 0 30rpx;
-  display: flex;
-  align-items: center;
-}
-
-.search .input {
-  width: 606rpx;
-  height: 60rpx;
-  background: #ededed;
-  border-radius: 30rpx;
-  display: flex;
-  align-items: center;
-  padding-left: 40rpx;
-  margin-left: 24rpx;
-  background-color: #f7f7f7;
-  box-shadow: 0 0 20rpx rgba(0,0,0,0.10);
-}
-
-.search .icon {
-  background: url(http://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/search2-2fb94833aa.png) center no-repeat;
-  background-size: 100%;
-  width: 28rpx;
-  height: 28rpx;
-}
-
-.search .txt {
-  height: 42rpx;
-  line-height: 42rpx;
-  color: #9b9b9b;
-  padding-left: 10rpx;
-  font-size: 30rpx;
+  top: 6rpx;
 }
 .catalog {
   flex: 1;

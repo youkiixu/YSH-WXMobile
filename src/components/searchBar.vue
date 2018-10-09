@@ -18,7 +18,7 @@ export default {
   height: 88rpx;
   width: 100%;
   padding: 0 30rpx;
-  background: #fff;
+  background: #fff; 
   display: flex;
   align-items: center;
 }

@@ -19,7 +19,7 @@
                 <view class="status"></view>
             </view>
             <view class="b">
-                <view class="l">实付：￥{{item.SalePrice + item.Freight}}    (运费：{{item.Freight}})</view>
+                <view class="l">实付：￥{{item.ProductTotalAmount + item.Freight}}    (运费：{{item.Freight}})</view>
                 
                 <view class="r">
                     <button class="btn" @click="payOrder">去付款</button>

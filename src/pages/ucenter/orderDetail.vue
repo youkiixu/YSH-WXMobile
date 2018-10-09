@@ -6,8 +6,8 @@
         <view class="item-c">
             <view class="l">实付：<text class="cost">￥{{orderInfo.ProductTotalAmount}}</text></view>
             <view class="r">
-                <view class="btn" @click="cancelOrder" v-if="orderInfo.OrderStatus != 4">取消订单</view>
-                <view class="btn active" @click="payOrder" v-if="orderInfo.OrderStatus != 4">去付款</view>
+                <view class="btn" @click="cancelOrder" v-if="canCancel">取消订单</view>
+                <view class="btn active" @click="payOrder" v-if="canPay">去付款</view>
             </view>
         </view>
     </view>
@@ -65,12 +65,15 @@
 import api from '@/utils/api'
 import wx from 'wx'
 import { mapState } from 'vuex'
+import orderInfoStatus from '@/utils/orderInfoStatus'
 
 export default {
   data () {
     return {
       OrderId:'',
       orderInfo: {},
+      canCancel: false,
+      canPay: false,
       orderGoods: []
     }
   },
@@ -84,11 +87,13 @@ export default {
   async onShow () {
     this.orderInfo = [];
     this.orderGoods = []; 
+    this.canCancel = false
+    this.canPay = false
     this.OrderId = this.$route.query.Id 
-    console.log(this.$route.query)
     await Promise.all([
       this.getUserOrderDetail()
     ])
+    this.init()
   },
   methods: {
     // 获取用户订单数据
@@ -99,10 +104,30 @@ export default {
         this.$wx.hideLoading()
 
         if (res.success === true) {
-        const data = JSON.parse(res.data)               
+            const data = JSON.parse(res.data)
+            console.log(data)
             this.orderInfo = data[0];
             this.orderGoods = data[1].QuoteRecord;   
             this.orderInfo.OrderStatusStr = this.$wx.orderStatus(this.orderInfo.OrderStatus)
+        } else {
+            this.$router.back()
+        }
+    },
+    init () {
+        const m = this.orderInfo
+        console.log(orderInfoStatus)
+        // 判断是否可以取消
+        if(m.OrderStatus == orderInfoStatus.OrderOperateStatus.WaitPay || m.OrderStatus == orderInfoStatus.OrderOperateStatus.WaitDelivery && m.PaymentType == orderInfoStatus.PaymentTypes.CashOnDelivery) {
+            if(m.OrderStatus == orderInfoStatus.OrderOperateStatus.Audited || m.Production == 1) {
+
+            } else {
+                this.canCancel = true
+            }
+        }
+
+        if (!m.IsCleared && m.ReceivedAmount == 0 && !m.IsReprint || (m.IsReprint && m.OrderTotalAmount > 0))
+        {
+            this.canPay = true
         }
     },
     // 点击“去付款”
@@ -131,15 +156,13 @@ export default {
                 'signType': data.signType,
                 'paySign': data.paySign,
                 'success': function (res) {
-                    console.log(res)
                     wx.redirectTo({
-                    url: '../pay/payResult?status=1&Id=' + that.OrderId
+                        url: '../pay/payResult?status=1&Id=' + that.OrderId
                     })
                 },
                 'fail': function (res) {
-                    console.log(res)
                     wx.redirectTo({
-                    url: '../pay/payResult?status=0&Id=' + that.OrderId
+                        url: '../pay/payResult?status=0&Id=' + that.OrderId
                     })
                 }
             });

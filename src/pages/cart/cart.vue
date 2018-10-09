@@ -288,12 +288,12 @@ export default {
   },
     // 小程序原生上拉加载
   onReachBottom () {
-    this.page++
+    this.pageNo++
     this.getCartList()
   },
   // 小程序原生下拉刷新
   onPullDownRefresh: function() {
-    this.page = 1
+    this.pageNo = 1
     this.cartGoods = []
     this.getCartList()
     wx.stopPullDownRefresh()
