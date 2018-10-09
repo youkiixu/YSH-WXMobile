@@ -278,7 +278,7 @@ page{
 }
 
 .sort-box .item.active .txt{
-    color: #b4282d;
+    color: #009e96;
 }
 
 .sort-box .item.by-price{

@@ -327,8 +327,8 @@ page{
 }
 .info_member{
   height: 30rpx;
-  padding: 0 12rpx;
-  box-sizing: border-box;
+  width: 105rpx;
+  text-align: center;
   line-height: 30rpx;
   font-size: 20rpx;
   color: #fff;
