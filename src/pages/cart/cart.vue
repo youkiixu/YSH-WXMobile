@@ -19,7 +19,16 @@
   </view>
 
   <view class="cart-view" v-if="cartGoods.length">
-    <view class="list">
+    <view class="cart-address clear">
+      <view class="posi-img">
+        <img src="/static/images/icon_cart_position.png" background-size="cover"/>
+      </view>
+       <view class="from">配送广东省 佛山市 南海区</view>
+       <view class="to">至广东省 佛山市 南海区</view>
+       <view class="edit" @click="editCart">{{!isEditCart ? '编辑商品' : '完成'}}</view>       
+    </view>
+
+     <view class="list">
       <view class="group-item">
         <view class="goods">
           <view :class="isEditCart ? 'edit item' : 'item'" v-for="(item, index) of cartGoods" :key="item.Id" @click="checkedItem(item)">
@@ -31,9 +40,11 @@
                   <text class="name">{{item.ProductName}}</text>
                   <text class="num">x{{item.Quantity}}</text>
                 </view>
-                <view class="attr">{{item.Color}} {{item.Size}} {{item.Version}} {{item.Material}} {{item.Fashion}} {{item.Grams}} {{item.Ensemble}}</view>
+                <view class="attr">已选：{{item.Color}} {{item.Size}} {{item.Version}} {{item.Material}} {{item.Fashion}} {{item.Grams}} {{item.Ensemble}}</view>
                 <view class="b">
-                  <text class="price">￥{{item.Price}}</text>
+                  <view class="price">
+                    <text class="icon">￥</text>{{item.Price}}
+                  </view>
                   <!-- <view class="selnum">
                     <view class="cut" @click="cutNumber" :data-item-index="index">-</view>
                     <input :value="item.number" class="number" disabled="true" type="number" />
@@ -46,14 +57,15 @@
         </view>
       </view>
     </view>
-    <view class="cart-bottom">
+
+   <view class="cart-bottom">
       <!-- <view :class="checkedAllStatus ? 'checked checkbox' : 'checkbox'" @click="checkedAll">全选({{cartTotal.checkedGoodsCount}})</view> -->
-      <view class="total">{{!isEditCart ? '￥'+ selectGoods.Price : ''}}</view>
-      <view class="delete" @click="editCart">{{!isEditCart ? '编辑' : '完成'}}</view>
-      <view class="checkout" @click="deleteCart" v-if="isEditCart">删除所选</view>
-      <view class="checkout" @click="checkoutOrder" v-if="!isEditCart">下单</view>
+      <view class="total">总金额：<text class="total-price">{{!isEditCart ? '￥'+ selectGoods.Price : ''}}</text></view>
+      <view class="checkout" @click="checkoutOrder" v-if="!isEditCart">去结算</view>
     </view>
+
   </view>
+
 </view>
 </template>
 
@@ -322,6 +334,12 @@ page{
     min-height: 100%;
     overflow: hidden;
 }
+.clear:after{
+    display: block;
+    content:'';
+    clear: both;
+    height:0;
+    }
 .no-cart{
   width: 280rpx;
   height: 230rpx;
@@ -383,8 +401,40 @@ page{
 } */
 
 
-
-
+.cart-address{
+  width: 750rpx;
+  height: 80rpx;
+  line-height: 80rpx;
+  background-color: #fff;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 1000;
+  padding: 0 20rpx;
+  box-sizing: border-box;
+}
+.cart-address .posi-img{
+  width: 30rpx;
+  height: 30rpx;
+  float: left;
+  align-items: center;
+  justify-content: center;
+}
+.posi-img img{
+  width: 100%;
+  height: 100%;
+}
+.cart-address .from,.cart-address .to{
+  float: left;
+  color: #acacac;
+  font-size: 20rpx;
+  margin-left: 10rpx;
+}
+.cart-address .edit{
+  float: right;
+  font-size: 24rpx;
+  color: #333;
+}
 .service-policy{
     width: 720rpx;
     height: 73rpx;
@@ -418,6 +468,7 @@ page{
     height: auto;
     width: 100%;
     overflow: hidden;
+    margin-top: 100rpx;
     margin-bottom: 120rpx;
 }
 
@@ -429,15 +480,16 @@ page{
 }
 
 .cart-view .item{
-    height: 164rpx;
+    height: 228rpx;
     width: 100%;
     overflow: hidden;
+    border-bottom: 2rpx solid #f1f1f1;
 }
 .cart-view .item .checkbox{
     float: left;
     height: 34rpx;
     width: 34rpx;
-    margin: 65rpx 18rpx 65rpx 26rpx;
+    margin: 90rpx 18rpx 90rpx 26rpx;
     background: url(http://nos.netease.com/mailpub/hxm/yanxuan-wap/p/20150730/style/img/icon-normal/checkbox-0e09baa37e.png) no-repeat;
     background-size: 34rpx;
 }
@@ -449,67 +501,73 @@ page{
 
 .cart-view .item .cart-goods{
     float: left;
-    height: 164rpx;
+    height: 228rpx;
     width: 672rpx;
     border-bottom: 1px solid #f4f4f4;
 }
 
 .cart-view .item .img{
     float: left;
-    height:125rpx;
-    width: 125rpx;
+    height:190rpx;
+    width: 190rpx;
     background: #f4f4f4;
     margin: 19.5rpx 18rpx 19.5rpx 0;
 }
 
 .cart-view .item .info{
     float: left;
-    height:125rpx;
-    width: 480rpx;
+    width: 420rpx;
     margin: 19.5rpx 26rpx 19.5rpx 0;
 }
 
 .cart-view .item .t{
     margin: 8rpx 0;
-    height: 28rpx;
-    font-size: 25rpx;
-    color: #333;
+    font-size: 24rpx;
+    color: #282828;
     overflow: hidden;
 }
-
-
 .cart-view .item .name{
-    height: 30rpx;
-    max-width: 310rpx;
+    float: left;
     line-height: 30rpx;
-    font-size: 25rpx;
-    color: #333;
+    font-size: 24rpx;
+    color: #282828;
+    width: 360rpx;
     overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
 }
 
 .cart-view .item .num{
+    width: 60rpx;
     height: 28rpx;
     line-height: 28rpx;
     float: right;
 }
 
 .cart-view .item .attr{
+    margin-top: 10rpx;
     margin-bottom: 17rpx;
-    height: 24rpx;
     line-height: 24rpx;
-    font-size: 22rpx;
+    font-size: 20rpx;
     color: #666;
-    overflow: hidden;
+    width: 420px;
+    overflow: hidden;/*超出部分隐藏*/
+    white-space: nowrap;/*不换行*/
+    text-overflow:ellipsis;/*超出部分文字以...显示*/  
 }
 
-.cart-view .item .b{
-    height: 28rpx;
-    line-height: 28rpx;
-    font-size: 25rpx;
-    color: #333;
+.cart-view .item .b{   
+    line-height: 30rpx;
+    font-size: 32rpx;
+    color: #dc2121;
     overflow: hidden;
+    margin-top: 30rpx;
 }
-
+.cart-view .item .b .icon{
+  font-size: 28rpx;
+}
 .cart-view .item .price{
     float: left;
 }
@@ -648,21 +706,24 @@ page{
     position: fixed;
     bottom:0;
     left:0;
-    height: 100rpx;
+    height: 88rpx;
     width: 100%;
     background: #fff;
     display: flex;
+    border-bottom: 3rpx solid #e8e8e8;
+    box-shadow: 1px 1px 3px 3px #e8e8e8;
 }
 
 .cart-bottom .checkbox{
     height: 34rpx;
-
     padding-left: 60rpx;
     line-height: 34rpx;
     margin: 33rpx 18rpx 33rpx 26rpx;
     background: url(http://nos.netease.com/mailpub/hxm/yanxuan-wap/p/20150730/style/img/icon-normal/checkbox-0e09baa37e.png) no-repeat;
     background-size: 34rpx;
-    font-size: 29rpx;
+    font-size: 24rpx;
+    color: #666666;
+    flex: 1;
 }
 
 .cart-bottom .checkbox.checked{
@@ -671,13 +732,19 @@ page{
 }
 
 .cart-bottom .total{
-    height: 34rpx;
+    height: 88rpx;
+    line-height: 88rpx;
     flex: 1;
-    margin: 33rpx 10rpx;
-    font-size: 29rpx;
+    font-size: 24rpx;
+    color: #666666;
+    text-align: left;
+    padding-left: 20rpx;
+    box-sizing: border-box;
 }
-
-
+.cart-bottom .total .total-price{
+  color: #009e96;
+  font-size: 32rpx;
+}
 .cart-bottom .delete{
     height: 34rpx;
     width: auto;
@@ -686,12 +753,12 @@ page{
 }
 
 .cart-bottom .checkout{
-    height: 100rpx;
-    width: 210rpx;
+    height: 88rpx;
+    width: 180rpx;
     text-align: center;
-    line-height: 100rpx;
-    font-size: 29rpx;
-    background: #b4282d;
+    line-height: 88rpx;
+    font-size: 28rpx;
+    background: #009e96;
     color: #fff;
 }
 </style>
