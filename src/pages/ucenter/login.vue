@@ -14,29 +14,32 @@
                 </view>
                 <button class="VerCode_btn"  @click="getCode">获取验证码</button>                
             </view>
-            <view class="register_pwd">
+            <!-- <view class="register_pwd">
                <input v-model="userInfo.Password" placeholder="请输入密码" password confirm-type="done">         
-            </view>
+            </view> -->
             <view  class="register_btn">
                 <button @click="btnHandler">注册</button>
             </view>                       
+            <view  class="to_register">
+                <button @click="transferText">已有账号?去登陆...</button>
+            </view>  
         </view>
 
         <!-- 登录 -->
         <view class="login" v-if="!isRegister">
             <view class="login_phone">
-               <input v-model="userInfo.UserId" placeholder="请输入账号/手机号" password confirm-type="done">         
+               <input v-model="userInfo.UserId" placeholder="请输入账号/手机号" confirm-type="done">         
             </view>
             <view class="login_pwd clear">
                 <view class="login_pwdInput">
-                     <input v-model="userInfo.Password" placeholder="请输入密码" confirm-type="done">
+                     <input v-model="userInfo.Password" placeholder="请输入密码" password confirm-type="done">
                 </view>
                 <button class="pwd_btn"  @click="forgetPwd">忘记密码</button>                
             </view>            
             <view  class="login_btn">
                 <button @click="btnHandler">登录</button>
             </view>   
-             <view  class="to_register">
+            <view  class="to_register">
                 <button @click="transferText">立即注册</button>
             </view>                       
         </view>
@@ -44,25 +47,6 @@
 
     </view>
 
-
-    <!-- <view class="login">
-        <view class="name" v-if="!isRegister">
-            <input v-model="userInfo.UserId" placeholder="请输入账号" confirm-type="next">
-        </view>
-        <view class="psw" v-if="!isRegister">
-            <input v-model="userInfo.Password" placeholder="请输入密码" password confirm-type="done">
-        </view>
-        
-        <view class="name" v-if="isRegister">
-            <input v-model="registerInfo.CellPhone" placeholder="请再次输入要注册的手机号" number confirm-type="done">
-        </view>
-        <view class="psw" v-if="isRegister">
-            <input v-model="registerInfo.Code" placeholder="请再次短信验证码" confirm-type="done">
-        </view>
-        <button class="weui-btn mini-btn code-btn" size="mini" type="primary" v-if="isRegister" @click="getCode">获取验证码</button>
-        <button class="btn" @click="btnHandler">{{isRegister ? '注册' : '登陆'}}</button>
-        <text class="btn-transfer" @click="transferText">{{isRegister ? '已有账号?去登陆...' : '没有账号?去注册...'}}</text>
-    </view> -->
 </template>
 <script>
 import api from '@/utils/api'
@@ -88,24 +72,38 @@ export default {
             'sassLogin'
         ]),
         login() {
+            const _this = this;
             this.sassLogin(this.userInfo).then(res => {
-                this.$wx.showSuccessToast( '登陆成功')
+                _this.$wx.showSuccessToast( '登陆成功')
                 setTimeout(() => {
-                    this.$router.back()
+                    _this.$router.back()
                 }, 1000);
             }).catch(err => {
-                this.$wx.showErrorToast( '登陆失败')
+                _this.$wx.showErrorToast( '登陆失败')
             })
         },
         async register () {
-            if(this.registerInfo.CellPhone && this.registerInfo.Code) {
-                const openId = wx.getStorageSync('openId')
-                this.registerInfo.OpenId = openId
-                const res = await api.sassRegister(this.registerInfo)
-                
-            } else {
-                this.$wx.showErrorToast( '注册失败')
+            const _this = this;
+            if(this.registerInfo.CellPhone == '') {
+                this.$wx.showErrorToast('请输入手机号')
+                return
             }
+            if(this.registerInfo.Code == '') {
+                this.$wx.showErrorToast('请输入验证码')
+            }
+
+            const openId = wx.getStorageSync('openId')
+            _this.registerInfo.OpenId = openId
+            const res = await api.sassRegister(this.registerInfo)
+            if(res.success) {
+                this.$wx.showSuccessToast(res.msg)
+                setTimeout(() => {
+                    _this.$router.back()
+                }, 1000);
+            } else {
+                this.$wx.showErrorToast(res.msg)
+            }
+              
         },
         async getCode () {
             const isPhone = util.checkMobile(this.registerInfo.CellPhone)
@@ -115,7 +113,7 @@ export default {
                 })
                 this.$wx.showSuccessToast( res.msg)
             } else {
-                this.$wx.showErrorToast( '请输入有效的手机号码')
+                this.$wx.showErrorToast('请正确输入手机号码')
             }
         },
         btnHandler () {
@@ -124,11 +122,20 @@ export default {
 
             } else {
                 this.login()
-
             }
         },
         transferText() {
             this.isRegister = !this.isRegister
+            if(this.isRegister){
+                wx.setNavigationBarTitle({
+                    title: '注册'
+                })
+            } else {
+                wx.setNavigationBarTitle({
+                    title: '登陆'
+                })
+            }
+
             this.userInfo= {
                 UserId: '',
                 Password: ''
@@ -137,6 +144,9 @@ export default {
                 CellPhone: '',
                 Code: ''
             }
+        },
+        forgetPwd() {
+            this.$wx.showErrorToast('暂未支持')
         }
     }
 }

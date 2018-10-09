@@ -78,15 +78,17 @@ export default {
     ...mapState(['userInfo'])  
   },
   async mounted () {
+    
+  },
+  // 每次打开触发，更新数据
+  async onShow () {
+    this.orderInfo = [];
+    this.orderGoods = []; 
     this.OrderId = this.$route.query.Id 
+    console.log(this.$route.query)
     await Promise.all([
       this.getUserOrderDetail()
     ])
-  },
-  // 每次打开触发，更新数据
-  onShow () {
-    this.orderInfo = [];
-    this.orderGoods = []; 
   },
   methods: {
     // 获取用户订单数据
@@ -101,7 +103,6 @@ export default {
             this.orderInfo = data[0];
             this.orderGoods = data[1].QuoteRecord;   
             this.orderInfo.OrderStatusStr = this.$wx.orderStatus(this.orderInfo.OrderStatus)
-            console.log(data[0])
         }
     },
     // 点击“去付款”
@@ -114,35 +115,40 @@ export default {
           pappid: miniProgram.miniProgram.appId,
           orderIds: this.OrderId
       }
-      console.log(JSON.stringify(par))
+      this.$wx.showLoading()
       const res = await api.getSaaSQRCode(par);
-      console.log(res)
+      this.$wx.hideLoading()
       // console.log('订单详情页去付款,请求结果', res);
-      if (res.success) {
-        // 原生的支付方法
-        wx.requestPayment({
-          'timeStamp': res.data.timeStamp,
-          'nonceStr': res.data.nonceStr,
-          'package': res.data.package,
-          'signType': res.data.signType,
-          'paySign': res.data.paySign,
-          'success': function (res) {
-              console.log(res)
-            wx.redirectTo({
-              url: '../pay/payResult?status=1&orderId=' + that.orderId
-            })
-          },
-          'fail': function (res) {
-              console.log(res)
-            wx.redirectTo({
-              url: '../pay/payResult?status=0&orderId=' + that.orderId
-            })
+
+      if (res.success  ) {
+          if(!res.bPay) {
+            const data = JSON.parse(res.data.paySign)
+            // 原生的支付方法
+            wx.requestPayment({
+                'timeStamp': data.timeStamp,
+                'nonceStr': data.nonceStr,
+                'package': data.package,
+                'signType': data.signType,
+                'paySign': data.paySign,
+                'success': function (res) {
+                    console.log(res)
+                    wx.redirectTo({
+                    url: '../pay/payResult?status=1&Id=' + that.OrderId
+                    })
+                },
+                'fail': function (res) {
+                    console.log(res)
+                    wx.redirectTo({
+                    url: '../pay/payResult?status=0&Id=' + that.OrderId
+                    })
+                }
+            });
+          } else {
+              this.$wx.showErrorToast('此订单已支付')
           }
-        });
+
       } else {
-        wx.redirectTo({
-          url: '/pages/pay/payResult?status=0&orderId=' + that.orderId
-        })
+        this.$wx.showErrorToast('发起支付失败')
       }
     },
     // 点击取消订单

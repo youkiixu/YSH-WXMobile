@@ -63,7 +63,7 @@
 import api from '@/utils/api'
 import wx from 'wx'
 import util from '@/utils/util'
-import { mapState , mapMutations } from 'vuex'
+import { mapState  , mapActions } from 'vuex'
 
 export default {
   data () {
@@ -100,21 +100,25 @@ export default {
     }
   },
   async mounted () {
-    this.$wx.showLoading()
+    
+    
+  },
+  // 每次打开触发，更新数据
+  onShow () {
+    this.address = {}
+    this.regionProvince = {name: '省'}
+    this.regionCity = {name: '城市'}
+    this.regionArea = {name: '区'}
+    this.regionStreet = {name: '街道'}
+    this.selectRegionId = 0
+    this.regionType = 0 
     if(this.$route.query.address && this.$route.query.address != '{}') {
       this.address = JSON.parse(this.$route.query.address)
       this.init()
     } else {
       this.address = {}
-    }
-    await Promise.all([
       this.getRegionList(0)
-    ])
-    this.$wx.hideLoading()
-  },
-  // 每次打开触发，更新数据
-  onShow () {
-    this.address = {}
+    }
   },
   computed: {
     ...mapState([
@@ -125,16 +129,23 @@ export default {
     // this.$wx.showLoading()
   },
   methods: {
-    ...mapMutations(['set_address']),
-    // init
+    ...mapActions(['getUserAddressList']),
+    // 进来默认选中
     init() {
       const address = this.address
       let RegionIdPath = address.RegionIdPath
       const RegionIdPathArr =  RegionIdPath.split(',')
+      // 默认第四级类型
+      this.regionType = 4
+      // 默认省市区街道
       this.provinceInit({name: address.Province , id : RegionIdPathArr[0]})
       this.cityInit({name: address.City , id : RegionIdPathArr[1]})
       this.areaInit({name: address.Area , id : RegionIdPathArr[2]})
       this.streetInit({name: address.Street , id : RegionIdPathArr[3]})
+      // 默认选中第四级别
+      this.selectRegionId = RegionIdPathArr[3]
+      // 加载街道的数据
+      this.getRegionList(RegionIdPathArr[2])
     },
     // 获得对应级别的地市信息
     async getRegionList (regionId) {
@@ -256,6 +267,7 @@ export default {
     // 点击底部“保存按钮”保存地址
     async saveAddress () {
       // console.log(this.address)
+      const _this = this
       let address = this.address;
       if (address.ShipTo === '') {
         util.showErrorToast('请输入姓名');
@@ -287,8 +299,16 @@ export default {
       } else {
         par = Object.assign(par , { Id : 0 , rowState: null})
       }
-      console.log(JSON.stringify(par))
       const res = await api.modifyUserAddress(par);
+      if(res.success) {
+        this.$wx.showSuccessToast('保存成功')
+        this.getUserAddressList(this.userInfo.Id)
+        setTimeout(() => {
+          _this.$router.back()
+        }, 1000);
+      } else {
+        this.$wx.showErrorToast('保存失败')
+      }
       
       // // console.log('保存地址,请求结果', res);
       // if (res.errno === 0) {

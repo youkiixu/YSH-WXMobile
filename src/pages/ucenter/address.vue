@@ -6,11 +6,11 @@
             <view class="l">
                 <view class="name">{{item.ShipTo}}</view>
                 <view class="default" v-if="item.IsDefault">默认</view>
-                <view class="default" v-if="item.IsYJDefault">印捷默认</view>
+                <!-- <view class="default" v-if="item.IsYJDefault">印捷默认</view> -->
             </view>
             <view class="c">
                 <view class="mobile">{{item.Phone}}</view>
-                <view class="address">{{item.Province + item.City + item.Area + item.Address}}</view>
+                <view class="address">{{item.Province + item.City + item.Area + item.Street + item.Address }}</view>
             </view>
             <view class="r"> 
                 <image @click.stop="deleteAddress" :data-address-id="item.Id" class="del" src="/static/images/del-address.png"/>

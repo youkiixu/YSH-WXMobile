@@ -1,92 +1,93 @@
 <template >
 <view>
-    <view class="container">
-      <view class="goodshead">
+    <!-- 主体容器 -->
+    <scroll-view class="container" scroll-y="true" scroll-with-animation="true" :scroll-into-view="navId">
+      <!-- 头部导航 -->
+      <view class="goodshead" id="goodshead">
         <view class="head-classify">
-          <view class="classify-item produ">
+          <view class="classify-item produ" @click="toNav('goodshead')">
             <img src="/static/images/posi.png"/>
             商品
           </view>
-          <navigator :url="'../comment/comment?valueId=' + id + '&typeId=0'">
-            <view class="classify-item com">评论</view>
-          </navigator>          
-          <view class="classify-item detail">详情</view>
+          <!-- <view :url="'../comment/comment?valueId=' + id + '&typeId=0'"> -->
+          <view class="classify-item com" @click="toNav('comments')">评论</view>
+          <!-- </navigator>           -->
+          <view class="classify-item detail"  @click="toNav('proDetail')">详情</view>
         </view>
         <view class="head-share">
           <img src="/static/images/upload.png"/>
         </view>
       </view>
-    <swiper class="goodsimgs" indicator-dots="true" autoplay="true" interval="3000" duration="1000">
-        <swiper-item v-for="(item, index) of gallery" :key="item.id" :data-index="index">
-        <img :src="item.img_url" background-size="cover"/>
-        </swiper-item>
-    </swiper>
-    <view class="goods-info">
-        <view class="c clear">
-          <view class="c-price"><text class="price-icon">￥</text>{{detailInfo.Price}}</view>
-          <view class="c-collect" @click="addCannelCollect">           
-              <img class="icon" :src="collectProduImage"/>           
-          </view>
-        </view>
-        <view class="con-text">
-          <view class="desc">{{detailInfo.ProductName}}</view>
-          <view class="notes">{{detailInfo.ShortDescription}}</view>
-        </view>       
-    </view>
-
-
-    <view class="section-nav section-attr" @click="switchAttrPop">
-        <view class="t">规格:{{selectSkuStr.Color}} {{selectSkuStr.Size}} {{selectSkuStr.Version}} {{selectSkuStr.Material}} {{selectSkuStr.Fashion}} {{selectSkuStr.Grams}} {{selectSkuStr.Ensemble}}</view>
-        <img class="i" src="/static/images/address_right.png" background-size="cover"/>
-        <view class="clear"></view>
-    </view>
-
-    <view class="address-nav address-attr clear">
-        <view class="t">商家地址:<text class="td">{{detailInfo.ShopAddress}}</text></view>
-        <img class="i" src="/static/images/address_right.png" background-size="cover"/>
-        <view class="clear"></view>
-    </view>
-      
-
-        <view class="comments">
-          <view class="h clear">
-            <navigator :url="'../comment/comment?valueId=' + id + '&typeId=0'">
-                <text class="t">评价</text>
-                <text class="i">查看全部评价</text>
-                <!-- <view class="clear"></view> -->
-            </navigator>
-          </view>
-          <view class="b">
-            <view class="item">
-              <view class="info clear">
-                <view class="user">
-                    <img />
-                    <text>1856*******</text>
-                </view>
-                <view class="star">☆☆☆☆☆</view>
-                <!-- <view class="clear"></view> -->
-              </view>
-              <view class="content">
-              不错，速度很快，质量很好，好评！
-              </view>
-                <!-- <view class="imgs">
-                <image class="img"/>
-                </view>
-                <view class="spec">白色 2件</view>  -->
+      <!-- 图片轮播 -->
+      <swiper class="goodsimgs" indicator-dots="true" autoplay="true" interval="3000" duration="1000">
+          <swiper-item v-for="(item, index) of gallery" :key="item.id" :data-index="index">
+          <img :src="item.img_url" background-size="cover"/>
+          </swiper-item>
+      </swiper>
+      <!-- 商品信息 -->
+      <view class="goods-info">
+          <view class="c clear">
+            <view class="c-price"><text class="price-icon">￥</text>{{detailInfo.Price}}</view>
+            <view class="c-collect" @click="addCannelCollect">           
+                <img class="icon" :src="collectProduImage"/>           
             </view>
-            <view class="seeall">查看全部评价</view>
-          </view>   
-        </view> 
-
-
-        <view class="proDetail">
-          <view class="title">商品详情</view>
-          <view class="content">
-            <wxParse :content="goodDetailHTMLstr" />
           </view>
+          <view class="con-text">
+            <view class="desc">{{detailInfo.ProductName}}</view>
+            <view class="notes">{{detailInfo.ShortDescription}}</view>
+          </view>       
+      </view>
+      <!-- 已选参数 -->
+      <view class="section-nav section-attr" @click="switchAttrPop">
+          <view class="t">规格:{{selectSkuStr.Color}} {{selectSkuStr.Size}} {{selectSkuStr.Version}} {{selectSkuStr.Material}} {{selectSkuStr.Fashion}} {{selectSkuStr.Grams}} {{selectSkuStr.Ensemble}}</view>
+          <img class="i" src="/static/images/address_right.png" background-size="cover"/>
+          <view class="clear"></view>
+      </view>
+      <!-- 商家地址 -->
+      <view class="address-nav address-attr clear">
+          <view class="t">商家地址:<text class="td">{{detailInfo.ShopAddress}}</text></view>
+          <img class="i" src="/static/images/address_right.png" background-size="cover"/>
+          <view class="clear"></view>
+      </view>
+      <!-- 商品评论 -->
+      <view class="comments" id="comments">
+        <view class="h clear">
+          <navigator :url="'../comment/comment?valueId=' + id + '&typeId=0'">
+              <text class="t">评价</text>
+              <text class="i">查看全部评价</text>
+              <!-- <view class="clear"></view> -->
+          </navigator>
         </view>
-    </view>
-
+        <view class="b">
+          <view class="item">
+            <view class="info clear">
+              <view class="user">
+                  <img />
+                  <text>1856*******</text>
+              </view>
+              <view class="star">☆☆☆☆☆</view>
+              <!-- <view class="clear"></view> -->
+            </view>
+            <view class="content">
+            不错，速度很快，质量很好，好评！
+            </view>
+              <!-- <view class="imgs">
+              <image class="img"/>
+              </view>
+              <view class="spec">白色 2件</view>  -->
+          </view>
+          <view class="seeall">查看全部评价</view>
+        </view>   
+      </view> 
+      <!-- 产品描述 -->
+      <view class="proDetail" id="proDetail">
+        <view class="title">商品详情</view>
+        <view class="content">
+          <wxParse :content="goodDetailHTMLstr" />
+        </view>
+      </view>
+    </scroll-view>
+    <!-- 模态浮层 -->
     <view class="attr-pop-box" :hidden="!openAttr">
       <view class="attr-pop" >
           <view class="close" @click="closeAttr">
@@ -171,19 +172,19 @@
           </view>
       </view>
     </view>
-
+    <!-- tabbar -->
     <view class="bottom-btn">
-    <view class="l l-collect" @click="addCannelCollect">
-        <img class="icon" :src="collectBackImage"/>
-    </view>
-    <view class="l l-cart">
-        <view class="box">
-        <text class="cart-count">{{cartGoodsCount}}</text>
-        <img @click="openCartPage" class="icon" src="/static/images/shopping-car.png"/>
-        </view>
-    </view>
-    <view class="c" @click="addToCart">加入购物车</view>
-    <view class="r" @click="SubmitByProduct" >立即购买</view>
+      <view class="l l-collect" @click="addCannelCollect">
+          <img class="icon" :src="collectBackImage"/>
+      </view>
+      <view class="l l-cart">
+          <view class="box">
+          <text class="cart-count">{{cartGoodsCount}}</text>
+          <img @click="openCartPage" class="icon" src="/static/images/shopping-car.png"/>
+          </view>
+      </view>
+      <view class="c" @click="addToCart">加入购物车</view>
+      <view class="r" @click="SubmitByProduct" >立即购买</view>
     </view>
 
 
@@ -204,6 +205,7 @@ export default {
   },
   data () {
     return {
+      navId: '',
       RequestUrl: '',
       detailInfo: {
         Material: [],
@@ -521,6 +523,11 @@ export default {
     // 增加数量
     addNumber () {
       this.number = this.number + 1;
+    },
+    // 滚动到某位置
+    toNav(id) {
+      console.log(id)
+      this.navId = id
     }
   },
   watch: {
@@ -543,7 +550,7 @@ export default {
     // 每次打开触发，更新数据
   onShow () {
     this.openAttr === false
-  },
+  }
 }
 </script>
 
@@ -1231,12 +1238,13 @@ export default {
 
 .attr-pop .close {
   position: absolute;
-  width: 48rpx;
-  height: 48rpx;
+  width: 100rpx;
+  height: 100rpx;
   right: 80rpx;
   overflow: hidden;
   top: 31.25rpx;
   z-index: 30;
+  text-align:right;
 }
 
 .attr-pop .close .icon {

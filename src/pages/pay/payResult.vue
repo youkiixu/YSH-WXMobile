@@ -2,7 +2,7 @@
 <view class="container">
   <view class="pay-result">
     <view class="success" v-if="status == true">
-      <view class="msg">下单成功</view>
+      <view class="msg">付款成功</view>
       <view class="btns">
         <navigator class="btn" url="../ucenter/order" open-type="redirect">查看订单</navigator>
         <navigator class="btn" url="../index/index" open-type="switchTab">继续逛</navigator>
@@ -41,13 +41,13 @@ export default {
     if (this.$route.query.status) {
       this.status = this.$route.query.status;
     }
-    this.orderId = this.$route.query.orderId || 24;
+    this.orderId = this.$route.query.Id
   },
   methods: {
     // 返回订单详情页
     redirectToOrderDetail () {
       wx.redirectTo({
-        url: '../ucenter/orderDetail?id=' + this.orderId
+        url: '../ucenter/orderDetail?Id=' + this.orderId
       })
     },
     // 重新付款

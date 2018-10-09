@@ -270,15 +270,15 @@ export default {
         if(this.checkOutOther.Remindtype == 3) {
             return
         }
-      wx.navigateTo({
-        url: '../shopping/address'
-      })
+        this.$router.push({
+            path: '../shopping/address'
+        })
     },
     // 添加收获地址
     addAddress () {
-      wx.navigateTo({
-        url: '../shopping/addressAdd'
-      })
+        this.$router.push({
+            path: '../shopping/addressAdd'
+        })
     },
     // 点击“去付款”
     submitOrder () {
@@ -337,9 +337,12 @@ export default {
     },
     submitAfter (res) {
         if(res.success) {
-            wx.redirectTo({
-            url: '../pay/payResult?status=1&orderId=' + res.data
-            });
+            // wx.redirectTo({
+            // url: '../pay/payResult?status=1&orderId=' + res.data
+            // });
+            this.$router.replace({
+                path: '../pay/payResult?status=1&Id=' + res.data
+            })
         } else {
             this.$wx.showErrorToast(res.msg)
         }

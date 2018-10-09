@@ -41,7 +41,7 @@
     </view>
     <view class="cart-bottom">
       <!-- <view :class="checkedAllStatus ? 'checked checkbox' : 'checkbox'" @click="checkedAll">全选({{cartTotal.checkedGoodsCount}})</view> -->
-      <view class="total">{{!isEditCart ? '￥'+selectGoods.Price : ''}}</view>
+      <view class="total">{{!isEditCart ? '￥'+ selectGoods.Price : ''}}</view>
       <view class="delete" @click="editCart">{{!isEditCart ? '编辑' : '完成'}}</view>
       <view class="checkout" @click="deleteCart" v-if="isEditCart">删除所选</view>
       <view class="checkout" @click="checkoutOrder" v-if="!isEditCart">下单</view>
@@ -67,7 +67,9 @@ export default {
       },
       isEditCart: false,
       checkedAllStatus: true,
-      selectGoods: {},
+      selectGoods: {
+        Price: 0
+      },
       pageNo: 1,
       pageSize: 15
     }
@@ -180,19 +182,19 @@ export default {
     editCart () {
       // 编辑状态
       if (this.isEditCart) {
-        this.getCartList();
+        // this.getCartList();
         this.isEditCart = !this.isEditCart;
       } else {
         // 非编辑状态
-        let tmpCartList = this.cartGoods.map(function (v) {
-          v.checked = false;
-          return v;
-        });
-        this.editCartList = this.cartGoods;
-        this.cartGoods = tmpCartList;
+        // let tmpCartList = this.cartGoods.map(function (v) {
+        //   v.checked = false;
+        //   return v;
+        // });
+        // this.editCartList = this.cartGoods;
+        // this.cartGoods = tmpCartList;
         this.isEditCart = !this.isEditCart;
-        this.checkedAllStatus = this.isCheckedAll();
-        this.cartTotal.checkedGoodsCount = this.getCheckedGoodsCount();
+        // this.checkedAllStatus = this.isCheckedAll();
+        // this.cartTotal.checkedGoodsCount = this.getCheckedGoodsCount();
       }
     },
     // 更新购物车数据，点击+或—触发
@@ -252,34 +254,29 @@ export default {
     },
     // 点击“删除所选”
     async deleteCart () {
-      // 获取已选择的商品
-      let productIds = this.cartGoods.filter(function (element, index, array) {
-        if (element.checked === true) {
-          return true;
-        } else {
-          return false;
-        }
-      });
-      if (productIds.length <= 0) {
-        return false;
+      const openId = wx.getStorageSync('openId')
+      var par = {
+        openId: openId,
+        Id: this.selectGoods.Id,
+        rowState: 'D'
       }
-      productIds = productIds.map(function (element, index, array) {
-        if (element.checked === true) {
-          return element.product_id;
-        }
-      });
-      // 请求后台计算
-      const res = await api.CartDelete({ productIds: productIds.join(',') });
-      // console.log('删除所选', res);
-      if (res.errno === 0) {
-        let cartList = res.data.cartList.map(v => {
-          v.checked = false;
-          return v;
-        });
-        this.cartGoods = cartList;
-        this.cartTotal = res.data.cartTotal;
+      this.$wx.showLoading()
+      const res = await api.modifyShoppingCart(par)
+      this.$wx.hideLoading()
+      if(res.success) {
+        this.cartGoods = this.cartGoods.filter(function (element, index, array) {
+        if (element.Id === par.Id) {
+            return false;
+          } else {
+            return true;
+          }
+        })
+        this.$wx.showSuccessToast('移除成功!')
+      } else {
+        this.$wx.showErrorToast(res.msg)
       }
-      this.checkedAllStatus = this.isCheckedAll();
+      
+      
     }
   },
     // 小程序原生上拉加载
@@ -490,7 +487,7 @@ page{
 }
 
 .cart-view .item.edit .t{
-    display: none;
+    /* display: none; */
 }
 
 .cart-view .item.edit .attr{

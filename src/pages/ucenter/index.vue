@@ -27,7 +27,7 @@
   </view>
   <view class="myOrder">
       <view class="h clear">
-          <navigator>
+          <navigator url="/pages/ucenter/order">
               <text class="t">我的订单</text>
               <text class="i">查看全部订单</text>            
           </navigator>
@@ -69,10 +69,10 @@
         <view class="t">我的足迹</view>
         <img class="i" src="/static/images/address_right.png" background-size="cover"/>       
   </view>
-   <view class="address list clear">    
+   <navigator url="../ucenter/address" class="address list clear">    
         <view class="t">地址管理</view>
         <img class="i" src="/static/images/address_right.png" background-size="cover"/>       
-  </view>
+  </navigator>
    <view class="service list clear">    
         <view class="t">售后客服</view>
         <img class="i" src="/static/images/address_right.png" background-size="cover"/>       
