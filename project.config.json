@@ -103,6 +103,12 @@
 					"name": "注册登录",
 					"pathName": "pages/ucenter/login",
 					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "二级分类页",
+					"pathName": "pages/category/category",
+					"query": ""
 				}
 			]
 		}

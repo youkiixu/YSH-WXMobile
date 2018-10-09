@@ -1,5 +1,29 @@
 <template >
 <view class="container">
+  <view class="sort">
+    <view class="sort-box">
+      <view :class=" currentSortType == 'default' ? 'active item' : 'item'"  @click="openSortFilter" id="defaultSort">
+        <text class="txt">综合</text>
+      </view>
+      <view :class="['item', 'by-sales by-sort', { active: currentSortType == 'sales', asc: currentSortOrder == 'asc', desc: currentSortOrder !== 'asc' }]"
+         @click="openSortFilter" id="salesSort">
+        <text class="txt">销量</text>
+      </view>
+      <view :class="['item', 'by-price by-sort', { active: currentSortType == 'price', asc: currentSortOrder == 'asc', desc: currentSortOrder !== 'asc' }]"
+         @click="openSortFilter" id="priceSort">
+        <text class="txt">价格</text>
+      </view>
+      <view :class="['item', 'by-comment by-sort', { active: currentSortType == 'comment', asc: currentSortOrder == 'asc', desc: currentSortOrder !== 'asc' }]"
+         @click="openSortFilter" id="commentSort">
+        <text class="txt">评论</text>
+      </view>
+    </view>
+    <view class="sort-box-category" v-if="categoryFilter">
+      <view :class="item.checked ? 'active item' : 'item'" v-for="(item, index) of filterCategory" :key="cate-item.id" :data-category-index="index" @click="selectCategory">{{item.name}}</view>
+    </view>
+  </view>
+
+
     <view class="cate-nav">
         <scroll-view scroll-x="true" class="cate-nav-body" style="width: 750rpx;" :scroll-left="scrollLeft">
             <view  v-for="(item , index) of navList" :class="Id == item.Id ? 'active item' : 'item'" :key="item.Id"
@@ -19,8 +43,12 @@
                 <view v-for="item of goodsList" :key="item.ProductId" :class="(index + 1) % 2 === 0 ? 'item-b item' : 'item'"
                    @click="toGoods(item)" >
                     <img class="img" :src=" 'https://www.kiy.cn/'+ item.imagePath" background-size="cover" />
-                    <text class="name">{{item.ProductName}}</text>
-                    <text class="price">￥{{item.MinSalePrice}}</text>
+                    <view class="b-txt">
+                      <view class="price">
+                        <text class="icon">￥</text>{{item.MinSalePrice}}
+                      </view>
+                      <view class="name">{{item.ProductName}}</view>
+                    </view>
                 </view>
             </view>
         </view>
@@ -40,6 +68,12 @@ export default {
       goodsList: [],
       Id: 0,
       currentCategory: {},
+      currentSortType: 'default',
+      currentSortOrder: 'desc',
+      searchStatus: false,
+      goodsList: [],
+      categoryFilter: false,
+      keyword: '',
       scrollLeft: 0,
       scrollTop: 0,
       scrollHeight: 0,
@@ -70,6 +104,67 @@ export default {
     ])
   },
   methods: {
+
+    // 获得搜索结果的商品列表
+    async getGoodsList () {
+      // this.historyKeyword = [];
+      // const res = await api.getGoodsList({ keyword: this.keyword, page: this.page, size: this.size, sort: this.currentSortType, order: this.currentSortOrder, categoryId: this.categoryId });
+      const res = await api.search({keywords: this.keyword , pageNo: this.page , pageSize: this.size})
+      console.log('搜索结果', res);
+      if (res.success) {
+        this.searchStatus = true;
+        this.categoryFilter = false;
+        var dataTable = JSON.parse(res.data)
+        this.goodsList = dataTable.Table;
+      }
+    },
+     // 三个排序条件的点击事件
+    openSortFilter: function (event) {
+      let currentId = event.currentTarget.id;
+      switch (currentId) {        
+        case 'salesSort':
+          let tmpSortOrderSales = 'asc';
+          if (this.currentSortOrder === 'asc') {
+            tmpSortOrderSales = 'desc';
+          }
+          this.categoryFilter = false;
+          this.currentSortType = 'sales';
+          this.currentSortOrder = tmpSortOrderSales;
+          this.getGoodsList();
+          break;
+
+          case 'priceSort':
+          let tmpSortOrderPrice = 'asc';
+          if (this.currentSortOrder === 'asc') {
+            tmpSortOrderPrice = 'desc';
+          }
+          this.categoryFilter = false;
+          this.currentSortType = 'price';
+          this.currentSortOrder = tmpSortOrderPrice;
+          this.getGoodsList();
+          break;
+
+          case 'commentSort':
+          let tmpSortOrderComment = 'asc';
+          if (this.currentSortOrder === 'asc') {
+            tmpSortOrderComment = 'desc';
+          }
+          this.categoryFilter = false;
+          this.currentSortType = 'comment';
+          this.currentSortOrder = tmpSortOrderComment;
+          this.getGoodsList();
+          break;
+
+        default:
+          // 综合排序
+          this.categoryFilter = false;
+          this.currentSortType = 'default';
+          this.currentSortOrder = 'desc';
+          this.getGoodsList();
+      }
+    },
+
+
     async searchGoods() {
       const res = await api.search({ cid: this.Id , pageNo: this.page , pageSize : this.size });
       if(res.success) {
@@ -137,12 +232,92 @@ export default {
 
 <style scoped>
 .container{
-    background: #f9f9f9;
+    background: #f1f1f1;
+}
+.sort{
+    background: #fff;
+    width: 100%;
+    height: 78rpx;
+    position: fixed;
+    left:0;
+    z-index: 1000;
+}
+
+.sort-box{
+    background: #fff;
+    width: 690rpx;
+    height: 78rpx;
+    overflow: hidden;
+    padding: 0 30rpx;
+    display: flex;
+    border-bottom: 1px solid #d9d9d9;
+}
+
+.sort-box .item{
+    height: 78rpx;
+    line-height: 78rpx;
+    text-align: center;
+    flex:1;
+    color: #333;
+    font-size: 30rpx;
+}
+
+.sort-box .item .txt{
+    display: block;
+    width: 100%;
+    height: 100%;
+    color: #282828;
+    font-size: 28rpx;
+}
+
+.sort-box .item.active .txt{
+    color: #009e96;
+}
+
+.sort-box .item.by-sort{
+    background: url(//yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/no-3127092a69.png) 155rpx center no-repeat;
+    background-size: 15rpx 21rpx;
+}
+
+.sort-box .item.by-sort.active.asc{
+    background: url(http://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/up-636b92c0a5.png) 155rpx center no-repeat;
+    background-size: 15rpx 21rpx;
+}
+
+.sort-box .item.by-sort.active.desc{
+    background: url(http://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/down-95e035f3e5.png) 155rpx center no-repeat;
+    background-size: 15rpx 21rpx;
+}
+
+.sort-box-category{
+    background: #fff;
+    width: 100%;
+    height: auto;
+    overflow: hidden;
+    padding: 40rpx 40rpx 0 0;
+    border-bottom: 1px solid #d9d9d9;
+}
+
+.sort-box-category .item{
+    height: 54rpx;
+    line-height: 54rpx;
+    text-align: center;
+    float: left;
+    padding: 0 16rpx;
+    margin: 0 0 40rpx 40rpx;
+    border: 1px solid #666;
+    color: #333;
+    font-size: 24rpx;
+}
+
+.sort-box-category .item.active{
+    color: #b4282d;
+    border: 1px solid #b4282d;
 }
 .cate-nav{
     position: fixed;
     left:0;
-    top:0;
+    top:78rpx;
     z-index: 1000;
 }
 
@@ -208,49 +383,49 @@ export default {
 
 .cate-item .b{
   width: 750rpx;
-  padding: 0 6.25rpx;
+  padding: 7rpx 13rpx;
+  box-sizing: border-box;
   height: auto;
   overflow: hidden;
+  background-color: #f1f1f1;
 }
-
 .cate-item .b .item{
   float: left;
   background: #fff;
-  width: 365rpx;
-  margin-bottom: 6.25rpx;
-  padding-bottom: 33.333rpx;
-  height: auto;
+  width: 357rpx;
+  height: 540rpx;
   overflow: hidden;
-  text-align: center;
 }
-
-.cate-item .b .item-b{
-  margin-left: 6.25rpx;
+.cate-item .b .item{
+  margin-top: 13rpx;
 }
-
+.cate-item .b .item:nth-child(2n){
+    margin-left: 13rpx;
+}
 .cate-item .item .img{
-  width: 302rpx;
-  height: 302rpx;
-}
-
-.cate-item .item .name{
   display: block;
-  width: 320rpx;
-  height: 40rpx;
-  margin: 11.5rpx 0 22rpx 0;
-  text-align: center;
+  width: 100%;
+  height: 400rpx;
+  background: #666666;
+}
+.cate-item .b-txt{
+  width: 100%;
+  height: 140rpx;
+  padding: 15rpx 10rpx;
+  box-sizing: border-box;
+}
+.cate-item .b-txt .price{
+  width: 100%;
+  font-size: 32rpx;
+  color: #dc2121;
+}
+.cate-item .b-txt .icon{ 
+  font-size: 28rpx;
+}
+.cate-item .b-txt .name{
+  width: 100%;
   overflow: hidden;
-  padding: 0 20rpx;
-  font-size: 30rpx;
-  color: #333;
-}
-
-.cate-item .item .price{
-  display: block;
-  width: 365.625rpx;
-  height: 30rpx;
-  text-align: center;
-  font-size: 30rpx;
-  color: #b4282d;
+  font-size: 24rpx;
+  color: #282828;
 }
 </style>

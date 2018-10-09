@@ -1,18 +1,29 @@
 <template >
 <view class="container">
-    <view class="search">
+    <!-- <view class="search">
         <navigator url="/pages/search/search" class="input">
             <img class="icon"/>
             <text class="txt">商品搜索, 共{{goodsCount}}款好物</text>
         </navigator>
+    </view> -->
+
+    <view class="index-searchbar">
+      <view class="search">
+          <navigator url="/pages/search/search" class="input">
+              <img class="icon"/>
+              <text class="txt">商品搜索</text>
+          </navigator>
+      </view>
     </view>
+    
+
     <view class="catalog">
         <scroll-view class="nav" scroll-y="true">
             <view :class="currentCategory.Id == item.Id ? 'active item' : 'item'" v-for="(item, index) of navList" :key="item.Id" :data-id="item.Id"
                 :data-index="index" @click="switchCateLog(index)">{{item.Name}}</view>
         </scroll-view>
         <scroll-view class="cate" scroll-y="true" >
-            <view v-for="( categoryChild , index1 ) of categoryList" :key="index1">
+            <view class="cate_item" v-for="( categoryChild , index1 ) of categoryList" :key="index1">
               <view class="hd">
                   <!-- <text class="line"></text> -->
                   <text class="txt">{{categoryChild.Name}}分类</text>
@@ -103,31 +114,35 @@ page {
 }
 
 .container {
-  background: #f9f9f9;
+  background: #fff;
   height: 100%;
   width: 100%;
   display: flex;
   flex-direction: column;
 }
-
+.index-searchbar {
+  position: absolute;
+  z-index: 99;
+}
 .search {
-  height: 88rpx;
+  height: 60rpx;
   width: 100%;
   padding: 0 30rpx;
-  background: #fff;
   display: flex;
   align-items: center;
 }
 
 .search .input {
-  width: 690rpx;
-  height: 56rpx;
+  width: 606rpx;
+  height: 60rpx;
   background: #ededed;
-  border-radius: 8rpx;
+  border-radius: 30rpx;
   display: flex;
   align-items: center;
-  justify-content: center;
+  padding-left: 40rpx;
   margin-left: 24rpx;
+  background-color: #f7f7f7;
+  box-shadow: 0 0 20rpx rgba(0,0,0,0.10);
 }
 
 .search .icon {
@@ -140,24 +155,23 @@ page {
 .search .txt {
   height: 42rpx;
   line-height: 42rpx;
-  color: #666;
+  color: #9b9b9b;
   padding-left: 10rpx;
   font-size: 30rpx;
 }
-
-
 .catalog {
   flex: 1;
   width: 100%;
   background: #fff;
   display: flex;
   border-top: 1px solid #fafafa;
+  margin-top: 80rpx;
 }
 
 .catalog .nav {
   width: 180rpx;
   height: 100%;
-  background: #f1f1f1;
+  
 }
 
 .catalog .nav .item {
@@ -165,17 +179,17 @@ page {
   line-height: 100rpx;
   width: 180rpx;
   height: 100rpx;
-  color: #333;
+  color: #282828;
   font-size: 24rpx;
   border-left: 6rpx solid #f1f1f1;
   overflow: hidden;
+  margin-top: 3rpx;
+  background: #f1f1f1;
 }
 
 .catalog .nav .item.active {
   color: #20b2aa;
-  font-size: 28rpx;
-  border-left: 6rpx solid #20b2aa;
-  background: #fff;
+  font-size: 24rpx;
 }
 
 .catalog .cate {
@@ -212,21 +226,26 @@ page {
   line-height: 192rpx;
   width: 100%;
 }
+.catalog .cate_item{
+  padding: 10rpx 0;
+  box-sizing: border-box;
+  border-bottom: 3rpx solid #f1f1f1;
+}
 
 .catalog .hd {
-  height: 108rpx;
+  height: 65rpx;
+  line-height: 65rpx;
   width: 100%;
+  margin-top: 10rpx;
   display: flex;
   /* justify-content: center; */
   align-items: center;
 }
 
 .catalog .hd .txt {
-  font-size: 24rpx;
+  font-size: 20rpx;
   text-align: left;
-  color: #111111;
-  font-weight: 700;
-  padding: 0 10rpx;
+  color: #282828;
   width: auto;
 }
 
@@ -245,9 +264,13 @@ page {
 .catalog .bd .item {
   display: block;
   float: left;
-  height: 216rpx;
-  width: 127rpx;
-  margin-right: 50rpx;
+  height: 210rpx;
+  width: 136rpx;
+  margin-left: 30rpx;
+  margin-top: 20rpx;
+}
+.catalog .bd .item:nth-child(3n+1){
+  margin-left: 0;
 }
 
 .catalog .bd .item.last {
@@ -255,20 +278,19 @@ page {
 }
 
 .catalog .bd .item .icon {
-  height: 127rpx;
-  width: 127rpx;
-  border-radius: 50%;
+  height: 136rpx;
+  width: 136rpx;
   overflow: hidden;
 }
 
 .catalog .bd .item .txt {
   display: block;
   text-align: center;
-  font-size: 20rpx;
-  color: #666666;
-  font-weight: 500;
-  height: 72rpx;
-  width: 127rpx;
+  font-size: 22rpx;
+  color: #282828;
+  height: 74rpx;
+  line-height: 30rpx;
+  width: 100%;
 }
 
 </style>

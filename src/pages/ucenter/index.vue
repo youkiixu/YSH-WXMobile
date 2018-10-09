@@ -20,7 +20,7 @@
         <button v-if="canIUse" open-type="getUserInfo" @getuserinfo="goLogin" class="goLoginBtn" >点击，授权登录~</button>   
       </view>
       </view>
-      
+
     <view class="set">
       <img src="/static/images/ic_me_set.png"/>
     </view>
@@ -328,10 +328,12 @@ page{
 .info_member{
   height: 30rpx;
   padding: 0 12rpx;
+  box-sizing: border-box;
   line-height: 30rpx;
   font-size: 20rpx;
   color: #fff;
   background-color: #dcae71;
+  background: linear-gradient(to right,#ecc183, #c79558);
   border-radius: 5rpx;
   margin-top: 5rpx;
 }

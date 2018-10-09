@@ -5,12 +5,19 @@
     <view class="item">48小时快速退款</view>
     <view class="item">满88元免邮费</view>
   </view> -->
-  <view class="no-cart" v-if="cartGoods.length <= 0">
+  <!-- <view class="no-cart" v-if="cartGoods.length <= 0">
     <view class="c">
       <img src="http://nos.netease.com/mailpub/hxm/yanxuan-wap/p/20150730/style/img/icon-normal/noCart-a8fe3f12e5.png" />
       <text>去添加点什么吧</text>
     </view>
+  </view> -->
+
+  <view class="no-cart" v-if="cartGoods.length <= 0">
+    <view class="c">购物车空空如也</view>
+    <view class="g">快去逛逛吧</view>
+    <view class="k">去逛逛</view>
   </view>
+
   <view class="cart-view" v-if="cartGoods.length">
     <view class="list">
       <view class="group-item">
@@ -315,28 +322,36 @@ page{
     min-height: 100%;
     overflow: hidden;
 }
-.service-policy{
-    width: 720rpx;
-    height: 73rpx;
-    background: #f4f4f4;
-    padding: 0 31.25rpx;
-    display: flex;
-    flex-flow: row nowrap;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.service-policy .item{
-    background: url(http://nos.netease.com/mailpub/hxm/yanxuan-wap/p/20150730/style/img/icon-normal/servicePolicyRed-518d32d74b.png) 0 center no-repeat;
-    background-size: 10rpx;
-    padding-left: 15rpx;
-    display: flex;
-    align-items: center;
-    font-size: 25rpx;
-    color: #666;
-}
-
 .no-cart{
+  width: 280rpx;
+  height: 230rpx;
+  margin: 100rpx auto;
+  text-align: center
+}
+.no-cart .c{
+  width: 100%;
+  line-height: 50rpx;
+  color: #333333;
+  font-size: 28rpx;
+}
+.no-cart .g{
+  width: 100%;
+  line-height: 50rpx;
+  color: #666666;
+  font-size: 24rpx;
+}
+.no-cart .k{
+  width: 150rpx;
+  height: 58rpx;
+  line-height: 58rpx;
+  color: #009e96;
+  font-size: 24rpx;
+  border: 3rpx solid #009e96;
+  background-color: #fff;
+  margin: 30rpx auto;
+}
+
+/* .no-cart{
     width: 100%;
     height: auto;
     margin: 0 auto;
@@ -365,6 +380,30 @@ page{
     text-align: center;
     font-size: 29rpx;
     color: #999;
+} */
+
+
+
+
+.service-policy{
+    width: 720rpx;
+    height: 73rpx;
+    background: #f4f4f4;
+    padding: 0 31.25rpx;
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.service-policy .item{
+    background: url(http://nos.netease.com/mailpub/hxm/yanxuan-wap/p/20150730/style/img/icon-normal/servicePolicyRed-518d32d74b.png) 0 center no-repeat;
+    background-size: 10rpx;
+    padding-left: 15rpx;
+    display: flex;
+    align-items: center;
+    font-size: 25rpx;
+    color: #666;
 }
 
 
