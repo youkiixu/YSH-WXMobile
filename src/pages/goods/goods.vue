@@ -39,7 +39,7 @@
       </view>
       <!-- 已选参数 -->
       <view class="section-nav section-attr" @click="switchAttrPop">
-          <view class="t">规格:{{selectSkuStr.Color}} {{selectSkuStr.Size}} {{selectSkuStr.Version}} {{selectSkuStr.Material}} {{selectSkuStr.Fashion}} {{selectSkuStr.Grams}} {{selectSkuStr.Ensemble}}</view>
+          <view class="t">规格:<text class="td">{{selectSkuStr.Color}} {{selectSkuStr.Size}} {{selectSkuStr.Version}} {{selectSkuStr.Material}} {{selectSkuStr.Fashion}} {{selectSkuStr.Grams}} {{selectSkuStr.Ensemble}}</text></view>
           <img class="i" src="/static/images/address_right.png" background-size="cover"/>
           <view class="clear"></view>
       </view>
@@ -711,7 +711,11 @@ export default {
   color: #555555;
   margin-left: 31.25rpx;
 }
-
+.section-nav .t .td{
+  color: #282828;
+  padding-left: 25rpx;
+  box-sizing: border-box;
+}
 .section-nav .i {
   float: right;
   width: 52rpx;

@@ -1,6 +1,42 @@
 <template >
 <view class="container">
-    <view class="address-box">
+   <view class="order-head">
+       <view class="address-box">
+        <view class="address-item" @click="selectAddress" v-if="address.Id > 0">
+                <view class="name clear">
+                    <text class="s">收货人：</text>
+                    <text class="t">{{address.ShipTo}}</text>
+                    <text class="phone">{{address.Phone}}</text>
+                </view>
+                <view class="address-info">
+                <view class="info-icon">
+                    <img src="/static/images/location.png" background-size="cover"/>
+                </view>
+                <view class="info-txt">  
+                    <text class="default" v-if="address.IsDefault === 1">默认</text>            
+                    <text>{{address.Province +' '+  address.City +' '+ address.Area +' '+ address.Street +' '+ address.Address }}</text>
+                </view>
+                <view class="info-go">
+                    <img src="/static/images/address_right.png"/>
+                </view>
+                </view>
+            </view>
+
+            <!-- <view class="address-item address-empty" @click="addAddress" v-if="checkOutInfo.Address">
+                <view class="m">
+                还没有收货地址，去添加
+                </view>
+                <view class="r">
+                    <image src="/static/images/address_right.png"/>
+                </view>
+            </view> -->
+        </view>
+        <view class="line">
+            <img src="/static/images/icon-order-division.png"/>
+        </view>
+   </view>
+    
+    <!-- <view class="address-box">
         <view class="address-item" @click="selectAddress" v-if="address.Id > 0">
             <view class="l">
                 <text class="name">{{address.ShipTo}}</text>
@@ -14,7 +50,12 @@
                 <image src="/static/images/address_right.png"/>
             </view>
         </view>
-        <!-- <view class="address-item address-empty" @click="addAddress" v-if="checkOutInfo.Address">
+      
+
+      
+    </view> -->
+
+  <!-- <view class="address-item address-empty" @click="addAddress" v-if="checkOutInfo.Address">
             <view class="m">
                还没有收货地址，去添加
             </view>
@@ -22,91 +63,143 @@
                 <image src="/static/images/address_right.png"/>
             </view>
         </view> -->
-    </view>
-
-
-    <view class="order-box">
-        <view class="order-item">
-            <view class="l">
-                <text class="name">备注</text>
-            </view>
-            <view class="r">
-                <input class="txt" v-model="checkOutOther.orderRemarks"/>
+    <view class="outside">
+        <scroll-view scroll-y class="order-content">       
+        <view class="goods-items">
+            <view class="item" >
+                <view class="img">
+                    <image :src="checkOutInfo.products.imagePath"/>
+                </view>
+                <view class="info">
+                    <view class="t">
+                        <text class="name">{{checkOutInfo.products.ProductName}}</text>
+                        <text class="number">x{{checkOutInfo.Count}}</text>
+                    </view>
+                    <view class="m" v-if="checkOutInfo.products.Color">颜色：{{checkOutInfo.products.Color}}</view>
+                    <view class="m" v-if="checkOutInfo.products.Size">尺寸：{{checkOutInfo.products.Size}}</view>
+                    <view class="m" v-if="checkOutInfo.products.Version">规格：{{checkOutInfo.products.Version}}</view>
+                    <view class="m" v-if="checkOutInfo.products.Material">材料：{{checkOutInfo.products.Material}}</view>
+                    <view class="m" v-if="checkOutInfo.products.Fashion">款式：{{checkOutInfo.products.Fashion}}</view>
+                    <view class="m" v-if="checkOutInfo.products.Grams">克重：{{checkOutInfo.products.Grams}}</view>
+                    <view class="m" v-if="checkOutInfo.products.Ensemble">套餐：{{checkOutInfo.products.Ensemble}}</view>
+                    <!-- <view class="b">￥{{checkOutInfo.products.SalePrice}}</view> -->
+                </view>
             </view>
         </view>
-        <view class="order-item"  @click="selectWuliu('Remindtype')">
-            <view class="l">
-                <text class="name">配送方式</text>
+
+        
+        <view class="order-box">
+            <view class="box-top">
+                
+            <view class="order-item clear"  @click="selectWuliu('Remindtype')">
+                <view class="l">
+                    <text class="name">配送方式</text>
+                </view>
+                <view class="r distribution y">  
+                    <text class="txt">￥{{daifaInfo.DiscountFreight}}</text>          
+                    <text class="txt">{{checkOutOther.RemindtypeStr}}</text>
+                </view>
             </view>
-            <view class="r">
-                <text class="txt">{{checkOutOther.RemindtypeStr}}</text>
+            <view class="order-item clear">
+                <view class="l">
+                    <text class="name">优惠券码</text>
+                </view>
+                <view class="r distribution">            
+                    <text class="txt">20元立减券</text>
+                </view>
             </view>
-        </view>
+            <view class="order-item clear">
+                <view class="l">
+                    <text class="name">买家留言</text>
+                </view>
+                <view class="r message">
+                    <input class="txt" v-model="checkOutOther.orderRemarks" placeholder="点击给商家留言"/>
+                </view>
+            </view>
+
+            <view class="order-item clear">
+                <view class="l">
+                    <text class="name">合计</text>
+                </view>
+                <view class="r price">            
+                <view class="txt" v-if="daifaInfo.isDaifa">￥ {{checkOutInfo.totalAmount + daifaInfo.DiscountFreight}}</view>
+                <view class="txt" v-if="!daifaInfo.isDaifa">￥ {{checkOutInfo.totalAmount}}</view>
+                </view>
+            </view>
+            </view>
+            <view class="box-bottom">
+                <view class="price-total">
+                    <view class="product-price clear">
+                        <view class="l">商品金额</view>
+                        <view class="r">￥{{checkOutInfo.totalAmount}}</view>
+                    </view>
+                    <view class="express-price clear">
+                        <view class="l">运费</view>
+                        <view class="r">+ ￥{{daifaInfo.DiscountFreight}}</view>
+                    </view>
+                </view>
+            </view>
+
+        
+
+
         <!-- 代发快递 -->
-        <div class="box-content" v-if="checkOutOther.Remindtype == 1">
-            <div class="weui-cells__title">代发快递方式</div>
-            <div class="weui-cells weui-cells_after-title">
-                <!-- <div class="weui-cell weui-cell_switch">
-                    <div class="weui-cell__bd">是否到付</div>
-                    <div class="weui-cell__ft">
-                        <switch :checked="daifaInfo.isCashOnDelivery" @change="daifaSwitch('isCashOnDelivery')"/>
+            <div class="box-content" v-if="checkOutOther.Remindtype == 1">
+                <div class="weui-cells__title">代发快递方式</div>
+                <div class="weui-cells weui-cells_after-title">
+                    <!-- <div class="weui-cell weui-cell_switch">
+                        <div class="weui-cell__bd">是否到付</div>
+                        <div class="weui-cell__ft">
+                            <switch :checked="daifaInfo.isCashOnDelivery" @change="daifaSwitch('isCashOnDelivery')"/>
+                        </div>
+                    </div> -->
+                    <div class="weui-cell weui-cell_switch">
+                        <div class="weui-cell__bd">代收货款</div>
+                        <div class="weui-cell__ft">
+                            <switch :checked="daifaInfo.IsDaiShouHuoKuan" @change="daifaSwitch('IsDaiShouHuoKuan')"/>
+                        </div>
                     </div>
-                </div> -->
-                <div class="weui-cell weui-cell_switch">
-                    <div class="weui-cell__bd">代收货款</div>
-                    <div class="weui-cell__ft">
-                        <switch :checked="daifaInfo.IsDaiShouHuoKuan" @change="daifaSwitch('IsDaiShouHuoKuan')"/>
+                    <div class="weui-cell weui-cell_switch" v-if="daifaInfo.IsDaiShouHuoKuan">
+                        <div class="weui-cell__bd">代收货款金额</div>
+                        <div class="weui-cell__ft">
+                            <input class="weui-input" v-model="daifaInfo.daiShouMoney" type="number" placeholder="请输入代收货款金额" />
+                        </div>
                     </div>
-                </div>
-                <div class="weui-cell weui-cell_switch" v-if="daifaInfo.IsDaiShouHuoKuan">
-                    <div class="weui-cell__bd">代收货款金额</div>
-                    <div class="weui-cell__ft">
-                        <input class="weui-input" v-model="daifaInfo.daiShouMoney" type="number" placeholder="请输入代收货款金额" />
-                    </div>
-                </div>
-                <!-- 快递公司	 -->
-                <div class="weui-cell weui-cell_select">
-                    <div class="weui-cell__hd weui-cell__hd_in-select-after">
-                        <div class="weui-label">快递公司</div>
-                    </div>
-                    <div class="weui-cell__bd">
-                        <picker @change="expressCompanyChange" :range="expressCompany">
-                        <div class="weui-select weui-select_in-select-after">{{expressCompany[expressCompanyIndex]}}</div>
-                        </picker>
+                    <!-- 快递公司	 -->
+                    <div class="weui-cell weui-cell_select">
+                        <div class="weui-cell__hd weui-cell__hd_in-select-after">
+                            <div class="weui-label">快递公司</div>
+                        </div>
+                        <div class="weui-cell__bd">
+                            <picker @change="expressCompanyChange" :range="expressCompany">
+                            <div class="weui-select weui-select_in-select-after">{{expressCompany[expressCompanyIndex]}}</div>
+                            </picker>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </view>
-
-    <view class="goods-items">
-        <view class="item" >
-            <view class="img">
-                <image :src="checkOutInfo.products.imagePath"/>
-            </view>
-            <view class="info">
-                <view class="t">
-                    <text class="name">{{checkOutInfo.products.ProductName}}</text>
-                    <text class="number">x{{checkOutInfo.Count}}</text>
-                </view>
-                <view class="m" v-if="checkOutInfo.products.Color">颜色：{{checkOutInfo.products.Color}}</view>
-                <view class="m" v-if="checkOutInfo.products.Size">尺寸：{{checkOutInfo.products.Size}}</view>
-                <view class="m" v-if="checkOutInfo.products.Version">规格：{{checkOutInfo.products.Version}}</view>
-                <view class="m" v-if="checkOutInfo.products.Material">材料：{{checkOutInfo.products.Material}}</view>
-                <view class="m" v-if="checkOutInfo.products.Fashion">款式：{{checkOutInfo.products.Fashion}}</view>
-                <view class="m" v-if="checkOutInfo.products.Grams">克重：{{checkOutInfo.products.Grams}}</view>
-                <view class="m" v-if="checkOutInfo.products.Ensemble">套餐：{{checkOutInfo.products.Ensemble}}</view>
-                <!-- <view class="b">￥{{checkOutInfo.products.SalePrice}}</view> -->
-            </view>
+        
         </view>
+
+
+
+    </scroll-view>
+
+
     </view>
+    
+
+   
 
     <view class="order-total" >
+        <view class="t">
         <!-- 如果是代发，需要加上代发运费 -->
-        <view class="l" v-if="daifaInfo.isDaifa">实付：￥{{checkOutInfo.totalAmount + daifaInfo.DiscountFreight}}</view>
+        <view  v-if="daifaInfo.isDaifa">合计：￥{{checkOutInfo.totalAmount + daifaInfo.DiscountFreight}}</view>
         <!-- 如果是印捷配送，直接显示价格 -->
-        <view class="l" v-if="!daifaInfo.isDaifa">实付：￥{{checkOutInfo.totalAmount}}</view>
-        <view class="r" @click="submitOrder">去下单</view>
+        <view v-if="!daifaInfo.isDaifa">合计：￥{{checkOutInfo.totalAmount}}</view>
+        </view>
+        
+        <view class="b" @click="submitOrder">确认支付</view>
     </view>
 </view>
 </template>
@@ -364,12 +457,127 @@ export default {
 </script>
 
 <style scoped>
-page{
+.container{
     height: 100%;
-    background: #f4f4f4;
+    background: #fff;
+}
+.clear:after{
+    display: block;
+    content:'';
+    clear: both;
+    height:0;
+    }
+.order-head{
+    position: fixed;
+    z-index: 10;
+}
+.outside{
+    position:fixed;
+    z-index:9;
+    top: 200rpx;
+    height: auto;
+    background: #f1f1f1;
+    }
+.order-content{
+    height: 760rpx;
+    overflow:hidden;
+   
+}
+.address-box{
+    width: 750rpx;
+    height: auto;
+    padding: 0 20rpx 20rpx 20rpx;
+    box-sizing: border-box;
+    background-color: #fff;
+}
+.address-box .address-item{
+    padding: 20rpx 0 20rpx 0;
+}
+.address-box .name{
+    height: 55rpx;
+    line-height: 55rpx;
+}
+.address-box .name .s{
+    font-size: 28rpx;
+    color: #000;
+    margin-left: 60rpx;
+}
+.address-box .name .t{
+    font-size: 28rpx;
+    color: #000;
+    margin-left: 10rpx;
+}
+.address-box .name .phone{
+  float: right;
+  font-size: 28rpx;
+  color: #000;
+  margin-right: 50rpx;
+ 
+}
+.address-info{
+  display: -webkit-box;
+  display: -webkit-flex;
+  margin-top: 10rpx;
+}
+.address-info .info-icon{
+  width: 45rpx;
+  height: 50rpx;
+  margin-top: 12rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.address-info .info-icon img{
+  width: 35rpx;
+  height: 40rpx;
+  text-align: center;
+}
+.address-info .info-txt{
+  flex: 1;
+  font-size: 28rpx;
+  color: #000;
+  width: 550rpx;
+  line-height: 40rpx;
+  margin-left: 15rpx;
+}
+.address-info .info-go{
+  width: 45rpx;
+  height: 50rpx;
+  margin-top: 12rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.address-info .info-go img{
+  width: 35rpx;
+  height: 40rpx;
+  text-align: center;
+}
+.address-box .default{
+    width: 77rpx;
+    height: 30rpx;
+    line-height: 30rpx;
+    text-align: center;
+    font-size: 26rpx;
+    color: #009e96;
+    margin-right: 20rpx;
+    background-color: #c7eae8;
+    visibility: visible;
 }
 
-.address-box{
+.line{
+    width: 100%;
+    height: 10rpx;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.line img{
+    width: 100%;
+    height: 10rpx;
+}
+
+/* .address-box{
     width: 100%;
     height: 166.55rpx;
     background: url('http://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/address-bg-bd30f2bfeb.png') 0 0 repeat-x;
@@ -383,7 +591,7 @@ page{
     height: 155.55rpx;
     background: #fff;
     padding: 41.6rpx 0 41.6rpx 31.25rpx;
-}
+} */
 
 .address-item.address-empty{
   line-height: 75rpx;
@@ -507,39 +715,101 @@ page{
 }
 
 .order-box{
-    margin-top: 20rpx;
     width: 100%;
     height: auto;
     overflow: hidden;
+    background: #f1f1f1;
+}
+.order-box .box-top,.order-box .box-bottom{
     background: #fff;
 }
-
 .order-box .order-item{
-    height: 66rpx;
-    overflow: hidden;
-    background: #fff;
-    display: flex;
-    margin-left: 31.25rpx;
-    padding-right: 31.25rpx;
-    padding-top: 26rpx;
-    border-bottom: 1px solid #d9d9d9;
+    height: 85rpx;
+    line-height: 85rpx;
+    padding: 0 20rpx;
+    box-sizing: border-box;
+    border-bottom: 1rpx solid #f5f5f5;
+}
+.order-box .order-item:first-child{
+    height: 100rpx;
+    line-height: 100rpx;
+}
+.order-box .order-item:last-child{
+    border-bottom: none;
 }
 
 .order-box .order-item .l{
     float: left;
-    height: 52rpx;
-    width: 50%;
-    line-height: 52rpx;
-    overflow: hidden;
+    width: 25%;
+    font-size: 28rpx;
+    color: #000;
 }
 
 .order-box .order-item .r{
     float: right;
     text-align: right;
-    width: 50%;
-    height: 52rpx;
-    line-height: 52rpx;
-    overflow: hidden;
+    width: 75%;
+    padding-right: 50rpx;
+    box-sizing: border-box;
+    font-size: 26rpx;
+    color: #666;
+}
+.order-box .order-item .distribution{
+    background: url(http://nos.netease.com/mailpub/hxm/yanxuan-wap/p/20150730/style/img/icon-normal/address-right-990628faa7.png) right center no-repeat;
+    background-size: 52rpx;
+}
+.order-box .order-item .y{
+    padding-top: 17rpx;
+    padding-bottom: 17rpx;
+    box-sizing: border-box;
+}
+.order-box .order-item .y .txt{
+    display: block;
+    line-height: 35rpx;
+}
+.order-box .order-item .message{
+    text-align: left;
+}
+.order-box .order-item .message input{
+    width: 100%;
+    height: 85rpx;
+    line-height: 85rpx;
+    color: #a9a9a9;
+    font-size: 28rpx;
+}
+.order-box .order-item .price{
+    color: #ea291b;
+    font-size: 38rpx;
+    padding-right: 0;
+}
+.price-total{
+    margin-top: 20rpx;
+    background-color: #fff;
+    height: 170rpx;
+    width: 100%;
+    padding-top: 20rpx;
+    box-sizing: border-box;
+}
+.price-total .express-price,.price-total .product-price{
+    padding: 0 20rpx;
+    box-sizing: border-box;
+}
+.price-total .l{
+    width: 25%;
+    height: 60rpx;
+    float: left;
+    line-height: 65rpx;
+    font-size: 28rpx;
+    color: #666;
+}
+.price-total .r{
+    width: 75%;
+    height: 60rpx;
+    float: right;
+    line-height: 65rpx;
+    text-align: right;
+    font-size: 28rpx;
+    color: #666;
 }
 
 .order-box .order-item.no-border{
@@ -547,21 +817,18 @@ page{
 }
 
 .goods-items{
-    margin-top: 20rpx;
     width: 100%;
     height: auto;
     /* overflow: hidden; */
-    background: #fff;
-    padding-left: 31.25rpx;
-    margin-bottom: 120rpx;
+    background: #f1f1f1;
+    padding: 25rpx 20rpx 25rpx 20rpx;
+   
 }
 
 .goods-items .item{
-    /* height: 192rpx; */
-    padding-right: 31.25rpx;
     display: flex;
     align-items: center;
-    border-bottom: 1px solid rgba(0,0,0,0.15);
+    margin-left: 20rpx;
 }
 
 .goods-items .item.no-border{
@@ -574,51 +841,52 @@ page{
 }
 
 .goods-items .img{
-    height: 145.83rpx;
-    width: 145.83rpx;
-    background-color: #f4f4f4;
+    height: 150rpx;
+    width: 150rpx;
+    background-color: #282828;
     margin-right: 20rpx;
 }
 
 .goods-items .img image{
-    height: 145.83rpx;
-    width: 145.83rpx;
+    height: 150rpx;
+    width: 150rpx;
 }
 
 .goods-items .info{
     flex: 1;
-    /* height: 145.83rpx; */
-    padding-top: 5rpx;
 }
 
 .goods-items .t{
-    height:  33rpx;
-    line-height: 33rpx;
-    margin-bottom: 10rpx;
+    line-height: 35rpx;
     overflow: hidden;
-    font-size: 30rpx;
-    color: #333;
+    font-size: 28rpx;
+    color: #000;
+    margin-bottom: 20rpx;
 }
 
 .goods-items .t .name{
+    width: 370rpx;
     display: block;
     float: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
 }
 
 .goods-items .t .number{
+    width: 145rpx;
     display: block;
     float: right;
-    text-align: right;
-    margin-right: 30rpx;
+    text-align: center;
 }
 
 .goods-items .m {
-    height:  29rpx;
     overflow: hidden;
-    line-height: 29rpx;
-    margin-bottom: 25rpx;
-    font-size: 25rpx;
-    color: #666;
+    line-height: 30rpx;
+    font-size: 26rpx;
+    color: #595757;
 }
 
 .goods-items .b {
@@ -633,31 +901,34 @@ page{
     position: fixed;
     left:0;
     bottom: 0;
-    height: 100rpx;
+    height: 260rpx;
     width: 100%;
-    display: flex;
+    background-color: #fff;
+    padding: 20rpx 20rpx;
+    box-sizing: border-box;
+    box-shadow: 0 -2px 0 #f5f5f5;
+    z-index: 1000;
 }
 
-.order-total .l{
+.order-total .t{
     flex: 1;
-    height: 100rpx;
-    line-height: 100rpx;
-    color: #b4282d;
-    background: #fff;
-    font-size: 33rpx;
-    padding-left: 31.25rpx;
-    border-top: 1rpx solid rgba(0,0,0,0.2);
-    border-bottom: 1rpx solid rgba(0,0,0,0.2);
+    height: 70rpx;
+    line-height: 70rpx;
+    color: #000;
+    font-size: 28rpx;
+    text-align: center;
 }
 
-.order-total .r{
-    width: 233rpx;
-    height: 100rpx;
-    background: #b4282d;
-    border: 1px solid #b4282d;
-    line-height: 100rpx;
+.order-total .b{
+    width: 700rpx;
+    height: 85rpx;
+    background: #009e96;
+    line-height: 85rpx;
     text-align: center;
     color: #fff;
-    font-size: 30rpx;
+    font-size: 34rpx;
+    margin: 0 auto;
+    border-radius: 10rpx;
+    box-shadow: 3px 3px 2px #009e96;
 }
 </style>

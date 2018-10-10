@@ -1,5 +1,5 @@
 <template>
-    <view class="search">
+    <view class="search" :style="background">
         <navigator url="/pages/search/search" class="input">
             <img class="icon"/>
             <text class="txt">商品搜索</text>
@@ -9,7 +9,13 @@
 
 <script>
 export default {
-    name: 'indexSearchBar'
+    name: 'indexSearchBar',
+    props: {
+      background: {
+        type: String,
+        defalut: 'rgba(255,255,255,0.8)' 
+      }
+    }
 }
 </script>
 <style scoped>
