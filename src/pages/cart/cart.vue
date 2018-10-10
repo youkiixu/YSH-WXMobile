@@ -62,6 +62,7 @@
       <!-- <view :class="checkedAllStatus ? 'checked checkbox' : 'checkbox'" @click="checkedAll">全选({{cartTotal.checkedGoodsCount}})</view> -->
       <view class="total">总金额：<text class="total-price">{{!isEditCart ? '￥'+ selectGoods.Price : ''}}</text></view>
       <view class="checkout" @click="checkoutOrder" v-if="!isEditCart">去结算</view>
+      <view class="delete" @click="deleteCart" v-if="isEditCart">删除</view>
     </view>
 
   </view>

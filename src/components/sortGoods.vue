@@ -3,7 +3,7 @@
   <scroll-view scroll-y="true" scroll-top="scrollTop" :style="{'height': '100%'}" @bindscroll="onReachBottom">
         <view class="cate-item">           
             <view class="b">               
-                  <navigator v-for="(item, index) of goodsList" :key="index" :class="index % 2 == 0 ? 'item-b item' : 'item'" :url="'../goods/goods?id=' + item.ProductId">
+                  <navigator v-for="(item, index) of goodsList" :key="index" :class="index % 2 == 0 ? 'item-b item' : 'item'" @toDetail="toDetail(item)">
                     <img class="img" :src="baseUrl+item.imagePath" background-size="cover"/>
                       <view class="b-txt">
                         <view class="price">
@@ -27,12 +27,18 @@
       </block>
     </view>
   </view> -->
-
+ 
 </view>
 </template>
 
 <script>
 export default {
+  methods: {
+    toDetail (item) {
+      console.log(item)
+      this.$wx.toGoodsDetail(item , this)
+    }
+  },
   computed: {
         baseUrl() {
             return this.$wx.baseUrl

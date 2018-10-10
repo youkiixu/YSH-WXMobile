@@ -205,7 +205,7 @@ export default {
       if(isLogin === true) {
         // 点击头像进入
         this.$router.push({
-            path: 'login'
+            path: 'login' 
           })
       } else {
         _this.$wx.showLoading()
