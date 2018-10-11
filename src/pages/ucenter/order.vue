@@ -1,6 +1,43 @@
 <template >
 <view class="container">
-    <view class="orders">
+    <view class="order-head">
+        <view class="head-item">全部订单</view>
+        <view class="head-item">待付款</view>
+        <view class="head-item">待发货</view>
+        <view class="head-item">待收货</view>
+        <view class="head-item">已完成</view>
+    </view>
+    <view class="orders-list">
+        <navigator :url="'./orderDetail?Id=' + item.Id" class="order" v-for="(item, index) in orderList" :key="item.id" :data-index="index">
+            <view class="list-item">
+                <view class="item-h clear">
+                    <view class="number">订单编号：{{item.Id}}</view>
+                    <view class="pending">待付款</view>
+                </view>
+                <view class="item-info clear">
+                    <view class="img">
+                        <image :src="item.ThumbnailsUrl"/>
+                    </view>
+                    <view class="txt">
+                        <view class="txt-t">
+                            <view class="txt-title">{{item.ProductName}}</view>
+                            <view class="txt-num">共{{item.Quantity}}件商品</view>
+                        </view>
+                        <view class="txt-price">价格：￥<text class="t">{{item.ProductTotalAmount}}</text></view>
+                    </view>
+                </view>
+                <view class="item-check clear">
+                    <view class="total">合计：<text class="icon">￥</text><text class="t">{{item.ProductTotalAmount + item.Freight}}</text> (运费：{{item.Freight}})</view>
+                    <view class="btn clear">
+                        <button class="cancel">取消订单</button>
+                        <button class="confirm" @click="payOrder">确认支付</button>                 
+                    </view>
+                </view>
+            </view>
+        </navigator>
+    </view>
+
+    <!-- <view class="orders">
         <navigator :url="'./orderDetail?Id=' + item.Id" class="order" v-for="(item, index) in orderList" :key="item.id" :data-index="index">
             <view class="h">
                 <view class="l">订单编号：{{item.Id}}</view>
@@ -29,7 +66,7 @@
                 </view>
             </view>
         </navigator>
-    </view>
+    </view> -->
 </view>
 </template>
 
@@ -122,116 +159,170 @@ page{
     width: 100%;
     background: #f4f4f4;
 }
-
-.orders{
-    height: auto;
-    width: 100%;
-    overflow: hidden;
+.container{
+    background: #f1f1f1;
 }
-
-.order{
-    margin-top: 20rpx;
+.clear:after{
+    display: block;
+    content:'';
+    clear: both;
+    height:0;
+    }
+.order-head{
+    padding: 0 20rpx;
+    box-sizing: border-box;
+    display: -webkit-box;
+    display: -webkit-flex;
+    height: 80rpx;
+    width: 750rpx;
     background: #fff;
 }
-
-.order .h{
-    display: flex;
-    height: 83.3rpx;
-    line-height: 83.3rpx;
-    margin-left: 31.25rpx;
-    padding-right: 31.25rpx;
-    border-bottom: 1px solid #f4f4f4;
+.order-head .head-item{
+    flex: 1;
+    margin-left: 20rpx;
+    color: #282828;
     font-size: 24rpx;
-    color: #333;
+    line-height: 80rpx;
+    text-align: center;
 }
-.order .h .shop-name {
-    padding: 0 15rpx;
+.order-head .head-item:first-child{
+    margin-left: 0;
 }
-.order .h .l{
-    /* float: left; */
+.order-head .head-item .active{
+    border-bottom: 2rpx solid #009e96;
+    color: #009e96;
 }
-
-.order .h .r{
-    /* float: right; */
-    color: #b4282d;
+.orders-list{
+    width: 750rpx; 
+    background: #fff;
+    padding: 0 20rpx;
+    box-sizing: border-box;
+    margin-top: 20rpx;
+}
+.orders-list .list-item{
+    margin-top: 20rpx;
+}
+.orders-list .list-item:first-child{
+    margin-top: 0;
+}
+.list-item .item-h{
+    height: 70rpx;
+    line-height: 70rpx;
+    border-bottom: 2rpx solid #f1f1f1;
+}
+.list-item .item-h .number{
+    width: 85%;
+    float: left;
+    color: #666;
     font-size: 24rpx;
 }
-
-.order .goods{
+.list-item .item-h .pending{
+    width: 13%;
+    float: right;
+    color: #009e96;
+    font-size: 20rpx;
+    text-align: right;
+}
+.item-info{
+    height: 188rpx;
+    border-bottom: 2rpx solid #f1f1f1;
+}
+.item-info .img{
+    width: 160rpx;
+    height: 160rpx;
+    background: #009e96;
     display: flex;
     align-items: center;
-    height: 199rpx;
-    margin-left: 31.25rpx;
+    justify-content: center;
+    float: left;
+    margin: 14rpx 20rpx 14rpx 0;
 }
-
-.order .goods .img{
-    height:145.83rpx;
-    width:145.83rpx;
-    background: #f4f4f4;
+.item-info .img image{
+   width: 160rpx;
+   height: 160rpx;
 }
-
-.order .goods .img image{
-    height:145.83rpx;
-    width:145.83rpx;
-}
-
-.order .goods .info{
-    height: 145.83rpx;
-    flex: 1;
-    padding-left: 20rpx;
-}
-
-.order .goods .name{
-    margin-top: 30rpx;
-    display: block;
-    height: 44rpx;
-    line-height: 44rpx;
-    color: #333;
-    font-size: 30rpx;
-    overflow: hidden;
-}
-
-.order .goods .number{
-    display: block;
-    height: 37rpx;
-    line-height: 37rpx;
-    color: #666;
-    font-size: 25rpx;
-}
-
-.order .goods .status{
-    width:105rpx;
-    color: #b4282d;
-    font-size: 25rpx;
-}
-
-.order .b{
-    height: 103rpx;
-    line-height: 103rpx;
-    margin-left: 31.25rpx;
-    padding-right: 31.25rpx;
-    border-top: 1px solid #f4f4f4;
-    font-size: 30rpx;
-    color: #333;
-}
-
-.order .b .l{
+.item-info .txt{
+    width: 520rpx;
+    height: 160rpx;
+    margin: 14rpx 0 14rpx 0;
     float: left;
 }
-
-.order .b .r{
+.item-info .txt .txt-t{
+    height: 130rpx;
+}
+.item-info .txt .txt-title{  
+    color: #282828;
+    font-size: 24rpx;
+    line-height: 35rpx;
+}
+.item-info .txt .txt-num{
+    color: #666666;
+    font-size: 24rpx;
+    line-height: 30rpx;
+    margin-top: 10rpx;
+}
+.item-info .txt .txt-price{
+    height: 30rpx;
+    color: #666666;
+    font-size: 24rpx;
+    line-height: 30rpx;
+    text-align: right;
+}
+.item-info .txt .txt-price .t{
+    font-size: 28rpx;
+}
+.item-check{
+    height: 88rpx;
+    line-height: 88rpx;
+}
+.item-check .total{
+    width: 50%;
+    font-size: 24rpx;
+    color: #282828;
+    float: left;
+}
+.item-check .btn{
+    width: 50%;
     float: right;
 }
-
-.order .b .btn{
-    margin-top: 19rpx;
-    height: 64.5rpx;
-    line-height: 64.5rpx;
-    text-align: center;
-    padding: 0 20rpx;
-    border-radius: 5rpx;
-    font-size: 28rpx;
-    color: #fff;
-    background: #b4282d;
+.item-check .total .icon{
+    color: #dc2121;
+}
+.item-check .total .t{
+    color: #dc2121;
+    font-size: 32rpx;
+}
+button::after {
+  border: none;
+}
+button{
+    background: #fff;
+    margin: 0;
+    padding: 0;
+}
+.item-check .btn .cancel{
+  width: 140rpx;
+  height: 50rpx;
+  line-height: 50rpx;
+  text-align: center;
+  font-size: 24rpx;
+  color: #666;
+  border: 2rpx solid #666;
+  margin: 22rpx 0;
+  float: left;
+  border-radius: 8rpx;
+  margin-left: 40rpx;
+}
+.item-check .btn .confirm{
+  width: 140rpx;
+  height: 50rpx;
+  line-height: 50rpx;
+  text-align: center;
+  font-size: 24rpx;
+  color: #009e96;
+  border: 2rpx solid #009e96;
+  float: right;
+  margin: 22rpx 0;
+  border-radius: 8rpx;
 }
 </style>

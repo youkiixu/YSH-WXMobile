@@ -8,7 +8,7 @@
     </view> -->
 
     <view class="index-searchbar">
-      <searchBar></searchBar>
+      <searchBar :background="bg"></searchBar>
     </view>
     
 
@@ -54,7 +54,8 @@ export default {
       scrollLeft: 0,
       scrollTop: 0,
       goodsCount: 0,
-      scrollHeight: 0
+      scrollHeight: 0,
+      bg: '#f7f7f7'
     }
   },
   async mounted () {
