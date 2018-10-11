@@ -1,41 +1,5 @@
 <template >
-<view class="container">
-   <view class="order-head">
-       <view class="address-box">
-        <view class="address-item" @click="selectAddress" v-if="address.Id > 0">
-                <view class="name clear">
-                    <text class="s">收货人：</text>
-                    <text class="t">{{address.ShipTo}}</text>
-                    <text class="phone">{{address.Phone}}</text>
-                </view>
-                <view class="address-info">
-                <view class="info-icon">
-                    <img src="/static/images/location.png" background-size="cover"/>
-                </view>
-                <view class="info-txt">  
-                    <text class="default" v-if="address.IsDefault === 1">默认</text>            
-                    <text>{{address.Province +' '+  address.City +' '+ address.Area +' '+ address.Street +' '+ address.Address }}</text>
-                </view>
-                <view class="info-go">
-                    <img src="/static/images/address_right.png"/>
-                </view>
-                </view>
-            </view>
-
-            <!-- <view class="address-item address-empty" @click="addAddress" v-if="checkOutInfo.Address">
-                <view class="m">
-                还没有收货地址，去添加
-                </view>
-                <view class="r">
-                    <image src="/static/images/address_right.png"/>
-                </view>
-            </view> -->
-        </view>
-        <view class="line">
-            <img src="/static/images/icon-order-division.png"/>
-        </view>
-   </view>
-    
+<view class="container">  
     <!-- <view class="address-box">
         <view class="address-item" @click="selectAddress" v-if="address.Id > 0">
             <view class="l">
@@ -63,134 +27,159 @@
                 <image src="/static/images/address_right.png"/>
             </view>
         </view> -->
-    <view class="outside">
-        <scroll-view scroll-y class="order-content">       
-        <view class="goods-items">
-            <view class="item" >
-                <view class="img">
-                    <image :src="baseUrl + productImg"/>
-                </view>
-                <view class="info">
-                    <view class="t">
-                        <text class="name">{{checkOutInfo.products.ProductName}}</text>
-                        <text class="number">x{{checkOutInfo.Count}}</text>
-                    </view>
-                    <view class="m" v-if="checkOutInfo.products.Color">颜色：{{checkOutInfo.products.Color}}</view>
-                    <view class="m" v-if="checkOutInfo.products.Size">尺寸：{{checkOutInfo.products.Size}}</view>
-                    <view class="m" v-if="checkOutInfo.products.Version">规格：{{checkOutInfo.products.Version}}</view>
-                    <view class="m" v-if="checkOutInfo.products.Material">材料：{{checkOutInfo.products.Material}}</view>
-                    <view class="m" v-if="checkOutInfo.products.Fashion">款式：{{checkOutInfo.products.Fashion}}</view>
-                    <view class="m" v-if="checkOutInfo.products.Grams">克重：{{checkOutInfo.products.Grams}}</view>
-                    <view class="m" v-if="checkOutInfo.products.Ensemble">套餐：{{checkOutInfo.products.Ensemble}}</view>
-                    <!-- <view class="b">￥{{checkOutInfo.products.SalePrice}}</view> -->
-                </view>
-            </view>
-        </view>
+   
+        <scroll-view scroll-y class="order-content">     
 
-        
-        <view class="order-box">
-            <view class="box-top">
-                
-            <view class="order-item clear"  @click="selectWuliu('Remindtype')">
-                <view class="l">
-                    <text class="name">配送方式</text>
+             <view class="address-box">
+            <view class="address-item" @click="selectAddress" v-if="address.Id > 0">
+                    <view class="name clear">
+                        <text class="s">收货人：</text>
+                        <text class="t">{{address.ShipTo}}</text>
+                        <text class="phone">{{address.Phone}}</text>
+                    </view>
+                    <view class="address-info">
+                    <view class="info-icon">
+                        <img src="/static/images/location.png" background-size="cover"/>
+                    </view>
+                    <view class="info-txt">  
+                        <text class="default" v-if="address.IsDefault === 1">默认</text>            
+                        <text>{{address.Province +' '+  address.City +' '+ address.Area +' '+ address.Street +' '+ address.Address }}</text>
+                    </view>
+                    <view class="info-go">
+                        <img src="/static/images/address_right.png"/>
+                    </view>
+                    </view>
                 </view>
-                <view class="r distribution y">  
-                    <text class="txt">￥{{daifaInfo.isDaifa ? daifaInfo.ExpressFreight : 0}}</text>          
-                    <text class="txt">{{checkOutOther.RemindtypeStr}}</text>
+
+                <!-- <view class="address-item address-empty" @click="addAddress" v-if="checkOutInfo.Address">
+                    <view class="m">
+                    还没有收货地址，去添加
+                    </view>
+                    <view class="r">
+                        <image src="/static/images/address_right.png"/>
+                    </view>
+                </view> -->
+            </view>
+            <view class="line">
+                <img src="/static/images/icon-order-division.png"/>
+            </view>
+
+            <view class="goods-items">
+                <view class="item" >
+                    <view class="img">
+                        <image :src="baseUrl + productImg"/>
+                    </view>
+                    <view class="info">
+                        <view class="t">
+                            <text class="name">{{checkOutInfo.products.ProductName}}</text>
+                            <text class="number">x{{checkOutInfo.Count}}</text>
+                        </view>
+                        <view class="m" v-if="checkOutInfo.products.Color">颜色：{{checkOutInfo.products.Color}}</view>
+                        <view class="m" v-if="checkOutInfo.products.Size">尺寸：{{checkOutInfo.products.Size}}</view>
+                        <view class="m" v-if="checkOutInfo.products.Version">规格：{{checkOutInfo.products.Version}}</view>
+                        <view class="m" v-if="checkOutInfo.products.Material">材料：{{checkOutInfo.products.Material}}</view>
+                        <view class="m" v-if="checkOutInfo.products.Fashion">款式：{{checkOutInfo.products.Fashion}}</view>
+                        <view class="m" v-if="checkOutInfo.products.Grams">克重：{{checkOutInfo.products.Grams}}</view>
+                        <view class="m" v-if="checkOutInfo.products.Ensemble">套餐：{{checkOutInfo.products.Ensemble}}</view>
+                        <!-- <view class="b">￥{{checkOutInfo.products.SalePrice}}</view> -->
+                    </view>
                 </view>
             </view>
+
             
-            <!-- <view class="order-item clear">
-                <view class="l">
-                    <text class="name">优惠券码</text>
-                </view>
-                <view class="r distribution">            
-                    <text class="txt">20元立减券</text>
-                </view>
-            </view> -->
-            <view class="order-item clear">
-                <view class="l">
-                    <text class="name">买家留言</text>
-                </view>
-                <view class="r message">
-                    <input class="txt" v-model="checkOutOther.orderRemarks" placeholder="点击给商家留言"/>
-                </view>
-            </view>
-
-            <view class="order-item clear">
-                <view class="l">
-                    <text class="name">合计</text>
-                </view>
-                <view class="r price">            
-                <view class="txt" v-if="daifaInfo.isDaifa">￥ {{checkOutInfo.totalAmount + daifaInfo.ExpressFreight}}</view>
-                <view class="txt" v-if="!daifaInfo.isDaifa">￥ {{checkOutInfo.totalAmount}}</view>
-                </view>
-            </view>
-            </view>
-            <view class="box-bottom">
-                <view class="price-total">
-                    <view class="product-price clear">
-                        <view class="l">商品金额</view>
-                        <view class="r">￥{{checkOutInfo.totalAmount}}</view>
+            <view class="order-box">
+                <view class="box-top">
+                    
+                <view class="order-item clear"  @click="selectWuliu('Remindtype')">
+                    <view class="l">
+                        <text class="name">配送方式</text>
                     </view>
-                    <view class="express-price clear">
-                        <view class="l">运费</view>
-                        <view class="r">+ ￥{{daifaInfo.isDaifa ? daifaInfo.ExpressFreight : 0}}</view>
+                    <view class="r distribution y">  
+                        <text class="txt">￥{{daifaInfo.isDaifa ? daifaInfo.ExpressFreight : 0}}</text>          
+                        <text class="txt">{{checkOutOther.RemindtypeStr}}</text>
                     </view>
                 </view>
-            </view>
+                
+                <!-- <view class="order-item clear">
+                    <view class="l">
+                        <text class="name">优惠券码</text>
+                    </view>
+                    <view class="r distribution">            
+                        <text class="txt">20元立减券</text>
+                    </view>
+                </view> -->
+                <view class="order-item clear">
+                    <view class="l">
+                        <text class="name">买家留言</text>
+                    </view>
+                    <view class="r message">
+                        <input class="txt" v-model="checkOutOther.orderRemarks" placeholder="点击给商家留言"/>
+                    </view>
+                </view>
 
-        
-            <!-- 代发快递 -->
-            <div class="box-content" v-if="checkOutOther.Remindtype == 1">
-                <div class="weui-cells__title">代发快递方式</div>
-                <div class="weui-cells weui-cells_after-title">
-                    <!-- <div class="weui-cell weui-cell_switch">
-                        <div class="weui-cell__bd">是否到付</div>
-                        <div class="weui-cell__ft">
-                            <switch :checked="daifaInfo.isCashOnDelivery" @change="daifaSwitch('isCashOnDelivery')"/>
+                <view class="order-item clear">
+                    <view class="l">
+                        <text class="name">合计</text>
+                    </view>
+                    <view class="r price">            
+                    <view class="txt" v-if="daifaInfo.isDaifa">￥ {{checkOutInfo.totalAmount + daifaInfo.ExpressFreight}}</view>
+                    <view class="txt" v-if="!daifaInfo.isDaifa">￥ {{checkOutInfo.totalAmount}}</view>
+                    </view>
+                </view>
+                </view>
+                <view class="box-bottom">
+                    <view class="price-total">
+                        <view class="product-price clear">
+                            <view class="l">商品金额</view>
+                            <view class="r">￥{{checkOutInfo.totalAmount}}</view>
+                        </view>
+                        <view class="express-price clear">
+                            <view class="l">运费</view>
+                            <view class="r">+ ￥{{daifaInfo.isDaifa ? daifaInfo.ExpressFreight : 0}}</view>
+                        </view>
+                    </view>
+                </view>
+
+            
+                <!-- 代发快递 -->
+                <div class="box-content" v-if="checkOutOther.Remindtype == 1">
+                    <div class="weui-cells__title">代发快递方式</div>
+                    <div class="weui-cells weui-cells_after-title">
+                        <!-- <div class="weui-cell weui-cell_switch">
+                            <div class="weui-cell__bd">是否到付</div>
+                            <div class="weui-cell__ft">
+                                <switch :checked="daifaInfo.isCashOnDelivery" @change="daifaSwitch('isCashOnDelivery')"/>
+                            </div>
+                        </div> -->
+                        <div class="weui-cell weui-cell_switch">
+                            <div class="weui-cell__bd">代收货款</div>
+                            <div class="weui-cell__ft">
+                                <switch :checked="daifaInfo.IsDaiShouHuoKuan" @change="daifaSwitch('IsDaiShouHuoKuan')"/>
+                            </div>
                         </div>
-                    </div> -->
-                    <div class="weui-cell weui-cell_switch">
-                        <div class="weui-cell__bd">代收货款</div>
-                        <div class="weui-cell__ft">
-                            <switch :checked="daifaInfo.IsDaiShouHuoKuan" @change="daifaSwitch('IsDaiShouHuoKuan')"/>
+                        <div class="weui-cell weui-cell_switch" v-if="daifaInfo.IsDaiShouHuoKuan">
+                            <div class="weui-cell__bd">代收货款金额</div>
+                            <div class="weui-cell__ft">
+                                <input class="weui-input" v-model="daifaInfo.daiShouMoney" type="number" placeholder="请输入代收货款金额" />
+                            </div>
                         </div>
-                    </div>
-                    <div class="weui-cell weui-cell_switch" v-if="daifaInfo.IsDaiShouHuoKuan">
-                        <div class="weui-cell__bd">代收货款金额</div>
-                        <div class="weui-cell__ft">
-                            <input class="weui-input" v-model="daifaInfo.daiShouMoney" type="number" placeholder="请输入代收货款金额" />
-                        </div>
-                    </div>
-                    <!-- 快递公司	 -->
-                    <div class="weui-cell weui-cell_select">
-                        <div class="weui-cell__hd weui-cell__hd_in-select-after">
-                            <div class="weui-label">快递公司</div>
-                        </div>
-                        <div class="weui-cell__bd">
-                            <picker @change="expressCompanyChange" :range="expressCompany">
-                            <div class="weui-select weui-select_in-select-after">{{expressCompany[expressCompanyIndex]}}</div>
-                            </picker>
+                        <!-- 快递公司	 -->
+                        <div class="weui-cell weui-cell_select">
+                            <div class="weui-cell__hd weui-cell__hd_in-select-after">
+                                <div class="weui-label">快递公司</div>
+                            </div>
+                            <div class="weui-cell__bd">
+                                <picker @change="expressCompanyChange" :range="expressCompany">
+                                <div class="weui-select weui-select_in-select-after">{{expressCompany[expressCompanyIndex]}}</div>
+                                </picker>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-
         
-        
-        </view>
+            </view>
+        </scroll-view>
 
-
-
-    </scroll-view>
-
-
-    </view>
-    
-
-   
 
     <view class="order-total" >
         <view class="t">
@@ -479,21 +468,8 @@ export default {
     clear: both;
     height:0;
     }
-.order-head{
-    position: fixed;
-    z-index: 10;
-}
-.outside{
-    position:fixed;
-    z-index:9;
-    top: 200rpx;
-    height: auto;
-    background: #f1f1f1;
-    }
 .order-content{
-    height: 760rpx;
-    overflow:hidden;
-   
+    margin-bottom: 200rpx;
 }
 .address-box{
     width: 750rpx;
@@ -913,10 +889,10 @@ export default {
     position: fixed;
     left:0;
     bottom: 0;
-    height: 260rpx;
+    height: 200rpx;
     width: 100%;
     background-color: #fff;
-    padding: 20rpx 20rpx;
+    padding: 20rpx;
     box-sizing: border-box;
     box-shadow: 0 -2px 0 #f5f5f5;
     z-index: 1000;

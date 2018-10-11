@@ -1,6 +1,7 @@
 <template >
  <view class="container">
-    <view class="order-info" >
+     <scroll-view scroll-y class="order-content">
+           <view class="order-info" >
         <view class="info-item">订单状态：<text class="t">{{orderInfo.OrderStatus}}</text></view>
         <view class="info-item">订单编号：{{orderInfo.Id}}</view>
         <view class="info-item">下单时间：{{orderInfo.OrderDate}}</view>
@@ -31,15 +32,15 @@
             <view class="txt-price">价格：￥<text class="t">{{orderInfo.ProductTotalAmount}}</text></view>
         </view>
     </view>
-        <!-- <view class="info-bottom">
-            <view class="m" v-if="orderInfo.products.Color">颜色：{{orderInfo.products.Color}}</view>
-            <view class="m" v-if="orderInfo.products.Size">尺寸：{{orderInfo.products.Size}}</view>
-            <view class="m" v-if="orderInfo.products.Version">规格：{{orderInfo.products.Version}}</view>
-            <view class="m" v-if="orderInfo.products.Material">材料：{{orderInfo.products.Material}}</view>
-            <view class="m" v-if="orderInfo.products.Fashion">款式：{{orderInfo.products.Fashion}}</view>
-            <view class="m" v-if="orderInfo.products.Grams">克重：{{orderInfo.products.Grams}}</view>
-            <view class="m" v-if="orderInfo.products.Ensemble">套餐：{{orderInfo.products.Ensemble}}</view>
-        </view> -->
+        <view class="info-bottom">
+            <view class="m" v-if="orderInfo.Color">颜色：<text class="t">{{orderInfo.Color}}</text></view>
+            <view class="m" v-if="orderInfo.Size">尺寸：<text class="t">{{orderInfo.Size}}</text></view>
+            <view class="m" v-if="orderInfo.Version">规格：<text class="t">{{orderInfo.Version}}</text></view>
+            <view class="m" v-if="orderInfo.Material">材料：<text class="t">{{orderInfo.Material}}</text></view>
+            <view class="m" v-if="orderInfo.Fashion">款式：<text class="t">{{orderInfo.Fashion}}</text></view>
+            <view class="m" v-if="orderInfo.Grams">克重：<text class="t">{{orderInfo.Grams}}</text></view>
+            <view class="m" v-if="orderInfo.Ensemble">套餐：<text class="t">{{orderInfo.Ensemble}}</text></view>           
+        </view>
     </view>
     
 
@@ -71,10 +72,9 @@
             <button class="confirm" @click="payOrder">确认支付</button> 
         </view>
     </view>
+     </scroll-view>
 
-
-
-
+  
     <!-- <view class="order-goods">
         <view class="h">
             <view class="label">商品信息</view>
@@ -299,14 +299,17 @@ page{
     clear: both;
     height:0;
 }
-
+.order-content{
+    margin-bottom: 100rpx;
+}
 .order-info{
-    padding: 20rpx;
+    padding: 10rpx 20rpx;
     box-sizing: border-box;
     background: #fff;
     height: auto;
     overflow: hidden;
     width: 100%;
+    border-top: 2rpx solid #f1f1f1;
 }
 
 .info-item{
@@ -322,14 +325,14 @@ page{
 .address-info{
     background-color: #fff;
     width: 100%;
-    padding: 20rpx;
+    padding: 10rpx 20rpx;
     box-sizing: border-box;
     margin-top: 20rpx;
 }
 .address-info .address-item{
     font-size: 24rpx;
     color: #666;
-    line-height: 35rpx;
+    line-height: 40rpx;
 }
 .address-info .address-item .t{
     color: #282828;
@@ -342,11 +345,19 @@ page{
     margin-top: 20rpx;
 }
 .info-bottom{
-    height: 72.25rpx;
-    color: #999;
+    padding-top: 10rpx;
+    box-sizing: border-box;  
+}
+.info-bottom .m{
+     line-height: 40rpx;
+     color: #666666;
+     font-size: 24rpx;
+}
+.info-bottom .m .t{
+     color: #282828;
 }
 .info-t{
-    height: 188rpx;
+    /* height: 188rpx; */
     border-bottom: 2rpx solid #f1f1f1;
 }
 .goods-info .img{
@@ -357,7 +368,7 @@ page{
     align-items: center;
     justify-content: center;
     float: left;
-    margin: 14rpx 20rpx 14rpx 0;
+    margin: 0 20rpx 20rpx 0;
 }
 .goods-info .img image{
    width: 160rpx;
@@ -366,7 +377,7 @@ page{
 .goods-info .txt{
     width: 520rpx;
     height: 160rpx;
-    margin: 14rpx 0 14rpx 0;
+    margin: 0 0 20rpx 0;
     float: left;
 }
 .goods-info .txt .txt-t{
@@ -375,19 +386,18 @@ page{
 .goods-info .txt .txt-title{  
     color: #282828;
     font-size: 24rpx;
-    line-height: 35rpx;
+    line-height: 40rpx;
 }
 .goods-info .txt .txt-num{
     color: #666666;
     font-size: 24rpx;
-    line-height: 30rpx;
-    margin-top: 10rpx;
+    line-height: 40rpx;
 }
 .goods-info .txt .txt-price{
     height: 30rpx;
     color: #666666;
     font-size: 24rpx;
-    line-height: 30rpx;
+    line-height: 40rpx;
     text-align: right;
 }
 .goods-info .txt .txt-price .t{
@@ -415,23 +425,21 @@ page{
 .price-total{
     background-color: #fff;
     width: 100%;
-    padding: 20rpx;
+    padding: 10rpx 20rpx;
     box-sizing: border-box;
     margin-top: 20rpx;
 }
 .price-total .l{
     width: 25%;
-    height: 60rpx;
     float: left;
-    line-height: 65rpx;
+    line-height: 40rpx;
     font-size: 24rpx;
     color: #666666;
 }
 .price-total .r{
     width: 75%;
-    height: 60rpx;
     float: right;
-    line-height: 65rpx;
+    line-height: 40rpx;
     text-align: right;
     font-size: 24rpx;
     color: #282828;
@@ -453,16 +461,15 @@ page{
     z-index: 100;
     bottom: 0;
     background-color: #fff;
-    padding: 20rpx 20rpx;
+    padding: 0 20rpx;
     box-sizing: border-box;
-    box-shadow: 0 -2px 0 #f5f5f5;
+    box-shadow: 0 -3px 0 #f1f1f1;
 }
 .order-bottom .total{
     width: 48%;
     font-size: 24rpx;
     color: #282828;
     float: left;
-    border: 1rpx solid red;
 }
 .order-bottom .btn{
     width: 50%;
@@ -484,28 +491,28 @@ button{
     padding: 0;
 }
 .order-bottom .btn .cancel{
-  width: 140rpx;
-  height: 50rpx;
-  line-height: 50rpx;
+  width: 160rpx;
+  height: 60rpx;
+  line-height: 60rpx;
   text-align: center;
   font-size: 24rpx;
   color: #666;
   border: 2rpx solid #666;
-  margin: 25rpx 0;
+  margin: 20rpx 0;
   float: left;
   border-radius: 8rpx;
-  margin-left: 40rpx;
+  margin-left: 20rpx;
 }
 .order-bottom .btn .confirm{
-  width: 140rpx;
-  height: 50rpx;
-  line-height: 50rpx;
+  width: 160rpx;
+  height: 60rpx;
+  line-height: 60rpx;
   text-align: center;
   font-size: 24rpx;
   color: #fff;
   background: #009e96;
   float: right;
-  margin: 25rpx 0;
+  margin: 20rpx 0;
   border-radius: 8rpx;
 }
 
