@@ -12,7 +12,7 @@
             <view class="list-item">
                 <view class="item-h clear">
                     <view class="number">订单编号：{{item.Id}}</view>
-                    <view class="pending">待付款</view>
+                    <view class="pending">{{item.OrderStatus}}</view>
                 </view>
                 <view class="item-info clear">
                     <view class="img">
