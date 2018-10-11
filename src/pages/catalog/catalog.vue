@@ -12,7 +12,7 @@
     </view>
     
 
-    <view class="catalog">
+    <view class="catalog" :style="{'height' : '100%'}">
         <scroll-view class="nav" scroll-y="true">
             <view :class="currentCategory.Id == item.Id ? 'active item' : 'item'" v-for="(item, index) of navList" :key="item.Id" :data-id="item.Id"
                 :data-index="index" @click="switchCateLog(index)">{{item.Name}}</view>

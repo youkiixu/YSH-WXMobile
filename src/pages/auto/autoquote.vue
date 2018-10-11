@@ -3,7 +3,7 @@
     <div class="ad">
       <img class="ad-img" :src="baseUrl + '/Areas/wxMobile/Content/img/ad.png'" alt="">
     </div>
-    <view class="catalog">
+    <view class="catalog" :style="{'height' : '100%'}">
         <scroll-view class="nav menu-ul" scroll-y="true" scroll-with-animation="true" :scroll-into-view="navId">
             <view :class="currentIndex == index ? 'active item menu-item' : 'item menu-item' " v-for="(item, index) of list" :key="index" :id="'nav_' + index"
                  @click="selectMenu(index)">{{item.name}}</view>
