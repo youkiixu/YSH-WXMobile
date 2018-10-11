@@ -149,7 +149,8 @@ const wxFun = {
     toGoodsDetail,
     baseUrl,
     toLogin,
-    orderStatus
+    orderStatus,
+    getImagePath
 }
 
 export default wxFun

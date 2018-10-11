@@ -1,11 +1,11 @@
 <template >
 <view class="container">
     <view class="order-head">
-        <view class="head-item">全部订单</view>
-        <view class="head-item">待付款</view>
-        <view class="head-item">待发货</view>
-        <view class="head-item">待收货</view>
-        <view class="head-item">已完成</view>
+        <view :class="orderStatus ? 'head-item' : ' head-item select'" @click="selectStatus()">全部订单</view>
+        <view :class="orderStatus == OrderOperateStatus.WaitPay ? 'head-item select' : 'head-item '" @click="selectStatus(OrderOperateStatus.WaitPay)">待付款</view>
+        <view :class="orderStatus == OrderOperateStatus.WaitDelivery  ? 'head-item select' : 'head-item '" @click="selectStatus(OrderOperateStatus.WaitDelivery)">待发货</view>
+        <view :class="orderStatus == OrderOperateStatus.WaitReceiving  ? 'head-item select' : 'head-item '" @click="selectStatus(OrderOperateStatus.WaitReceiving)">待收货</view>
+        <view :class="orderStatus == OrderOperateStatus.Finish  ? 'head-item select' : 'head-item '" @click="selectStatus(OrderOperateStatus.Finish)">已完成</view>
     </view>
     <view class="orders-list">
         <navigator :url="'./orderDetail?Id=' + item.Id" class="order" v-for="(item, index) in orderList" :key="item.id" :data-index="index">
@@ -84,11 +84,16 @@ export default {
       orderStatus: undefined
     }
   },
+  computed: {
+      OrderOperateStatus() {
+          return orderInfoStatus.OrderOperateStatus
+      }
+  },
   async mounted () {
     this.orderList = []
     if(this.$route.query.orderStatus) {
         // 获取订单状态
-        this.orderStatus = orderInfoStatus.OrderOperateStatus[this.$route.query.orderStatus]
+        this.orderStatus = this.OrderOperateStatus[this.$route.query.orderStatus]
     } else {
         this.orderStatus = undefined
     }
@@ -111,6 +116,18 @@ export default {
             this.$wx.toLogin()
         }
         
+    },
+    // 选择状态
+    selectStatus (status) {
+        if(status) {
+            this.orderStatus = status
+        } else {
+            this.orderStatus = undefined
+        }
+        console.log(this.orderStatus)
+        this.orderList = []
+        this.pageNo = 1
+        this.getUserOrderList()
     },
     // 查看物流
     checkExpress (item) {
@@ -176,6 +193,10 @@ page{
     height: 80rpx;
     width: 750rpx;
     background: #fff;
+}
+.order-head .select {
+    color: #009e96;
+    border-bottom: 3rpx solid #009e96;
 }
 .order-head .head-item{
     flex: 1;

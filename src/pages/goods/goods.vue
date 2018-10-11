@@ -1,7 +1,7 @@
 <template >
 <view>
     <!-- 主体容器 -->
-    <scroll-view class="container" scroll-y="true" scroll-with-animation="true" :scroll-into-view="navId">
+    <view class="container" >
       <!-- 头部导航 -->
       <view class="goodshead" id="goodshead">
         <view class="head-classify">
@@ -45,8 +45,8 @@
       </view>
       <!-- 商家地址 -->
       <view class="address-nav address-attr clear">
-          <view class="t">商家地址:<text class="td">{{detailInfo.ShopAddress}}</text></view>
-          <img class="i" src="/static/images/address_right.png" background-size="cover"/>
+          <view class="t">{{detailInfo.ShopName}} : <text class="td">{{detailInfo.ShopAddress}}</text></view>
+          <!-- <img class="i" src="/static/images/address_right.png" background-size="cover"/> -->
           <view class="clear"></view>
       </view>
       <!-- 商品评论 -->
@@ -89,7 +89,7 @@
           <wxParse :content="goodDetailHTMLstr" />
         </view>
       </view>
-    </scroll-view>
+    </view>
     <!-- 模态浮层 -->
     <view class="attr-pop-box" :hidden="!openAttr">
       <view class="attr-pop" >
