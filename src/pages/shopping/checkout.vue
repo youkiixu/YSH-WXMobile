@@ -68,7 +68,7 @@
         <view class="goods-items">
             <view class="item" >
                 <view class="img">
-                    <image :src="checkOutInfo.products.imagePath"/>
+                    <image :src="baseUrl + productImg"/>
                 </view>
                 <view class="info">
                     <view class="t">
@@ -96,18 +96,19 @@
                     <text class="name">配送方式</text>
                 </view>
                 <view class="r distribution y">  
-                    <text class="txt">￥{{daifaInfo.DiscountFreight}}</text>          
+                    <text class="txt">￥{{daifaInfo.isDaifa ? daifaInfo.ExpressFreight : 0}}</text>          
                     <text class="txt">{{checkOutOther.RemindtypeStr}}</text>
                 </view>
             </view>
-            <view class="order-item clear">
+            
+            <!-- <view class="order-item clear">
                 <view class="l">
                     <text class="name">优惠券码</text>
                 </view>
                 <view class="r distribution">            
                     <text class="txt">20元立减券</text>
                 </view>
-            </view>
+            </view> -->
             <view class="order-item clear">
                 <view class="l">
                     <text class="name">买家留言</text>
@@ -122,7 +123,7 @@
                     <text class="name">合计</text>
                 </view>
                 <view class="r price">            
-                <view class="txt" v-if="daifaInfo.isDaifa">￥ {{checkOutInfo.totalAmount + daifaInfo.DiscountFreight}}</view>
+                <view class="txt" v-if="daifaInfo.isDaifa">￥ {{checkOutInfo.totalAmount + daifaInfo.ExpressFreight}}</view>
                 <view class="txt" v-if="!daifaInfo.isDaifa">￥ {{checkOutInfo.totalAmount}}</view>
                 </view>
             </view>
@@ -135,15 +136,13 @@
                     </view>
                     <view class="express-price clear">
                         <view class="l">运费</view>
-                        <view class="r">+ ￥{{daifaInfo.DiscountFreight}}</view>
+                        <view class="r">+ ￥{{daifaInfo.isDaifa ? daifaInfo.ExpressFreight : 0}}</view>
                     </view>
                 </view>
             </view>
 
         
-
-
-        <!-- 代发快递 -->
+            <!-- 代发快递 -->
             <div class="box-content" v-if="checkOutOther.Remindtype == 1">
                 <div class="weui-cells__title">代发快递方式</div>
                 <div class="weui-cells weui-cells_after-title">
@@ -178,6 +177,8 @@
                     </div>
                 </div>
             </div>
+
+        
         
         </view>
 
@@ -194,7 +195,7 @@
     <view class="order-total" >
         <view class="t">
         <!-- 如果是代发，需要加上代发运费 -->
-        <view  v-if="daifaInfo.isDaifa">合计：￥{{checkOutInfo.totalAmount + daifaInfo.DiscountFreight}}</view>
+        <view  v-if="daifaInfo.isDaifa">合计：￥{{checkOutInfo.totalAmount + daifaInfo.ExpressFreight}}</view>
         <!-- 如果是印捷配送，直接显示价格 -->
         <view v-if="!daifaInfo.isDaifa">合计：￥{{checkOutInfo.totalAmount}}</view>
         </view>
@@ -246,7 +247,8 @@ export default {
         expressCompanyId: [ 7 , 11 , 28],
         expressCompanyIndex: 0,
         remindInfo: {},
-        calculateFreight: {}
+        calculateFreight: {},
+        productImg: ''
     }
   },
   computed: {
@@ -254,13 +256,16 @@ export default {
             'userInfo',
             'checkOutInfo',
             'address'
-        ])
+        ]),
+        baseUrl () {
+            return this.$wx.baseUrl
+        }
     },  
   async mounted () {
     // 获取印捷提点
     //将默认的地址存到全局那里
     this.set_address(this.checkOutInfo.Address)
-
+    this.productImg = this.$wx.getImagePath(this.checkOutInfo.products.imagePath)
     await Promise.all([
         this.getYJFreightCalculate(),
         this.getCalculateFreight()
@@ -284,9 +289,9 @@ export default {
         const res = await api.getCalculateFreight(par)
         if(res.success) {
             var data = {
-                ExpressFreight : this.data.DiscountFreight,
-                ExpressWeight: this.data.Weight,
-                ExpressFreightLog: this.data.logId,
+                ExpressFreight : res.data.DiscountFreight,
+                ExpressWeight: res.data.Weight,
+                ExpressFreightLog: res.data.logId,
             }
             this.daifaInfo = Object.assign(this.daifaInfo , data)
             // this.calculateFreight = res.data
@@ -342,6 +347,7 @@ export default {
     getYunFeiEvent(str) {
         if(str == '代发快递'){
             this.daifaInfo.isDaifa = true
+            this.getCalculateFreight()
         } else {
             this.daifaInfo.isDaifa = false
         }
