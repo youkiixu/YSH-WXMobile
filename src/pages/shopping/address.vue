@@ -1,5 +1,32 @@
 <template >
+
+
 <view class="container">
+   <view class="address-list" v-if="addressList.length">
+        <view class="item" v-for="(item, index) of addressList" :key="item.Id" @click="selectAddress(item)"
+          :data-address-id="item.Id" :data-index="index">
+            <view class="name"><text class="t">{{item.ShipTo}}</text><text class="phone">{{item.Phone}}</text></view>
+            <view class="address-info">
+              <view class="info-icon">
+                <img src="/static/images/location.png" background-size="cover"/>
+              </view>
+              <view class="info-txt">
+                <text class="default" v-if="item.IsDefault">默认</text>
+                <text>{{item.RegionFullName}} {{item.Address}}</text>
+              </view>
+              <view class="info-edit" @click.stop="addressAddOrUpdate" :data-address-id="item.Id">编辑</view>
+            </view>
+        </view>
+    </view>
+    <view class="empty-view" v-if="addressList.length <= 0">
+      <image class="icon" src="http://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/noAddress-26d570cefa.png"/>
+      <text class="text">收货地址在哪里</text>
+    </view>
+    
+    <view class="add-address"  @click="addressAddOrUpdate" data-address-id="0">新建</view>
+</view>
+
+<!-- <view class="container">
     <view class="address-list" v-if="addressList.length">
         <view class="item" v-for="(item, index) of addressList" :key="item.Id" @click="selectAddress(item)"
           :data-address-id="item.Id" :data-index="index">
@@ -21,7 +48,7 @@
       <text class="text">收货地址在哪里</text>
     </view>
     <view class="add-address"  @click="addressAddOrUpdate" data-address-id="0">新建</view>
-</view>
+</view> -->
 </template>
 
 <script>
@@ -94,68 +121,108 @@ page{
     width: 100%;
     background: #f4f4f4;
 }
-
 .container{
   height: 100%;
   width: 100%;
 }
-
+ .clear:after{
+    display: block;
+    content:'';
+    clear: both;
+    height:0;
+    }
 .address-list{
-    padding-left: 31.25rpx;
+    padding: 30rpx 20rpx;
+    box-sizing: border-box;
     background: #fff url(http://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/address-bg-bd30f2bfeb.png) 0 0 repeat-x;
     background-size: auto 10.5rpx;
     margin-bottom: 90rpx;
+    width: 100%;
 }
 
 .address-list .item{
-    height: 156.55rpx;
-    align-items: center;
-    display: flex;
-    border-bottom: 1rpx solid #DCD9D9;
+    padding: 20rpx 0 20rpx 0;
 }
-
-.address-list .item:last-child{
-
-    border-bottom: none;
+.address-list .name .t{
+    font-size: 28rpx;
+    color: #000;
+    margin-left: 60rpx;
 }
-
-.address-list .l{
-    width: 125rpx;
-    height: 85rpx;
-    overflow: hidden;
+.address-list .name .phone{
+  font-size: 24rpx;
+  color: #898989;
+  margin-left: 20rpx;
 }
-
-.address-list .name{
-    width: 125rpx;
-    height: 43rpx;
-    font-size: 29rpx;
-    color: #333;
-    margin-bottom: 5.2rpx;
-        text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
+.address-info{
+  display: -webkit-box;
+  display: -webkit-flex;
+  margin-top: 10rpx;
 }
-
+.address-info .info-icon{
+  width: 45rpx;
+  height: 50rpx;
+  margin-top: 12rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.address-info .info-icon img{
+  width: 35rpx;
+  height: 40rpx;
+  text-align: center;
+}
+.address-info .info-txt{
+  flex: 1;
+  font-size: 28rpx;
+  color: #000;
+  width: 550rpx;
+  line-height: 40rpx;
+  margin-left: 15rpx;
+}
+.address-info .info-edit{
+  width: 88rpx;
+  height: 40rpx;
+  color: #898989;
+  font-size: 24rpx;
+  text-align: center;
+  line-height: 40rpx;
+  margin-left: 20rpx; 
+  border-left: 2rpx solid #c9caca;
+}
 .address-list .default{
-    width: 62.5rpx;
-    height: 33rpx;
-    line-height: 28rpx;
+    width: 77rpx;
+    height: 30rpx;
+    line-height: 30rpx;
     text-align: center;
-    font-size: 20rpx;
-    color: #b4282d;
-    border: 1rpx solid #b4282d;
+    font-size: 26rpx;
+    color: #009e96;
+    margin-right: 20rpx;
+    background-color: #c7eae8;
     visibility: visible;
 }
+.add-address{
+  height: 80rpx;
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  text-align: center;
+  line-height: 80rpx;
+  background-color: #009e96;
+  color: #fff;
+  font-size: 28rpx;
+}
+
+
 
 
 .address-list .c{
     flex: 1;
-    height: 85rpx;
+    height: auto;
     overflow: hidden;
 }
 
 .address-list .mobile{
-
     height: 29rpx;
     font-size: 29rpx;
     line-height: 29rpx;
@@ -185,7 +252,7 @@ page{
     height: 52rpx;
 }
 
-.add-address{
+/* .add-address{
     background: #b4282d;
     text-align: center;
     width: 100%;
@@ -198,7 +265,7 @@ page{
     font-size: 29rpx;
     bottom: 0;
     left:0;
-}
+} */
 
 .empty-view{
   height: 100%;

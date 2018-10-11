@@ -46,7 +46,7 @@
 
     <view class="message-info clear">
         <view class="l">留言:</view>
-        <view class="r"></view>
+        <view class="r">{{orderInfo.OrderRemarks}}</view>
     </view>
 
     <view class="price-total">
@@ -63,7 +63,9 @@
         </view>
     </view>
 
-    <view class="order-bottom clear">
+     </scroll-view>
+
+     <view class="order-bottom clear">
         <view class="total">
             合计：<text class="icon">￥</text><text class="t">{{orderInfo.ProductTotalAmount + orderInfo.ReceivedAmount}}</text>
         </view>
@@ -72,7 +74,6 @@
             <button class="confirm" v-if="canPay" @click="payOrder">确认支付</button> 
         </view>
     </view>
-     </scroll-view>
 
   
     <!-- <view class="order-goods">
@@ -419,7 +420,7 @@ page{
     float: left;
 }
 .message-info .r{
-    width: 80%;
+    width: 88%;
     float: right;
 }
 .price-total{

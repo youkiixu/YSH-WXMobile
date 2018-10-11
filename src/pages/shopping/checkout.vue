@@ -13,10 +13,7 @@
             <view class="r" v-if="checkOutOther.Remindtype != 3">
                 <image src="/static/images/address_right.png"/>
             </view>
-        </view>
-      
-
-      
+        </view>     
     </view> -->
 
   <!-- <view class="address-item address-empty" @click="addAddress" v-if="checkOutInfo.Address">
@@ -26,7 +23,7 @@
             <view class="r">
                 <image src="/static/images/address_right.png"/>
             </view>
-        </view> -->
+   </view> -->
    
         <scroll-view scroll-y class="order-content">     
 
@@ -45,7 +42,7 @@
                         <text class="default" v-if="address.IsDefault === 1">默认</text>            
                         <text>{{address.Province +' '+  address.City +' '+ address.Area +' '+ address.Street +' '+ address.Address }}</text>
                     </view>
-                    <view class="info-go">
+                    <view class="info-go" v-if="checkOutOther.Remindtype != 3">
                         <img src="/static/images/address_right.png"/>
                     </view>
                     </view>
