@@ -40,7 +40,9 @@ export default {
     ...mapState(['userInfo'])
   },
   async onShow () {
-    console.log(this.$route.query.data)
+    this.orderInfo = {}
+    this.expressInfo = {},
+    this.expressTraces = []
     if (this.$route.query.data) {
       this.orderInfo = JSON.parse(this.$route.query.data)
     }

@@ -54,7 +54,6 @@ export default {
           const res = await api.getQitem({})
           this.baseUrl = res.RequestUrl
           this.qitemList = JSON.parse(res.data)
-          console.log(this.qitemList.length)
           this.formatData()
       },
       formatData () {
@@ -87,7 +86,6 @@ export default {
             }
           })
         })
-        console.log(arr2)
         return arr2
       },
       getFoodHeight() {

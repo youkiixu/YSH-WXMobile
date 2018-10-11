@@ -8,13 +8,13 @@
         <view :class="orderStatus == OrderOperateStatus.Finish  ? 'head-item select' : 'head-item '" @click="selectStatus(OrderOperateStatus.Finish)">已完成</view>
     </view>
     <view class="orders-list">
-        <navigator :url="'./orderDetail?Id=' + item.Id" class="order" v-for="(item, index) in orderList" :key="item.id" :data-index="index">
+        <view  class="order" v-for="(item, index) in orderList" :key="item.id" :data-index="index">
             <view class="list-item">
                 <view class="item-h clear">
                     <view class="number">订单编号：{{item.Id}}</view>
-                    <view class="pending">{{item.OrderStatus}}</view>
+                    <view class="pending">{{item.orderStatuString}}</view>
                 </view>
-                <view class="item-info clear">
+                <navigator class="item-info clear" :url="'./orderDetail?Id=' + item.Id">
                     <view class="img">
                         <image :src="baseUrl + item.ThumbnailsUrl + '/1_350.png'"/>
                     </view>
@@ -25,16 +25,16 @@
                         </view>
                         <view class="txt-price">价格：￥<text class="t">{{item.ProductTotalAmount}}</text></view>
                     </view>
-                </view>
+                </navigator>
                 <view class="item-check clear">
                     <view class="total">合计：<text class="icon">￥</text><text class="t">{{item.ProductTotalAmount + item.Freight}}</text> (运费：{{item.Freight}})</view>
                     <view class="btn clear">
-                        <button class="cancel" >取消订单</button>
+                        <!-- <button class="cancel" >取消订单</button> -->
                         <button class="confirm" @click="checkExpress(item)">查看物流</button>                 
                     </view>
                 </view>
             </view>
-        </navigator>
+        </view>
     </view>
 
     <!-- <view class="orders">
@@ -112,9 +112,13 @@ export default {
         const res = await api.getUserOrderList({ openId: openId , pageNo: this.pageNo , pageSize: this.pageSize , orderStatus: this.orderStatus })               
         this.$wx.hideLoading()
         if (res.success) {
-            const data = JSON.parse(res.data)      
-            this.orderList = this.orderList.concat(data)
-            console.log(this.orderList[0])
+            var arr = []
+            let data = JSON.parse(res.data)      
+            data.map(item => {
+                item.orderStatuString = this.$wx.orderStatus(item.OrderStatus)
+                arr.push(item)
+            })
+            this.orderList = this.orderList.concat(arr)
         } else {
             // 没有登陆请登录
             this.$wx.toLogin()
@@ -135,8 +139,13 @@ export default {
     },
     // 查看物流
     checkExpress (item) {
-        console.log(JSON.stringify(item))
-        this.$router.push({path: './express' , query : {data : JSON.stringify(item)}})
+        const par = {
+            Remindtype: item.Remindtype,
+            Id: item.Id,
+            ExpressCompanyName: item.ExpressCompanyName,
+            ShipOrderNumber: item.ShipOrderNumber
+        }
+        this.$router.push({path: './express' , query : {data : JSON.stringify(par)}})
     },
 
     // 点击“去付款”
@@ -159,12 +168,12 @@ export default {
   },
   // 小程序原生上拉加载
   onReachBottom () {
-    this.page++
+    this.pageNo++
     this.getUserOrderList()
   },
   // 小程序原生下拉刷新
   onPullDownRefresh: function() {
-    this.page = 1
+    this.pageNo = 1
     this.orderList = []
     this.getUserOrderList()
     wx.stopPullDownRefresh()
@@ -242,7 +251,7 @@ page{
     box-sizing: border-box;
 }
 .list-item .item-h .pending{
-    width: 13%;
+    /* width: 13%; */
     float: right;
     color: #009e96;
     font-size: 20rpx;

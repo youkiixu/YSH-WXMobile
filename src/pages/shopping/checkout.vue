@@ -71,6 +71,8 @@
                             <text class="name">{{checkOutInfo.products.ProductName}}</text>
                             <text class="number">x{{checkOutInfo.Count}}</text>
                         </view>
+                        
+                        <view class="m" v-if="ParaStr">参数:{{ParaStr}}</view>
                         <view class="m" v-if="checkOutInfo.products.Color">颜色：{{checkOutInfo.products.Color}}</view>
                         <view class="m" v-if="checkOutInfo.products.Size">尺寸：{{checkOutInfo.products.Size}}</view>
                         <view class="m" v-if="checkOutInfo.products.Version">规格：{{checkOutInfo.products.Version}}</view>
@@ -186,7 +188,7 @@
         <view v-if="!daifaInfo.isDaifa">合计：￥{{checkOutInfo.totalAmount}}</view>
         </view>
         
-        <view class="b" @click="submitOrder">确认支付</view>
+        <view class="b" @click="submitOrder">确认下单</view>
     </view>
 </view>
 </template>
@@ -234,7 +236,8 @@ export default {
         expressCompanyIndex: 0,
         remindInfo: {},
         calculateFreight: {},
-        productImg: ''
+        productImg: '',
+        ParaStr: ''
     }
   },
   computed: {
@@ -250,6 +253,7 @@ export default {
   async mounted () {
     // 获取印捷提点
     //将默认的地址存到全局那里
+    this.ParaStr = ''
     this.set_address(this.checkOutInfo.Address)
     this.productImg = this.$wx.getImagePath(this.checkOutInfo.products.imagePath)
     await Promise.all([
@@ -257,6 +261,13 @@ export default {
         this.getCalculateFreight()
     ])
     this.selectWuliu()
+
+    try {
+        var QuoteLogModel=  JSON.parse(this.checkOutInfo.QuoteLogModel)
+        this.ParaStr = QuoteLogModel[0].ParaStr
+    } catch (error) {
+        
+    }
   },
   methods: {
     ...mapMutations(['set_address']),
@@ -872,6 +883,7 @@ export default {
     line-height: 30rpx;
     font-size: 26rpx;
     color: #595757;
+    width:500rpx;
 }
 
 .goods-items .b {
@@ -913,7 +925,8 @@ export default {
     color: #fff;
     font-size: 34rpx;
     margin: 0 auto;
-    border-radius: 10rpx;
-    box-shadow: 3px 3px 2px #009e96;
+    border-radius: 6rpx;
+    box-shadow: 2rpx 3rpx 9rpx 2rpx rgba(0, 150, 158, 0.6);
+
 }
 </style>
