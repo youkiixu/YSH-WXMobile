@@ -18,7 +18,7 @@
             </view>
         </view>
         <div class="list-content">
-            <div class="list-item" v-for="(item , index) in quoteList" :key="index" @click="toDetail(item)">
+            <div class="list-item" v-for="(item , index) in quoteList" :key="index" >
                 <div class="list-item-box">
                     <img class="list-img" :src="baseUrl + '/Storage/Shop/'+ item.ShopId +'/Products/' + item.ProductId + '/1_350.png'" alt="">
                     <div class="list-info">
@@ -29,9 +29,14 @@
                             <div class="p price">
                                 ￥{{item.Price}}
                             </div>
+                            
                             <div class="bottom">
                                 <div class="bottom-left p">{{item.SaleCounts}}销量 {{item.ProductMark}}好评</div>
                                 <div class="bottom-right p">货期{{item.DeliveryTime}}</div>
+                            </div>
+                            <div class="btn-group">
+                                <kiyButton  text="去下单" @onClick="toDetail(item)"></kiyButton>
+                                <kiyButton :solid="true" text="加入购物车" @onClick="toCart(item)"></kiyButton>
                             </div>
                         </div>
                     </div>
@@ -42,9 +47,14 @@
 </template>
 
 <script>
+import kiyButton from '@/components/kiyButton'
 import { mapState , mapActions } from 'vuex';
+import api from '@/utils/api'
 
 export default {
+    components: {
+        kiyButton
+    },
     data () {
         return {
             quoteList: []
@@ -63,7 +73,6 @@ export default {
         ...mapActions(['SubmitByProductId2']),
         toDetail(item) {
             const openId = wx.getStorageSync('openId')
-            console.log(item)
             var par = {
                 openId: openId,
                 skuIds: item.ProductId + '_0_0_0_0_0_0_0',
@@ -80,6 +89,30 @@ export default {
                 // PreferentialAmount: item.
             }
             this.SubmitByProductId2(par)
+        },
+        async toCart(item) {
+            console.log(item)
+            const openId = wx.getStorageSync('openId')
+            var par = {
+                openId: openId,
+                productId: item.ProductId,
+                isCustom: true,//非标品
+                skuId: item.ProductId + '_0_0_0_0_0_0_0',
+                quantity: 1,
+                dataStr: item.QuoteStr,
+                quoteJson : item.GroupJson,
+                // Yjtype: this.Yjtype
+                // YjUse: this.YjUse
+            }
+            
+            this.$wx.showLoading()
+            const res = await api.modifyShoppingCart(par)
+            this.$wx.hideLoading()
+            if(res.success) {
+                this.$wx.showSuccessToast('加入购物车成功')
+            } else {
+                this.$wx.showErrorToast('加入购物车失败')
+            }
         }
     }
 }
@@ -219,8 +252,8 @@ page{
     font-size: 28rpx;
 }
 .bottom {
-    margin-top: 55rpx;
-    height: 24rpx;
+    /* margin-top: 55rpx; */
+    height: 60rpx;
     color: #949494;
 }
 .bottom-left {
@@ -230,6 +263,10 @@ page{
 .bottom-right {
     float: right;
     font-size: 22rpx;
+}
+.btn-group {
+    display:flex;
+    flex-direction: row-reverse;
 }
 </style>
 
