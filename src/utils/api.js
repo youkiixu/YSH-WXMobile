@@ -141,6 +141,10 @@ const api = {
   // 退出登陆
   loginOut: (paramObj) => request.post('/Wxmobile/LoginRegisterTransfer/LoginOut', paramObj, {
     baseURL: ApiKiyUrl
+  }),
+  // 设默认地址
+  setDefaultShippingAddress: (paramObj) => request.post('/Wxmobile/UserInfos/SetDefaultShippingAddress', paramObj, {
+    baseURL: ApiKiyUrl
   })
 }
 

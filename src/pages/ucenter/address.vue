@@ -14,7 +14,8 @@
                 <img src="/static/images/location.png" background-size="cover"/>
               </view>
               <view class="info-txt">
-                <text class="default" v-if="item.IsDefault">默认</text>
+                <text class="default" v-if="item.IsDefault">平台默认</text>
+                <text class="default" v-if="item.IsYJDefault">印捷默认</text>
                 <text>{{item.Province +' '+  item.City +' '+ item.Area +' '+ item.Street +' '+ item.Address }}</text>
               </view>
               <view class="info-edit" @click.stop="deleteAddress" :data-address-id="item.Id">删除</view>
@@ -217,6 +218,7 @@ page{
     margin-right: 20rpx;
     background-color: #c7eae8;
     visibility: visible;
+    padding: 4rpx;
 }
 .add-address{
   height: 80rpx;

@@ -2,7 +2,7 @@
  <view class="container">
      <scroll-view scroll-y class="order-content">
            <view class="order-info" >
-        <view class="info-item">订单状态：<text class="t">{{orderInfo.OrderStatus}}</text></view>
+        <view class="info-item">订单状态：<text class="t">{{orderInfo.OrderStatusStr}}</text></view>
         <view class="info-item">订单编号：{{orderInfo.Id}}</view>
         <view class="info-item">下单时间：{{orderInfo.OrderDate}}</view>
         <!-- <view class="item-c">
@@ -68,8 +68,8 @@
             合计：<text class="icon">￥</text><text class="t">{{orderInfo.ProductTotalAmount + orderInfo.ReceivedAmount}}</text>
         </view>
         <view class="btn">
-            <button class="cancel">取消订单</button>
-            <button class="confirm" @click="payOrder">确认支付</button> 
+            <button class="cancel" v-if="canCancel" @click="cancelOrder">取消订单</button>
+            <button class="confirm" v-if="canPay" @click="payOrder">确认支付</button> 
         </view>
     </view>
      </scroll-view>

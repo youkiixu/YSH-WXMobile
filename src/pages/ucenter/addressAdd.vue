@@ -1,6 +1,6 @@
 <template >
-<view>
-  <view class="add-address">
+<view :style="{'height': '100%'}">
+  <view class="add-address" >
       <view class="add-form">
           <view class="form-item">
               <input class="input"  placeholder="姓名" v-model="address.ShipTo" auto-focus/>
@@ -14,9 +14,22 @@
           <view class="form-item">
               <input class="input"  v-model="address.Address" placeholder="详细地址, 如街道、楼盘号等"/>
           </view>
-          <!-- <view class="form-default">
-              <text @click="bindIsDefault" :class="address.IsDefault ? 'selected default-input' : 'default-input'">设为默认地址</text>
-          </view> -->
+          <view class="form-default" v-if="address.Id">
+            <div class="weui-cell weui-cell_switch">
+                <div class="weui-cell__bd">设为默认地址</div>
+                <div class="weui-cell__ft">
+                    <switch :checked="address.IsDefault"  @change="bindIsDefault('IsDefault')"/>
+                </div>
+            </div>
+          </view>
+          <view class="form-default" v-if="address.Id">
+            <div class="weui-cell weui-cell_switch">
+                <div class="weui-cell__bd">设为印捷配送默认地址</div>
+                <div class="weui-cell__ft">
+                    <switch :checked="address.IsYJDefault"  @change="bindIsDefault('IsYJDefault')"/>
+                </div>
+            </div>
+          </view> 
       </view>
       <view class="btns">
           <button class="cannel" @click="cancelAddress">取消</button>
@@ -114,6 +127,7 @@ export default {
     this.regionType = 0 
     if(this.$route.query.address && this.$route.query.address != '{}') {
       this.address = JSON.parse(this.$route.query.address)
+      console.log(this.address)
       this.init()
     } else {
       this.address = {}
@@ -152,33 +166,10 @@ export default {
       const res = await api.getYinJieRegion({id: regionId});
       this.regionList = res
     },
-    // 获得输入的电话号码
-    bindinputMobile (event) {
-      // console.log('输入的电话号码', event);
-      let address = this.address;
-      address.mobile = event.target.value;
-      this.address = address;
-    },
-    // 获得输入的收货人姓名
-    bindinputName (event) {
-      // console.log('输入的收货人姓名', event);
-      let address = this.address;
-      address.name = event.target.value;
-      this.address = address;
-    },
-    // 获得输入的地址
-    bindinputAddress (event) {
-      // console.log('输入的地址', event);
-      let address = this.address;
-      address.address = event.target.value;
-      this.address = address;
-    },
     // 设置是否为默认地址
-    bindIsDefault () {
-      // console.log('点击，设置默认地址', this.address);
-      let address = this.address;
-      address.is_default = !address.is_default;
-      this.address = address;
+    bindIsDefault (type) {
+      this.address[type] = !this.address[type]
+      console.log(type , this.address[type])
     },
     // 展开地市选择浮窗
     chooseRegion () {
@@ -266,39 +257,44 @@ export default {
     },
     // 点击底部“保存按钮”保存地址
     async saveAddress () {
-      // console.log(this.address)
       const _this = this
+      const openId = wx.getStorageSync('openId')
       let address = this.address;
       if (address.ShipTo === '') {
-        util.showErrorToast('请输入姓名');
+        this.$wx.showErrorToast('请输入姓名');
         return false;
       }
       if (address.Phone === '') {
-        util.showErrorToast('请输入手机号码');
+        this.$wx.showErrorToast('请输入手机号码');
         return false;
       }
       if (this.regionStreet.id == undefined) {
-        util.showErrorToast('请完善四级地址');
+        this.$wx.showErrorToast('请完善四级地址');
         return false;
       }
-      if (address.address === '') {
-        util.showErrorToast('请输入详细地址');
+      if (address.Address === '') {
+        this.$wx.showErrorToast('请输入详细地址');
         return false;
       }
+      
       var par = {
         UserId: this.userInfo.Id,
         ShipTo: address.ShipTo,
         Phone: address.Phone,
         RegionId: this.regionStreet.id,
-        Address: address.Address,
-        is_default: address.is_default
+        Address: address.Address
       }
       if(address.Id) {
+        // 如果平台默认
+        par = Object.assign(par , {IsDefault : address.IsDefault ? 1 : 0})
+        // 印捷默认
+        par = Object.assign(par , {IsYJDefault  : address.IsYJDefault ? 1 : 0})
         par = Object.assign(par , {Id : address.Id , rowState: 'M'})
-
       } else {
         par = Object.assign(par , { Id : 0 , rowState: null})
       }
+      
+
       const res = await api.modifyUserAddress(par);
       if(res.success) {
         this.$wx.showSuccessToast('保存成功')
@@ -310,12 +306,6 @@ export default {
         this.$wx.showErrorToast('保存失败')
       }
       
-      // // console.log('保存地址,请求结果', res);
-      // if (res.errno === 0) {
-      //   wx.navigateTo({
-      //     url: '../ucenter/address'
-      //   })
-      // }
     }
   },
   // 原生的分享功能
@@ -332,17 +322,18 @@ export default {
 <style scoped>
 page{
     height: 100%;
-    background: #f4f4f4;
+    background: #f1f1f1;
 }
 .add-address .add-form{
-    background: #fff;
+    
     width: 100%;
     height: auto;
     overflow: hidden;
 }
 
 .add-address .form-item{
-    height: 116rpx;
+    height: 100rpx;
+    background: #fff;
     padding-left: 31.25rpx;
     border-bottom: 1px solid #d9d9d9;
     display: flex;
@@ -358,11 +349,13 @@ page{
 }
 
 .add-address .form-default{
+  margin-top: 20rpx;
+    border-top: 1px solid #d9d9d9;
     border-bottom: 1px solid #d9d9d9;
-    height: 75rpx;
-    background: #fafafa;
-    padding-top: 28rpx;
-    font-size: 28rpx;
+    /* height: 75rpx; */
+    /* background: #fafafa; */
+    /* padding-top: 28rpx; */
+    /* font-size: 28rpx; */
 }
 
 .default-input{
