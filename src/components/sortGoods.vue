@@ -3,8 +3,8 @@
   <scroll-view scroll-y="true" scroll-top="scrollTop" :style="{'height': '100%'}" @bindscroll="onReachBottom">
         <view class="cate-item">           
             <view class="b">               
-                  <navigator v-for="(item, index) of goodsList" :key="index" :class="index % 2 == 0 ? 'item-b item' : 'item'" @toDetail="toDetail(item)">
-                    <img class="img" :src="baseUrl+item.imagePath" background-size="cover"/>
+                  <navigator v-for="(item, index) of goodsList" :key="index" :class="index % 2 == 0 ? 'item-b item' : 'item'" @click="toDetail(item)">
+                    <img class="img" :src="baseUrl + item.imagePath + '/1_350.png'" mode="scaleToFill"/>
                       <view class="b-txt">
                         <view class="price">
                           <text class="icon">￥</text>{{item.MinSalePrice}}
@@ -16,18 +16,6 @@
         </view>
     </scroll-view>
 
-  <!-- <view class="cate-item">
-    <view class="b">
-      <block v-for="(item, index) of goodsList" :key="index">
-        <navigator :class="index % 2 == 0 ? 'item-b item' : 'item'" :url="'../goods/goods?id=' + item.ProductId">
-          <img class="img" :src="baseUrl+item.imagePath" background-size="cover"/>
-          <text class="name">{{item.ProductName}}</text>
-          <text class="price">￥{{item.MinSalePrice}}</text>
-        </navigator>
-      </block>
-    </view>
-  </view> -->
- 
 </view>
 </template>
 
@@ -35,7 +23,6 @@
 export default {
   methods: {
     toDetail (item) {
-      console.log(item)
       this.$wx.toGoodsDetail(item , this)
     }
   },
@@ -45,42 +32,6 @@ export default {
         }
     },
   props: {
-    currentSortType: {
-      type: String,
-      default () {
-        return {}
-      }
-    },
-    currentSortOrder: {
-      type: String,
-      default () {
-        return {}
-      }
-    },
-    openSortFilter: {
-      type: Function,
-      default () {
-        return {}
-      }
-    },
-    categoryFilter: {
-      type: Boolean,
-      default () {
-        return {}
-      }
-    },
-    filterCategory: {
-      type: Array,
-      default () {
-        return {}
-      }
-    },
-    selectCategory: {
-      type: Function,
-      default () {
-        return {}
-      }
-    },
     goodsList: {
       type: Array,
       default () {

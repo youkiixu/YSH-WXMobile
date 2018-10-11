@@ -90,7 +90,10 @@ export default {
       timer: null
     }
   },
-  async mounted () {
+  async onShow () {
+    this.goodsList = []
+    this.keyword = ''
+    this.searchStatus = false
     await Promise.all([
       this.getSearchKeyword()
     ])

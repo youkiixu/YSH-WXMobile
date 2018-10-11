@@ -177,6 +177,16 @@ function accMul(arg1, arg2) {
   } catch (e) {}
   return Number(s1.replace(".", "")) * Number(s2.replace(".", "")) / Math.pow(10, m)
 }
+// 获取图片
+
+function getImagePathGroup(path) {
+  var arr = []
+  for (let index = 1; index < 6; index++) {
+    arr.push(`${path}/${index}_350.png`)
+  }
+  return arr
+}
+
 
 const util = {
   login,
@@ -184,6 +194,7 @@ const util = {
   request,
   formatTime,
   checkMobile,
+  getImagePathGroup,
   accMul
 }
 

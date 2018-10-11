@@ -115,7 +115,7 @@ export default {
     },
     init () {
         const m = this.orderInfo
-        console.log(orderInfoStatus)
+        console.log(m)
         // 判断是否可以取消
         if(m.OrderStatus == orderInfoStatus.OrderOperateStatus.WaitPay || m.OrderStatus == orderInfoStatus.OrderOperateStatus.WaitDelivery && m.PaymentType == orderInfoStatus.PaymentTypes.CashOnDelivery) {
             if(m.OrderStatus == orderInfoStatus.OrderOperateStatus.Audited || m.Production == 1) {
@@ -124,11 +124,14 @@ export default {
                 this.canCancel = true
             }
         }
-
-        if (!m.IsCleared && m.ReceivedAmount == 0 && !m.IsReprint || (m.IsReprint && m.OrderTotalAmount > 0))
-        {
-            this.canPay = true
+        if(m.OrderStatus == orderInfoStatus.OrderOperateStatus.WaitPay || (!m.IsCleared && m.OrderStatus != orderInfoStatus.OrderOperateStatus.Close && m.ReceivedAmount == 0)) {
+            if (!m.IsCleared && m.ReceivedAmount == 0 && !m.IsReprint || (m.IsReprint && m.OrderTotalAmount > 0))
+            {
+                this.canPay = true
+            }
         }
+        
+        
     },
     // 点击“去付款”
     async payOrder () {

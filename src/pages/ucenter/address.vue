@@ -7,7 +7,7 @@
       <text class="t">添加新的地址</text>
     </view> -->
    <view class="address-list" v-if="addressList.length">
-        <view class="item" v-for="(item, index) of addressList" :key="item.Id" :data-address-id="item.Id" :data-index="index">
+        <view class="item" v-for="(item, index) of addressList" :key="item.Id"  :data-index="index" :data-address-id="item.Id" @click="addressAddOrUpdate">
             <view class="name"><text class="t">{{item.ShipTo}}</text><text class="phone">{{item.Phone}}</text></view>
             <view class="address-info">
               <view class="info-icon">
@@ -17,7 +17,7 @@
                 <text class="default" v-if="item.IsDefault">默认</text>
                 <text>{{item.Province +' '+  item.City +' '+ item.Area +' '+ item.Street +' '+ item.Address }}</text>
               </view>
-              <view class="info-edit" @click="addressAddOrUpdate">编辑</view>
+              <view class="info-edit" @click.stop="deleteAddress" :data-address-id="item.Id">删除</view>
             </view>
         </view>
     </view>

@@ -12,7 +12,6 @@ export default {
         }
     },
     mounted () {
-        console.log(this.$route.query)
         if (this.$route.query.pid) {
             this.quoteUrl = 'https://www.kiy.cn//m-mobile/autobaojia/index?pid=' + this.$route.query.pid
             this.qitemCode = this.$route.query.pid

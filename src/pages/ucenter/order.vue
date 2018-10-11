@@ -36,6 +36,7 @@
 <script>
 import api from '@/utils/api'
 import wx from 'wx'
+import orderInfoStatus from '@/utils/orderInfoStatus'
 
 export default {
   data () {
@@ -43,9 +44,17 @@ export default {
       orderList: [],
       pageNo: 1,
       pageSize: 15,
+      orderStatus: undefined
     }
   },
   async mounted () {
+    this.orderList = []
+    if(this.$route.query.orderStatus) {
+        // 获取订单状态
+        this.orderStatus = orderInfoStatus.OrderOperateStatus[this.$route.query.orderStatus]
+    } else {
+        this.orderStatus = undefined
+    }
     await Promise.all([
       this.getUserOrderList()
     ])
@@ -55,7 +64,7 @@ export default {
     async getUserOrderList () {
         const openId = wx.getStorageSync('openId')
         this.$wx.showLoading()
-        const res = await api.getUserOrderList({ openId: openId , pageNo: this.pageNo , pageSize: this.pageSize })               
+        const res = await api.getUserOrderList({ openId: openId , pageNo: this.pageNo , pageSize: this.pageSize , orderStatus: this.orderStatus })               
         this.$wx.hideLoading()
         if (res.success) {
             const data = JSON.parse(res.data)      
@@ -68,6 +77,7 @@ export default {
     },
     // 查看物流
     checkExpress (item) {
+        console.log(JSON.stringify(item))
         this.$router.push({path: './express' , query : {data : JSON.stringify(item)}})
     },
 

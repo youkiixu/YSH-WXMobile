@@ -131,9 +131,12 @@ function orderStatus(status) {
   }
 }
 
+function getImagePath(path) {
+  return `${path}/1_350.png`
+}
 
-const baseUrl = 'http://192.168.0.91:8008/'
-// const baseUrl = 'http://www.kiy.cn/'
+// const baseUrl = 'http://192.168.0.91:8008/'
+const baseUrl = 'http://www.kiy.cn/'
 
 const wxFun = {
     showSuccessToast,

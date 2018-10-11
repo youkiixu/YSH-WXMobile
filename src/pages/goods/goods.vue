@@ -21,7 +21,7 @@
       <!-- 图片轮播 -->
       <swiper class="goodsimgs" indicator-dots="true" autoplay="true" interval="3000" duration="1000">
           <swiper-item v-for="(item, index) of gallery" :key="item.id" :data-index="index">
-          <img :src="item.img_url" background-size="cover"/>
+          <img :src="RequestUrl + item" background-size="cover"/>
           </swiper-item>
       </swiper>
       <!-- 商品信息 -->
@@ -50,7 +50,7 @@
           <view class="clear"></view>
       </view>
       <!-- 商品评论 -->
-      <view class="comments" id="comments">
+      <view class="comments" id="comments" >
         <view class="h clear">
           <navigator :url="'../comment/comment?valueId=' + id + '&typeId=0'">
               <text class="t">评价</text>
@@ -58,18 +58,18 @@
               <!-- <view class="clear"></view> -->
           </navigator>
         </view>
-        <view class="b">
+        <view class="b"  v-if="comment.Id">
           <view class="item">
             <view class="info clear">
               <view class="user">
                   <img />
-                  <text>1856*******</text>
+                  <text>{{comment.UserName}}</text>
               </view>
-              <view class="star">☆☆☆☆☆</view>
+              <view class="star">{{comment.star}}</view>
               <!-- <view class="clear"></view> -->
             </view>
             <view class="content">
-            不错，速度很快，质量很好，好评！
+            {{comment.ReviewContent}}
             </view>
               <!-- <view class="imgs">
               <image class="img"/>
@@ -78,6 +78,9 @@
           </view>
           <view class="seeall">查看全部评价</view>
         </view>   
+        <view class="b" v-else>
+          <view class="seeall">暂无评价</view>
+        </view>
       </view> 
       <!-- 产品描述 -->
       <view class="proDetail" id="proDetail">
@@ -94,13 +97,13 @@
             <img class="icon" src="/static/images/icon_close.png"/>
           </view>
           <view class="img-info clear">
-            <img class="img" :src="gallery[0].img_url"/>
+            <img class="img" :src="RequestUrl + gallery[0]"/>
             <view class="info">
               <view class="c">
                 <view class="p"><text class="p-icon">￥</text>{{detailInfo.Price}}</view>
                 <view class="s">库存：{{Stock}}</view>
                 <view class="a">已选：<text>{{selectSkuStr.Color}} {{selectSkuStr.Size}} {{selectSkuStr.Version}} {{selectSkuStr.Material}} {{selectSkuStr.Fashion}} {{selectSkuStr.Grams}} {{selectSkuStr.Ensemble}}</text></view>
-                <!-- <view class="a" v-if="productList.length">已选择：{{checkedSpecText}}</view> -->
+
                
               </view>
           </view>
@@ -179,7 +182,7 @@
       </view>
       <view class="l l-cart">
           <view class="box">
-          <text class="cart-count">{{cartGoodsCount}}</text>
+          <!-- <text class="cart-count">{{cartGoodsCount}}</text> -->
           <img @click="openCartPage" class="icon" src="/static/images/shopping-car.png"/>
           </view>
       </view>
@@ -218,17 +221,17 @@ export default {
         Ensemble: []
       },
       id: 0,
-      goods: {},
-      gallery: [{ img_url: '' }],
-      attribute: [],
-      issueList: [],
-      comment: [],
-      brand: {},
-      specificationList: [],
-      productList: [],
-      relatedGoods: [],
-      cartGoodsCount: 0,
-      userHasCollect: 0,
+      // goods: {},
+      gallery: [],
+      // attribute: [],
+      // issueList: [],
+      // comment: [],
+      // brand: {},
+      // specificationList: [],
+      // productList: [],
+      // relatedGoods: [],
+      // cartGoodsCount: 0,
+      // userHasCollect: 0,
       number: 1,
       saleNumber: 1,
       checkedSpecText: '请选择规格数量',
@@ -260,7 +263,8 @@ export default {
       Yjtype: 0,
       YjUse: 0,
       Stock: 0,
-      SubmitByProductType: false
+      SubmitByProductType: false,
+      comment: {}
     }
   },
   mounted () {
@@ -291,7 +295,8 @@ export default {
       await Promise.all([
         this.getGoodsSkuInfo(),
         this.getGoodsDetail(),
-        this.getGoodsDesc()
+        this.getGoodsDesc(),
+        this.getComment()
       ]);
       // 选中默认选项
       this.getSkuPrice()
@@ -330,8 +335,22 @@ export default {
       }
       const res = await api.getGoodsDetail(par)
       this.RequestUrl = res.RequestUrl
+      this.RequestUrl = 'http://www.kiy.cn/'
       this.detailInfo = res.data
+      this.gallery = util.getImagePathGroup(this.detailInfo.imagePath)
       this.number = Number(this.detailInfo.SaleNumber)
+    },
+    // 获取评论
+    async getComment () {
+      const res = await api.getCommentList({ ProductId: this.id , pageNo: 1 , pageSize: 1})
+      if(res.comments.length != 0) {
+        this.comment = res.comments[0]
+        var star = ''
+        for (let index = 0; index < this.comment.ReviewMark; index++) {
+          star += '☆'
+        }
+        this.comment.star = star
+      }
     },
     // 规格弹窗中，每个规则项的点击事件
     clickSkuValue (skuName , skuId , skuValue) {
@@ -474,7 +493,6 @@ export default {
           // YjUse: this.YjUse
         }
         this.$wx.showLoading()
-        console.log(JSON.stringify(par))
         const res = await api.modifyShoppingCart(par)
         
         this.$wx.hideLoading()
@@ -526,12 +544,10 @@ export default {
     },
     // 增加数量
     addNumber () {
-      console.log(this.number)
       this.number = this.number + 1;
     },
     // 滚动到某位置
     toNav(id) {
-      console.log(id)
       this.navId = id
     }
   },
@@ -710,6 +726,9 @@ export default {
   font-size: 28rpx;
   color: #555555;
   margin-left: 31.25rpx;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .section-nav .i {

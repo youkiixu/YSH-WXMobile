@@ -176,7 +176,7 @@ export default {
   },
   methods: {
     ...mapMutations(['set_address']),
-    // 获取印捷运费
+    // 获取代发快递
     async getCalculateFreight() {
         var par = {
             quoteLogModelId: this.checkOutInfo.QuoteLogModel,
@@ -190,7 +190,12 @@ export default {
         this.$wx.showLoading('正在加载...')
         const res = await api.getCalculateFreight(par)
         if(res.success) {
-            this.daifaInfo = Object.assign(this.daifaInfo , res.data)
+            var data = {
+                ExpressFreight : this.data.DiscountFreight,
+                ExpressWeight: this.data.Weight,
+                ExpressFreightLog: this.data.logId,
+            }
+            this.daifaInfo = Object.assign(this.daifaInfo , data)
             // this.calculateFreight = res.data
         }
         this.$wx.hideLoading()
@@ -311,7 +316,8 @@ export default {
         if(this.checkOutInfo.QuoteStr && this.checkOutInfo.GroupJson) {
             let par2 = {
                 QuoteStr : this.checkOutInfo.QuoteStr,
-                GroupJson : this.checkOutInfo.GroupJson 
+                GroupJson : this.checkOutInfo.GroupJson,
+                PrintedMatterPrice: this.checkOutInfo.totalAmount
             }
             par = Object.assign(par , par2)
             // 修改报价日志id

@@ -42,7 +42,7 @@
             <view class="b">
                 <view v-for="item of goodsList" :key="item.ProductId" :class="(index + 1) % 2 === 0 ? 'item-b item' : 'item'"
                    @click="toGoods(item)" >
-                    <img class="img" :src=" 'https://www.kiy.cn/'+ item.imagePath" background-size="cover" />
+                    <img class="img" :src="baseUrl + item.imagePath + '/1_350.png'" mode="scaleToFill" />
                     <view class="b-txt">
                       <view class="price">
                         <text class="icon">￥</text>{{item.MinSalePrice}}
@@ -101,7 +101,10 @@ export default {
   computed: {
     ...mapState([
       'categoryList'
-    ])
+    ]),
+    baseUrl() {
+      return this.$wx.baseUrl
+    }
   },
   methods: {
 

@@ -125,6 +125,7 @@ const store = new Vuex.Store({
         })
       }
     },
+    // 获取非标品报价
     async getProSearchRst(vm , skuInfo) {
       const openId = wx.getStorageSync('openId')
       var par = Object.assign({
@@ -134,6 +135,7 @@ const store = new Vuex.Store({
       const res = await api.getProSearchRst(par)
       hideLoading()
       if(res.success) {
+        console.log(res)
         vm.commit('setProSearchRst', res.data)
         wx.navigateTo({
           url: '../../pages/auto/quoteList'

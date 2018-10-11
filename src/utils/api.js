@@ -138,6 +138,10 @@ const api = {
   getSaaSQRCode: (paramObj) => request.post('/Wxmobile/Pay/GetSaaSQRCode', paramObj, {
     baseURL: ApiKiyUrl
   }),
+  // 退出登陆
+  loginOut: (paramObj) => request.post('/Wxmobile/LoginRegisterTransfer/LoginOut', paramObj, {
+    baseURL: ApiKiyUrl
+  })
 }
 
 export default api

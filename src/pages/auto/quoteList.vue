@@ -20,7 +20,7 @@
         <div class="list-content">
             <div class="list-item" v-for="(item , index) in quoteList" :key="index" @click="toDetail(item)">
                 <div class="list-item-box">
-                    <img class="list-img" :src="item.ImagePath" alt="">
+                    <img class="list-img" :src="baseUrl + '/Storage/Shop/'+ item.ShopId +'/Products/' + item.ProductId + '/1_350.png'" alt="">
                     <div class="list-info">
                         <div class="list-info-content">
                             <div class="title">
@@ -31,7 +31,7 @@
                             </div>
                             <div class="bottom">
                                 <div class="bottom-left p">{{item.SaleCounts}}销量 {{item.ProductMark}}好评</div>
-                                <div class="bottom-right p">货期{{item.DeliveryTime}}天</div>
+                                <div class="bottom-right p">货期{{item.DeliveryTime}}</div>
                             </div>
                         </div>
                     </div>
@@ -51,10 +51,12 @@ export default {
         }
     },
     computed: {
-        ...mapState(['proSearchRst' , 'userInfo'])
+        ...mapState(['proSearchRst' , 'userInfo']),
+        baseUrl() {
+            return this.$wx.baseUrl
+        }
     },
-    mounted () {
-        console.log(this.proSearchRst)
+    onShow () {
         this.quoteList = JSON.parse(this.proSearchRst.data)
     },
     methods: {

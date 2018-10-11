@@ -1,14 +1,14 @@
 <template >
 <view class="container">
 
-  <view class="profile-info clear">
+  <view class="profile-info clear" >
     <view class="user_info clear" v-if="userInfo.Id">
-      <view class="user_info_img">
-        <img :src="baseUrl+userInfo.photo" @click="goLogin(true)"/>
+      <view class="user_info_img" @click="goLogin(true)">
+        <img :src="baseUrl+userInfo.photo" />
       </view>
       <view class="user_info_txt">
         <view class="info_name">{{userInfo.UserName}}</view>
-        <view class="info_member">金牌会员</view>
+        <view class="info_member">{{userInfo.GradeName}}</view>
       </view>
     </view>
 
@@ -21,7 +21,7 @@
       </view>
       </view>
 
-    <view class="set">
+    <view class="set" v-if="userInfo.Id" @click="logOut">
       <img src="/static/images/ic_me_set.png"/>
     </view>
   </view>
@@ -33,22 +33,22 @@
           </navigator>
       </view>
       <view class="myOrder_con">
-        <view class="con_item">
+        <navigator class="con_item" @click="toOrderList('WaitPay')">
           <img src="/static/images/ic_me_pay.png"/>
           <text class="item_t">待付款</text>
-        </view>
-        <view class="con_item">
+        </navigator>
+        <navigator class="con_item" @click="toOrderList('WaitDelivery')">
           <img src="/static/images/ic_me_deliver.png"/>
           <text class="item_t">待发货</text>
-        </view>
-        <view class="con_item">
+        </navigator>
+        <navigator class="con_item" @click="toOrderList('WaitReceiving')">
           <img src="/static/images/ic_me_collect.png"/>
           <text class="item_t">待收货</text>
-        </view>
-        <view class="con_item">
+        </navigator>
+        <navigator class="con_item" @click="toOrderList('Finish')">
           <img src="/static/images/ic_me_complete.png"/>
           <text class="item_t">已完成</text>
-        </view>
+        </navigator>
       </view>
 
   </view>
@@ -79,103 +79,13 @@
   </view>
 
 </view>
-<!-- <view class="container">
-  <view class="profile-info">
-    <view v-if="userInfo.Id" >
-      <img class="avatar" :src="baseUrl+userInfo.photo" @click="goLogin(true)"/>
-      <view class="info">
-        <text class="name">{{userInfo.UserName}}</text>
-      </view>
-    </view>
-    <view v-else class="goLogin">
-      <img class="icon" src="/static/images/ic_menu_me_pressed.png"/>
-      <button v-if="canIUse" open-type="getUserInfo" @getuserinfo="goLogin" class="goLoginBtn" >点击，授权登录~</button>
-    </view>
-  </view>
-
-  <view class="user-menu">
-    <view class="item">
-      <navigator url="/pages/ucenter/order" class="a">
-        <text class="icon order"></text>
-        <text class="txt">我的订单</text>
-      </navigator>
-    </view>
-    <view class="item">
-      <navigator url="/pages/ucenter/coupon" class="a">
-        <text class="icon coupon"></text>
-        <text class="txt">优惠券</text>
-      </navigator>
-    </view>
-    <view class="item no-border">
-      <view class="a">
-        <text class="icon gift"></text>
-        <text class="txt">礼品卡</text>
-      </view>
-    </view>
-    <view class="item">
-      <navigator url="/pages/ucenter/collect" class="a">
-        <img class="icon" src="/static/images/icon_collect.png"/>
-        <text class="txt">我的收藏</text>
-      </navigator>
-    </view>
-    <view class="item">
-      <navigator url="../ucenter/footprint" class="a">
-        <img class="icon" src="/static/images/footprint.png"/>
-        <text class="txt">我的足迹</text>
-      </navigator>
-    </view>
-    <view class="item no-border">
-      <view class="a">
-        <img class="icon" src="/static/images/VIP.png"/>
-        <text class="txt">会员福利</text>
-      </view>
-    </view>
-    <view class="item">
-      <navigator url="../ucenter/address" class="a">
-        <text class="icon address"></text>
-        <text class="txt">地址管理</text>
-      </navigator>
-    </view>
-    <view class="item">
-      <view class="a">
-        <text class="icon security"></text>
-        <text class="txt">账号安全</text>
-      </view>
-    </view>
-    <view class="item no-border">
-      <view class="a">
-        <text class="icon kefu"></text>
-        <text class="txt">联系客服</text>
-      </view>
-    </view>
-    <view class="item item-bottom">
-      <view class="a">
-        <text class="icon help"></text>
-        <text class="txt">帮助中心</text>
-      </view>
-    </view>
-    <view class="item item-bottom">
-      <navigator url="../ucenter/feedback" class="a">
-        <text class="icon feedback"></text>
-        <text class="txt">意见反馈</text>
-      </navigator>
-    </view>
-    <view class="item">
-      <navigator url="../ucenter/express" class="a">
-        <img class="icon" src="/static/images/car.png"/>
-        <text class="txt">物流查询</text>
-      </navigator>
-    </view>
-  </view>
-  <view v-if="userInfo.avatar" class="logout" @click="exitLogin">退出登录</view>
-</view> -->
 </template>
 
 <script>
 import wx from 'wx';
-// import getCurrentPages from 'wxFunction';
+import api from '@/utils/api'
 import user from '@/services/user';
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions , mapMutations } from 'vuex'
 var app = getApp();
 
 export default {
@@ -199,6 +109,9 @@ export default {
     ...mapActions([
       'sassLogin'
     ]),
+    ...mapMutations ([
+      'setUserInfo'
+    ]),
     // 点击登陆
     goLogin (isLogin) {
       var _this = this;
@@ -221,7 +134,6 @@ export default {
           
         }).catch((err) => {
           _this.$wx.hideLoading()
-          console.log('登陆失败', err)
         });
       }
 
@@ -243,6 +155,36 @@ export default {
 
               }
             });
+          }
+        }
+      })
+    },
+    // 去详情页
+
+    toOrderList(orderStatus) {
+      this.$router.push({
+        path: '/pages/ucenter/order',
+        query: {
+          orderStatus: orderStatus
+        }
+      })
+    },
+    // 退出登陆
+
+    async logOut () {
+      var _this = this;
+      wx.showModal({
+        title: '',
+        content: '退出登录?',
+        success: async function (res) {
+          if (res.confirm) {
+            const openId = wx.getStorageSync('openId')
+            const res = await api.loginOut({openId :openId})
+            if(res.success) {
+              // 清空缓存
+              _this.setUserInfo({})
+              wx.removeStorageSync('openId')
+            }
           }
         }
       })
@@ -293,7 +235,8 @@ page{
   width: 160rpx;
   height: 160rpx;
   float: left;
-  border-radius: 80rpx;
+  border-radius: 50%;
+  overflow: hidden;
 }
 .user_info_img img{
   width: 160rpx;

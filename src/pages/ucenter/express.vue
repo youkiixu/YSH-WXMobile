@@ -39,9 +39,9 @@ export default {
   computed: {
     ...mapState(['userInfo'])
   },
-  async mounted () {
+  async onShow () {
+    console.log(this.$route.query.data)
     if (this.$route.query.data) {
-      
       this.orderInfo = JSON.parse(this.$route.query.data)
     }
     await Promise.all([
