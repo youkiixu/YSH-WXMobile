@@ -21,7 +21,7 @@
     <view class="goods-info">
         <view class="info-t clear">
         <view class="img">
-            <image :src="orderInfo.ThumbnailsUrl"/>
+            <image :src="baseUrl + orderInfo.ThumbnailsUrl + '/1_350.png'"/>
         </view>
         <view class="txt">
             <view class="txt-t">
@@ -145,11 +145,15 @@ export default {
     }
   },
   computed: {
-    ...mapState(['userInfo'])  
+    ...mapState(['userInfo']) ,
+    baseUrl () {
+        return this.$wx.baseUrl
+    } 
   },
   async mounted () {
     
   },
+  
   // 每次打开触发，更新数据
   async onShow () {
     this.orderInfo = [];

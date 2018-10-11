@@ -1,7 +1,7 @@
 <template >
 <view class="container">
     <div class="ad">
-      <img class="ad-img" :src="baseUrl + '/Areas/wxMobile/Content/img/miniprogram/ad.png'" alt="">
+      <img class="ad-img" :src="baseUrl + '/Areas/wxMobile/Content/img/ad.png'" alt="">
     </div>
     <view class="catalog">
         <scroll-view class="nav menu-ul" scroll-y="true" scroll-with-animation="true" :scroll-into-view="navId">

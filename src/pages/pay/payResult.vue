@@ -1,6 +1,6 @@
 <template >
 <view class="container">
-  <view class="pay-result">
+  <view class="pay-result" v-if="show">
     <view class="success" v-if="status == true">
       <view class="msg">{{isShopping ? '下单成功' : '付款成功'}}</view>
       <view class="btns">
@@ -35,10 +35,12 @@ export default {
     return {
       status: false,
       orderId: 0,
-      isShopping: false
+      isShopping: false,
+      show: false
     }
   },
-  async mounted () {
+  async onShow () {
+    this.show = false
     if (this.$route.query.status) {
       this.status = this.$route.query.status;
     }
@@ -47,6 +49,7 @@ export default {
       this.isShopping = this.$route.query.isShopping
     }
     this.orderId = this.$route.query.Id
+    this.show = true
   },
   methods: {
     // 返回订单详情页

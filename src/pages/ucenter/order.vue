@@ -12,11 +12,11 @@
             <view class="list-item">
                 <view class="item-h clear">
                     <view class="number">订单编号：{{item.Id}}</view>
-                    <view class="pending">待付款</view>
+                    <view class="pending">{{item.OrderStatus}}</view>
                 </view>
                 <view class="item-info clear">
                     <view class="img">
-                        <image :src="item.ThumbnailsUrl"/>
+                        <image :src="baseUrl + item.ThumbnailsUrl + '/1_350.png'"/>
                     </view>
                     <view class="txt">
                         <view class="txt-t">
@@ -29,8 +29,8 @@
                 <view class="item-check clear">
                     <view class="total">合计：<text class="icon">￥</text><text class="t">{{item.ProductTotalAmount + item.Freight}}</text> (运费：{{item.Freight}})</view>
                     <view class="btn clear">
-                        <button class="cancel">取消订单</button>
-                        <button class="confirm" @click="payOrder">确认支付</button>                 
+                        <button class="cancel" >取消订单</button>
+                        <button class="confirm" @click="checkExpress(item)">查看物流</button>                 
                     </view>
                 </view>
             </view>
@@ -81,12 +81,15 @@ export default {
       orderList: [],
       pageNo: 1,
       pageSize: 15,
-      orderStatus: undefined
+      orderStatus: false
     }
   },
   computed: {
       OrderOperateStatus() {
           return orderInfoStatus.OrderOperateStatus
+      },
+      baseUrl () {
+          return this.$wx.baseUrl
       }
   },
   async mounted () {
@@ -95,7 +98,7 @@ export default {
         // 获取订单状态
         this.orderStatus = this.OrderOperateStatus[this.$route.query.orderStatus]
     } else {
-        this.orderStatus = undefined
+        this.orderStatus = false
     }
     await Promise.all([
       this.getUserOrderList()
@@ -111,6 +114,7 @@ export default {
         if (res.success) {
             const data = JSON.parse(res.data)      
             this.orderList = this.orderList.concat(data)
+            console.log(this.orderList[0])
         } else {
             // 没有登陆请登录
             this.$wx.toLogin()
@@ -122,7 +126,7 @@ export default {
         if(status) {
             this.orderStatus = status
         } else {
-            this.orderStatus = undefined
+            this.orderStatus = false
         }
         console.log(this.orderStatus)
         this.orderList = []
