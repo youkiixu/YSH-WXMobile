@@ -398,17 +398,18 @@ page{
     text-align: center;
     line-height: 100rpx;
     font-size: 28rpx;
-    color: #fff;
     border:none;
     border-radius: 0;
 }
 
 .add-address .cannel{
-    background: #333;
+    background: #e3fffe;
+    color: #009e96;
 }
 
 .add-address .save{
-    background: #b4282d;
+    background: #009e96;
+    color: #fff;
 }
 
 
