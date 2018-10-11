@@ -215,13 +215,11 @@ page{
 }
 .orders-list{
     width: 750rpx; 
-    background: #fff;
-    padding: 0 20rpx;
-    box-sizing: border-box;
-    margin-top: 20rpx;
 }
-.orders-list .list-item{
+.orders-list .order{
     margin-top: 20rpx;
+    background: #fff;
+   
 }
 .orders-list .list-item:first-child{
     margin-top: 0;
@@ -236,6 +234,8 @@ page{
     float: left;
     color: #666;
     font-size: 24rpx;
+    padding: 0 20rpx;
+    box-sizing: border-box;
 }
 .list-item .item-h .pending{
     width: 13%;
@@ -243,6 +243,8 @@ page{
     color: #009e96;
     font-size: 20rpx;
     text-align: right;
+     padding: 0 20rpx;
+    box-sizing: border-box;
 }
 .item-info{
     height: 188rpx;
@@ -256,7 +258,7 @@ page{
     align-items: center;
     justify-content: center;
     float: left;
-    margin: 14rpx 20rpx 14rpx 0;
+    margin: 14rpx 20rpx 14rpx 20rpx;
 }
 .item-info .img image{
    width: 160rpx;
@@ -265,7 +267,7 @@ page{
 .item-info .txt{
     width: 520rpx;
     height: 160rpx;
-    margin: 14rpx 0 14rpx 0;
+    margin: 14rpx 20rpx 14rpx 0;
     float: left;
 }
 .item-info .txt .txt-t{
@@ -295,6 +297,8 @@ page{
 .item-check{
     height: 88rpx;
     line-height: 88rpx;
+    padding: 0 20rpx;
+    box-sizing: border-box;
 }
 .item-check .total{
     width: 50%;
