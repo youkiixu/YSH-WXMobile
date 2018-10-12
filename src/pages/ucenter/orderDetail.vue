@@ -165,7 +165,7 @@ export default {
     await Promise.all([
       this.getUserOrderDetail()
     ])
-    this.init()
+    
   },
   methods: {
     // 获取用户订单数据
@@ -177,17 +177,19 @@ export default {
 
         if (res.success === true) {
             const data = JSON.parse(res.data)
-            console.log(data)
             this.orderInfo = data[0];
             this.orderGoods = data[1].QuoteRecord;   
             this.orderInfo.OrderStatusStr = this.$wx.orderStatus(this.orderInfo.OrderStatus)
+            // 判断按钮可不可以用
+            this.init()
         } else {
             this.$router.back()
         }
     },
     init () {
         const m = this.orderInfo
-        console.log(m)
+        this.canCancel = false
+        this.canPay = false
         // 判断是否可以取消
         if(m.OrderStatus == orderInfoStatus.OrderOperateStatus.WaitPay || m.OrderStatus == orderInfoStatus.OrderOperateStatus.WaitDelivery && m.PaymentType == orderInfoStatus.PaymentTypes.CashOnDelivery) {
             if(m.OrderStatus == orderInfoStatus.OrderOperateStatus.Audited || m.Production == 1) {

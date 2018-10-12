@@ -34,7 +34,7 @@
           <view :class="isEditCart ? 'edit item' : 'item'" v-for="(item, index) of cartGoods" :key="item.Id" @click="checkedItem(item)">
             <view :class="selectGoods.Id == item.Id ? 'checked checkbox' : 'checkbox'"  :data-item-index="index"></view>
             <view class="cart-goods">
-              <img class="img" :src="baseUrl + item.ImagePath"/>
+              <img class="img" :src="baseUrl + item.ImagePath + '/1_350.png'"/>
               <view class="info">
                 <view class="t">
                   <text class="name">{{item.ProductName}}</text>
@@ -103,7 +103,10 @@ export default {
   computed: {
     ...mapState([
       'userInfo'
-    ])
+    ]),
+    baseUrl () {
+      return this.$wx.baseUrl
+    }
   },
   methods: {
     // 请求购物车数据
@@ -115,7 +118,6 @@ export default {
         pageSize : this.pageSize
       }
       const res = await api.getShoppingCartList(par);
-      this.baseUrl = res.RequestUrl
       if(res.success) {
         var resData = JSON.parse(res.data)
         this.cartGoods = this.cartGoods.concat(resData.Table)

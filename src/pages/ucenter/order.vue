@@ -7,7 +7,7 @@
         <view :class="orderStatus == OrderOperateStatus.WaitReceiving  ? 'head-item select' : 'head-item '" @click="selectStatus(OrderOperateStatus.WaitReceiving)">待收货</view>
         <view :class="orderStatus == OrderOperateStatus.Finish  ? 'head-item select' : 'head-item '" @click="selectStatus(OrderOperateStatus.Finish)">已完成</view>
     </view>
-    <view class="orders-list">
+    <view class="orders-list" >
         <view  class="order" v-for="(item, index) in orderList" :key="item.id" :data-index="index">
             <view class="list-item">
                 <view class="item-h clear">
@@ -36,7 +36,6 @@
             </view>
         </view>
     </view>
-
     <!-- <view class="orders">
         <navigator :url="'./orderDetail?Id=' + item.Id" class="order" v-for="(item, index) in orderList" :key="item.id" :data-index="index">
             <view class="h">
@@ -190,7 +189,18 @@ page{
     background: #f4f4f4;
 }
 .container{
+    height:100%;
+    width: 100%;
+    display:flex;
+    flex-direction:column;
+
     background: #f1f1f1;
+}
+.order-content {
+    flex: 1;
+  width: 100%;
+  background: #fff;
+  display: flex;
 }
 .clear:after{
     display: block;
@@ -199,6 +209,8 @@ page{
     height:0;
     }
 .order-head{
+    position: fixed;
+    top: 0;
     padding: 0 20rpx;
     box-sizing: border-box;
     display: -webkit-box;
@@ -206,6 +218,7 @@ page{
     height: 80rpx;
     width: 750rpx;
     background: #fff;
+    z-index: 999;
 }
 .order-head .select {
     color: #009e96;
@@ -227,6 +240,7 @@ page{
     color: #009e96;
 }
 .orders-list{
+    margin-top: 80rpx;
     width: 750rpx; 
 }
 .orders-list .order{

@@ -86,7 +86,7 @@
       <view class="proDetail" id="proDetail">
         <view class="title">商品详情</view>
         <view class="content">
-          <wxParse :content="goodDetailHTMLstr" />
+          <wxParse :imageProp="baseUrl" :content="goodDetailHTMLstr" />
         </view>
       </view>
     </view>
@@ -286,6 +286,13 @@ export default {
         borderColor: this.detailInfo.BorderSelectionColor,
         color: '#b4282d'
       }
+    },
+    baseUrl () {
+      var obj = {
+        mode: 'aspectFit',
+        domain: 'kiy.cn'
+      }
+      return obj
     }
   },
   methods: {

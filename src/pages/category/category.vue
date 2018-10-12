@@ -18,9 +18,9 @@
         <text class="txt">评论</text>
       </view>
     </view>
-    <view class="sort-box-category" v-if="categoryFilter">
+    <!-- <view class="sort-box-category" v-if="categoryFilter">
       <view :class="item.checked ? 'active item' : 'item'" v-for="(item, index) of filterCategory" :key="cate-item.id" :data-category-index="index" @click="selectCategory">{{item.name}}</view>
-    </view>
+    </view> -->
   </view>
 
 
@@ -78,7 +78,8 @@ export default {
       scrollTop: 0,
       scrollHeight: 0,
       page: 1,
-      size: 20 // 默认10000尽量大，查到所有符合的数据
+      size: 20, // 默认10000尽量大，查到所有符合的数据
+      orderKey: 1
     }
   }, 
   async mounted () {
@@ -109,20 +110,20 @@ export default {
   methods: {
 
     // 获得搜索结果的商品列表
-    async getGoodsList () {
-      // this.historyKeyword = [];
-      // const res = await api.getGoodsList({ keyword: this.keyword, page: this.page, size: this.size, sort: this.currentSortType, order: this.currentSortOrder, categoryId: this.categoryId });
-      const res = await api.search({keywords: this.keyword , pageNo: this.page , pageSize: this.size})
-      console.log('搜索结果', res);
-      if (res.success) {
-        this.searchStatus = true;
-        this.categoryFilter = false;
-        var dataTable = JSON.parse(res.data)
-        this.goodsList = dataTable.Table;
-      }
-    },
+    // async getGoodsList () {
+    //   // this.historyKeyword = [];
+    //   // const res = await api.getGoodsList({ keyword: this.keyword, page: this.page, size: this.size, sort: this.currentSortType, order: this.currentSortOrder, categoryId: this.categoryId });
+    //   const res = await api.search({keywords: this.keyword , pageNo: this.page , pageSize: this.size , orderKey: this.orderKey})
+    //   if (res.success) {
+    //     this.searchStatus = true;
+    //     this.categoryFilter = false;
+    //     var dataTable = JSON.parse(res.data)
+    //     this.goodsList = dataTable.Table;
+    //   }
+    // },
      // 三个排序条件的点击事件
     openSortFilter: function (event) {
+      // this.goodsList = []
       let currentId = event.currentTarget.id;
       switch (currentId) {        
         case 'salesSort':
@@ -133,7 +134,8 @@ export default {
           this.categoryFilter = false;
           this.currentSortType = 'sales';
           this.currentSortOrder = tmpSortOrderSales;
-          this.getGoodsList();
+          this.orderKey = 2
+          this.refresh();
           break;
 
           case 'priceSort':
@@ -144,7 +146,8 @@ export default {
           this.categoryFilter = false;
           this.currentSortType = 'price';
           this.currentSortOrder = tmpSortOrderPrice;
-          this.getGoodsList();
+          this.orderKey = 3
+          this.refresh();
           break;
 
           case 'commentSort':
@@ -155,7 +158,8 @@ export default {
           this.categoryFilter = false;
           this.currentSortType = 'comment';
           this.currentSortOrder = tmpSortOrderComment;
-          this.getGoodsList();
+          this.orderKey = 4
+          this.refresh();
           break;
 
         default:
@@ -163,16 +167,16 @@ export default {
           this.categoryFilter = false;
           this.currentSortType = 'default';
           this.currentSortOrder = 'desc';
-          this.getGoodsList();
+          this.orderKey = 1
+          this.refresh();
       }
     },
 
 
     async searchGoods() {
-      const res = await api.search({ cid: this.Id , pageNo: this.page , pageSize : this.size });
+      const res = await api.search({ cid: this.Id , pageNo: this.page , pageSize : this.size , orderKey: this.orderKey });
       if(res.success) {
         var tableData = JSON.parse(res.data)
-        console.log(tableData)
         this.goodsList = this.goodsList.concat(tableData.Table)
         
       }
