@@ -275,17 +275,17 @@ export default {
 }
 
 .sort-box .item.by-price , .sort-box .item.by-sales , .sort-box .item.by-comment{
-    background: url(http://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/no-3127092a69.png) 135rpx center no-repeat;
+    background: url(http://www.kiy.cn/Areas/wxMobile/Content/img/icon-none.png) 135rpx center no-repeat;
     background-size: 15rpx 21rpx;
 }
 
 .sort-box .item.by-price.active.asc , .sort-box .item.by-sales.active.asc , .sort-box .item.by-comment.active.asc{
-    background: url(http://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/up-636b92c0a5.png) 135rpx center no-repeat;
+    background: url(http://www.kiy.cn/Areas/wxMobile/Content/img/icon-asc.png) 135rpx center no-repeat;
     background-size: 15rpx 21rpx;
 }
 
 .sort-box .item.by-price.active.desc , .sort-box .item.by-sales.active.desc , .sort-box .item.by-comment.active.desc{
-    background: url(http://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/down-95e035f3e5.png) 135rpx center no-repeat;
+    background: url(http://www.kiy.cn/Areas/wxMobile/Content/img/icon-desc.png) 135rpx center no-repeat;
     background-size: 15rpx 21rpx;
 }
 
@@ -347,8 +347,8 @@ export default {
 }
 
 .cate-nav .item.active .name{
-    color: #ab2b2b;
-    border-bottom: 2px solid #ab2b2b;
+    color: #009e96;
+    border-bottom: 2px solid #009e96;
 }
 
 .cate-item{
@@ -393,20 +393,21 @@ export default {
 .cate-item .b .item{
   float: left;
   background: #fff;
-  width: 357rpx;
+  width: 350rpx;
   height: 540rpx;
   overflow: hidden;
 }
 .cate-item .b .item{
-  margin-top: 13rpx;
+  margin-top: 15rpx;
 }
 .cate-item .b .item:nth-child(2n){
-    margin-left: 13rpx;
+    margin-left: 15rpx;
 }
 .cate-item .item .img{
   display: block;
   width: 100%;
   height: 400rpx;
+  overflow: hidden;
   background: #666666;
 }
 .cate-item .b-txt{

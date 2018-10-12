@@ -83,15 +83,15 @@ export default {
 .cate-item .b .item{
   float: left;
   background: #fff;
-  width: 357rpx;
+  width: 350rpx;
   height: 540rpx;
   overflow: hidden;
 }
 .cate-item .b .item{
-  margin-top: 13rpx;
+  margin-top: 15rpx;
 }
 .cate-item .b .item:nth-child(2n){
-    margin-left: 13rpx;
+    margin-left: 15rpx;
 }
 .cate-item .item .img{
   display: block;

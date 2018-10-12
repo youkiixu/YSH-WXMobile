@@ -2,7 +2,7 @@
 <scroll-view class="container" style="height: 100%;">
   <view class="search-header">
     <view class="input-box">
-      <img class="icon" src="http://nos.netease.com/mailpub/hxm/yanxuan-wap/p/20150730/style/img/icon-normal/search2-2fb94833aa.png"/>
+      <img class="icon" @click="getSeach" src="http://nos.netease.com/mailpub/hxm/yanxuan-wap/p/20150730/style/img/icon-normal/search2-2fb94833aa.png"/>
        <!-- @input="inputChange" @focus="inputFocus" @confirm="onKeywordConfirm" -->
       <input name="input" class="keywrod" focus="true" v-model="keyword" confirm-type="search" @confirm="onKeywordConfirm"  :placeholder="defaultKeyword.keyword" />
       <img class="del" v-if="keyword" @click="clearKeyword" src="http://nos.netease.com/mailpub/hxm/yanxuan-wap/p/20150730/style/img/icon-normal/clearIpt-f71b83e3c2.png"/>
@@ -180,7 +180,12 @@ export default {
     // 键盘回车进行搜索
     onKeywordConfirm: function (event) {
       this.getSearchResult();
+    },
+    // 键盘搜索图标进行搜索
+    getSeach: function (event) {
+      this.getSearchResult();
     }
+    
   },
   // 小程序原生上拉加载
   onReachBottom () {
