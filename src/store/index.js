@@ -23,6 +23,7 @@ const store = new Vuex.Store({
     address: {},//地址编辑详情
     addressList: [],//个人地址列表
     checkOutInfo: {},//下单页面信息
+    proSearchParam : {},//非标报价的参数
     proSearchRst: {}//非标报价后的厂家价格列表
   },
   mutations: {
@@ -47,6 +48,10 @@ const store = new Vuex.Store({
     },
     setProSearchRst(state, res) {
       state.proSearchRst = res
+    },
+    // 设置非标报价的参数
+    setProSearchParam (state , res) {
+      state.proSearchParam = res
     }
   },
   actions: {
@@ -135,7 +140,7 @@ const store = new Vuex.Store({
       const res = await api.getProSearchRst(par)
       hideLoading()
       if(res.success) {
-        console.log(res)
+        vm.commit('setProSearchParam', skuInfo)
         vm.commit('setProSearchRst', res.data)
         wx.navigateTo({
           url: '../../pages/auto/quoteList'

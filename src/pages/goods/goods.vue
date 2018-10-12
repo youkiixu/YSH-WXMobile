@@ -298,6 +298,9 @@ export default {
   methods: {
     ...mapActions(['submitByProductId']),
     async refresh() {
+      // 请空已选的kiuId
+      this.comment = {}
+      this.skuId = ''
       this.$wx.showLoading()
       await Promise.all([
         this.getGoodsSkuInfo(),
@@ -422,7 +425,6 @@ export default {
       const skuIdArr = skuId.split('_')
       const selectSkuStr = this.selectSkuStr
       const detailInfo = this.detailInfo
-      
       this.selectSku.Color = Number(skuIdArr[1])
       this.selectSku.Size = Number(skuIdArr[2])
       this.selectSku.Version = Number(skuIdArr[3])
