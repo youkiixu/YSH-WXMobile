@@ -2,19 +2,21 @@
     <view class="container">
         <view class="sort">
             <view class="sort-box">
-            <view :class=" currentSortType == 'default' ? 'active item' : 'item'"  @click="openSortFilter" id="defaultSort">
-                <text class="txt">综合</text>
-            </view>
-            <view :class="['item', 'by-price', { active: currentSortType == 'price', asc: currentSortOrder == 'asc', desc: currentSortOrder !== 'asc' }]"
-                @click="openSortFilter" id="priceSort">
-                <text class="txt">价格</text>
-            </view>
-            <view :class=" currentSortType == 'category' ? 'active item' : 'item'" @click="openSortFilter" id="categoryFilter">
-                <text class="txt">分类</text>
-            </view>
-            </view>
-            <view class="sort-box-category" v-if="categoryFilter">
-            <view :class="item.checked ? 'active item' : 'item'" v-for="(item, index) of filterCategory" :key="cate-item.id" :data-category-index="index" @click="selectCategory">{{item.name}}</view>
+                <view :class=" currentSortType == 'default' ? 'active item' : 'item'"  @click="openSortFilter" id="defaultSort">
+                    <text class="txt">综合</text>
+                </view>
+                <view :class="['item', 'by-sales by-sort', { active: currentSortType == 'sales', asc: currentSortOrder == 'asc', desc: currentSortOrder !== 'asc' }]"
+                    @click="openSortFilter" id="salesSort">
+                    <text class="txt">销量</text>
+                </view>
+                <view :class="['item', 'by-price by-sort', { active: currentSortType == 'price', asc: currentSortOrder == 'asc', desc: currentSortOrder !== 'asc' }]"
+                    @click="openSortFilter" id="priceSort">
+                    <text class="txt">价格</text>
+                </view>
+                <view :class="['item', 'by-comment by-sort', { active: currentSortType == 'comment', asc: currentSortOrder == 'asc', desc: currentSortOrder !== 'asc' }]"
+                    @click="openSortFilter" id="commentSort">
+                    <text class="txt">评论</text>
+                </view>
             </view>
         </view>
         <div class="list-content">
@@ -57,16 +59,22 @@ export default {
     },
     data () {
         return {
-            quoteList: []
+            quoteList: [],
+            currentSortType: 'default',
+            currentSortOrder: 'desc',
+            orderKey: '默认'
+
         }
     },
     computed: {
-        ...mapState(['proSearchRst' , 'userInfo']),
+        ...mapState(['proSearchRst' , 'userInfo' , 'proSearchParam']),
         baseUrl() {
             return this.$wx.baseUrl
         }
     },
-    onShow () {
+    mounted () {
+        this.currentSortType = 'default';
+        this.currentSortOrder = 'desc';
         this.quoteList = JSON.parse(this.proSearchRst.data)
     },
     methods: {
@@ -81,17 +89,14 @@ export default {
                 YjUse: item.YjUse,
                 price: item.Price,
                 quoteModel: item.QuoteLogInfoId,
-                // qItemCode: item.
                 RemindPrice: item.RemindPrice,
                 GroupJson: item.GroupJson,
                 QuoteStr: item.QuoteStr,
                 LimitTimeBuyId: item.LimitTimeBuyId,
-                // PreferentialAmount: item.
             }
             this.SubmitByProductId2(par)
         },
         async toCart(item) {
-            console.log(item)
             const openId = wx.getStorageSync('openId')
             var par = {
                 openId: openId,
@@ -113,7 +118,71 @@ export default {
             } else {
                 this.$wx.showErrorToast('加入购物车失败')
             }
+        },
+        openSortFilter (event) {
+            // this.goodsList = []
+            let currentId = event.currentTarget.id;
+            switch (currentId) {        
+                case 'salesSort':
+                let tmpSortOrderSales = 'asc';
+                if (this.currentSortOrder === 'asc') {
+                    tmpSortOrderSales = 'desc';
+                }
+                this.currentSortType = 'sales';
+                this.currentSortOrder = tmpSortOrderSales;
+                this.orderKey = '销量'
+                this.refresh();
+                break;
+
+                case 'priceSort':
+                let tmpSortOrderPrice = 'asc';
+                if (this.currentSortOrder === 'asc') {
+                    tmpSortOrderPrice = 'desc';
+                }
+                this.currentSortType = 'price';
+                this.currentSortOrder = tmpSortOrderPrice;
+                this.orderKey = '价格'
+                this.refresh();
+                break;
+
+                case 'commentSort':
+                let tmpSortOrderComment = 'asc';
+                if (this.currentSortOrder === 'asc') {
+                    tmpSortOrderComment = 'desc';
+                }
+                this.currentSortType = 'comment';
+                this.currentSortOrder = tmpSortOrderComment;
+                this.orderKey = '评价'
+                this.refresh();
+                break;
+
+                default:
+                // 综合排序
+                this.currentSortType = 'default';
+                this.currentSortOrder = 'desc';
+                this.orderKey = '默认'
+                this.refresh();
+            }
+        },
+        async refresh () {
+            const openId = wx.getStorageSync('openId')
+            var par = Object.assign({
+                'openId': openId , 'orderByType' : this.orderKey , 'orderByKey': this.currentSortOrder == 'desc' ? 0 : 1
+            }, this.proSearchParam)
+            this.$wx.showLoading()
+            const res = await api.getProSearchRst(par)
+            this.$wx.hideLoading()
+            if(res.success) {
+                this.quoteList = JSON.parse(res.data.data)
+            } else {
+                this.$wx.showErrorToast('网络出错')
+            }
         }
+    },
+    // 小程序原生下拉刷新
+    onPullDownRefresh: function() {
+        this.refresh()
+        wx.stopPullDownRefresh()
     }
 }
 </script>
@@ -156,21 +225,21 @@ page{
 }
 
 .sort-box .item.active .txt{
-    color: #b4282d;
+    color: #009e96;
 }
 
-.sort-box .item.by-price{
-    background: url(//yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/no-3127092a69.png) 155rpx center no-repeat;
+.sort-box .item.by-price , .sort-box .item.by-sales , .sort-box .item.by-comment{
+    background: url(http://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/no-3127092a69.png) 135rpx center no-repeat;
     background-size: 15rpx 21rpx;
 }
 
-.sort-box .item.by-price.active.asc{
-    background: url(http://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/up-636b92c0a5.png) 155rpx center no-repeat;
+.sort-box .item.by-price.active.asc , .sort-box .item.by-sales.active.asc , .sort-box .item.by-comment.active.asc{
+    background: url(http://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/up-636b92c0a5.png) 135rpx center no-repeat;
     background-size: 15rpx 21rpx;
 }
 
-.sort-box .item.by-price.active.desc{
-    background: url(http://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/down-95e035f3e5.png) 155rpx center no-repeat;
+.sort-box .item.by-price.active.desc , .sort-box .item.by-sales.active.desc , .sort-box .item.by-comment.active.desc{
+    background: url(http://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/down-95e035f3e5.png) 135rpx center no-repeat;
     background-size: 15rpx 21rpx;
 }
 

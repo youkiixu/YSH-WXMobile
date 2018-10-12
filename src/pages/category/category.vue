@@ -108,19 +108,6 @@ export default {
     }
   },
   methods: {
-
-    // 获得搜索结果的商品列表
-    // async getGoodsList () {
-    //   // this.historyKeyword = [];
-    //   // const res = await api.getGoodsList({ keyword: this.keyword, page: this.page, size: this.size, sort: this.currentSortType, order: this.currentSortOrder, categoryId: this.categoryId });
-    //   const res = await api.search({keywords: this.keyword , pageNo: this.page , pageSize: this.size , orderKey: this.orderKey})
-    //   if (res.success) {
-    //     this.searchStatus = true;
-    //     this.categoryFilter = false;
-    //     var dataTable = JSON.parse(res.data)
-    //     this.goodsList = dataTable.Table;
-    //   }
-    // },
      // 三个排序条件的点击事件
     openSortFilter: function (event) {
       // this.goodsList = []
@@ -281,18 +268,18 @@ export default {
     color: #009e96;
 }
 
-.sort-box .item.by-sort{
-    background: url(//yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/no-3127092a69.png) 130rpx center no-repeat;
+.sort-box .item.by-price , .sort-box .item.by-sales , .sort-box .item.by-comment{
+    background: url(http://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/no-3127092a69.png) 135rpx center no-repeat;
     background-size: 15rpx 21rpx;
 }
 
-.sort-box .item.by-sort.active.asc{
-    background: url(http://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/up-636b92c0a5.png) 130rpx center no-repeat;
+.sort-box .item.by-price.active.asc , .sort-box .item.by-sales.active.asc , .sort-box .item.by-comment.active.asc{
+    background: url(http://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/up-636b92c0a5.png) 135rpx center no-repeat;
     background-size: 15rpx 21rpx;
 }
 
-.sort-box .item.by-sort.active.desc{
-    background: url(http://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/down-95e035f3e5.png) 130rpx center no-repeat;
+.sort-box .item.by-price.active.desc , .sort-box .item.by-sales.active.desc , .sort-box .item.by-comment.active.desc{
+    background: url(http://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/down-95e035f3e5.png) 135rpx center no-repeat;
     background-size: 15rpx 21rpx;
 }
 

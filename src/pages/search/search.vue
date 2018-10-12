@@ -9,7 +9,7 @@
     </view>
     <view class="right" @click="closeSearch">取消</view>
   </view>
-  <view class="no-search" v-if="!searchStatus">
+  <!-- <view class="no-search" v-if="!searchStatus">
       <view class="serach-keywords search-history" v-if="!keyword && historyKeyword.length">
     <view class="h">
       <text class="title">历史记录</text>
@@ -30,23 +30,25 @@
   <view class="shelper-list" v-if="keyword">
     <view class="item" hover-class="navigator-hover" v-for="(item, index) of helpKeyword" :key="item" :data-index="index" @click="onKeywordTap" :data-keyword="item">{{item}}</view>
   </view>
-  </view>
+  </view> -->
 
   <view class="sort" v-if="searchStatus">
     <view class="sort-box">
       <view :class=" currentSortType == 'default' ? 'active item' : 'item'"  @click="openSortFilter" id="defaultSort">
         <text class="txt">综合</text>
       </view>
-      <view :class="['item', 'by-price', { active: currentSortType == 'price', asc: currentSortOrder == 'asc', desc: currentSortOrder !== 'asc' }]"
+      <view :class="['item', 'by-sales by-sort', { active: currentSortType == 'sales', asc: currentSortOrder == 'asc', desc: currentSortOrder !== 'asc' }]"
+         @click="openSortFilter" id="salesSort">
+        <text class="txt">销量</text>
+      </view>
+      <view :class="['item', 'by-price by-sort', { active: currentSortType == 'price', asc: currentSortOrder == 'asc', desc: currentSortOrder !== 'asc' }]"
          @click="openSortFilter" id="priceSort">
         <text class="txt">价格</text>
       </view>
-      <view :class=" currentSortType == 'category' ? 'active item' : 'item'" @click="openSortFilter" id="categoryFilter">
-        <text class="txt">分类</text>
+      <view :class="['item', 'by-comment by-sort', { active: currentSortType == 'comment', asc: currentSortOrder == 'asc', desc: currentSortOrder !== 'asc' }]"
+         @click="openSortFilter" id="commentSort">
+        <text class="txt">评论</text>
       </view>
-    </view>
-    <view class="sort-box-category" v-if="categoryFilter">
-      <view :class="item.checked ? 'active item' : 'item'" v-for="(item, index) of filterCategory" :key="cate-item.id" :data-category-index="index" @click="selectCategory">{{item.name}}</view>
     </view>
   </view>
 
@@ -76,159 +78,119 @@ export default {
       keyword: '',
       searchStatus: false,
       goodsList: [],
-      helpKeyword: [],
-      historyKeyword: [],
       categoryFilter: false,
       currentSortType: 'default',
       filterCategory: [],
       defaultKeyword: {},
-      hotKeyword: [],
       page: 1,
       size: 20,
       currentSortOrder: 'desc',
-      categoryId: 0,
-      timer: null
+      timer: null,
+      orderKey: 1
     }
   },
-  async onShow () {
+  async mounted () {
     this.goodsList = []
     this.keyword = ''
     this.searchStatus = false
     await Promise.all([
-      this.getSearchKeyword()
     ])
   },
   methods: {
-    // 获取历史记录，默认红色关键词，热门关键词
-    async getSearchKeyword () {
-      // const res = await api.SearchIndex();
-      // console.log('搜索关键词,请求结果', res);
-      // if (res.errno === 0) {
-      //   this.historyKeyword = res.data.historyKeywordList;
-      //   this.defaultKeyword = res.data.defaultKeyword;
-      //   this.hotKeyword = res.data.hotKeywordList;
-      // }
-    },
     // 点击“取消”
     closeSearch () {
-      wx.navigateBack()
-    },
-    // 清空关键词
-    clearKeyword () {
-      this.keyword = '';
-      this.searchStatus = false;
-    },
-    // 监听输入事件
-    inputChange (e) {
-      // debounce防抖 500ms
-      // if (this.timer) {
-      //   clearTimeout(this.timer);
-      // }
-      // this.timer = setTimeout(() => {
-      //   // console.log('延迟监听输入事件', e);
-      //   this.keyword = e.target.value;
-      //   this.searchStatus = false;
-      //   this.getHelpKeyword();
-      // }, 500)
+      this.$router.back()
     },
     // 输入框获得焦点
     inputFocus () {
       this.searchStatus = false;
       this.goodsList = [];
-      // if (this.keyword) {
-      //   this.getHelpKeyword();
-      // }
-    },
-    // 输入时获取关键词提示
-    async getHelpKeyword () {
-      const res = await api.SearchHelper({ keyword: this.keyword });
-      // console.log('关键词提示,请求结果', res);
-      if (res.errno === 0) {
-        this.helpKeyword = res.data;
-      }
-    },
-    // 清空历史记录
-    async clearHistory () {
-      this.historyKeyword = [];
-      const res = await api.ClearSearchHistory();
-      // console.log('清空历史记录,请求结果', res);
-      if (res.errno === 0) {
-        // console.log('清除成功');
-      }
     },
     // 获得搜索结果的商品列表
     async getGoodsList () {
       this.historyKeyword = [];
-      // const res = await api.getGoodsList({ keyword: this.keyword, page: this.page, size: this.size, sort: this.currentSortType, order: this.currentSortOrder, categoryId: this.categoryId });
-      const res = await api.search({keywords: this.keyword , pageNo: this.page , pageSize: this.size})
+      const res = await api.search({keywords: this.keyword , pageNo: this.page , pageSize: this.size , orderKey: this.orderKey})
       console.log('搜索结果', res);
       if (res.success) {
         this.searchStatus = true;
         this.categoryFilter = false;
         var dataTable = JSON.parse(res.data)
-        this.goodsList = dataTable.Table;
-        console.log(this.goodsList)
-        // this.filterCategory = res.data.filterCategory;
-        // this.page = res.data.currentPage;
-        // this.size = res.data.pageSize;
-        // 重新获取关键词
-        this.getSearchKeyword();
+        this.goodsList = this.goodsList.concat(dataTable.Table);
       }
     },
     // 关键词被点击
-    onKeywordTap (event) {
-      // console.log('点击关键词的event', event);
-      this.getSearchResult(event.currentTarget.dataset.keyword);
+    onKeywordTap () {
+      this.getSearchResult();
     },
     // 上一个方法调用
-    getSearchResult (keyword) {
-      this.keyword = keyword;
+    getSearchResult () {
       this.page = 1;
-      this.categoryId = 0;
       this.goodsList = [];
       this.getGoodsList();
     },
     // 三个排序条件的点击事件
     openSortFilter: function (event) {
       let currentId = event.currentTarget.id;
-      switch (currentId) {
-        case 'categoryFilter':
-          this.categoryFilter = !this.categoryFilter;
-          this.currentSortType = 'category';
-          this.currentSortOrder = 'asc';
-          break;
-        case 'priceSort':
-          let tmpSortOrder = 'asc';
+      switch (currentId) {        
+        case 'salesSort':
+          let tmpSortOrderSales = 'asc';
           if (this.currentSortOrder === 'asc') {
-            tmpSortOrder = 'desc';
+            tmpSortOrderSales = 'desc';
+          }
+          this.categoryFilter = false;
+          this.currentSortType = 'sales';
+          this.currentSortOrder = tmpSortOrderSales;
+          this.orderKey = 2
+          this.getSearchResult();
+          break;
+
+          case 'priceSort':
+          let tmpSortOrderPrice = 'asc';
+          if (this.currentSortOrder === 'asc') {
+            tmpSortOrderPrice = 'desc';
           }
           this.categoryFilter = false;
           this.currentSortType = 'price';
-          this.currentSortOrder = tmpSortOrder;
-          this.getGoodsList();
+          this.currentSortOrder = tmpSortOrderPrice;
+          this.orderKey = 3
+          this.getSearchResult();
           break;
+
+          case 'commentSort':
+          let tmpSortOrderComment = 'asc';
+          if (this.currentSortOrder === 'asc') {
+            tmpSortOrderComment = 'desc';
+          }
+          this.categoryFilter = false;
+          this.currentSortType = 'comment';
+          this.currentSortOrder = tmpSortOrderComment;
+          this.orderKey = 4
+          this.getSearchResult();
+          break;
+
         default:
           // 综合排序
           this.categoryFilter = false;
           this.currentSortType = 'default';
           this.currentSortOrder = 'desc';
-          this.getGoodsList();
+          this.orderKey = 1
+          this.getSearchResult();
       }
-    },
-    // “分类”的点击事件
-    selectCategory: function (event) {
-      // console.log('分类点击的event', event);
-      let currentIndex = event.currentTarget.dataset.categoryIndex;
-      this.categoryFilter = false;
-      this.categoryId = this.filterCategory[currentIndex].id;
-      this.getGoodsList();
     },
     // 键盘回车进行搜索
     onKeywordConfirm: function (event) {
-      // console.log('键盘回车的event', event);
-      // 这里是target不是currentTarget哦~
-      this.getSearchResult(event.target.value);
+      this.getSearchResult();
     }
+  },
+  // 小程序原生上拉加载
+  onReachBottom () {
+    this.page++
+    this.getGoodsList()
+  },
+  // 小程序原生下拉刷新
+  onPullDownRefresh: function() {
+    this.getSearchResult()
+    wx.stopPullDownRefresh()
   },
   // 原生的分享功能
   onShareAppMessage: function () {
@@ -284,18 +246,18 @@ page{
     color: #009e96;
 }
 
-.sort-box .item.by-price{
-    background: url(//yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/no-3127092a69.png) 155rpx center no-repeat;
+.sort-box .item.by-price , .sort-box .item.by-sales , .sort-box .item.by-comment{
+    background: url(http://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/no-3127092a69.png) 135rpx center no-repeat;
     background-size: 15rpx 21rpx;
 }
 
-.sort-box .item.by-price.active.asc{
-    background: url(http://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/up-636b92c0a5.png) 155rpx center no-repeat;
+.sort-box .item.by-price.active.asc , .sort-box .item.by-sales.active.asc , .sort-box .item.by-comment.active.asc{
+    background: url(http://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/up-636b92c0a5.png) 135rpx center no-repeat;
     background-size: 15rpx 21rpx;
 }
 
-.sort-box .item.by-price.active.desc{
-    background: url(http://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/down-95e035f3e5.png) 155rpx center no-repeat;
+.sort-box .item.by-price.active.desc , .sort-box .item.by-sales.active.desc , .sort-box .item.by-comment.active.desc{
+    background: url(http://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/down-95e035f3e5.png) 135rpx center no-repeat;
     background-size: 15rpx 21rpx;
 }
 
