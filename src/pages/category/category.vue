@@ -1,6 +1,7 @@
 <template >
 <view class="container">
-  <view class="sort">
+  <view class="cate-head">
+    <view class="sort">
     <view class="sort-box">
       <view :class=" currentSortType == 'default' ? 'active item' : 'item'"  @click="openSortFilter" id="defaultSort">
         <text class="txt">综合</text>
@@ -32,6 +33,8 @@
             </view>
         </scroll-view>
     </view>
+  </view>
+  
 
     <scroll-view scroll-y="true" scroll-top="scrollTop" :style="{'height': '100%'}" @bindscroll="onReachBottom">
         <view class="cate-item">
@@ -241,13 +244,16 @@ export default {
 .container{
     background: #f1f1f1;
 }
-.sort{
-    background: #fff;
+.cate-head{
+   background: #fff;
     width: 100%;
-    height: 78rpx;
     position: fixed;
     left:0;
     z-index: 1000;
+}
+.sort{
+    width: 100%;
+    height: 78rpx;
 }
 
 .sort-box{
@@ -321,12 +327,12 @@ export default {
     color: #b4282d;
     border: 1px solid #b4282d;
 }
-.cate-nav{
+/* .cate-nav{
     position: fixed;
     left:0;
     top:78rpx;
     z-index: 1000;
-}
+} */
 
 .cate-nav-body{
     height: 84rpx;
@@ -359,7 +365,8 @@ export default {
 }
 
 .cate-item{
-    margin-top: 94rpx;
+    margin-top: 172rpx;
+    margin-bottom: 20rpx;
     height: auto;
     overflow: hidden;
 }

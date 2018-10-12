@@ -2,7 +2,7 @@ import request from './request'
 
 let ApiKiyUrl = 'http://192.168.0.91:8008/'
 // const ApiKiyUrl = 'http://localhost:7634/'
-ApiKiyUrl = 'https://www.kiy.cn/'
+// ApiKiyUrl = 'https://www.kiy.cn/'
 
 const api = {
   //获取sass首页

@@ -157,6 +157,7 @@ page {
 .catalog .nav .item.active {
   color: #20b2aa;
   font-size: 24rpx;
+  background-color: #fff;
 }
 
 .catalog .cate {
