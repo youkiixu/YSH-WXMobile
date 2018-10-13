@@ -22,7 +22,7 @@
     <view class="goods-info">
         <view class="info-t clear">
         <view class="img">
-            <image :src="baseUrl + orderInfo.ThumbnailsUrl + '/1_350.png'"/>
+            <image :src="baseUrl + orderInfo.ThumbnailsUrl + '/1_50.png'"/>
         </view>
         <view class="txt">
             <view class="txt-t">
@@ -56,10 +56,10 @@
         </view>
         <view class="express-price clear">
             <view class="l">运费</view>
-            <view class="r">￥{{orderInfo.ReceivedAmount}}</view>
+            <view class="r">￥{{orderInfo.Freight}}</view>
         </view>
         <view class="actual-pay">
-            实际支付：<text class="t">￥ {{orderInfo.ProductTotalAmount + orderInfo.ReceivedAmount}}</text>
+            实际支付：<text class="t">￥ {{orderInfo.ProductTotalAmount + orderInfo.Freight}}</text>
         </view>
     </view>
 
@@ -67,7 +67,7 @@
 
      <view class="order-bottom clear">
         <view class="total">
-            合计：<text class="icon">￥</text><text class="t">{{orderInfo.ProductTotalAmount + orderInfo.ReceivedAmount}}</text>
+            合计：<text class="icon">￥</text><text class="t">{{orderInfo.ProductTotalAmount + orderInfo.Freight}}</text>
         </view>
         <view class="btn">
             <button class="cancel" v-if="canCancel" @click="cancelOrder">取消订单</button>
@@ -197,7 +197,7 @@ export default {
             } else {
                 this.canCancel = true
             }
-        }
+        } 
         if(m.OrderStatus == orderInfoStatus.OrderOperateStatus.WaitPay || (!m.IsCleared && m.OrderStatus != orderInfoStatus.OrderOperateStatus.Close && m.ReceivedAmount == 0)) {
             if (!m.IsCleared && m.ReceivedAmount == 0 && !m.IsReprint || (m.IsReprint && m.OrderTotalAmount > 0))
             {

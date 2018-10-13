@@ -81,15 +81,26 @@ const store = new Vuex.Store({
     },
     // 获取用户地址
     async getUserAddressList (vm , UserId) {
-      const res = await api.getSassUserAddress({
-        UserId: UserId
-      });
-      const addressList = JSON.parse(res.data)
-      vm.commit('setUserAddressList', addressList)
+      try {
+        const res = await api.getSassUserAddress({
+          UserId: UserId
+        });
+        const addressList = JSON.parse(res.data)
+        vm.commit('setUserAddressList', addressList)
+      } catch (error) {
+        vm.commit('setUserAddressList', [])
+      }
     },
     // 标准品去到下单也
     async submitByProductId(vm, skuInfo) {
       const openId = wx.getStorageSync('openId')
+      if (openId == '') {
+        wx.showToast({
+          title: '请先登录',
+          image: '/static/images/icon_error.png'
+        })
+        return
+      }
       var par = Object.assign({
         'openId': openId
       }, skuInfo)
@@ -115,7 +126,6 @@ const store = new Vuex.Store({
         'openId': openId
       }, skuInfo)
       loading()
-      console.log(JSON.stringify(par))
       const res = await api.SubmitByProductId2(par)
       hideLoading()
       if (res.success) {

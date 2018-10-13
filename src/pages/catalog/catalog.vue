@@ -124,7 +124,12 @@ page {
 .index-searchbar {
   position: absolute;
   z-index: 99;
-  top: 6rpx;
+  left: 0rpx;
+  width:750rpx;
+  overflow: hidden;
+  padding:10rpx 0;
+  height:74rpx;
+
 }
 .catalog {
   flex: 1;

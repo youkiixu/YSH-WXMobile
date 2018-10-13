@@ -78,5 +78,10 @@ export default {
   position: absolute;
   top: 20rpx;
   z-index: 99;
+  left: 0rpx;
+  width:750rpx;
+  overflow: hidden;
+  padding:10rpx 0;
+  height:74rpx;
 }
 </style>

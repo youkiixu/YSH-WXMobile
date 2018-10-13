@@ -301,6 +301,25 @@ export default {
       // 请空已选的kiuId
       this.comment = {}
       this.skuId = ''
+      // 2018.10.13:清空前一次的sku信息，防止下一次进来还存留
+      this.selectSku = {
+        Color: 0,
+        Size: 0,
+        Version: 0,
+        Material: 0,
+        Fashion: 0,
+        Grams: 0,
+        Ensemble: 0
+      }
+      this.selectSkuStr = {
+        Color: '',
+        Size: '',
+        Version: '',
+        Material: '',
+        Fashion: '',
+        Grams: '',
+        Ensemble: ''
+      }
       this.$wx.showLoading()
       await Promise.all([
         this.getGoodsSkuInfo(),
@@ -344,11 +363,17 @@ export default {
         par = Object.assign(par ,{openId : openId})
       }
       const res = await api.getGoodsDetail(par)
-      this.RequestUrl = res.RequestUrl
-      this.RequestUrl = 'http://www.kiy.cn/'
-      this.detailInfo = res.data
-      this.gallery = util.getImagePathGroup(this.detailInfo.imagePath)
-      this.number = Number(this.detailInfo.SaleNumber)
+      if(res.success){
+        this.RequestUrl = res.RequestUrl
+        // https下面展示没有图片
+        this.RequestUrl = this.$wx.baseUrl
+        this.detailInfo = res.data
+        this.gallery = util.getImagePathGroup(this.detailInfo.imagePath)
+        this.number = Number(this.detailInfo.SaleNumber)
+      } else {
+        this.$wx.showErrorToast(res.msg)
+      }
+
     },
     // 获取评论
     async getComment () {
@@ -582,7 +607,7 @@ export default {
   },
     // 每次打开触发，更新数据
   onShow () {
-    this.openAttr === false
+    this.openAttr = false
   }
 }
 </script>

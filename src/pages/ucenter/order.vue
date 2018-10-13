@@ -16,7 +16,7 @@
                 </view>
                 <navigator class="item-info clear" :url="'./orderDetail?Id=' + item.Id">
                     <view class="img">
-                        <image :src="baseUrl + item.ThumbnailsUrl + '/1_350.png'"/>
+                        <image :src="baseUrl + item.ThumbnailsUrl + '/1_50.png'"/>
                     </view>
                     <view class="txt">
                         <view class="txt-t">

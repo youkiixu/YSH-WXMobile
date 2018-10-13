@@ -22,14 +22,14 @@
                 </div>
             </div>
           </view>
-          <view class="form-default" v-if="address.Id">
+          <!-- <view class="form-default" v-if="address.Id">
             <div class="weui-cell weui-cell_switch">
                 <div class="weui-cell__bd">设为印捷配送默认地址</div>
                 <div class="weui-cell__ft">
                     <switch :checked="address.IsYJDefault"  @change="bindIsDefault('IsYJDefault')"/>
                 </div>
             </div>
-          </view> 
+          </view>  -->
       </view>
       <view class="btns">
           <button class="cannel" @click="cancelAddress">取消</button>
@@ -288,7 +288,7 @@ export default {
         // 如果平台默认
         par = Object.assign(par , {IsDefault : address.IsDefault ? 1 : 0})
         // 印捷默认
-        par = Object.assign(par , {IsYJDefault  : address.IsYJDefault ? 1 : 0})
+        // par = Object.assign(par , {IsYJDefault  : address.IsYJDefault ? 1 : 0})
         par = Object.assign(par , {Id : address.Id , rowState: 'M'})
       } else {
         par = Object.assign(par , { Id : 0 , rowState: null})

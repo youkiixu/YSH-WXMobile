@@ -12,6 +12,7 @@ export default {
         }
     },
     mounted () {
+        // this.$route.query.pid = 24
         if (this.$route.query.pid) {
             this.quoteUrl = 'https://www.kiy.cn//m-mobile/autobaojia/index?pid=' + this.$route.query.pid
             this.qitemCode = this.$route.query.pid
@@ -23,6 +24,7 @@ export default {
     methods: {
         ...mapActions(['getProSearchRst']),
         bindmessage (e) {
+            console.log(e)
             var _this = this;
             var skuInfo = e.mp.detail.data[0]
             var par = {
@@ -30,6 +32,7 @@ export default {
                 dataStr: skuInfo,
                 quoteJson: ''
             }
+            
             this.getProSearchRst(par)
             
         }
