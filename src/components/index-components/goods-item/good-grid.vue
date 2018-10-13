@@ -1,12 +1,20 @@
 <template>
   <view class="good-grid">
-    <view class="b">
-      <block v-for="(item,iindex) of content.goodslist" :key="item.item_id" :data-id="index">
-        <view :class="  iindex % 2 == 0 ? 'item' : 'item item-b'">
+    <view class="b clear">
+      <block v-for="item of content.goodslist" :key="item.item_id" :data-id="index">
+        <view class="item">
           <navigator :url="'../goods/goods?id=' + item.item_id" class="a">
             <img class="img" :src="baseUrl+ item.pic" background-size="cover" />
-            <text class="name">{{item.title}}</text>
-            <text class="price">￥{{item.price}}</text>
+            <view class="txt">
+              <text class="name">{{item.title}}</text>
+              <text class="desc">商品介绍</text>
+              <view class="btom clear">
+                <text class="price">￥{{item.price}}</text>
+                <img class="more" src="/static/images/more.png"  background-size="cover" />
+              </view>
+              
+            </view>
+            
           </navigator>
         </view>
       </block>
@@ -38,6 +46,12 @@ export default {
   height: auto;
   overflow: hidden;
 }
+.clear:after{
+    display: block;
+    content:'';
+    clear: both;
+    height:0;
+    }
 
 .good-grid .h {
   display: flex;
@@ -51,7 +65,8 @@ export default {
 
 .good-grid .b {
   width: 750rpx;
-  padding: 0 6.25rpx;
+  padding: 0 20rpx;
+  box-sizing: border-box;
   height: auto;
   overflow: hidden;
 }
@@ -59,47 +74,70 @@ export default {
 .good-grid .b .item {
   float: left;
   background: #fff;
-  width: 365rpx;
-  margin-bottom: 6.25rpx;
-  height: 452rpx;
+  width: 227rpx;
+  height: 370rpx;
   overflow: hidden;
-  text-align: center;
+  margin-top: 15rpx;
+  margin-left: 15rpx;
+  border-radius: 5rpx;
 }
-
+.good-grid .b .item:nth-child(3n+1) {
+  margin-left: 0;
+}
 .good-grid .b .item .a{
-  height: 452rpx;
+  height: 370rpx;
   width: 100%;
 }
 
-.good-grid .b .item-b {
-  margin-left: 6.25rpx;
-}
-
 .good-grid .item .img {
-  margin-top: 20rpx;
-  width: 302rpx;
-  height: 302rpx;
-}
-
-.good-grid .item .name {
+  width: 227rpx;
+  height: 230rpx;
   display: block;
-  width: 320rpx;
-  padding: 0 20rpx;
-  overflow: hidden;
+}
+.good-grid .item .txt{
+  height: 140rpx;
+  width: 100%;
+  padding: 20rpx 10rpx;
+  box-sizing: border-box;
+}
+.good-grid .item .txt .name {
+  display: block;
   height: 35rpx;
-  margin: 11.5rpx 0 22rpx 0;
-  text-align: center;
-  font-size: 30rpx;
-  color: #333;
+  line-height: 35rpx;
+  font-size: 24rpx;
+  color: #464646;
+  width: 217rpx;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow:ellipsis;
+
+}
+.good-grid .item .txt .desc {
+  display: block;
+  height: 30rpx;
+  line-height: 30rpx;
+  font-size: 20rpx;
+  color: #555555;
+  width: 217rpx;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow:ellipsis;
 }
 
-.good-grid .item .price {
-  display: block;
-  width: 365.625rpx;
-  height: 30rpx;
-  text-align: center;
-  font-size: 30rpx;
-  color: #b4282d;
+.good-grid .item .btom{
+  height: 35rpx;
+  line-height: 35rpx;
+  font-size: 22rpx;
+  color: #dc2121;
+}
+.good-grid .item .btom .price{
+  width: 80%;
+  float: left;
+}
+.good-grid .item .btom img{
+  width: 8%;
+  height: 22rpx;
+  float: right;
 }
 
 .good-grid .more-item{

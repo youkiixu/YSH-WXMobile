@@ -8,11 +8,11 @@
     </view> -->
 
     <view class="index-searchbar">
-      <searchBar :background="bg"></searchBar>
+      <searchBar></searchBar>
     </view>
     
 
-    <view class="catalog">
+    <view class="catalog" :style="{'height' : '100%'}">
         <scroll-view class="nav" scroll-y="true">
             <view :class="currentCategory.Id == item.Id ? 'active item' : 'item'" v-for="(item, index) of navList" :key="item.Id" :data-id="item.Id"
                 :data-index="index" @click="switchCateLog(index)">{{item.Name}}</view>
@@ -54,8 +54,7 @@ export default {
       scrollLeft: 0,
       scrollTop: 0,
       goodsCount: 0,
-      scrollHeight: 0,
-      bg: '#f7f7f7'
+      scrollHeight: 0
     }
   },
   async mounted () {
@@ -108,6 +107,18 @@ export default {
   }
 </script>
 
+<style scoped>
+  /*父组件在当前页改变子组件的背景色*/
+  .index-searchbar /deep/ .search .input{
+  background-color: #f7f7f7;
+  box-shadow: none;
+  color: #9b9b9b;
+}
+ .index-searchbar /deep/ .search .txt{
+  color: #9b9b9b;
+}
+</style>
+
 <style>
 page {
   height: 100%;
@@ -121,6 +132,7 @@ page {
   flex-direction: column;
   overflow: hidden;
 }
+
 .index-searchbar {
   position: absolute;
   z-index: 99;
@@ -162,6 +174,7 @@ page {
 .catalog .nav .item.active {
   color: #20b2aa;
   font-size: 24rpx;
+  background-color: #fff;
 }
 
 .catalog .cate {

@@ -1,16 +1,10 @@
 <template>
   <view class="nav a-section a-brand">
-    <view class="b">
+    <view class="b clear">
       <view class="item item-1" v-for="item of content.goodslist" :key="item.item_id">
         <navigator :url="'/pages/brand/brandDetail?id='+item.item_id">
-          <view class="wrap">
-            <img class="img" :src="baseUrl+ item.pic" mode="aspectFill" />
-            <view class="mt">
-              <text class="brand">{{item.title}}</text>
-              <text class="price">{{item.price}}</text>
-              <text class="unit">元起</text>
-            </view>
-          </view>
+              <text class="name">{{item.title}}</text>
+              <img class="img" :src="baseUrl+ item.pic" mode="aspectFill" background-size="cover" />
         </navigator>
       </view>
     </view>
@@ -33,57 +27,50 @@ export default {
 .a-brand .b {
   width: 750rpx;
   height: auto;
+  padding: 0 20rpx 20rpx 20rpx;
   overflow: hidden;
-  position: relative;
 }
-
-.a-brand .wrap {
-  position: relative;
-}
-
-.a-brand .img {
-  position: absolute;
-  left: 0;
-  top: 0;
-}
-
-.a-brand .mt {
-  position: absolute;
-  z-index: 2;
-  padding: 27rpx 31rpx;
-  left: 0;
-  top: 0;
-}
-
-.a-brand .mt .brand {
-  display: block;
-  font-size: 33rpx;
-  height: 43rpx;
-  color: #333;
-}
-
-.a-brand .mt .price, .a-brand .mt .unit {
-  font-size: 25rpx;
-  color: #999;
-}
-
-.a-brand .item-1 {
+.clear:after{
+    display: block;
+    content:'';
+    clear: both;
+    height:0;
+    }
+.a-brand .b .item {
   float: left;
-  width: 375rpx;
-  height: 252rpx;
-  overflow: hidden;
-  border-top: 1rpx solid #fff;
-  margin-left: 1rpx;
+  width: 225rpx;
+  height: 225rpx;
+  margin-top: 15rpx;
+  margin-left: 15rpx;
+  border-radius: 5rpx;
+  background-color: #666;
+  position: relative;
 }
-
-.a-brand .item-1:nth-child(2n+1){
+.a-brand .b .item:nth-child(1),.a-brand .b .item:nth-child(2),.a-brand .b .item:nth-child(3) {
+  margin-top: 0;
+}
+.a-brand .b .item:nth-child(3n+1) {
   margin-left: 0;
-  width: 374rpx;
+}
+.a-brand .b .item .name{
+  display: block;
+  width: 225rpx;
+  height: 60rpx;
+  line-height: 60rpx;
+  text-align: center;
+  font-size: 24rpx;
+  color: #fff;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow:ellipsis;
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+.a-brand .b .item .img{
+  display: block;
+  width: 225rpx;
+  height: 225rpx;
 }
 
-.a-brand .item-1 .img {
-  width: 375rpx;
-  height: 253rpx;
-}
 </style>
 

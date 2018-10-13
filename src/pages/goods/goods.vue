@@ -656,18 +656,18 @@ export default {
   line-height: 65rpx;
 }
 .head-share{
-  width: 30rpx;
-  height: 30rpx;
+  width: 44rpx;
+  height: 44rpx;
   position: absolute;
   right: 47rpx;
-  top: 17rpx;
+  top: 8rpx;
   display: flex;
   align-items:center;
   justify-content: space-around;
 }
 .head-share img{
-   width: 30rpx;
-   height: 30rpx;
+   width: 44rpx;
+   height: 44rpx;
 }
 .goodsimgs {
   width: 750rpx;
@@ -1366,9 +1366,8 @@ export default {
 
 .spec-con {
   width: 100%;
-  height:600rpx;
+  height:500rpx;
   overflow: hidden;
-  padding-bottom: 30rpx;
 }
 .spec-con .spec-item{
    padding: 20rpx 10rpx;

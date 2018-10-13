@@ -198,7 +198,7 @@ export default {
         width: 100%;
         line-height: 80rpx;
         font-size: 24rpx;
-        color: #b5b5bc;
+        color: #282828;
     }
     .VerCode{
         margin-top: 30rpx;
@@ -216,7 +216,7 @@ export default {
         width: 100%;
         line-height: 80rpx;
         font-size: 24rpx;
-        color: #b5b5bc;
+        color: #282828;
     }
     .VerCode_btn{
         width: 135rpx;
@@ -243,7 +243,7 @@ export default {
         width: 100%;
         line-height: 80rpx;
         font-size: 24rpx;
-        color: #b5b5bc;
+        color: #282828;
     }
     .register_btn{
         margin-top: 30rpx;       
@@ -278,7 +278,7 @@ export default {
         width: 100%;
         line-height: 80rpx;
         font-size: 24rpx;
-        color: #b5b5bc;
+        color: #282828;
     }
     .login_pwd{
         margin-top: 30rpx;
@@ -296,7 +296,7 @@ export default {
         width: 100%;
         line-height: 80rpx;
         font-size: 24rpx;
-        color: #b5b5bc;
+        color: #282828;
     }
     .pwd_btn{
         width: 135rpx;
