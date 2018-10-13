@@ -197,6 +197,7 @@ export default {
     },
     // 跳转到商品下单页面
     toGoods(item) {
+      // console.log(item)
       this.$wx.toGoodsDetail(item , this)
       // // 标准品false
       // if(item.IsCustom) {
@@ -220,7 +221,7 @@ export default {
   onShareAppMessage: function () {
     return {
       title: 'sassShop',
-      desc: '印生活SASS商城',
+      desc: '印生活',
       path: '/pages/category/category'
     }
   }

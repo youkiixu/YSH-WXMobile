@@ -1,12 +1,5 @@
 <template >
 <view class="container">
-    <!-- <view class="search">
-        <navigator url="/pages/search/search" class="input">
-            <img class="icon"/>
-            <text class="txt">商品搜索, 共{{goodsCount}}款好物</text>
-        </navigator>
-    </view> -->
-
     <view class="index-searchbar">
       <searchBar></searchBar>
     </view>
@@ -100,7 +93,7 @@ export default {
     onShareAppMessage: function () {
       return {
         title: 'sassShop',
-        desc: '印生活SASS商城',
+        desc: '印生活',
         path: '/pages/index/index'
       }
     }

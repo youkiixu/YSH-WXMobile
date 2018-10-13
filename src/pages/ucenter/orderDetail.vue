@@ -22,7 +22,7 @@
     <view class="goods-info">
         <view class="info-t clear">
         <view class="img">
-            <image :src="baseUrl + orderInfo.ThumbnailsUrl + '/1_50.png'"/>
+            <image :src="baseUrl + orderInfo.ThumbnailsUrl + '/1_350.png'"/>
         </view>
         <view class="txt">
             <view class="txt-t">
@@ -280,7 +280,7 @@ export default {
   onShareAppMessage: function () {
     return {
       title: 'sassShop',
-      desc: '印生活SASS商城',
+      desc: '印生活',
       path: '/pages/ucenter/orderDetail'
     }
   }

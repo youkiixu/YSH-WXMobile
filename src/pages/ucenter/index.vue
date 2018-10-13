@@ -131,7 +131,6 @@ export default {
               path: 'login'
             })
           })
-          
         }).catch((err) => {
           _this.$wx.hideLoading()
         });

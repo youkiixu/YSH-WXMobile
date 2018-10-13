@@ -109,7 +109,13 @@ export default {
         }).exec()
       },
       queryQuote(item) {
-          this.$router.push({ path: '/pages/auto/queryquote', query: { pid: item.Code , title: item.qName  } })
+          console.log(item)
+          if(item.IsPriceDisplayPage != 0 && item.ProductId != 0){
+            this.$wx.toDetail({id : item.ProductId , title: item.qName} , this)
+          } else {
+            this.$wx.toBaoJia({ pid: item.Code , title: item.qName } , this)
+          }
+          // this.$router.push({ path: '/pages/auto/queryquote', query: { pid: item.Code , title: item.qName  } })
       },
       selectMenu (index) {
         this.contentId = `con_${index}`
@@ -156,7 +162,7 @@ export default {
   onShareAppMessage: function () {
     return {
       title: 'sassShop',
-      desc: '印生活SASS商城',
+      desc: '印生活',
       path: '/pages/brand/brand'
     }
   },

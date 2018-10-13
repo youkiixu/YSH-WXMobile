@@ -64,6 +64,13 @@ function formatBoolToInt(object) {
 }
 
 function toGoodsDetail (item , vm) {
+    // vm.$router.push({
+    //   path: '/pages/goods/goods',
+    //   query: {
+    //     data: JSON.stringify(item)
+    //   }
+    // })
+  // 不区分是否非标，全部进入单个商品也
   // 标准品false , vm是this
   if (item.IsCustom) {
     vm.$router.push({
@@ -80,6 +87,29 @@ function toGoodsDetail (item , vm) {
       }
     })
   }
+}
+
+function toDetail(item , vm) {
+  const data = {
+    ProductId: item.id,
+    ProductName: item.title
+  }
+  vm.$router.push({
+    path: '/pages/goods/goods',
+    query: {
+      data: JSON.stringify(data)
+    }
+  })
+}
+
+function toBaoJia(item , vm) {
+    vm.$router.push({
+      path: '/pages/auto/queryquote',
+      query: {
+        pid: item.pid,
+        title: item.title
+      }
+    })
 }
 
 function toLogin(isBack) {
@@ -150,7 +180,9 @@ const wxFun = {
     baseUrl,
     toLogin,
     orderStatus,
-    getImagePath
+    getImagePath,
+    toBaoJia,
+    toDetail
 }
 
 export default wxFun

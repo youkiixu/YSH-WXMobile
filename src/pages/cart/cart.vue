@@ -34,7 +34,7 @@
           <view :class="isEditCart ? 'edit item' : 'item'" v-for="(item, index) of cartGoods" :key="item.Id" @click="checkedItem(item)">
             <view :class="selectGoods.Id == item.Id ? 'checked checkbox' : 'checkbox'"  :data-item-index="index"></view>
             <view class="cart-goods">
-              <img class="img" :src="baseUrl + item.ImagePath + '/1_50.png'"/>
+              <img class="img" :src="baseUrl + item.ImagePath + '/1_350.png'"/>
               <view class="info">
                 <view class="t">
                   <text class="name">{{item.ProductName}}</text>
@@ -317,7 +317,7 @@ export default {
   onShareAppMessage: function () {
     return {
       title: 'sassShop',
-      desc: '印生活SASS商城',
+      desc: '印生活',
       path: '/pages/cart/cart'
     }
   }

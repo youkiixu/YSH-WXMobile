@@ -22,7 +22,7 @@
         <div class="list-content">
             <div class="list-item" v-for="(item , index) in quoteList" :key="index" >
                 <div class="list-item-box">
-                    <img class="list-img" :src="baseUrl + '/Storage/Shop/'+ item.ShopId +'/Products/' + item.ProductId + '/1_50.png'" alt="">
+                    <img class="list-img" :src="baseUrl + '/Storage/Shop/'+ item.ShopId +'/Products/' + item.ProductId + '/1_350.png'" alt="">
                     <div class="list-info">
                         <div class="list-info-content">
                             <div class="title">

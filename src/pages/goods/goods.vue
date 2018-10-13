@@ -264,16 +264,20 @@ export default {
       YjUse: 0,
       Stock: 0,
       SubmitByProductType: false,
-      comment: {}
+      comment: {},
+      IsCustom: false
     }
   },
   mounted () {
-    this.id = 146
+    // this.id = 146
     if (this.$route.query.data) {
           const data = JSON.parse(this.$route.query.data);
+          console.log(data)
           wx.setNavigationBarTitle({
               title: data.ProductName
           })
+          
+          
           this.id = data.ProductId
       }
     this.refresh()
@@ -327,10 +331,19 @@ export default {
         this.getGoodsDesc(),
         this.getComment()
       ]);
-      // 选中默认选项
-      this.getSkuPrice()
-      // 默认选中配送方式
-      this.selectWuliu()
+      // true等于非标
+      // this.IsCustom = true
+      
+      if(this.IsCustom) {
+        
+      } else {
+        // 标准品默认选中
+        // 选中默认选项
+        this.getSkuPrice()
+        // 默认选中配送方式
+        this.selectWuliu()
+      }
+      
       this.$wx.hideLoading()
     },
     // 获取商品SKu详情
@@ -363,16 +376,16 @@ export default {
         par = Object.assign(par ,{openId : openId})
       }
       const res = await api.getGoodsDetail(par)
-      if(res.success){
+      // if(res.success){
         this.RequestUrl = res.RequestUrl
         // https下面展示没有图片
         this.RequestUrl = this.$wx.baseUrl
         this.detailInfo = res.data
         this.gallery = util.getImagePathGroup(this.detailInfo.imagePath)
         this.number = Number(this.detailInfo.SaleNumber)
-      } else {
-        this.$wx.showErrorToast(res.msg)
-      }
+      // } else {
+      //   this.$wx.showErrorToast(res.msg)
+      // }
 
     },
     // 获取评论
@@ -492,6 +505,20 @@ export default {
     },
     // 立即购买
     SubmitByProduct () {
+      if(this.IsCustom) {
+        this.$wx.showSuccessToast('非标品购买')
+        const par = {
+          QitemCode: 24,
+          ProductName: '不干胶'
+        }
+        this.$wx.toBaoJia(par , this)
+      } else {
+        this.buyGood()
+      }
+
+    },
+    // 标准品立即购买
+    buyGood () {
       if (this.openAttr === false) {
         // 打开规格选择弹窗
         this.SubmitByProductType = true
@@ -537,6 +564,7 @@ export default {
         }
       }
     },
+    // 选择物流
     selectWuliu(e) {
       const _this = this;
       const detailInfo =  this.detailInfo
@@ -601,7 +629,7 @@ export default {
   onShareAppMessage: function () {
     return {
       title: 'sassShop',
-      desc: '印生活SASS商城',
+      desc: '印生活',
       path: '/pages/goods/goods'
     }
   },

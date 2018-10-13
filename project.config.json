@@ -11,7 +11,7 @@
 	"compileType": "miniprogram",
 	"appid": "wxe1c5fe5c72be84e6",
 	"projectname": "kiy-wx",
-	"libVersion": "2.3.0",
+	"libVersion": "2.2.5",
 	"condition": {
 		"search": {
 			"current": -1,
@@ -30,7 +30,7 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 16,
+			"current": 17,
 			"list": [
 				{
 					"id": -1,
@@ -60,7 +60,7 @@
 					"id": 4,
 					"name": "标准品下单",
 					"pathName": "pages/goods/goods",
-					"query": ""
+					"query": "data={\"ProductId\":146,\"ProductName\":\"不干胶材料\"}"
 				},
 				{
 					"id": -1,
@@ -133,6 +133,12 @@
 					"name": "自助报价",
 					"pathName": "pages/auto/autoquote",
 					"query": "pid=24&&title=test"
+				},
+				{
+					"id": 17,
+					"name": "非标单品报价",
+					"pathName": "pages/goods/goods",
+					"query": "data={\"ProductId\":297,\"ProductName\":\"彩色拼版不干胶\"}"
 				}
 			]
 		}
