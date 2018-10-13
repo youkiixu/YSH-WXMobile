@@ -22,7 +22,7 @@
     <view class="goods-info">
         <view class="info-t clear">
         <view class="img">
-            <image :src="baseUrl + orderInfo.ThumbnailsUrl + '/1_50.png'"/>
+            <image :src="baseUrl + orderInfo.ThumbnailsUrl + '/1_350.png'"/>
         </view>
         <view class="txt">
             <view class="txt-t">
