@@ -73,6 +73,7 @@ export default {
 <style scoped>
 .container {
   overflow: hidden;
+  background-color: #f1f1f1;
 }
 .index-searchbar {
   position: absolute;

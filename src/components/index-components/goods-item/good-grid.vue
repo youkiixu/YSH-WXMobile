@@ -7,12 +7,8 @@
             <img class="img" :src="baseUrl+ item.pic" background-size="cover" />
             <view class="txt">
               <text class="name">{{item.title}}</text>
-              <text class="desc">商品介绍</text>
-              <view class="btom clear">
-                <text class="price">￥{{item.price}}</text>
-                <img class="more" src="/static/images/more.png"  background-size="cover" />
-              </view>
-              
+              <text class="desc">新达标签印刷厂</text>
+              <text class="price">￥{{item.price}}</text>             
             </view>
             
           </navigator>
@@ -65,7 +61,7 @@ export default {
 
 .good-grid .b {
   width: 750rpx;
-  padding: 0 20rpx;
+  padding: 15rpx 20rpx;
   box-sizing: border-box;
   height: auto;
   overflow: hidden;
@@ -74,70 +70,68 @@ export default {
 .good-grid .b .item {
   float: left;
   background: #fff;
-  width: 227rpx;
-  height: 370rpx;
-  overflow: hidden;
+  width: 32%;
+  height: 365rpx;
   margin-top: 15rpx;
   margin-left: 15rpx;
-  border-radius: 5rpx;
+  border-radius: 7rpx;
+  box-shadow: 2px 2px 2px #f3f3f3;
+}
+.good-grid .b .item:nth-child(1) ,.good-grid .b .item:nth-child(2),.good-grid .b .item:nth-child(3){
+  margin-top: 0;
 }
 .good-grid .b .item:nth-child(3n+1) {
   margin-left: 0;
 }
 .good-grid .b .item .a{
-  height: 370rpx;
+  height: 365rpx;
   width: 100%;
+  overflow: hidden;
 }
 
 .good-grid .item .img {
-  width: 227rpx;
-  height: 230rpx;
   display: block;
+  width: 100%;
+  height: 226rpx; 
+  overflow: hidden;
+  box-sizing:border-box;
 }
 .good-grid .item .txt{
-  height: 140rpx;
+  height: 134rpx;
   width: 100%;
-  padding: 20rpx 10rpx;
+  padding: 20rpx;
   box-sizing: border-box;
+  overflow: hidden;
 }
 .good-grid .item .txt .name {
   display: block;
-  height: 35rpx;
-  line-height: 35rpx;
-  font-size: 24rpx;
-  color: #464646;
-  width: 217rpx;
+  height: 30rpx;
+  line-height: 30rpx;
+  font-size: 20rpx;
+  color: #282828;
+  width: 190rpx;
   overflow: hidden;
   white-space: nowrap;
   text-overflow:ellipsis;
-
 }
 .good-grid .item .txt .desc {
   display: block;
   height: 30rpx;
   line-height: 30rpx;
   font-size: 20rpx;
-  color: #555555;
-  width: 217rpx;
+  color: #666666;
+  width: 190rpx;
   overflow: hidden;
   white-space: nowrap;
   text-overflow:ellipsis;
 }
 
-.good-grid .item .btom{
-  height: 35rpx;
-  line-height: 35rpx;
-  font-size: 22rpx;
+.good-grid .item .txt .price{
+  display: block;
+  height: 40rpx;
+  line-height: 50rpx;
+  font-size: 20rpx;
   color: #dc2121;
-}
-.good-grid .item .btom .price{
-  width: 80%;
-  float: left;
-}
-.good-grid .item .btom img{
-  width: 8%;
-  height: 22rpx;
-  float: right;
 }
 
 .good-grid .more-item{
