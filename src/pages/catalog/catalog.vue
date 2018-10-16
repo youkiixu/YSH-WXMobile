@@ -167,11 +167,11 @@ page {
 .catalog .nav .item.active {
   color: #20b2aa;
   font-size: 24rpx;
-  background-color: #fff;
+  background: #fff;
 }
 
 .catalog .cate {
-  border-left: 1px solid #fafafa;
+  /* border-left: 1px solid #fafafa; */
   flex: 1;
   height: 100%;
   padding: 0 40rpx 0 40rpx;

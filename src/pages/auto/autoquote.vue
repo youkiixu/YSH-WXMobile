@@ -87,7 +87,7 @@ export default {
           })
         })
         return arr2
-      },
+      }, 
       getFoodHeight() {
         var query = wx.createSelectorQuery()
         let h = 0
@@ -111,7 +111,8 @@ export default {
       queryQuote(item) {
           console.log(item)
           if(item.IsPriceDisplayPage != 0 && item.ProductId != 0){
-            this.$wx.toDetail({id : item.ProductId , title: item.qName} , this)
+            // this.$wx.toDetail({id : item.ProductId , title: item.qName , code : item.Code} , this)
+            this.$wx.toBaoJia({ pid: item.Code , title: item.qName , isDetail: true , ProductId: item.ProductId } , this)
           } else {
             this.$wx.toBaoJia({ pid: item.Code , title: item.qName } , this)
           }

@@ -82,6 +82,7 @@ export default {
         ...mapActions(['SubmitByProductId2']),
         toDetail(item) {
             const openId = wx.getStorageSync('openId')
+            console.log(item)
             var par = {
                 openId: openId,
                 skuIds: item.ProductId + '_0_0_0_0_0_0_0',
@@ -95,6 +96,7 @@ export default {
                 QuoteStr: item.QuoteStr,
                 LimitTimeBuyId: item.LimitTimeBuyId,
             }
+            console.log(par)
             this.SubmitByProductId2(par)
         },
         async toCart(item) {
@@ -300,7 +302,7 @@ page{
     /* margin-top: 40rpx; */
   float: left;
   height: 177rpx;
-  width: 440rpx;
+  width: 472rpx;
   align-items: center;
 }
 .title {
@@ -313,7 +315,7 @@ page{
 }
 .p {
   font-size: 29rpx;
-  color: #333;
+  color: #666;
   height: 40rpx;
   line-height: 40rpx;
 }

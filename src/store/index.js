@@ -113,7 +113,7 @@ const store = new Vuex.Store({
           url: '../../pages/shopping/checkout'
         })
       } else {
-        wx.showToast({
+        wx.showToast({ 
           title: res.msg,
           image: '/static/images/icon_error.png'
         })
@@ -146,16 +146,35 @@ const store = new Vuex.Store({
       var par = Object.assign({
         'openId': openId
       }, skuInfo)
-      loading()
-      const res = await api.getProSearchRst(par)
-      hideLoading()
-      if(res.success) {
-        vm.commit('setProSearchParam', skuInfo)
-        vm.commit('setProSearchRst', res.data)
-        wx.navigateTo({
-          url: '../../pages/auto/quoteList'
-        })
+      console.log(skuInfo)
+      vm.commit('setProSearchParam', skuInfo)
+      if (skuInfo.isDetail) {
+        // 从detail页过来的,不重写加载
+        if(skuInfo.detailCommon) {
+          
+        } else {
+          // 去详情页
+          const data = {
+            ProductId: skuInfo.ProductId,
+            ProductName: skuInfo.title,
+            code: skuInfo.qitemCode,
+          }
+          wx.navigateTo({
+            url: `../../pages/goods/goods?data=${JSON.stringify(data)}`
+          })
+        }
+      } else {
+        loading()
+        const res = await api.getProSearchRst(par)
+        hideLoading()
+        if (res.success) {
+          vm.commit('setProSearchRst', res.data)
+          wx.navigateTo({
+            url: '../../pages/auto/quoteList'
+          })
+        }
       }
+      
     }
   }
 })

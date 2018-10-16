@@ -39,7 +39,8 @@
             <view class="m" v-if="orderInfo.Material">材料：<text class="t">{{orderInfo.Material}}</text></view>
             <view class="m" v-if="orderInfo.Fashion">款式：<text class="t">{{orderInfo.Fashion}}</text></view>
             <view class="m" v-if="orderInfo.Grams">克重：<text class="t">{{orderInfo.Grams}}</text></view>
-            <view class="m" v-if="orderInfo.Ensemble">套餐：<text class="t">{{orderInfo.Ensemble}}</text></view>           
+            <view class="m" v-if="orderInfo.Ensemble">套餐：<text class="t">{{orderInfo.Ensemble}}</text></view>      
+            <view class="m" v-if="orderGoods[0]"><text class="t">{{orderGoods[0].ParaStr}}</text></view>        
         </view>
     </view>
     

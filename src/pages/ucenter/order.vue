@@ -328,13 +328,13 @@ page{
     box-sizing: border-box;
 }
 .item-check .total{
-    width: 50%;
+    width: 80%;
     font-size: 24rpx;
     color: #282828;
     float: left;
 }
 .item-check .btn{
-    width: 50%;
+    width: 20%;
     float: right;
 }
 .item-check .total .icon{

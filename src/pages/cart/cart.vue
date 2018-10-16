@@ -97,6 +97,7 @@ export default {
   // 每次打开触发，更新数据
   onShow () {
     this.cartGoods = []
+    this.pageNo = 1
     this.getCartList()
     
   },

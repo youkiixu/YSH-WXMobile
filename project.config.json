@@ -138,7 +138,7 @@
 					"id": 17,
 					"name": "非标单品报价",
 					"pathName": "pages/goods/goods",
-					"query": "data={\"ProductId\":297,\"ProductName\":\"彩色拼版不干胶\"}"
+					"query": "data={\"ProductId\":297,\"ProductName\":\"彩色拼版不干胶\" ,\"code\":24}"
 				}
 			]
 		}

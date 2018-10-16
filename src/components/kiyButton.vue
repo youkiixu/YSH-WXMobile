@@ -25,7 +25,7 @@ export default {
 </script>
 <style scoped>
 .btn {
-  margin-right: 20rpx;
+  margin-left: 20rpx;
   width: 140rpx;
   height: 50rpx;
   line-height: 50rpx;

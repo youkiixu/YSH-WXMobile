@@ -88,11 +88,14 @@ function toGoodsDetail (item , vm) {
     })
   }
 }
-
+// 去商品详情页
 function toDetail(item , vm) {
-  const data = {
+  let data = {
     ProductId: item.id,
-    ProductName: item.title
+    // ProductName: item.title
+  }
+  if(item.code) {
+    data = Object.assign(data , {code: item.code})
   }
   vm.$router.push({
     path: '/pages/goods/goods',
@@ -101,13 +104,19 @@ function toDetail(item , vm) {
     }
   })
 }
-
+// 去非标报价页
 function toBaoJia(item , vm) {
+    let isDetail = item.isDetail ? true : false
+    let ProductId = item.ProductId ? item.ProductId : ''
+    let detailCommon = item.detailCommon ? item.detailCommon : false
     vm.$router.push({
       path: '/pages/auto/queryquote',
       query: {
         pid: item.pid,
-        title: item.title
+        title: item.title,
+        isDetail: isDetail,
+        ProductId: ProductId,
+        detailCommon: detailCommon
       }
     })
 }

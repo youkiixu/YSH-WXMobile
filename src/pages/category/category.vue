@@ -197,14 +197,15 @@ export default {
     },
     // 跳转到商品下单页面
     toGoods(item) {
-      // console.log(item)
-      this.$wx.toGoodsDetail(item , this)
-      // // 标准品false
-      // if(item.IsCustom) {
-      //   this.$router.push({ path: '/pages/auto/queryquote', query: { pid: item.QitemCode } })
-      // } else {
-      //   this.$router.push({ path: '/pages/goods/goods', query: { data: JSON.stringify(item) } })
-      // }
+      console.log(item)
+      // this.$wx.toGoodsDetail(item , this)
+      // 标准品false
+      if(item.IsCustom) {
+        // this.$wx.toDetail({id : item.ProductId , title: item.ProductName , code : item.QitemCode} , this)
+        this.$wx.toBaoJia({ pid: item.QitemCode , title: item.ProductName , isDetail: true , ProductId: item.ProductId } , this)
+      } else {
+        this.$wx.toDetail({id : item.ProductId , title: item.ProductName} , this)
+      }
     }
   },
   // 小程序原生上拉加载

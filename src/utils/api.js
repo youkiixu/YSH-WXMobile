@@ -145,6 +145,10 @@ const api = {
   // 设默认地址
   setDefaultShippingAddress: (paramObj) => request.post('/Wxmobile/UserInfos/SetDefaultShippingAddress', paramObj, {
     baseURL: ApiKiyUrl
+  }),
+  // 非标品单个商品报价
+  getOpenQuote: (paramObj) => request.post('/Wxmobile/Quote/OpenQuote', paramObj, {
+    baseURL: ApiKiyUrl
   })
 }
 
