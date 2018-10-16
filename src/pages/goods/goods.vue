@@ -1,7 +1,7 @@
 <template >
-<view>
+<view class=" openAttr ? 'scroll' : 'scroll-lock' " >
     <!-- 主体容器 -->
-    <view class="container" >
+    <view class="container">
       <!-- 头部导航 -->
       <view class="goodshead" id="goodshead">
         <view class="head-classify">
@@ -189,8 +189,6 @@
       <view class="c" @click="addToCart">加入购物车</view>
       <view class="r" @click="SubmitByProduct" >立即购买</view>
     </view>
-
-
 
 </view>
 </template>
@@ -615,6 +613,16 @@ export default {
 <style>
 @import "../../utils/wxParse/wxParse.wxss";
 
+page{
+  height: 100%;
+}
+.scroll-lock{
+  height: 100%;
+  overflow-y: hidden;
+}
+.scroll{
+  overflow-y: auto;
+}
 .container {
   background-color: #f1f1f1;
   margin-bottom: 100rpx;
@@ -861,7 +869,7 @@ export default {
   background-color: white;
   padding: 0 30rpx;
   box-sizing: border-box;
-  border-bottom: 1px solid #d9d9d9;
+  border-bottom: 1rpx solid #f1f1f1;
 }
 
 .comments .h .t {
@@ -933,12 +941,14 @@ export default {
   font-size: 28rpx;
   color: #555555;
   text-align: center;
-  margin-top: 5rpx;
+  margin-top: 30rpx;
 }
 .proDetail{
   margin-top: 30rpx;
   background-color: white;
   width: 100%;
+  padding: 0 20rpx 100rpx 20rpx;
+  box-sizing: border-box;
 }
 .proDetail .title{
   height: 75rpx;
@@ -1319,7 +1329,7 @@ export default {
 
 .attr-pop .img-info {
   width: 687.5rpx;
-  padding-bottom: 50rpx;
+  padding-bottom: 25rpx;
   position: relative; 
   border-bottom: 1px solid #ececec;
 }
@@ -1423,42 +1433,44 @@ export default {
 }
 .number-item .selnum {
   float: right;
-  margin-top: 22rpx;
-  margin-right: 30rpx;
-  width: 200rpx;
+  margin-top: 10rpx;
+  margin-right: 50rpx;
   height: 55rpx;
   display: flex;
   font-size: 29rpx;
 }
 
 .number-item .cut {
-  width: 60rpx;
-  height: 55rpx;
+  width: 80rpx;
+  height: 80rpx;
   text-align: center;
-  line-height: 55rpx;
+  line-height: 80rpx;
   background-color: #f4f4f4;
   border-radius: 5rpx;
+  font-size: 40rpx;
 }
 
 .number-item .number {
-  width: 68rpx;
-  height: 55rpx;
+  width: 90rpx;
+  height: 80rpx;
   text-align: center;
-  line-height: 55rpx;
+  line-height: 80rpx;
   float: left;
   margin-left: 3rpx;
   background-color: #f4f4f4;
   border-radius: 5rpx;
+  font-size: 28rpx;
 }
 
 .number-item .add {
-  width: 60rpx;
-  height: 55rpx;
+  width: 80rpx;
+  height: 80rpx;
   text-align: center;
-  line-height: 55rpx;
+  line-height: 80rpx;
   margin-left: 3rpx;
   background-color: #f4f4f4;
   border-radius: 5rpx;
+  font-size: 40rpx;
 }
 
 .car-btn{

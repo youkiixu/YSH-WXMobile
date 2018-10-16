@@ -41,6 +41,8 @@ export default {
   width: 750rpx;
   height: auto;
   overflow: hidden;
+  background-color: #fff;
+  margin-bottom: 20rpx;
 }
 .clear:after{
     display: block;
@@ -102,6 +104,9 @@ export default {
   padding: 20rpx;
   box-sizing: border-box;
   overflow: hidden;
+  border: none;
+  border-bottom-left-radius:10rpx;
+  border-bottom-right-radius:10rpx;
 }
 .good-grid .item .txt .name {
   display: block;

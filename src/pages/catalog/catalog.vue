@@ -154,7 +154,7 @@ page {
 
 .catalog .nav {
   width: 180rpx;
-  height: 90%;
+  height: 92%;
   
 }
 
@@ -180,7 +180,7 @@ page {
 .catalog .cate {
   border-left: 1px solid #fafafa;
   flex: 1;
-  height: 90%;
+  height: 92%;
   padding: 0 40rpx 0 40rpx;
 }
 

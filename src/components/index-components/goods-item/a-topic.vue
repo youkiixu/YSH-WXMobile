@@ -30,10 +30,11 @@ export default {
 </script>
 <style scoped>
 .a-topic .b {
-  height: 398rpx;
+  height: 378rpx;
   width: 750rpx;
   padding: 0;
-  background-color: #f1f1f1;
+  background-color: #fff;
+  margin-bottom: 20rpx;
 }
 
 .clear:after{
@@ -43,7 +44,7 @@ export default {
     height:0;
     }
 .a-topic .b .list {
-  height: 398rpx;
+  height: 378rpx;
   width: 750rpx;
   white-space: nowrap;
 }

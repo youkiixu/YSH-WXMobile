@@ -50,6 +50,7 @@
                       <view class="price">
                         <text class="icon">￥</text>{{item.MinSalePrice}}
                       </view>
+                      <view class="ShopName">{{item.ShopName}}</view>
                       <view class="name">{{item.ProductName}}</view>
                     </view>
                 </view>
@@ -393,7 +394,8 @@ export default {
 .cate-item .b .item{
   float: left;
   background: #fff;
-  width: 350rpx;
+  /* width: 350rpx; */
+  width: 49%;
   height: 540rpx;
   overflow: hidden;
 }
@@ -424,10 +426,19 @@ export default {
 .cate-item .b-txt .icon{ 
   font-size: 28rpx;
 }
-.cate-item .b-txt .name{
+.cate-item .b-txt .ShopName{
   width: 100%;
-  overflow: hidden;
   font-size: 24rpx;
   color: #282828;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow:ellipsis;
+}
+.cate-item .b-txt .name{
+  font-size: 24rpx;
+  color: #282828;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow:ellipsis;
 }
 </style>
