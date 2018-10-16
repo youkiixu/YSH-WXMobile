@@ -316,11 +316,11 @@ page{
   float: right;
   font-size: 22rpx;
   text-align: right;
-  padding-right: 60rpx;
+  padding-right: 80rpx;
   color: #c5c5c5;
   background: url(http://nos.netease.com/mailpub/hxm/yanxuan-wap/p/20150730/style/img/icon-normal/address-right-990628faa7.png) right center no-repeat;
   background-size: 45rpx;
-  background-position: 85% 48%;
+  background-position: 78% 48%;
 }
 .myOrder_con{
   width: 100%;

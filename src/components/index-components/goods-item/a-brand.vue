@@ -24,6 +24,10 @@ export default {
 }
 </script>
 <style scoped>
+.a-brand{
+  margin-bottom: 20rpx;
+  background-color: #fff;
+}
 .a-brand .b {
   width: 750rpx;
   height: auto;
@@ -38,11 +42,11 @@ export default {
     }
 .a-brand .b .item {
   float: left;
-  width: 225rpx;
-  height: 225rpx;
+  width: 30.5%;
+  height: 226rpx;
   margin-top: 15rpx;
   margin-left: 15rpx;
-  border-radius: 5rpx;
+  border-radius: 7rpx;
   background-color: #666;
   position: relative;
 }
@@ -54,7 +58,7 @@ export default {
 }
 .a-brand .b .item .name{
   display: block;
-  width: 225rpx;
+  width: 226rpx;
   height: 60rpx;
   line-height: 60rpx;
   text-align: center;
@@ -68,8 +72,9 @@ export default {
 }
 .a-brand .b .item .img{
   display: block;
-  width: 225rpx;
-  height: 225rpx;
+  width: 100%;
+  height: 226rpx;
+  overflow: hidden;
 }
 
 </style>

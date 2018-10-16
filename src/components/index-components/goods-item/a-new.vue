@@ -6,11 +6,8 @@
           <img class="img" :src="baseUrl+ item.pic" background-size="cover" />
           <view class="txt">
               <text class="name">{{item.title}}</text>
-              <text class="desc">商品简介</text>
-              <view class="btom clear">
-                <text class="price">￥{{item.price}}</text>
-                <img class="more" src="/static/images/more.png"  background-size="cover" />
-              </view>              
+              <text class="desc">新达标签印刷厂</text>
+              <text class="price">￥{{item.price}}</text>                        
             </view>
         </navigator>
       </view>
@@ -34,9 +31,10 @@ export default {
 .a-new .b {
   width: 750rpx;
   height: auto;
-  padding: 0 20rpx;
+  padding: 0 20rpx 20rpx 20rpx;
   box-sizing: border-box;
   overflow: hidden;
+  background-color: #f1f1f1;
 }
 .clear:after{
     display: block;
@@ -46,11 +44,11 @@ export default {
     }
 .a-new .b .item {
   float: left;
-  width: 350rpx;
-  height: 500rpx;
+  width: 49%;
+  height: 510rpx;
   margin-top: 10rpx;
   margin-left: 10rpx;
-  border-radius: 5rpx;
+  border-radius: 7rpx;
 }
 .a-new .b .item:nth-child(1),.a-new .b .item:nth-child(2){
   margin-top: 0;
@@ -63,56 +61,49 @@ export default {
 }
 
 .a-new .b .img {
-  width: 350rpx;
+  width: 100%;
   height: 350rpx;
   display: block;
+  overflow: hidden;
+  box-sizing: border-box;
   background-color: #e5e5e5;
 }
 
 .a-new .item .txt{
-  height: 150rpx;
-  width: 350rpx;
-  padding: 20rpx 10rpx;
+  height: 160rpx;
+  width: 100%;
+  padding: 20rpx;
   box-sizing: border-box;
+  background-color: #fff;
 }
 .a-new .item .txt .name {
   display: block;
   height: 40rpx;
   line-height: 40rpx;
-  font-size: 22rpx;
-  color: #464646;
-  width: 340rpx;
+  font-size: 24rpx;
+  color: #282828;
+  width: 310rpx;
   overflow: hidden;
   white-space: nowrap;
   text-overflow:ellipsis;
-
 }
 .a-new .item .txt .desc {
   display: block;
-  height: 40rpx;
-  line-height: 40rpx;
-  font-size: 22rpx;
-  color: #555555;
-  width: 340rpx;
+  line-height: 30rpx;
+  font-size: 20rpx;
+  color: #666666;
+  width: 310rpx;
   overflow: hidden;
   white-space: nowrap;
   text-overflow:ellipsis;
 }
 
-.a-new .item .btom{
-  height: 40rpx;
-  line-height: 40rpx;
+.a-new .item .txt .price{
+  display: block;
+  height: 50rpx;
+  line-height: 60rpx;
   font-size: 22rpx;
   color: #dc2121;
-}
-.a-new .item .btom .price{
-  width: 80%;
-  float: left;
-}
-.a-new .item .btom img{
-  width: 8%;
-  height: 32rpx;
-  float: right;
 }
 </style>
 

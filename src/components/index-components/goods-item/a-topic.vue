@@ -7,10 +7,7 @@
               <img class="img" :src="baseUrl+ item.pic" background-size="cover" />
               <view class="np">
                 <text class="name">{{item.title}}</text>
-                <view class="btom clear">
-                <text class="price">￥{{item.price}}</text>
-                <img class="add" src="/static/images/add.png"  background-size="cover" />
-              </view>       
+               <text class="price">￥{{item.price}}</text>   
               </view>
             </navigator>
           </view>
@@ -33,7 +30,7 @@ export default {
 </script>
 <style scoped>
 .a-topic .b {
-  height: 355rpx;
+  height: 398rpx;
   width: 750rpx;
   padding: 0;
   background-color: #f1f1f1;
@@ -46,14 +43,14 @@ export default {
     height:0;
     }
 .a-topic .b .list {
-  height: 355rpx;
+  height: 398rpx;
   width: 750rpx;
   white-space: nowrap;
 }
 .a-topic .b .item {
   display: inline-block;
-  height: 330rpx;
-  width: 245rpx;
+  height: 378rpx;
+  width: 280rpx;
   margin-left: 20rpx;
   overflow: hidden;
   background-color: #fff;
@@ -64,17 +61,18 @@ export default {
 }
 
 .a-topic .b .img {
-  height: 245rpx;
-  width: 245rpx;
+  height: 280rpx;
+  width: 280rpx;
   display: block;
+  overflow: hidden;
   background-color: #666666;
 }
 
 .a-topic .b .np {
-  height: 80rpx;
+  height: 98rpx;
   color: #333;
   font-size: 30rpx;
-  padding: 10rpx;
+  padding: 10rpx 10rpx 20rpx 10rpx;
   box-sizing: border-box;
 }
 .a-topic .b .np .name {
@@ -82,28 +80,19 @@ export default {
   height: 30rpx;
   line-height: 30rpx;
   font-size: 24rpx;
-  color: #555555;
-  width: 240rpx;
+  color: #282828;
+  width: 270rpx;
   overflow: hidden;
   white-space: nowrap;
   text-overflow:ellipsis;
 
 }
-.a-topic .item .btom{
-  height: 30rpx;
-  line-height: 30rpx;
-  font-size: 22rpx;
+.a-topic .item .np .price{
+  display: block;
+  height: 40rpx;
+  line-height: 40rpx;
+  font-size: 24rpx;
   color: #dc2121;
-}
-.a-topic .item .btom .price{
-  width: 60%;
-  float: left;
-}
-.a-topic .item .btom img{
-  width: 25rpx;
-  height: 25rpx;
-  margin-top: 2.5rpx;
-  float: right;
 }
 </style>
 
