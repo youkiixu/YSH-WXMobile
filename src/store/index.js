@@ -140,6 +140,24 @@ const store = new Vuex.Store({
         })
       }
     },
+    // 购物车去下单页
+    async submitByShoppingCart (vm , cardId) {
+      const openId = wx.getStorageSync('openId')
+      var par = Object.assign({
+        'openId': openId
+      }, cardId)
+      loading()
+      const res = await api.submitByShoppingCart(par)
+      hideLoading()
+      console.log(res)
+      if (res.success) {
+        vm.commit('setCheckOutInfo' , res.data)
+        wx.navigateTo({
+          url: '../../pages/cart/cartCheckout'
+        })
+      }
+      
+    },
     // 获取非标品报价
     async getProSearchRst(vm , skuInfo) {
       const openId = wx.getStorageSync('openId')
@@ -174,7 +192,6 @@ const store = new Vuex.Store({
           })
         }
       }
-      
     }
   }
 })

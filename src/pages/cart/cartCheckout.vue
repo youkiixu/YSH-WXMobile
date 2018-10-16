@@ -1,34 +1,8 @@
 <template >
 <view class="container">  
-    <!-- <view class="address-box">
-        <view class="address-item" @click="selectAddress" v-if="address.Id > 0">
-            <view class="l">
-                <text class="name">{{address.ShipTo}}</text>
-                <text class="default" v-if="address.IsDefault === 1">默认</text>
-            </view>
-            <view class="m">
-                <text class="mobile">{{address.Phone}}</text>
-                <text class="address">{{address.RegionFullName + address.Address}}</text>
-            </view>
-            <view class="r" v-if="checkOutOther.Remindtype != 3">
-                <image src="/static/images/address_right.png"/>
-            </view>
-        </view>     
-    </view> -->
-
-  <!-- <view class="address-item address-empty" @click="addAddress" v-if="checkOutInfo.Address">
-            <view class="m">
-               还没有收货地址，去添加
-            </view>
-            <view class="r">
-                <image src="/static/images/address_right.png"/>
-            </view>
-   </view> -->
-   
-        <scroll-view scroll-y class="order-content">     
-
-             <view class="address-box">
-            <view class="address-item" @click="selectAddress" v-if="address.Id > 0">
+        <view class="order-content" >     
+            <view class="address-box">
+                <view class="address-item" @click="selectAddress" v-if="address.Id > 0">
                     <view class="name clear">
                         <text class="s">收货人：</text>
                         <text class="t">{{address.ShipTo}}</text>
@@ -47,147 +21,131 @@
                     </view>
                     </view>
                 </view>
-
-                <!-- <view class="address-item address-empty" @click="addAddress" v-if="checkOutInfo.Address">
-                    <view class="m">
-                    还没有收货地址，去添加
-                    </view>
-                    <view class="r">
-                        <image src="/static/images/address_right.png"/>
-                    </view>
-                </view> -->
             </view>
             <view class="line">
                 <img src="/static/images/icon-order-division.png"/>
             </view>
-
-            <view class="goods-items">
-                <view class="item" >
-                    <view class="img">
-                        <image :src="baseUrl + productImg"/>
-                    </view>
-                    <view class="info">
-                        <view class="t">
-                            <text class="name">{{checkOutInfo.products.ProductName}}</text>
-                            <text class="number">x{{checkOutInfo.Count}}</text>
-                        </view>
-                        
-                        <view class="m" v-if="ParaStr">参数:{{ParaStr}}</view>
-                        <view class="m" v-if="checkOutInfo.products.Color">颜色：{{checkOutInfo.products.Color}}</view>
-                        <view class="m" v-if="checkOutInfo.products.Size">尺寸：{{checkOutInfo.products.Size}}</view>
-                        <view class="m" v-if="checkOutInfo.products.Version">规格：{{checkOutInfo.products.Version}}</view>
-                        <view class="m" v-if="checkOutInfo.products.Material">材料：{{checkOutInfo.products.Material}}</view>
-                        <view class="m" v-if="checkOutInfo.products.Fashion">款式：{{checkOutInfo.products.Fashion}}</view>
-                        <view class="m" v-if="checkOutInfo.products.Grams">克重：{{checkOutInfo.products.Grams}}</view>
-                        <view class="m" v-if="checkOutInfo.products.Ensemble">套餐：{{checkOutInfo.products.Ensemble}}</view>
-                        <!-- <view class="b">￥{{checkOutInfo.products.SalePrice}}</view> -->
-                    </view>
-                </view>
-            </view>
-
-            
-            <view class="order-box">
-                <view class="box-top">
+            <scroll-view scroll-y :style="{'height': '100%'}">
+                <view class="card" v-for="(item , index) of goodList" :key="index">
                     
-                <view class="order-item clear"  @click="selectWuliu('Remindtype')">
-                    <view class="l">
-                        <text class="name">配送方式</text>
+                    <view class="goods-items">
+                        <view class="item" >
+                            <view class="img">
+                                <image :src="baseUrl + item.imagePath + '/1_350.png'"/>
+                            </view>
+                            <view class="info">
+                                <view class="t">
+                                    <text class="name">{{item.ProductName}}</text>
+                                    <text class="number">x{{item.Count}}</text>
+                                </view>
+                                
+                                <view class="m" v-if="QuoteStr">参数:{{QuoteStr}}</view>
+                                <view class="m" v-if="item.Color">颜色：{{item.Color}}</view>
+                                <view class="m" v-if="item.Size">尺寸：{{item.Size}}</view>
+                                <view class="m" v-if="item.Version">规格：{{item.Version}}</view>
+                                <view class="m" v-if="item.Material">材料：{{item.Material}}</view>
+                                <view class="m" v-if="item.Fashion">款式：{{item.Fashion}}</view>
+                                <view class="m" v-if="item.Grams">克重：{{item.Grams}}</view>
+                                <view class="m" v-if="item.Ensemble">套餐：{{item.Ensemble}}</view>
+                                <!-- <view class="b">￥{{checkOutInfo.products.SalePrice}}</view> -->
+                            </view>
+                        </view>
                     </view>
-                    <view class="r distribution y">  
-                        <text class="txt">￥{{daifaInfo.isDaifa ? daifaInfo.ExpressFreight : 0}}</text>          
-                        <text class="txt">{{checkOutOther.RemindtypeStr}}</text>
-                    </view>
-                </view>
+                    <view class="order-box" >
+                        <view class="box-top">
+                            
+                        <view class="order-item clear"  @click="selectWuliu(index)">
+                            <view class="l">
+                                <text class="name">配送方式</text>
+                            </view>
+                            <view class="r distribution y">  
+                                <text class="txt">￥{{item.isDaifa ? item.ExpressFreight : 0}}</text>          
+                                <text class="txt">{{item.RemindtypeStr}}</text>
+                            </view>
+                        </view>
+                        <view class="order-item clear">
+                            <view class="l">
+                                <text class="name">买家留言</text>
+                            </view>
+                            <view class="r message">
+                                <input class="txt" v-model="item.orderRemarks" placeholder="点击给商家留言"/>
+                            </view>
+                        </view>
+                        <view class="box-bottom">
+                            <view class="price-total">
+                                <view class="product-price clear">
+                                    <view class="l">商品金额</view>
+                                    <view class="r">￥{{item.totalAmount}}</view>
+                                </view>
+                                <view class="express-price clear">
+                                    <view class="l">运费</view>
+                                    <view class="r">+ ￥{{item.isDaifa ? item.ExpressFreight : 0}}</view>
+                                </view>
+                            </view>
+                        </view>
+                        <view class="order-item clear">
+                            <view class="l">
+                                <text class="name">合计</text>
+                            </view>
+                            <view class="r price">            
+                                <view class="txt" v-if="item.isDaifa">￥ {{item.totalAmount + item.ExpressFreight}}</view>
+                                <view class="txt" v-if="!item.isDaifa">￥ {{item.totalAmount}}</view>
+                                </view>
+                            </view>
+                        </view>
+
+
+                    
+                        <!-- 代发快递 -->
+                        <div class="box-content" v-if="item.Remindtype == 1">
+                            <!-- <div class="weui-cells__title">代发快递方式</div> -->
+                            <div class="weui-cells weui-cells_after-title">
+                                <!-- <div class="weui-cell weui-cell_switch">
+                                    <div class="weui-cell__bd">是否到付</div>
+                                    <div class="weui-cell__ft">
+                                        <switch :checked="daifaInfo.isCashOnDelivery" @change="daifaSwitch('isCashOnDelivery')"/>
+                                    </div>
+                                </div> -->
+                                <div class="weui-cell weui-cell_switch">
+                                    <div class="weui-cell__bd">代收货款</div>
+                                    <div class="weui-cell__ft">
+                                        <switch :checked="item.IsDaiShouHuoKuan" @change="daifaSwitch(index)"/>
+                                    </div>
+                                </div>
+                                <div class="weui-cell weui-cell_switch" v-if="item.IsDaiShouHuoKuan">
+                                    <div class="weui-cell__bd">代收货款金额</div>
+                                    <div class="weui-cell__ft">
+                                        <input class="weui-input" v-model="item.daiShouMoney" type="number" placeholder="请输入代收货款金额" />
+                                    </div>
+                                </div>
+                                <!-- 快递公司	 -->
+                                <div class="weui-cell weui-cell_select">
+                                    <div class="weui-cell__hd weui-cell__hd_in-select-after">
+                                        <div class="weui-label">快递公司</div>
+                                    </div>
+                                    <div class="weui-cell__bd">
+                                        <picker @change="expressCompanyChange" :id="index" :range="expressCompany">
+                                        <div class="weui-select weui-select_in-select-after">{{item.CarryCompany}}</div>
+                                        </picker>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                 
-                <!-- <view class="order-item clear">
-                    <view class="l">
-                        <text class="name">优惠券码</text>
                     </view>
-                    <view class="r distribution">            
-                        <text class="txt">20元立减券</text>
-                    </view>
-                </view> -->
-                <view class="order-item clear">
-                    <view class="l">
-                        <text class="name">买家留言</text>
-                    </view>
-                    <view class="r message">
-                        <input class="txt" v-model="checkOutOther.orderRemarks" placeholder="点击给商家留言"/>
+                    <view class="line">
+                        <img src="/static/images/icon-order-division.png"/>
                     </view>
                 </view>
-
-                <view class="order-item clear">
-                    <view class="l">
-                        <text class="name">合计</text>
-                    </view>
-                    <view class="r price">            
-                    <view class="txt" v-if="daifaInfo.isDaifa">￥ {{checkOutInfo.totalAmount + daifaInfo.ExpressFreight}}</view>
-                    <view class="txt" v-if="!daifaInfo.isDaifa">￥ {{checkOutInfo.totalAmount}}</view>
-                    </view>
-                </view>
-                </view>
-                <view class="box-bottom">
-                    <view class="price-total">
-                        <view class="product-price clear">
-                            <view class="l">商品金额</view>
-                            <view class="r">￥{{checkOutInfo.totalAmount}}</view>
-                        </view>
-                        <view class="express-price clear">
-                            <view class="l">运费</view>
-                            <view class="r">+ ￥{{daifaInfo.isDaifa ? daifaInfo.ExpressFreight : 0}}</view>
-                        </view>
-                    </view>
-                </view>
-
-            
-                <!-- 代发快递 -->
-                <div class="box-content" v-if="checkOutOther.Remindtype == 1">
-                    <div class="weui-cells__title">代发快递方式</div>
-                    <div class="weui-cells weui-cells_after-title">
-                        <!-- <div class="weui-cell weui-cell_switch">
-                            <div class="weui-cell__bd">是否到付</div>
-                            <div class="weui-cell__ft">
-                                <switch :checked="daifaInfo.isCashOnDelivery" @change="daifaSwitch('isCashOnDelivery')"/>
-                            </div>
-                        </div> -->
-                        <div class="weui-cell weui-cell_switch">
-                            <div class="weui-cell__bd">代收货款</div>
-                            <div class="weui-cell__ft">
-                                <switch :checked="daifaInfo.IsDaiShouHuoKuan" @change="daifaSwitch('IsDaiShouHuoKuan')"/>
-                            </div>
-                        </div>
-                        <div class="weui-cell weui-cell_switch" v-if="daifaInfo.IsDaiShouHuoKuan">
-                            <div class="weui-cell__bd">代收货款金额</div>
-                            <div class="weui-cell__ft">
-                                <input class="weui-input" v-model="daifaInfo.daiShouMoney" type="number" placeholder="请输入代收货款金额" />
-                            </div>
-                        </div>
-                        <!-- 快递公司	 -->
-                        <div class="weui-cell weui-cell_select">
-                            <div class="weui-cell__hd weui-cell__hd_in-select-after">
-                                <div class="weui-label">快递公司</div>
-                            </div>
-                            <div class="weui-cell__bd">
-                                <picker @change="expressCompanyChange" :range="expressCompany">
-                                <div class="weui-select weui-select_in-select-after">{{daifaInfo.expressCompany}}</div>
-                                </picker>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-        
-            </view>
-        </scroll-view>
+            </scroll-view>
+        </view>
 
 
-    <view class="order-total" >
+    <view class="order-total">
         <view class="t">
         <!-- 如果是代发，需要加上代发运费 -->
-        <view  v-if="daifaInfo.isDaifa">合计：￥{{checkOutInfo.totalAmount + daifaInfo.ExpressFreight}}</view>
-        <!-- 如果是印捷配送，直接显示价格 -->
-        <view v-if="!daifaInfo.isDaifa">合计：￥{{checkOutInfo.totalAmount}}</view>
+        <view >合计：￥{{totalAmount }}</view>
         </view>
-        
         <view class="b" @click="submitOrder">确认下单</view>
     </view>
 </view>
@@ -205,24 +163,10 @@ export default {
   data () {
     return {
         checkOutOther:{
-            isCashOnDelivery : 0,
             orderRemarks: '',
             Remindtype: 0,
             RemindtypeStr: '',
-            isDaifa: '是否代发',
-            Paymenttype: '支付类型',
-            daiShouMoney: '代收金额',
-            CarryCompany: '快递公司id',
-            SenderPeople: '备注',
-            ExpressFreight: '代发快递运费',
-            ExpressWeight: '代发快递重量',
-            ExpressFreightLog: '代发快递参数',
-            filename: '文件名',
-            quoteLogModel: '报价日志id',
-            strId: '临时文件名',
-            IsRemind: '是否有提点费',
-            IsNotNeedFile: '是否需要传文件',
-            LimitTimeBuyId: '限时购id'
+            expressCompanyIndex: 0
         },
         daifaInfo: {
             isDaifa: false,//是否代发
@@ -234,11 +178,7 @@ export default {
         },
         expressCompany : ['顺丰快递'  , '运通快递' , '优速快递'],
         expressCompanyId: [ 7 , 11 , 28],
-        expressCompanyIndex: 0,
-        remindInfo: {},
-        calculateFreight: {},
-        productImg: '',
-        ParaStr: ''
+        goodList: []
     }
   },
   computed: {
@@ -249,39 +189,58 @@ export default {
         ]),
         baseUrl () {
             return this.$wx.baseUrl
+        },
+        totalAmount () {
+            let sum = 0
+            this.goodList.map(item => {
+                sum += item.totalAmount
+                if(item.isDaifa) {
+                    sum += item.ExpressFreight
+                }
+            })
+
+            return sum
         }
     },  
   async mounted () {
-    // 获取印捷提点
-    //将默认的地址存到全局那里
-    this.ParaStr = ''
-    this.set_address(this.checkOutInfo.Address)
-    this.productImg = this.$wx.getImagePath(this.checkOutInfo.products.imagePath)
-    await Promise.all([
-        this.getYJFreightCalculate(),
-        this.getCalculateFreight()
-    ])
-    this.selectWuliu()
-
-    try {
-        var QuoteLogModel=  JSON.parse(this.checkOutInfo.QuoteLogModel)
-        this.ParaStr = QuoteLogModel[0].ParaStr
-    } catch (error) {
+    const data = this.checkOutInfo
+    // // 获取印捷提点
+    // //将默认的地址存到全局那里
+    // this.ParaStr = ''
+    this.set_address(data.Address)
+    var _this = this;
+    data.ProductInfo.map(item => {
+        item = Object.assign(item , this.daifaInfo)
+        item = Object.assign(item , this.checkOutOther)
+        // obj = Object.assign(obj , {remindInfo : {}})
+        this.goodList.push(item)
+    })
+    this.goodList.map((item, index) => {
         
-    }
+        _this.init(index)
+    })
   },
   methods: {
     ...mapMutations(['set_address']),
+    // 首次进来
+    async init(index) {
+        await Promise.all([
+            this.getYJFreightCalculate(index),
+            this.getCalculateFreight(index)
+        ])
+        this.selectWuliu(index , true)
+    },
     // 获取代发快递
-    async getCalculateFreight() {
+    async getCalculateFreight(index) {
+        let item = this.goodList[index]
         var par = {
-            quoteLogModelId: this.checkOutInfo.QuoteLogModel,
+            quoteLogModelId: item.QuoteLogModel,
             UserId: this.userInfo.Id,
-            CompanyId: this.daifaInfo.CarryCompanyId,
-            fahuoCity: this.checkOutInfo.ShopAddress,
+            CompanyId: item.CarryCompanyId,
+            fahuoCity: item.ShopAddress,
             recieveCity: this.address.RegionFullName,
-            shuliang: this.checkOutInfo.Count,
-            Price: this.checkOutInfo.totalAmount
+            shuliang: item.Count,
+            Price: item.totalAmount
         }
         this.$wx.showLoading('正在加载...')
         const res = await api.getCalculateFreight(par)
@@ -291,88 +250,96 @@ export default {
                 ExpressWeight: res.data.Weight,
                 ExpressFreightLog: res.data.logId,
             }
-            this.daifaInfo = Object.assign(this.daifaInfo , data)
-            // this.calculateFreight = res.data
+            item = Object.assign(item , data)
         }
+        this.goodList[index] = item
         this.$wx.hideLoading()
     },
     // 获取印捷提点运费
-    async getYJFreightCalculate() {
+    async getYJFreightCalculate(index) {
+        let item = this.goodList[index]
         var par = {
             UserId: this.userInfo.Id,
             UserAddress: this.address.RegionId,
-            ShopId: this.checkOutInfo.products.ShopId,
-            Yjtype: this.checkOutInfo.Yjtype,
-            Price: this.checkOutInfo.totalAmount
+            ShopId: item.ShopId,
+            Yjtype: item.Yjtype,
+            Price: item.totalAmount
         }
         const res = await api.getYJFreightCalculate(par)
         if(res.success) {
-            this.remindInfo = res.data
+            item = Object.assign(item , res.data)
+            // this.remindInfo = res.data
+            this.goodList[index] = item
         }
     },
     // 选择配送方式
-    selectWuliu(e) {
+    selectWuliu(index , init) {
         var _this = this;
-        var checkOutInfo = this.checkOutInfo
+        let item = this.goodList[index]
         const openId = wx.getStorageSync('openId')
         // 加载信息
         var info = {
-            isYJPeiSong : checkOutInfo.IsPeisong,
-            YjUse: checkOutInfo.YjUse,
-            useFreightTempalate: checkOutInfo.UseFreightTemplate,
-            productId : checkOutInfo.products.ProductId,
+            isYJPeiSong : item.IsPeisong,
+            YjUse: item.YjUse,
+            useFreightTempalate: item.UseFreightTemplate,
+            productId : item.ProductId,
             openId: openId
         }
         var arr = express.selectExpress(info)
         // 初次进来默认选中第一个选项
-        if(e) {
+        if(init) {
+            var wuliuStr = arr[0]
+            item.Remindtype = express.wuliuId(wuliuStr)
+            item.RemindtypeStr = wuliuStr
+            this.getYunFeiEvent(index, wuliuStr)
+        } else {
             this.$wx.showActionSheet(arr).then(res => {
                 var wuliuStr = arr[res.tapIndex]
-                _this.checkOutOther.Remindtype = express.wuliuId(wuliuStr)
-                _this.checkOutOther.RemindtypeStr = wuliuStr
-                _this.getYunFeiEvent(wuliuStr)
+                item.Remindtype = express.wuliuId(wuliuStr)
+                item.RemindtypeStr = wuliuStr
+                item.getYunFeiEvent(index, wuliuStr)
             })
-        } else {
-            var wuliuStr = arr[0]
-            _this.checkOutOther.Remindtype = express.wuliuId(wuliuStr)
-            _this.checkOutOther.RemindtypeStr = wuliuStr
-            _this.getYunFeiEvent(wuliuStr)
         }
 
     },
     // 选择运费类型会产生的事件
-    getYunFeiEvent(str) {
+    getYunFeiEvent(index , str) {
+        let item = this.goodList[index]
         if(str == '代发快递'){
-            this.daifaInfo.isDaifa = true
-            this.getCalculateFreight()
+            item.isDaifa = true
+            this.getCalculateFreight(index)
         } else {
-            this.daifaInfo.isDaifa = false
+            item.isDaifa = false
         }
 
         if(str == '印捷配送') {
             // 让选择印捷默认的地址
-            this.set_address(this.checkOutInfo.Address)
+            this.set_address(item.Address)
         }
+        this.goodList[index] = item
     },
     // 代发快递信息选项
-    daifaSwitch(item) {
-        this.daifaInfo[item] = !this.daifaInfo[item]
+    daifaSwitch(index) {
+        this.goodList[index].IsDaiShouHuoKuan = !this.goodList[index].IsDaiShouHuoKuan
     },
     // 代发快递公司选择
     expressCompanyChange(e) {
-        if(e) {
-            this.expressCompanyIndex = e.mp.detail.value;
-        } else {
-            this.expressCompanyIndex = 0
-        }
-        this.daifaInfo.CarryCompany = this.expressCompany[this.expressCompanyIndex]
-        this.daifaInfo.CarryCompanyId = this.expressCompanyId[this.expressCompanyIndex]
-        this.getCalculateFreight()
+        const expressCompanyIndex = e.mp.detail.value
+        const index = Number(e.mp.target.id)
+        this.goodList[index].CarryCompany = this.expressCompany[expressCompanyIndex]
+        this.goodList[index].CarryCompanyId = this.expressCompanyId[expressCompanyIndex]
+        this.getCalculateFreight(index)
     },
     // 选择收获地址
     selectAddress () {
+        var isYj = false
+        this.goodList.map(item => {
+            if(item.Remindtype == 3) {
+                isYj = true
+            }
+        })
         // 如果是印捷配送，不能修改3
-        if(this.checkOutOther.Remindtype == 3) {
+        if(isYj) {
             return
         }
         this.$router.push({
@@ -387,7 +354,8 @@ export default {
     },
     // 点击“去付款”
     submitOrder () {
-        
+        console.log(this.goodList)        
+        return
         let res = undefined
         const openId = wx.getStorageSync('openId')
         //   标准品提交订单
@@ -429,14 +397,12 @@ export default {
     },
     async submitOrderByProductId (par) {
         this.$wx.showLoading()
-        console.log(JSON.stringify(par))
         const res = await api.submitOrderByProductId(par)
         this.$wx.hideLoading()
         this.submitAfter(res)
         
     },
     async submitOrderByProductId2(par) {
-        console.log(JSON.stringify(par))
         this.$wx.showLoading()
         const res = await api.submitOrderByProductId2(par)
         this.$wx.hideLoading()
@@ -929,5 +895,10 @@ export default {
     border-radius: 6rpx;
     box-shadow: 2rpx 3rpx 9rpx 2rpx rgba(0, 150, 158, 0.6);
 
+}
+.line-bg {
+    height: 20rpx;
+    width: 750rpx;
+    background:#666;
 }
 </style>

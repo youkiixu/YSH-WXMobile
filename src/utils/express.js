@@ -70,7 +70,7 @@ function wuliuId(str) {
 }
 
 function checkYjUse(num) {
-  // 0是商家只有，0以上都是印捷
+  // 0是商家直邮，0以上都是印捷
   if (num == 0) {
     return 0
   } else {

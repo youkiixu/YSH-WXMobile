@@ -149,6 +149,10 @@ const api = {
   // 非标品单个商品报价
   getOpenQuote: (paramObj) => request.post('/Wxmobile/Quote/OpenQuote', paramObj, {
     baseURL: ApiKiyUrl
+  }),
+  // 购物车去下单
+  submitByShoppingCart: (paramObj) => request.post('/Wxmobile/Orders/SubmitByShoppingCart', paramObj, {
+    baseURL: ApiKiyUrl
   })
 }
 

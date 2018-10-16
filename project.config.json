@@ -30,7 +30,7 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 17,
+			"current": 18,
 			"list": [
 				{
 					"id": -1,
@@ -139,6 +139,12 @@
 					"name": "非标单品报价",
 					"pathName": "pages/goods/goods",
 					"query": "data={\"ProductId\":297,\"ProductName\":\"彩色拼版不干胶\" ,\"code\":24}"
+				},
+				{
+					"id": 18,
+					"name": "购物车下单页",
+					"pathName": "pages/cart/cartCheckout",
+					"query": ""
 				}
 			]
 		}

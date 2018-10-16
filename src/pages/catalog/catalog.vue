@@ -6,11 +6,11 @@
     
 
     <view class="catalog" :style="{'height' : '100%'}">
-        <scroll-view class="nav" scroll-y="true">
+        <scroll-view class="nav" scroll-y="true"  :style="{'height' : '100%'}">
             <view :class="currentCategory.Id == item.Id ? 'active item' : 'item'" v-for="(item, index) of navList" :key="item.Id" :data-id="item.Id"
                 :data-index="index" @click="switchCateLog(index)">{{item.Name}}</view>
         </scroll-view>
-        <scroll-view class="cate" scroll-y="true" >
+        <scroll-view class="cate" scroll-y="true"  :style="{'height' : '100%'}">
             <view class="cate_item" v-for="( categoryChild , index1 ) of categoryList" :key="index1">
               <view class="hd">
                   <!-- <text class="line"></text> -->
@@ -173,7 +173,6 @@ page {
 .catalog .cate {
   /* border-left: 1px solid #fafafa; */
   flex: 1;
-  height: 90%;
   padding: 0 40rpx 0 40rpx;
 }
 

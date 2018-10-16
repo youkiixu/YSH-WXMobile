@@ -1,5 +1,5 @@
 <template>
-    <web-view :src="quoteUrl"  @message="bindmessage"></web-view>
+    <web-view :src="quoteUrl" v-if="canUse"  @message="bindmessage"></web-view>
 </template>
 
 <script>
@@ -12,10 +12,22 @@ export default {
             isDetail :  false, //是否从单个商品详情页过来,默认false
             detailCommon: false,
             ProductId: '',
-            title: ''
+            title: '',
+            canUse: wx.canIUse('web-view')
         }
     },
     mounted () {
+        var _this = this;
+        if(!this.canUse) {
+            this.$wx.showModal({
+                content: '当前微信版本过低，无法使用该功能，请升级到最新微信版本后重试。'
+            }).then(() => {
+                _this.$router.back()
+            }).catch(() => {
+                _this.$router.back()
+            })
+        }
+
         if (this.$route.query.pid) {
             this.quoteUrl = 'https://www.kiy.cn//m-mobile/autobaojia/index?pid=' + this.$route.query.pid
             this.qitemCode = this.$route.query.pid
