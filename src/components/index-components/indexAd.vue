@@ -31,13 +31,22 @@ export default {
         display: block;
         width: 750rpx;
         height: 353rpx;
+        
     }
-    .banner2 {
+     /* .banner2 {
         position: relative;
         display: block;
         width: 750rpx;
         height: 244rpx; 
         margin-top: 10rpx;
+    } */
+    .banner2 {
+        position: relative;
+        display: block;
+        width: 750rpx;
+        height: 220rpx; 
+        padding: 0 20rpx 20rpx 20rpx;
+        box-sizing: border-box;
     }
     
 
@@ -45,9 +54,14 @@ export default {
         width: 100%;
         height: 353rpx;
     }
-    .nofull {
+     /* .nofull {
         width: 710rpx;
         height: 234rpx;
         margin:  0 20rpx;
+    } */
+    .nofull {
+        width: 700rpx;
+        height: 193rpx;
+        border-radius:10rpx;
     }
 </style>

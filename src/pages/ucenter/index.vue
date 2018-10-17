@@ -57,10 +57,10 @@
         <view class="t">购物车</view>
         <img class="i" src="/static/images/address_right.png" background-size="cover"/>       
   </view>
-  <view class="collection list clear">    
+  <navigator url="../ucenter/collect" class="collection list clear">    
         <view class="t">我的收藏</view>
         <img class="i" src="/static/images/address_right.png" background-size="cover"/>       
-  </view>
+  </navigator>
    <view class="integral list clear">    
         <view class="t">我的积分</view>
         <img class="i" src="/static/images/address_right.png" background-size="cover"/>       

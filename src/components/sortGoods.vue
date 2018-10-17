@@ -10,6 +10,7 @@
                           <text class="icon">￥</text>{{item.MinSalePrice}}
                         </view>
                         <view class="name">{{item.ProductName}}</view>
+                        <view class="ShopName">{{item.ShopName}}</view>
                       </view>
                   </navigator>                                  
             </view>
@@ -115,9 +116,19 @@ export default {
 }
 .cate-item .b-txt .name{
   width: 100%;
-  overflow: hidden;
   font-size: 24rpx;
   color: #282828;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow:ellipsis;
+}
+.cate-item .b-txt .ShopName{
+  width: 100%;
+  font-size: 22rpx;
+  color: #666666;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow:ellipsis;
 }
 
 /*

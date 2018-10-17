@@ -145,6 +145,18 @@ const api = {
   // 设默认地址
   setDefaultShippingAddress: (paramObj) => request.post('/Wxmobile/UserInfos/SetDefaultShippingAddress', paramObj, {
     baseURL: ApiKiyUrl
+  }),
+   // 添加收藏
+   AddFavoriteProduct: (paramObj) => request.post('/Wxmobile/Collection/AddFavoriteProduct', paramObj, {
+    baseURL: ApiKiyUrl
+  }),
+  // 取消收藏
+  CancelConcernProducts: (paramObj) => request.post('/Wxmobile/Collection/CancelConcernProducts', paramObj, {
+    baseURL: ApiKiyUrl
+  }),
+  // 获取收藏列表
+  GetFavoriteProductList: (paramObj) => request.post('/Wxmobile/Collection/GetFavoriteProductList', paramObj, {
+    baseURL: ApiKiyUrl
   })
 }
 

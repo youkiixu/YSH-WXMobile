@@ -3,92 +3,103 @@
     <!-- 主体容器 -->
     <view class="container">
       <!-- 头部导航 -->
-      <view class="goodshead" id="goodshead">
+      <view class="goodshead">
         <view class="head-classify">
-          <view class="classify-item produ" @click="toNav('goodshead')">
+          <view class="classify-item produ" @click="toNav" data-id="goodshead">
             <img src="/static/images/posi.png"/>
             商品
           </view>
           <!-- <view :url="'../comment/comment?valueId=' + id + '&typeId=0'"> -->
-          <view class="classify-item com" @click="toNav('comments')">评论</view>
+          <view class="classify-item com" @click="toNav" data-id="comments">评论</view>
           <!-- </navigator>           -->
-          <view class="classify-item detail"  @click="toNav('proDetail')">详情</view>
+          <!-- <view class="classify-item detail"  @click="toNav('proDetail')">详情</view> -->
+          <view class="classify-item detail"  @click="toNav" data-id="proDetail">详情</view>
         </view>
         <view class="head-share">
           <img src="/static/images/upload.png"/>
         </view>
       </view>
-      <!-- 图片轮播 -->
-      <swiper class="goodsimgs" indicator-dots="true" autoplay="true" interval="3000" duration="1000">
-          <swiper-item v-for="(item, index) of gallery" :key="item.id" :data-index="index">
-          <img :src="RequestUrl + item" background-size="cover"/>
-          </swiper-item>
-      </swiper>
-      <!-- 商品信息 -->
-      <view class="goods-info">
-          <view class="c clear">
-            <view class="c-price"><text class="price-icon">￥</text>{{detailInfo.Price}}</view>
-            <view class="c-collect" @click="addCannelCollect">           
-                <img class="icon" :src="collectProduImage"/>           
-            </view>
-          </view>
-          <view class="con-text">
-            <view class="desc">{{detailInfo.ProductName}}</view>
-            <view class="notes">{{detailInfo.ShortDescription}}</view>
-          </view>       
-      </view>
-      <!-- 已选参数 -->
-      <view class="section-nav section-attr" @click="switchAttrPop">
-          <view class="t">规格:<text class="td">{{selectSkuStr.Color}} {{selectSkuStr.Size}} {{selectSkuStr.Version}} {{selectSkuStr.Material}} {{selectSkuStr.Fashion}} {{selectSkuStr.Grams}} {{selectSkuStr.Ensemble}}</text></view>
-          <img class="i" src="/static/images/address_right.png" background-size="cover"/>
-          <view class="clear"></view>
-      </view>
-      <!-- 商家地址 -->
-      <view class="address-nav address-attr clear">
-          <view class="t">{{detailInfo.ShopName}} : <text class="td">{{detailInfo.ShopAddress}}</text></view>
-          <!-- <img class="i" src="/static/images/address_right.png" background-size="cover"/> -->
-          <view class="clear"></view>
-      </view>
-      <!-- 商品评论 -->
-      <view class="comments" id="comments" >
-        <view class="h clear">
-          <navigator :url="'../comment/comment?valueId=' + id + '&typeId=0'">
-              <text class="t">评价</text>
-              <text class="i">查看全部评价</text>
-              <!-- <view class="clear"></view> -->
-          </navigator>
-        </view>
-        <view class="b"  v-if="comment.Id">
-          <view class="item">
-            <view class="info clear">
-              <view class="user">
-                  <img />
-                  <text>{{comment.UserName}}</text>
+
+      <scroll-view :scroll-into-view="toView" scroll-y="true" scroll-with-animation="true" class="src">
+        <view class="outside" id="goodshead">
+          <!-- 图片轮播 -->
+          <swiper class="goodsimgs" indicator-dots="true" autoplay="true" interval="3000" duration="1000">
+              <swiper-item v-for="(item, index) of gallery" :key="item.id" :data-index="index">
+              <img :src="RequestUrl + item" background-size="cover"/>
+              </swiper-item>
+          </swiper>
+          <!-- 商品信息 -->
+          <view class="goods-info">
+              <view class="c clear">
+                <view class="c-price"><text class="price-icon">￥</text>{{detailInfo.Price}}</view>
+                <view class="c-collect" @click="addCannelCollect">           
+                    <img class="icon" :src="collectProduImage"/>           
+                </view>
               </view>
-              <view class="star">{{comment.star}}</view>
-              <!-- <view class="clear"></view> -->
+              <view class="con-text">
+                <view class="desc">{{detailInfo.ProductName}}</view>
+                <view class="notes">{{detailInfo.ShortDescription}}</view>
+              </view>       
+          </view>
+          <!-- 已选参数 -->
+          <view class="section-nav section-attr" @click="switchAttrPop">
+              <view class="t">规格:<text class="td">{{selectSkuStr.Color}} {{selectSkuStr.Size}} {{selectSkuStr.Version}} {{selectSkuStr.Material}} {{selectSkuStr.Fashion}} {{selectSkuStr.Grams}} {{selectSkuStr.Ensemble}}</text></view>
+              <img class="i" src="/static/images/address_right.png" background-size="cover"/>
+              <view class="clear"></view>
+          </view>
+          <!-- 商家地址 -->
+          <view class="address-nav address-attr clear">
+              <view class="t">{{detailInfo.ShopName}} : <text class="td">{{detailInfo.ShopAddress}}</text></view>
+              <!-- <img class="i" src="/static/images/address_right.png" background-size="cover"/> -->
+              <view class="clear"></view>
+          </view>
+          <!-- 商品评论 -->
+          <view class="comments" id="comments" >
+            <view class="h clear">
+              <navigator :url="'../comment/comment?valueId=' + id + '&typeId=0'">
+                  <text class="t">评价</text>
+                  <text class="i">查看全部评价</text>
+                  <!-- <view class="clear"></view> -->
+              </navigator>
             </view>
+            <view class="b"  v-if="comment.Id">
+              <view class="item">
+                <view class="info clear">
+                  <view class="user">
+                      <img />
+                      <text>{{comment.UserName}}</text>
+                  </view>
+                  <view class="star">{{comment.star}}</view>
+                  <!-- <view class="clear"></view> -->
+                </view>
+                <view class="content">
+                {{comment.ReviewContent}}
+                </view>
+                  <!-- <view class="imgs">
+                  <image class="img"/>
+                  </view>
+                  <view class="spec">白色 2件</view>  -->
+              </view>
+              <view class="seeall">查看全部评价</view>
+            </view>   
+            <view class="b" v-else>
+              <view class="seeall">暂无评价</view>
+            </view>
+          </view> 
+          <!-- 产品描述 -->
+          <view class="proDetail" id="proDetail">
+            <view class="title">商品详情</view>
             <view class="content">
-            {{comment.ReviewContent}}
+              <wxParse :imageProp="baseUrl" :content="goodDetailHTMLstr" />
             </view>
-              <!-- <view class="imgs">
-              <image class="img"/>
-              </view>
-              <view class="spec">白色 2件</view>  -->
           </view>
-          <view class="seeall">查看全部评价</view>
-        </view>   
-        <view class="b" v-else>
-          <view class="seeall">暂无评价</view>
-        </view>
-      </view> 
-      <!-- 产品描述 -->
-      <view class="proDetail" id="proDetail">
-        <view class="title">商品详情</view>
-        <view class="content">
-          <wxParse :imageProp="baseUrl" :content="goodDetailHTMLstr" />
-        </view>
       </view>
+    
+
+      </scroll-view>
+
+     
+
     </view>
     <!-- 模态浮层 -->
     <view class="attr-pop-box" :hidden="!openAttr">
@@ -208,6 +219,7 @@ export default {
   data () {
     return {
       navId: '',
+      toView: '',
       RequestUrl: '',
       detailInfo: {
         Material: [],
@@ -480,7 +492,14 @@ export default {
     },
     // 购物车的五角星，添加或是取消收藏
     async addCannelCollect () {
-
+        const openId = wx.getStorageSync('openId')
+        const res = await api.AddFavoriteProduct({ ProductId: this.id , openId: openId })   
+         if (res.success) {
+            // let data = JSON.parse(res.data)   
+           this.$wx.showSuccessToast('收藏成功')
+        } else {
+          this.$wx.showSuccessToast('收藏失败')
+        }            
     },
     // 跳转到购物车页面
     openCartPage () {
@@ -579,9 +598,11 @@ export default {
       this.number = this.number + 1;
     },
     // 滚动到某位置
-    toNav(id) {
-      this.navId = id
-    }
+    toNav: function(e) {
+      // this.navId = id
+      console.log(e.currentTarget.dataset.id)
+      this.toView = e.currentTarget.dataset.id
+    },
   },
   watch: {
     number (e , b) {
@@ -616,6 +637,12 @@ export default {
 page{
   height: 100%;
 }
+.src{
+  height: 100vh;
+}
+.outside{
+  margin-top: 65rpx;
+}
 .scroll-lock{
   height: 100%;
   overflow-y: hidden;
@@ -638,7 +665,10 @@ page{
   width: 750rpx;
   height: 65rpx;
   background-color: white;
-  position: relative;
+  position: fixed;
+  z-index: 10;
+  left:0;
+
 }
 .head-classify{
   width: 428rpx;
@@ -712,6 +742,7 @@ page{
 .goods-info {
   width: 750rpx;
   background: #fff;
+  border: 1rpx solid transparent;
 }
 
 .goods-info .c {

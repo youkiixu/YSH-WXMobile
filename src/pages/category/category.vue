@@ -46,17 +46,24 @@
                 <view v-for="item of goodsList" :key="item.ProductId" :class="(index + 1) % 2 === 0 ? 'item-b item' : 'item'"
                    @click="toGoods(item)" >
                     <img class="img" :src="baseUrl + item.imagePath + '/1_350.png'" mode="scaleToFill" />
-                    <view class="b-txt">
-                      <view class="price">
-                        <text class="icon">￥</text>{{item.MinSalePrice}}
-                      </view>
-                      <view class="ShopName">{{item.ShopName}}</view>
+                    <view class="b-txt">                                         
                       <view class="name">{{item.ProductName}}</view>
+                       <view class="ShopName">{{item.ShopName}}</view>
+                       <view class="b-bottom clear">
+                          <view class="price">
+                           <text class="icon">￥</text>{{item.MinSalePrice}}
+                          </view> 
+                          <view class="dealNum">成交 124904 笔</view> 
+                       </view>
+                      
                     </view>
                 </view>
             </view>
         </view>
     </scroll-view>
+
+
+    <view class="scollTop">顶部</view>
 </view>
 </template>
 
@@ -232,6 +239,12 @@ export default {
 .container{
     background: #f1f1f1;
 }
+.clear:after{
+    display: block;
+    content:'';
+    clear: both;
+    height:0;
+    }
 .cate-head{
    background: #fff;
     width: 100%;
@@ -418,27 +431,54 @@ export default {
   padding: 15rpx 10rpx;
   box-sizing: border-box;
 }
-.cate-item .b-txt .price{
-  width: 100%;
-  font-size: 32rpx;
-  color: #dc2121;
-}
-.cate-item .b-txt .icon{ 
-  font-size: 28rpx;
-}
-.cate-item .b-txt .ShopName{
-  width: 100%;
-  font-size: 24rpx;
-  color: #282828;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow:ellipsis;
-}
 .cate-item .b-txt .name{
   font-size: 24rpx;
   color: #282828;
   overflow: hidden;
   white-space: nowrap;
   text-overflow:ellipsis;
+}
+.cate-item .b-txt .ShopName{
+  width: 100%;
+  font-size: 22rpx;
+  color: #666666;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow:ellipsis;
+}
+.cate-item .b-txt .b-bottom .price{
+  width: 50%;
+  font-size: 32rpx;
+  color: #dc2121;
+  float: left;
+  line-height: 50rpx;
+}
+.cate-item .b-txt .b-bottom .icon{ 
+  font-size: 28rpx;
+}
+.cate-item .b-txt .b-bottom .dealNum{
+  width: 50%;
+  font-size: 20rpx;
+  color: #999999;
+  float: left;
+  text-align: right;
+  line-height: 50rpx;
+}
+.scollTop{
+  width: 86rpx;
+  height: 86rpx;
+  color: #585c63;
+  font-size: 20rpx;
+  text-align: center;
+  line-height: 120rpx;
+  border-radius: 50%;
+  box-shadow: 0px 0px 2px 2px #f1f1f1;
+  position: fixed;
+  bottom: 55rpx;
+  right: 20rpx;
+  z-index: 1000;
+  background: url(http://www.kiy.cn/Areas/wxMobile/Content/img/up-arrow.png) center 25% no-repeat;
+  background-size: 38rpx; 
+  background-color: #fff;
 }
 </style>
