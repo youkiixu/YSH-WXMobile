@@ -291,7 +291,8 @@ export default {
       ListPriceInfo: {
         sprice : 1,
         paraStr: ''
-      }
+      },
+      openQuotSuccess: false
     }
   },
   mounted () {
@@ -379,6 +380,7 @@ export default {
     },
     // 获取非标的价格
     async getOpenQuote () {
+      const _this = this;
       const openId = wx.getStorageSync('openId')
       let par = {
         qid: this.code,
@@ -391,12 +393,21 @@ export default {
       this.$wx.showLoading('正在报价...')
       const res = await api.getOpenQuote(par)
       this.$wx.hideLoading()
-      const Data = JSON.parse(res.Data)
-      const ListPriceInfo  = Data.ListPriceInfo[0]
-      this.ListPriceInfo.sprice = res.SumPrice
-      this.ListPriceInfo.paraStr = ListPriceInfo.logJson[0].paraStr
-      this.ListPriceInfo.Data =ListPriceInfo
-      this.ListPriceInfo.res = res
+      this.openQuotSuccess = res.success
+      if(res.success) {
+        
+        const Data = JSON.parse(res.Data)
+        const ListPriceInfo  = Data.ListPriceInfo[0]
+        this.ListPriceInfo.sprice = res.SumPrice
+        this.ListPriceInfo.paraStr = ListPriceInfo.logJson[0].paraStr
+        this.ListPriceInfo.Data =ListPriceInfo
+        this.ListPriceInfo.res = res
+      } else {
+        this.ListPriceInfo.sprice = 0
+        this.ListPriceInfo.paraStr = ''
+        // this.$wx.showErrorToast('报价失败')
+      }
+      
     },
     // 获取商品SKu详情
     async getGoodsSkuInfo () {
@@ -582,8 +593,7 @@ export default {
     },
     // 非标品立即购买
     buyOpenGood() {
-    
-        console.log(this.ListPriceInfo)
+      try {
         const openId = wx.getStorageSync('openId')
         var par = {
             openId: openId,
@@ -600,8 +610,11 @@ export default {
             LimitTimeBuyId: this.ListPriceInfo.res.LimitTimeBuyId
         }
         this.openAttr = false
-        console.log(par)
         this.SubmitByProductId2(par)
+      } catch (error) {
+        this.$wx.showErrorToast('非标品下单失败')
+      }
+        
     },
     // 标准品立即购买
     buyGood () {
@@ -635,13 +648,20 @@ export default {
           Yjtype: this.Yjtype
           // YjUse: this.YjUse
         }
-        console.log('添加到购物车')
+        
         if(this.detailInfo.IsCustom) {
           // 如果是定制品
           // 重定义非标品的skuId和数量
           par.skuId = this.detailInfo.ProductId + '_0_0_0_0_0_0_0'
           par.quantity = 1
-          par = Object.assign(par , { dataStr : this.proSearchParam.dataStr , quoteJson: JSON.stringify(this.ListPriceInfo.Data.GroupJson) })
+          par = Object.assign(par , 
+            { 
+              dataStr : this.proSearchParam.dataStr , 
+              quoteJson: JSON.stringify(this.ListPriceInfo.Data.GroupJson) , 
+              ParaStr : this.ListPriceInfo.paraStr,
+              Price: this.ListPriceInfo.sprice
+            }
+          )
         } else {
           // 标准品检查库存
           if(this.checkStock()) return

@@ -12,19 +12,14 @@
     </view>
   </view>
 
-  <!-- <view class="no-cart" v-if="cartGoods.length <= 0">
-    <view class="c">购物车空空如也</view>
-    <view class="g">快去逛逛吧</view>
-    <view class="k">去逛逛</view>
-  </view> -->
 
   <view class="cart-view" v-if="cartGoods.length">
     <view class="cart-address clear">
       <view class="posi-img">
         <img src="/static/images/icon_cart_position.png" background-size="cover"/>
       </view>
-       <view class="from">配送广东省 佛山市 南海区</view>
-       <view class="to">至广东省 佛山市 南海区</view>
+       <view class="from">此购物车价格仅供参考</view>
+       <view class="to">请以下单的价格为标准</view>
        <view class="edit" @click="editCart">{{!isEditCart ? '编辑商品' : '完成'}}</view>       
     </view>
 
@@ -38,18 +33,19 @@
               <view class="info">
                 <view class="t">
                   <text class="name">{{item.ProductName}}</text>
-                  <text class="num">x{{item.Quantity}}</text>
+                  <text class="num">{{item.IsCustom ? '非标品' : 'x' + item.Quantity}}</text>
                 </view>
-                <view class="attr">已选：{{item.Color}} {{item.Size}} {{item.Version}} {{item.Material}} {{item.Fashion}} {{item.Grams}} {{item.Ensemble}}</view>
+                <view class="attr" v-if="item.IsCustom">已选：{{ item.ParaStr }}</view>
+                <view class="attr" v-else>已选：{{item.Color}} {{item.Size}} {{item.Version}} {{item.Material}} {{item.Fashion}} {{item.Grams}} {{item.Ensemble}}</view>
                 <view class="b">
                   <view class="price">
-                    <text class="icon">￥</text>{{item.Price}}
+                    <text class="icon">￥</text>{{item.IsCustom ? item.fbpPrice : ( item.bpPrice * item.Quantity ) }}
                   </view>
-                  <!-- <view class="selnum">
-                    <view class="cut" @click="cutNumber" :data-item-index="index">-</view>
-                    <input :value="item.number" class="number" disabled="true" type="number" />
-                    <view class="add" @click="addNumber" :data-item-index="index">+</view>
-                  </view> -->
+                  <view class="selnum" v-if="false">
+                    <view class="cut" @click.stop="cutNumber" :data-item-index="index">-</view>
+                    <input v-model="item.Quantity" class="number" disabled="true" type="number" />
+                    <view class="add" @click.stop="addNumber" :data-item-index="index">+</view>
+                  </view>
                 </view>
               </view>
             </view>
@@ -60,7 +56,7 @@
 
    <view class="cart-bottom">
       <view :class="checkedAllStatus ? 'checked checkbox' : 'checkbox'" @click="checkedAll">全选</view>
-      <view class="total">总金额：<text class="total-price">{{!isEditCart ? '￥'+ selectGoods.Price : ''}}</text></view>
+      <view class="total">总金额：<text class="total-price">{{'￥'+ allPrice}}</text></view>
       <view class="checkout" @click="checkoutOrder" v-if="!isEditCart">去结算</view>
       <view class="delete" @click="deleteCart" v-if="isEditCart">删除</view>
     </view>
@@ -73,6 +69,7 @@
 <script>
 import api from '@/utils/api'
 import wx from 'wx'
+import util from '@/utils/util'
 import { mapState , mapActions } from 'vuex'
 
 export default {
@@ -98,6 +95,8 @@ export default {
   onShow () {
     this.cartGoods = []
     this.pageNo = 1
+    this.checkedAllStatus = false
+    this.isEditCart = false
     this.getCartList()
     
   },
@@ -107,6 +106,20 @@ export default {
     ]),
     baseUrl () {
       return this.$wx.baseUrl
+    },
+    allPrice () {
+      var num = 0
+      this.cartGoods.map(function (v) {
+          if(v.checked && v.IsCustom) {
+            num = util.addNum(num , v.fbpPrice)
+          }
+          if(v.checked && !v.IsCustom) {
+            const toTal = util.accMul(v.bpPrice , v.Quantity)
+            num = util.addNum(num , toTal)
+          }
+      })
+
+      return num
     }
   },
   methods: {
@@ -125,6 +138,7 @@ export default {
       if(res.success) {
         var resData = JSON.parse(res.data)
         this.cartGoods = this.cartGoods.concat(resData.Table)
+        console.log(this.cartGoods)
       }
       // this.checkedAllStatus = this.isCheckedAll();
     },
@@ -172,60 +186,42 @@ export default {
     editCart () {
       // 编辑状态
       if (this.isEditCart) {
-        // this.getCartList();
         this.isEditCart = !this.isEditCart;
       } else {
-        // 非编辑状态
-        // let tmpCartList = this.cartGoods.map(function (v) {
-        //   v.checked = false;
-        //   return v;
-        // });
-        // this.editCartList = this.cartGoods;
-        // this.cartGoods = tmpCartList;
         this.isEditCart = !this.isEditCart;
-        
-        // this.checkedAllStatus = this.isCheckedAll();
-        // this.cartTotal.checkedGoodsCount = this.getCheckedGoodsCount();
       }
-    },
-    // 更新购物车数据，点击+或—触发
-    async updateCart (productId, goodsId, number, id) {
-      const res = await api.CartUpdate({
-        productId: productId,
-        goodsId: goodsId,
-        number: number,
-        id: id
-      });
-      if (res.errno === 0) {
-        // this.cartGoods = res.data.cartList;
-        // this.cartTotal = res.data.cartTotal;
-      }
-      // this.checkedAllStatus = this.isCheckedAll();
     },
     // 减少数量
     cutNumber (event) {
       let itemIndex = event.target.dataset.itemIndex;
       let cartItem = this.cartGoods[itemIndex];
-      let number = (cartItem.number - 1 > 1) ? cartItem.number - 1 : 1;
+      console.log(cartItem.SaleNumber)
+      const saleNumber =  cartItem.SaleNumber;//最低销售量
+      let number = cartItem.Quantity - 1
+      if(number < saleNumber) {
+        this.$wx.showErrorToast('不能低于最低销售量')
+        number = saleNumber
+      }
       cartItem.number = number;
-      this.cartGoods = this.cartGoods;
-      this.updateCart(cartItem.product_id, cartItem.goods_id, number, cartItem.id);
+      this.cartGoods[itemIndex].Quantity = number;
     },
     // 增加数量
     addNumber (event) {
       let itemIndex = event.target.dataset.itemIndex;
       let cartItem = this.cartGoods[itemIndex];
-      let number = cartItem.number + 1;
-      cartItem.number = number;
-      this.cartGoods = this.cartGoods;
-      this.updateCart(cartItem.product_id, cartItem.goods_id, number, cartItem.id);
+      const stock = cartItem.Stock
+      let number = cartItem.Quantity + 1;
+      if(number <= stock) {
+        this.cartGoods[itemIndex].Quantity = number;
+      } else {
+        this.$wx.showErrorToast('超出库存')
+      }
     },
     // 点击“下单”，跳转到下单页
     checkoutOrder () {
       // 获取已选择的商品
       const openId = wx.getStorageSync('openId')
       let shopCartIds = ''
-      console.log(this.cartGoods)
       this.cartGoods.map(function (element) {
         if (element.checked) {
           shopCartIds += `${element.Id},`
@@ -516,7 +512,7 @@ page{
 
 .cart-view .item .info{
     float: left;
-    width: 420rpx;
+    width: 435rpx;
     margin: 19.5rpx 26rpx 19.5rpx 0;
 }
 
@@ -548,7 +544,7 @@ page{
 
 .cart-view .item .attr{
     width: 400rpx;
-    height: 50rpx;
+    height: 75rpx;
     margin-top: 10rpx;
     margin-bottom: 17rpx;
     line-height: 25rpx;

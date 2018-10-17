@@ -39,7 +39,7 @@
                                     <text class="number">x{{item.Count}}</text>
                                 </view>
                                 
-                                <view class="m" v-if="QuoteStr">参数:{{QuoteStr}}</view>
+                                <view class="m" v-if="item.paraStr">参数:{{item.paraStr}}</view>
                                 <view class="m" v-if="item.Color">颜色：{{item.Color}}</view>
                                 <view class="m" v-if="item.Size">尺寸：{{item.Size}}</view>
                                 <view class="m" v-if="item.Version">规格：{{item.Version}}</view>
@@ -174,7 +174,11 @@ export default {
             // isCashOnDelivery: false,//是否代货到付款
             daiShouMoney: 0,//代收金额
             CarryCompany: '顺丰快递',//快递公司名字
-            CarryCompanyId: 7
+            CarryCompanyId: 7,
+            ExpressFreight: 0,
+            ExpressWeight: 0,
+            ExpressFreightLog: 0
+
         },
         expressCompany : ['顺丰快递'  , '运通快递' , '优速快递'],
         expressCompanyId: [ 7 , 11 , 28],
@@ -193,30 +197,29 @@ export default {
         totalAmount () {
             let sum = 0
             this.goodList.map(item => {
-                sum += item.totalAmount
+                sum = util.addNum(sum , item.totalAmount)
                 if(item.isDaifa) {
-                    sum += item.ExpressFreight
+                    sum = util.addNum(sum , item.ExpressFreight)
                 }
             })
-
             return sum
         }
-    },  
+    },      
   async mounted () {
     const data = this.checkOutInfo
-    // // 获取印捷提点
-    // //将默认的地址存到全局那里
-    // this.ParaStr = ''
+    this.goodList = []
     this.set_address(data.Address)
     var _this = this;
     data.ProductInfo.map(item => {
         item = Object.assign(item , this.daifaInfo)
         item = Object.assign(item , this.checkOutOther)
-        // obj = Object.assign(obj , {remindInfo : {}})
+        if(item.RecordModel != '') {
+            const RecordModel = JSON.parse(item.RecordModel)
+            item.paraStr = RecordModel[0].paraStr
+        }
         this.goodList.push(item)
     })
     this.goodList.map((item, index) => {
-        
         _this.init(index)
     })
   },
@@ -224,6 +227,7 @@ export default {
     ...mapMutations(['set_address']),
     // 首次进来
     async init(index) {
+        
         await Promise.all([
             this.getYJFreightCalculate(index),
             this.getCalculateFreight(index)
@@ -232,27 +236,21 @@ export default {
     },
     // 获取代发快递
     async getCalculateFreight(index) {
-        let item = this.goodList[index]
         var par = {
-            quoteLogModelId: item.QuoteLogModel,
+            quoteLogModelId: this.goodList[index].QuoteLogModel,
             UserId: this.userInfo.Id,
-            CompanyId: item.CarryCompanyId,
-            fahuoCity: item.ShopAddress,
+            CompanyId: this.goodList[index].CarryCompanyId,
+            fahuoCity: this.goodList[index].ShopAddress,
             recieveCity: this.address.RegionFullName,
-            shuliang: item.Count,
-            Price: item.totalAmount
+            shuliang: this.goodList[index].Count,
+            Price: this.goodList[index].totalAmount
         }
         this.$wx.showLoading('正在加载...')
         const res = await api.getCalculateFreight(par)
-        if(res.success) {
-            var data = {
-                ExpressFreight : res.data.DiscountFreight,
-                ExpressWeight: res.data.Weight,
-                ExpressFreightLog: res.data.logId,
-            }
-            item = Object.assign(item , data)
-        }
-        this.goodList[index] = item
+        this.goodList[index].ExpressFreight = res.data.DiscountFreight
+        this.goodList[index].ExpressWeight = res.data.Weight
+        this.goodList[index].ExpressFreightLog = res.data.logId
+        this.renderUI()
         this.$wx.hideLoading()
     },
     // 获取印捷提点运费
@@ -291,36 +289,39 @@ export default {
             var wuliuStr = arr[0]
             item.Remindtype = express.wuliuId(wuliuStr)
             item.RemindtypeStr = wuliuStr
-            this.getYunFeiEvent(index, wuliuStr)
+            _this.goodList[index] = item
+            _this.getYunFeiEvent(index, wuliuStr)
         } else {
             this.$wx.showActionSheet(arr).then(res => {
                 var wuliuStr = arr[res.tapIndex]
                 item.Remindtype = express.wuliuId(wuliuStr)
                 item.RemindtypeStr = wuliuStr
+                _this.goodList[index] = item
                 item.getYunFeiEvent(index, wuliuStr)
             })
         }
+        
 
     },
     // 选择运费类型会产生的事件
     getYunFeiEvent(index , str) {
-        let item = this.goodList[index]
         if(str == '代发快递'){
-            item.isDaifa = true
+            this.goodList[index].isDaifa = true
             this.getCalculateFreight(index)
         } else {
-            item.isDaifa = false
+            this.goodList[index].isDaifa = false
+            this.renderUI()
         }
-
         if(str == '印捷配送') {
             // 让选择印捷默认的地址
-            this.set_address(item.Address)
+            this.set_address(this.checkOutInfo.Address)
         }
-        this.goodList[index] = item
+        
     },
     // 代发快递信息选项
     daifaSwitch(index) {
         this.goodList[index].IsDaiShouHuoKuan = !this.goodList[index].IsDaiShouHuoKuan
+        this.renderUI()
     },
     // 代发快递公司选择
     expressCompanyChange(e) {
@@ -340,6 +341,9 @@ export default {
         })
         // 如果是印捷配送，不能修改3
         if(isYj) {
+            this.$wx.showModal({
+                content: '有一项产品选择了印捷配送，不能更改地址。'
+            })
             return
         }
         this.$router.push({
@@ -419,6 +423,11 @@ export default {
         } else {
             this.$wx.showErrorToast(res.msg)
         }
+    },
+    renderUI () {
+        const template = this.goodList
+        this.goodList = []
+        this.goodList = template
     }
   },
   // 原生的分享功能
@@ -737,7 +746,7 @@ export default {
     width: 100%;
     height: 85rpx;
     line-height: 85rpx;
-    color: #a9a9a9;
+    color: #000;
     font-size: 28rpx;
 }
 .order-box .order-item .price{

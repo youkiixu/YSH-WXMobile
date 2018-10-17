@@ -13,11 +13,6 @@
                 <view class="name">支付宝</view>
             </view>
             <view class="item">
-                <view class="checkbox"></view>
-                <view class="icon-net"></view>
-                <view class="name">网易支付</view>
-            </view>
-            <view class="item">
                 <view class="checkbox checked"></view>
                 <image src="/static/images/wxpay.png" class="icon"/>
                 <view class="name">微信支付</view>
