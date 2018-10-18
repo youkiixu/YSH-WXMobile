@@ -147,7 +147,7 @@ page {
 
 .catalog .nav {
   width: 180rpx;
-  height: 90%;
+  height: 92%;
   
 }
 

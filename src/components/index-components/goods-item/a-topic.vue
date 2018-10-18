@@ -3,7 +3,7 @@
       <view class="b">
         <scroll-view scroll-x="true" class="list">
           <view class="item" v-for="item of content.goodslist" :key="item.item_id">
-            <navigator :url="'../topic/topicDetail?id=' + item.item_id" class="nav">
+            <navigator  @click="toDetail(item)" class="nav">
               <img class="img" :src="baseUrl+ item.pic" background-size="cover" />
               <view class="np">
                 <text class="name">{{item.title}}</text>
@@ -25,15 +25,21 @@ export default {
         baseUrl() {
             return this.$wx.baseUrl
         }
+    },
+    methods: {
+      toDetail(item) {
+        this.$emit('onClick' , item);
+      }
     }
 }
 </script>
 <style scoped>
 .a-topic .b {
-  height: 398rpx;
+  height: 378rpx;
   width: 750rpx;
   padding: 0;
-  background-color: #f1f1f1;
+  background-color: #fff;
+  margin-bottom: 20rpx;
 }
 
 .clear:after{
@@ -43,7 +49,7 @@ export default {
     height:0;
     }
 .a-topic .b .list {
-  height: 398rpx;
+  height: 378rpx;
   width: 750rpx;
   white-space: nowrap;
 }

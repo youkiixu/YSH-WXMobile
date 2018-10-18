@@ -11,13 +11,13 @@
     <view class="error" v-if="status != true">
       <view class="msg">付款失败</view>
       <view class="tips">
-        <view class="p">请在 <text class="time">1小时</text> 内完成付款</view>
-        <view class="p">否则订单将会被系统取消</view>
+        <view class="p">请在在个人订单内完成付款</view>
+        <!-- <view class="p">否则订单将会被系统取消</view> -->
       </view>
       <view class="btns">
         <!-- <navigator class="btn" url="/pages/ucenter/order/order" open-type="redirect">查看订单</navigator> -->
-        <view class="btn" @click='redirectToOrderDetail'>查看订单</view>
-        <view class="btn" @click='payOrder'>重新付款</view>
+        <navigator class="btn" url="../ucenter/order" open-type="redirect">查看订单</navigator>
+        <navigator class="btn" url="../index/index" open-type="switchTab">继续逛</navigator>
       </view>
     </view>
   </view>

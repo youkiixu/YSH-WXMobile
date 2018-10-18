@@ -15,9 +15,9 @@
 
   <view class="cart-view" v-if="cartGoods.length">
     <view class="cart-address clear">
-      <view class="posi-img">
+      <!-- <view class="posi-img">
         <img src="/static/images/icon_cart_position.png" background-size="cover"/>
-      </view>
+      </view> -->
        <view class="from">此购物车价格仅供参考</view>
        <view class="to">请以下单的价格为标准</view>
        <view class="edit" @click="editCart">{{!isEditCart ? '编辑商品' : '完成'}}</view>       
@@ -119,7 +119,7 @@ export default {
           }
       })
 
-      return num
+      return num.toFixed(2)
     }
   },
   methods: {

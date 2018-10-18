@@ -27,7 +27,6 @@
             </view>
             <scroll-view scroll-y :style="{'height': '100%'}">
                 <view class="card" v-for="(item , index) of goodList" :key="index">
-                    
                     <view class="goods-items">
                         <view class="item" >
                             <view class="img">
@@ -63,39 +62,6 @@
                                 <text class="txt">{{item.RemindtypeStr}}</text>
                             </view>
                         </view>
-                        <view class="order-item clear">
-                            <view class="l">
-                                <text class="name">买家留言</text>
-                            </view>
-                            <view class="r message">
-                                <input class="txt" v-model="item.orderRemarks" placeholder="点击给商家留言"/>
-                            </view>
-                        </view>
-                        <view class="box-bottom">
-                            <view class="price-total">
-                                <view class="product-price clear">
-                                    <view class="l">商品金额</view>
-                                    <view class="r">￥{{item.totalAmount}}</view>
-                                </view>
-                                <view class="express-price clear">
-                                    <view class="l">运费</view>
-                                    <view class="r">+ ￥{{item.isDaifa ? item.ExpressFreight : 0}}</view>
-                                </view>
-                            </view>
-                        </view>
-                        <view class="order-item clear">
-                            <view class="l">
-                                <text class="name">合计</text>
-                            </view>
-                            <view class="r price">            
-                                <view class="txt" v-if="item.isDaifa">￥ {{item.totalAmount + item.ExpressFreight}}</view>
-                                <view class="txt" v-if="!item.isDaifa">￥ {{item.totalAmount}}</view>
-                                </view>
-                            </view>
-                        </view>
-
-
-                    
                         <!-- 代发快递 -->
                         <div class="box-content" v-if="item.Remindtype == 1">
                             <!-- <div class="weui-cells__title">代发快递方式</div> -->
@@ -131,6 +97,40 @@
                                 </div>
                             </div>
                         </div>
+                        <view class="order-item clear">
+                            <view class="l">
+                                <text class="name">买家留言</text>
+                            </view>
+                            <view class="r message">
+                                <input class="txt" v-model="item.orderRemarks" placeholder="点击给商家留言"/>
+                            </view>
+                        </view>
+                        <view class="box-bottom">
+                            <view class="price-total">
+                                <view class="product-price clear">
+                                    <view class="l">商品金额</view>
+                                    <view class="r">￥{{item.totalAmount}}</view>
+                                </view>
+                                <view class="express-price clear">
+                                    <view class="l">运费</view>
+                                    <view class="r">+ ￥{{item.isDaifa ? item.ExpressFreight : 0}}</view>
+                                </view>
+                            </view>
+                        </view>
+                        <view class="order-item clear">
+                            <view class="l">
+                                <text class="name">合计</text>
+                            </view>
+                            <view class="r price">            
+                                <view class="txt" v-if="item.isDaifa">￥ {{item.totalAmount + item.ExpressFreight}}</view>
+                                <view class="txt" v-if="!item.isDaifa">￥ {{item.totalAmount}}</view>
+                                </view>
+                            </view>
+                        </view>
+
+
+                    
+
                 
                     </view>
                     <view class="line">
@@ -202,7 +202,7 @@ export default {
                     sum = util.addNum(sum , item.ExpressFreight)
                 }
             })
-            return sum
+            return sum.toFixed(2)
         }
     },      
   async mounted () {
@@ -357,68 +357,31 @@ export default {
         })
     },
     // 点击“去付款”
-    submitOrder () {
-        console.log(this.goodList)        
-        return
-        let res = undefined
+    async submitOrder () {
         const openId = wx.getStorageSync('openId')
-        //   标准品提交订单
-        let par = {
-            openId : openId,
-            Remindtype: this.checkOutOther.Remindtype,//配送类型
-            skuIds : this.checkOutInfo.products.Id,
-            counts: this.checkOutInfo.Count,
-            userAddressId: this.address.Id,
-            orderRemarks: this.checkOutOther.orderRemarks,
-            quoteLogModel: this.checkOutInfo.QuoteLogModel,
-            Paymenttype: 1
+        const productInfo = []
+        let goodList = util.deepCopy(this.goodList)
+        goodList.map(item => {
+            delete item.QuoteLogModel
+            productInfo.push(item)
+        })
+        const productInfoStr =  JSON.stringify(productInfo)
+        var par = {
+            openId: openId,
+            userAddressId : this.address.Id,
+            productInfo : productInfoStr
         }
-        // 是否代发
-        if(this.daifaInfo.isDaifa) {
-            // 代发里面包含
-            // ExpressFreight : this.calculateFreight.DiscountFreight,
-            // ExpressWeight: this.calculateFreight.Weight,
-            // ExpressFreightLog: this.calculateFreight.logId,
-            par = Object.assign(par , this.daifaInfo )
-        }
-        // 非标品订单需要增加的参数
-        if(this.checkOutInfo.QuoteStr && this.checkOutInfo.GroupJson) {
-            let par2 = {
-                QuoteStr : this.checkOutInfo.QuoteStr,
-                GroupJson : this.checkOutInfo.GroupJson,
-                PrintedMatterPrice: this.checkOutInfo.totalAmount
-            }
-            par = Object.assign(par , par2)
-            // 修改报价日志id
-            par.quoteLogModel = this.checkOutInfo.QuoteLogId
-            par = this.$wx.formatBoolToInt(par)
-            this.submitOrderByProductId2(par)
-        } else {
-            // 标准拼报价
-            par = this.$wx.formatBoolToInt(par)
-            this.submitOrderByProductId(par)
-        }
+        const res = await api.submitOrderByShoppingCart2(par)
+        this.submitAfter(res , productInfoStr)
     },
-    async submitOrderByProductId (par) {
-        this.$wx.showLoading()
-        const res = await api.submitOrderByProductId(par)
-        this.$wx.hideLoading()
-        this.submitAfter(res)
-        
-    },
-    async submitOrderByProductId2(par) {
-        this.$wx.showLoading()
-        const res = await api.submitOrderByProductId2(par)
-        this.$wx.hideLoading()
-        this.submitAfter(res)
-    },
-    submitAfter (res) {
+    submitAfter (res , productInfoStr) {
         if(res.success) {
-            // wx.redirectTo({
-            // url: '../pay/payResult?status=1&orderId=' + res.data
-            // });
             this.$router.replace({
-                path: '../pay/payResult?status=1&isShopping=1&Id=' + res.data
+                path: '../pay/pay',
+                query: {
+                    productInfo: this.totalAmount,
+                    id: res.data
+                }
             })
         } else {
             this.$wx.showErrorToast(res.msg)
@@ -429,6 +392,10 @@ export default {
         this.goodList = []
         this.goodList = template
     }
+  },
+  // 小程序原生下拉刷新
+  onPullDownRefresh: function() {
+    wx.stopPullDownRefresh()
   },
   // 原生的分享功能
   onShareAppMessage: function () {

@@ -75,57 +75,6 @@
             <button class="confirm" v-if="canPay" @click="payOrder">确认支付</button> 
         </view>
     </view>
-
-  
-    <!-- <view class="order-goods">
-        <view class="h">
-            <view class="label">商品信息</view>
-            <view class="status">{{orderInfo.OrderStatusStr}}</view>
-        </view>
-        <view class="goods">
-            <view class="item" v-for="(item, index) in orderGoods" :key="item.id" :data-index="index">
-                <view class="img">
-                    <image :src="item.ThumbnailsUrl"/>
-                </view>
-                <view class="info">
-                    <view class="t">
-                        <text class="name">{{orderInfo.ProductName}}</text>
-                        
-                        <text class="number">x{{orderInfo.Quantity}}</text>
-                    </view>
-                    <view class="attr">{{item.ParaStr}}</view>
-                    
-                </view>
-            </view>
-        </view>
-    </view> -->
-
-<!-- <view class="price">￥{{item.ReceivedAmount}}</view> -->
-
-    <!-- <view class="order-bottom">
-        <view class="address">
-            <view class="t">
-                <text class="name">{{orderInfo.ShipTo}}</text>
-                <text class="mobile">{{orderInfo.CellPhone}}</text>
-            </view>
-            <view class="b">{{orderInfo.RegionFullName + orderInfo.Address}}</view>
-        </view>
-        <view class="total">
-            <view class="t">
-                <text class="label">商品合计：</text>
-                <text class="txt">￥{{orderInfo.ProductTotalAmount}}</text>
-            </view>
-            <view class="t">
-                <text class="label">运费：</text>
-                <text class="txt">￥{{orderInfo.ReceivedAmount}}</text>
-            </view>
-        </view>
-        <view class="pay-fee">
-            <text class="label">实付：</text>
-            <text class="txt">￥{{orderInfo.ProductTotalAmount}}</text>
-        </view>
-    </view> -->
-  
 </view> 
 
 </template>

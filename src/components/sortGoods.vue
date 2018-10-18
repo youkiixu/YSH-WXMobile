@@ -7,7 +7,7 @@
                     <img class="img" :src="baseUrl + item.imagePath + '/1_350.png'" mode="scaleToFill"/>
                       <view class="b-txt">
                         <view class="price">
-                          <text class="icon">￥</text>{{item.MinSalePrice}}
+                          <text class="icon"></text>{{item.IsCustom ? '定制报价' : '￥' + item.MinSalePrice}}
                         </view>
                         <view class="name">{{item.ProductName}}</view>
                       </view>
@@ -23,14 +23,18 @@
 export default {
   methods: {
     toDetail (item) {
-      this.$wx.toGoodsDetail(item , this)
+      if(item.IsCustom) {
+        this.$wx.toBaoJia({ pid: item.QitemCode , title: item.ProductName , isDetail: true , ProductId: item.ProductId } , this)
+      } else {
+        this.$wx.toDetail({id : item.ProductId , title: item.ProductName} , this)
+      }
     }
   },
   computed: {
-        baseUrl() {
-            return this.$wx.baseUrl
-        }
-    },
+      baseUrl() {
+          return this.$wx.baseUrl
+      }
+  },
   props: {
     goodsList: {
       type: Array,

@@ -2,7 +2,7 @@
   <view class="nav a-section a-new">
     <view class="b clear">
       <view class="item" v-for="item of content.goodslist" :key="item.item_id">
-        <navigator :url="'../goods/goods?id='+ item.item_id">
+        <navigator  @click="toDetail(item)">
           <img class="img" :src="baseUrl+ item.pic" background-size="cover" />
           <view class="txt">
               <text class="name">{{item.title}}</text>
@@ -24,6 +24,11 @@ export default {
         baseUrl() {
             return this.$wx.baseUrl
         }
+    },
+    methods: {
+      toDetail(item) {
+        this.$emit('onClick' , item);
+      }
     }
 }
 </script>
@@ -48,7 +53,6 @@ export default {
   height: 510rpx;
   margin-top: 10rpx;
   margin-left: 10rpx;
-  border-radius: 7rpx;
 }
 .a-new .b .item:nth-child(1),.a-new .b .item:nth-child(2){
   margin-top: 0;
@@ -75,6 +79,9 @@ export default {
   padding: 20rpx;
   box-sizing: border-box;
   background-color: #fff;
+  border: none;
+  border-bottom-left-radius:10rpx;
+  border-bottom-right-radius:10rpx;
 }
 .a-new .item .txt .name {
   display: block;

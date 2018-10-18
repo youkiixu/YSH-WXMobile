@@ -1,7 +1,7 @@
 <template >
-<view>
+<view class=" openAttr ? 'scroll' : 'scroll-lock' " >
     <!-- 主体容器 -->
-    <view class="container" >
+    <view class="container">
       <!-- 头部导航 -->
       <view class="goodshead" id="goodshead">
         <view class="head-classify">
@@ -14,9 +14,10 @@
           <!-- </navigator>           -->
           <view class="classify-item detail"  @click="toNav('proDetail')">详情</view>
         </view>
-        <view class="head-share">
-          <img src="/static/images/upload.png"/>
-        </view>
+        <button class="head-share" open-type="share">
+          <!-- <img src="/static/images/upload.png"/> -->
+          分享
+        </button>
       </view>
       <!-- 图片轮播 -->
       <swiper class="goodsimgs" indicator-dots="true" autoplay="true" interval="3000" duration="1000">
@@ -212,8 +213,6 @@
       <view class="r" @click="SubmitByProduct" >立即购买</view>
     </view>
 
-
-
 </view>
 </template>
 
@@ -223,7 +222,8 @@ import wx from 'wx';
 import wxParse from 'mpvue-wxparse'
 import express from '@/utils/express'
 import util from '@/utils/util'
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions ,mapMutations } from 'vuex'
+
 
 export default {
   components: {
@@ -297,12 +297,21 @@ export default {
   },
   mounted () {
     // this.id = 146
+    console.log(this.$route.query)
     if (this.$route.query.data) {
           const data = JSON.parse(this.$route.query.data);
           this.setTitle(data.ProductName)
           this.id = data.ProductId
           // 非标报价id , 标准品为0
           this.code = data.code ? data.code : 0
+
+          if(data.proSearchParam) {
+            console.log(util.decode(data.proSearchParam))
+            var param = {
+              dataStr: util.decode(data.proSearchParam)
+            }
+            this.data.setProSearchParam(param)
+          }
       }
     this.refresh()
   },
@@ -328,6 +337,7 @@ export default {
     ])
   },
   methods: {
+    ...mapMutations(['setProSearchParam']),
     ...mapActions(['submitByProductId' , 'SubmitByProductId2']),
     async refresh() {
       // 请空已选的kiuId
@@ -732,6 +742,9 @@ export default {
         wx.setNavigationBarTitle({
             title: text
         })
+    },
+    shareGoods() {
+
     }
   },
   watch: {
@@ -753,11 +766,29 @@ export default {
   },
   // 原生的分享功能
   onShareAppMessage: function () {
-    return {
-      title: 'sassShop',
-      desc: '印生活',
-      path: '/pages/goods/goods'
-    }
+     const data = JSON.parse(this.$route.query.data);
+      const ProductId = this.detailInfo.ProductId
+      // 非标报价id , 标准品为0
+      const code = this.code != 0 ? this.code : undefined
+      const par = {
+        ProductId: ProductId,
+        ProductName: this.detailInfo.ProductName,
+        code: code
+      }
+      let urlPath = '/pages/goods/goods?data=' + JSON.stringify(par)
+      if(this.detailInfo.IsCustom) {
+        urlPath += '&&proSearchParam=' + util.encode(this.proSearchParam.dataStr)
+      }
+
+      let shareInfo = {
+        title: this.detailInfo.ProductName,
+        desc: this.detailInfo.ShopName,
+        path: urlPath,
+        imageUrl: this.RequestUrl + this.gallery[0]
+      }
+
+
+    return shareInfo
   },
     // 每次打开触发，更新数据
   onShow () {
@@ -769,6 +800,16 @@ export default {
 <style>
 @import "../../utils/wxParse/wxParse.wxss";
 
+page{
+  height: 100%;
+}
+.scroll-lock{
+  height: 100%;
+  overflow-y: hidden;
+}
+.scroll{
+  overflow-y: auto;
+}
 .container {
   background-color: #f1f1f1;
   margin-bottom: 100rpx;
@@ -1015,7 +1056,7 @@ export default {
   background-color: white;
   padding: 0 30rpx;
   box-sizing: border-box;
-  border-bottom: 1px solid #d9d9d9;
+  border-bottom: 1rpx solid #f1f1f1;
 }
 
 .comments .h .t {
@@ -1087,12 +1128,14 @@ export default {
   font-size: 28rpx;
   color: #555555;
   text-align: center;
-  margin-top: 5rpx;
+  margin-top: 30rpx;
 }
 .proDetail{
   margin-top: 30rpx;
   background-color: white;
   width: 100%;
+  padding: 0 20rpx 100rpx 20rpx;
+  box-sizing: border-box;
 }
 .proDetail .title{
   height: 75rpx;
@@ -1473,7 +1516,7 @@ export default {
 
 .attr-pop .img-info {
   width: 687.5rpx;
-  padding-bottom: 50rpx;
+  padding-bottom: 25rpx;
   position: relative; 
   border-bottom: 1px solid #ececec;
 }
@@ -1577,42 +1620,44 @@ export default {
 }
 .number-item .selnum {
   float: right;
-  margin-top: 22rpx;
-  margin-right: 30rpx;
-  width: 200rpx;
+  margin-top: 10rpx;
+  margin-right: 50rpx;
   height: 55rpx;
   display: flex;
   font-size: 29rpx;
 }
 
 .number-item .cut {
-  width: 60rpx;
-  height: 55rpx;
+  width: 80rpx;
+  height: 80rpx;
   text-align: center;
-  line-height: 55rpx;
+  line-height: 80rpx;
   background-color: #f4f4f4;
   border-radius: 5rpx;
+  font-size: 40rpx;
 }
 
 .number-item .number {
-  width: 68rpx;
-  height: 55rpx;
+  width: 90rpx;
+  height: 80rpx;
   text-align: center;
-  line-height: 55rpx;
+  line-height: 80rpx;
   float: left;
   margin-left: 3rpx;
   background-color: #f4f4f4;
   border-radius: 5rpx;
+  font-size: 28rpx;
 }
 
 .number-item .add {
-  width: 60rpx;
-  height: 55rpx;
+  width: 80rpx;
+  height: 80rpx;
   text-align: center;
-  line-height: 55rpx;
+  line-height: 80rpx;
   margin-left: 3rpx;
   background-color: #f4f4f4;
   border-radius: 5rpx;
+  font-size: 40rpx;
 }
 
 .car-btn{

@@ -149,7 +149,6 @@ const store = new Vuex.Store({
       loading()
       const res = await api.submitByShoppingCart(par)
       hideLoading()
-      console.log(res)
       if (res.success) {
         vm.commit('setCheckOutInfo' , res.data)
         wx.navigateTo({

@@ -2,7 +2,7 @@
   <view class="nav a-section a-popular">
     <view class="b">
       <view class="item" v-for="item of content.goodslist" :key="item.item_id">
-        <navigator :url="'/pages/goods/goods?id=' + item.item_id">
+        <navigator @click="toDetail(item)">
           <img class="img" :src="baseUrl+ item.pic" background-size="cover" />
           <view class="right">
             <view class="text">
@@ -26,6 +26,11 @@ export default {
         baseUrl() {
             return this.$wx.baseUrl
         }
+    },
+    methods: {
+      toDetail(item) {
+        this.$emit('onClick' , item);
+      }
     }
 }
 </script>
