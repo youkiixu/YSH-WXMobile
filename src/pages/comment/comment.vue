@@ -20,7 +20,7 @@
       </view>
       <view class="comment">{{item.ReviewContent}}</view>
       <view class="imgs" v-if="item.Images">
-        <image class="img" v-for="(iitem, iindex) in item.AppendImages" :key="iitem.id" :src="baseUrl + iitem.AppendImages" :data-index="iindex"/>
+        <image class="img" v-for="(iitem, iindex) in item.AppendImages" :key="iitem.id" :src="baseUrl + iitem" :data-index="iindex"/>
       </view>
       <!-- <view class="imgs" v-if="item.AppendImages.length">
         <image class="img" v-for="(iitem, iindex) of item.AppendImages" :key="iitem.id" :src="iitem.AppendImages" :data-index="iindex"/>
@@ -57,9 +57,13 @@ export default {
       hasPicCount: 0,
       allPage: 1,
       picPage: 1,
-      size: 20,
+      size: 15,
       commentType: 1,
-      baseUrl: ''
+    }
+  },
+  computed: {
+    baseUrl ()   {
+        return this.$wx.baseUrl
     }
   },
   async mounted () {
@@ -89,10 +93,24 @@ export default {
     async getCommentList () {
       this.ProductId = this.$route.query.valueId     
       this.pageNo++
-      const res = await api.getCommentList({ ProductId: this.ProductId , pageNo: this.pageNo , commentType: this.commentType});      
+      const res = await api.getCommentList({ ProductId: this.ProductId , pageNo: this.pageNo  , pageSize: this.size, commentType: this.commentType});      
       if (res.success) {
-        this.baseUrl = res.RequestUrl
-       this.comments = this.comments.concat(res.comments)      
+       var commentList = []
+       res.comments.map(item => {
+           if(item.Images) {
+               item.AppendImages = []
+                let images = item.Images.split(',')
+                images.map(str => {
+                    item.AppendImages.push(str)
+                })
+               
+           }
+           commentList.push(item)
+       })
+
+       this.comments = this.comments.concat(commentList)  
+
+       console.log(this.comments)
        this.allCount = res.goodComment
        this.hasPicCount = res.hasImages  
       }
@@ -226,7 +244,7 @@ export default {
 
 .comments .imgs{
     width: 720rpx;
-    height: 150rpx;
+    /* height: 150rpx; */
     margin-bottom: 25rpx;
 }
 

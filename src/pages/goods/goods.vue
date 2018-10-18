@@ -28,7 +28,7 @@
           <!-- 图片轮播 -->
           <swiper class="goodsimgs" indicator-dots="true" autoplay="true" interval="3000" duration="1000">
               <swiper-item v-for="(item, index) of gallery" :key="item.id" :data-index="index">
-              <img :src="RequestUrl + item" background-size="cover"/>
+              <img :src="baseUrl + item" background-size="cover"/>
               </swiper-item>
           </swiper>
           <!-- 商品信息 -->
@@ -104,7 +104,7 @@
           <view class="proDetail" id="proDetail">
             <view class="title">商品详情</view>
             <view class="content">
-              <wxParse :imageProp="baseUrl" :content="goodDetailHTMLstr" />
+              <wxParse :imageProp="parseUrl" :content="goodDetailHTMLstr" />
             </view>
           </view>  
         </view> 
@@ -330,6 +330,9 @@ export default {
       }
     },
     baseUrl () {
+      return this.$wx.baseUrl
+    },
+    parseUrl () {
       var obj = {
         mode: 'aspectFit',
         domain: 'kiy.cn'

@@ -9,29 +9,6 @@
     </view>
     <view class="right" @click="closeSearch">取消</view>
   </view>
-  <!-- <view class="no-search" v-if="!searchStatus">
-      <view class="serach-keywords search-history" v-if="!keyword && historyKeyword.length">
-    <view class="h">
-      <text class="title">历史记录</text>
-      <img class="icon" @click="clearHistory" src="http://nos.netease.com/mailpub/hxm/yanxuan-wap/p/20150730/style/img/icon-normal/del1-93f0a4add4.png"/>
-    </view>
-    <view class="b">
-      <view class="item" @click="onKeywordTap" :data-keyword="item" v-for="(item, index) of historyKeyword" :key="item" :data-index="index" hover-class="navigator-hover">{{item}}</view>
-    </view>
-  </view>
-  <view class="serach-keywords search-hot" v-if="!keyword">
-    <view class="h">
-      <text class="title">热门搜索</text>
-    </view>
-    <view class="b">
-      <view :class="item.is_hot === 1 ? 'active item' : 'item'" hover-class="navigator-hover" @click="onKeywordTap" :data-keyword="item.keyword" v-for="(item, index) of hotKeyword" :key="item.keyword" :data-index="index">{{item.keyword}}</view>
-    </view>
-  </view>
-  <view class="shelper-list" v-if="keyword">
-    <view class="item" hover-class="navigator-hover" v-for="(item, index) of helpKeyword" :key="item" :data-index="index" @click="onKeywordTap" :data-keyword="item">{{item}}</view>
-  </view>
-  </view> -->
-
   <view class="sort" v-if="searchStatus">
     <view class="sort-box">
       <view :class=" currentSortType == 'default' ? 'active item' : 'item'"  @click="openSortFilter" id="defaultSort">
@@ -53,8 +30,7 @@
   </view>
 
   <view class="search-result" v-if="searchStatus && goodsList.length">
-    <sortGoods :currentSortType = currentSortType :currentSortOrder = currentSortOrder :openSortFilter = openSortFilter :categoryFilter = categoryFilter
-    :filterCategory = filterCategory :selectCategory = selectCategory :goodsList = goodsList></sortGoods>
+    <sortGoods :goodsList = goodsList></sortGoods>
   </view>
 
   <view class="search-result-empty" v-if="!goodsList.length && searchStatus">
@@ -219,11 +195,15 @@ page{
   background-color: #f4f4f4;
 }
 .sort{
-    position: relative;
-    background: #fff;
-    width: 100%;
+    position: fixed;
     height: 78rpx;
-    margin-top: 91rpx;
+    left:0;
+    top: 91rpx;
+    z-index: 1000;
+    background: #fff;
+    /* width: 100%;
+    height: 78rpx;
+    margin-top: 91rpx; */
 }
 
 .sort-box{
@@ -441,7 +421,9 @@ page{
     color: #333;
     border-bottom: 1px solid #f4f4f4;
 }
-
+.search-result {
+  padding-top: 172rpx;
+}
 .search-result-empty{
     width: 100%;
     height: 100%;
