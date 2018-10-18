@@ -3,8 +3,8 @@
 
 <view class="collect-head">
    <view class="sort">  
-      <view class="item">商品收藏</view>  
-      <view class="item">厂家收藏</view>  
+      <view class="item" @click="GoodsCollect">商品收藏</view>  
+      <view class="item" @click="shopCollect">厂家收藏</view>  
       <view class="item">我的足迹</view>   
   </view>
   <view class="classifi">  
@@ -21,10 +21,10 @@
   <view class="goodslist">
       <view class="group-item">
         <view class="goods">
-          <view class="item clear" @click="openGoods"  @touchstart="touchStart" @touchend="touchEnd"
-      v-for="(item, index) of collectList" :key="item.id" :data-index="index">
+          <view class="item clear"  @click="openGoods"  @touchstart="touchStart" @touchend="touchEnd"
+      v-for="(item, index) of collectList" :key="item.Id" :data-index="index">
       <!-- <view :class="selectGoods.Id == item.Id ? 'checked checkbox' : 'checkbox'"  :data-item-index="index"></view> -->
-            <view class="checkbox" v-if="iseditGoodsCollect"></view>
+            <view :class="selectGoods.Id == item.Id ? 'checked checkbox' : 'checkbox'" @click="checkedItem(item)" :data-item-index="index" v-if="iseditGoodsCollect"></view>
             <view class="cart-goods clear">
               <img class="img" :src="item.imagePath"/>
               <view class="info">
@@ -47,7 +47,7 @@
       <!-- <view :class="checkedAllStatus ? 'checked checkbox' : 'checkbox'" @click="checkedAll">全选({{cartTotal.checkedGoodsCount}})</view> -->
       <!-- <view class="delete" @click="deleteCart" v-if="isEditCart">删除</view> -->
       <view class="checkbox" @click="checkedAll">全选</view>
-      <view class="delete" @click="deleteCart">删除</view>
+      <view class="delete" @click="deleteGoods">删除</view>
       
     </view>
 
@@ -91,7 +91,9 @@ export default {
       pageSize: 20,
       isgoodsCollect:true,
       isshopCollect:false,
-      iseditGoodsCollect:false
+      iseditGoodsCollect:false,
+      checkedAllStatus: true,
+      selectGoods:0
     }
   },
   async mounted () {
@@ -114,20 +116,17 @@ export default {
     editGoodsCollect () {
       // 编辑状态
       if (this.iseditGoodsCollect) {
-        // this.getCartList();
+        this.GetFavoriteProductList()
         this.iseditGoodsCollect = !this.iseditGoodsCollect;
       } else {
         // 非编辑状态
-        // let tmpCartList = this.cartGoods.map(function (v) {
-        //   v.checked = false;
-        //   return v;
-        // });
-        // this.editCartList = this.cartGoods;
-        // this.cartGoods = tmpCartList;
         this.iseditGoodsCollect = !this.iseditGoodsCollect;
-        // this.checkedAllStatus = this.isCheckedAll();
-        // this.cartTotal.checkedGoodsCount = this.getCheckedGoodsCount();
+      
       }
+    },
+    // checkbox的点击事件
+    async checkedItem (item) {
+      this.selectGoods = item
     },
 
     // 长按删除，点击进入商品详情
@@ -155,7 +154,7 @@ export default {
                   icon: 'success',
                   duration: 2000
                 });
-                that.getCollectList();
+                that.GetFavoriteProductList();
               }
             }
           }
