@@ -19,9 +19,6 @@
         <text class="txt">评论</text>
       </view>
     </view>
-    <!-- <view class="sort-box-category" v-if="categoryFilter">
-      <view :class="item.checked ? 'active item' : 'item'" v-for="(item, index) of filterCategory" :key="cate-item.id" :data-category-index="index" @click="selectCategory">{{item.name}}</view>
-    </view> -->
   </view>
 
 
@@ -35,34 +32,11 @@
     </view>
   </view>
   
-
-    <scroll-view scroll-y="true" :scroll-top="scrollTop" class="cate-out"  bindscroll="onPageScroll">
-        <view class="cate-item">
-            <!-- <view class="h">
-                <text class="name">{{currentCategory.name}}</text>
-                <text class="desc">{{currentCategory.front_name}}</text>
-            </view> -->
-            <view class="b">
-                <view v-for="item of goodsList" :key="item.ProductId" :class="(index + 1) % 2 === 0 ? 'item-b item' : 'item'"
-                   @click="toGoods(item)" >
-                    <img class="img" :src="baseUrl + item.imagePath + '/1_350.png'" mode="scaleToFill" />
-                    <view class="b-txt">                                         
-                      <view class="name">{{item.ProductName}}</view>
-                       <view class="ShopName">{{item.ShopName}}</view>
-                       <view class="b-bottom clear">
-                          <view class="price">
-                           <text class="icon"></text>{{item.IsCustom ? '定制报价' : '￥' + item.MinSalePrice}}
-                          </view> 
-                          <view class="dealNum">成交 {{item.SaleCounts}} 笔</view> 
-                       </view>
-                      
-                    </view>
-                </view>
-            </view>
-        </view>
-    </scroll-view>
-
-
+  <view class="search-result">
+    <scroll-view scroll-y="true" :scroll-top="scrollTop" class="cate-out" bindscroll="onPageScroll">
+      <sortGoods :goodsList="goodsList"></sortGoods>
+    </scroll-view>   
+  </view>
     <view class="scollTop"  @click="toTop" :hidden="!floorstatus">顶部</view>
 </view>
 </template>
@@ -71,8 +45,12 @@
 import api from '@/utils/api'
 import wx from 'wx'
 import { mapState } from 'vuex'
+import sortGoods from '@/components/sortGoods'
 
 export default {
+  components: {
+    sortGoods
+  },
   data () {
     return {
       navList: [],
@@ -86,7 +64,7 @@ export default {
       categoryFilter: false,
       keyword: '',
       scrollLeft: 0,
-      scrollTop: 5,
+      scrollTop: 1,
       scrollHeight: 0,
       floorstatus: false,
       page: 1,
@@ -122,7 +100,6 @@ export default {
   methods: {
      // 三个排序条件的点击事件
     openSortFilter: function (event) {
-      // this.goodsList = []
       let currentId = event.currentTarget.id;
       switch (currentId) {        
         case 'salesSort':
@@ -185,7 +162,6 @@ export default {
     },
     // 切换商品类别
     switchCate (event) {
-      // console.log('触发了点击事件，event为：', event);
       if (this.Id === event.currentTarget.dataset.id) {
         return false;
       }
@@ -211,7 +187,6 @@ export default {
     toGoods(item) {
       // 标准品false
       if(item.IsCustom) {
-        // this.$wx.toDetail({id : item.ProductId , title: item.ProductName , code : item.QitemCode} , this)
         this.$wx.toBaoJia({ pid: item.QitemCode , title: item.ProductName , isDetail: true , ProductId: item.ProductId } , this)
       } else {
         this.$wx.toDetail({id : item.ProductId , title: item.ProductName} , this)
@@ -227,31 +202,23 @@ export default {
       } else {
        this.floorstatus = false
       }
-    // this.page++
-    // this.searchGoods()
+   
     },
-  // 小程序原生上拉加载
-  // onReachBottom () {
-  //   this.page++
-  //   this.searchGoods()
-  // },
+  //小程序原生上拉加载
+  onReachBottom () {
+    this.page++
+    this.searchGoods()
+  },
   // 小程序原生下拉刷新
   onPullDownRefresh: function() {
     this.refresh()
     wx.stopPullDownRefresh()
-  },
-  // 原生的分享功能
-  onShareAppMessage: function () {
-    return {
-      title: 'sassShop',
-      desc: '印生活',
-      path: '/pages/category/category'
-    }
   }
 }
 </script>
 
 <style scoped>
+@import "../../css/sortGoods.css";
 .container{
     background: #f1f1f1;
 }
@@ -384,105 +351,10 @@ export default {
     border-bottom: 2px solid #009e96;
 }
 
-.cate-item{
-    margin-top: 172rpx;
-    margin-bottom: 20rpx;
-    height: auto;
-    overflow: hidden;
+.search-result{
+    padding-top: 172rpx;
 }
 
-.cate-item .h{
-    height: 145rpx;
-    width: 750rpx;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-
-.cate-item .h .name{
-    display: block;
-    height: 35rpx;
-    margin-bottom: 18rpx;
-    font-size: 30rpx;
-    color: #333;
-}
-
-.cate-item .h .desc{
-    display: block;
-    height: 24rpx;
-    font-size: 24rpx;
-    color: #999;
-}
-
-.cate-item .b{
-  width: 750rpx;
-  padding: 7rpx 13rpx;
-  box-sizing: border-box;
-  height: auto;
-  overflow: hidden;
-  background-color: #f1f1f1;
-}
-.cate-item .b .item{
-  float: left;
-  background: #fff;
-  /* width: 350rpx; */
-  width: 49%;
-  height: 540rpx;
-  overflow: hidden;
-}
-.cate-item .b .item{
-  margin-top: 15rpx;
-}
-.cate-item .b .item:nth-child(2n){
-    margin-left: 15rpx;
-}
-.cate-item .item .img{
-  display: block;
-  width: 100%;
-  height: 400rpx;
-  overflow: hidden;
-  background: #666666;
-}
-.cate-item .b-txt{
-  width: 100%;
-  height: 140rpx;
-  padding: 15rpx 10rpx;
-  box-sizing: border-box;
-}
-.cate-item .b-txt .name{
-  font-size: 24rpx;
-  color: #282828;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow:ellipsis;
-}
-.cate-item .b-txt .ShopName{
-  width: 100%;
-  font-size: 22rpx;
-  color: #666666;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow:ellipsis;
-}
-.cate-item .b-txt .b-bottom .price{
-  width: 50%;
-  font-size: 32rpx;
-  color: #dc2121;
-  float: left;
-  line-height: 50rpx;
-}
-.cate-item .b-txt .b-bottom .icon{ 
-  font-size: 28rpx;
-}
-.cate-item .b-txt .b-bottom .dealNum{
-  width: 50%;
-  font-size: 20rpx;
-  color: #999999;
-  float: left;
-  text-align: right;
-  line-height: 50rpx;
-}
 .scollTop{
   width: 86rpx;
   height: 86rpx;

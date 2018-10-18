@@ -85,14 +85,6 @@ export default {
         this.$wx.showErrorToast('发起支付失败')
       }
     }
-  },
-  // 原生的分享功能
-  onShareAppMessage: function () {
-    return {
-      title: 'sassShop',
-      desc: '印生活',
-      path: '/pages/pay/pay'
-    }
   }
 }
 </script>

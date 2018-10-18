@@ -93,18 +93,11 @@ export default {
       isshopCollect:false,
       iseditGoodsCollect:false,
       checkedAllStatus: false,
-      selectGoods:0
+      selectGoods:0,
+      ProductIds:0
     }
   },
    // 每次打开触发，更新数据
-  onShow () {
-    this.collectList = []
-    this.pageNo = 0
-    this.checkedAllStatus = false
-    this.iseditGoodsCollect = false
-    this.GetFavoriteProductList()
-    
-  },
   async mounted () {
     await Promise.all([
       this.GetFavoriteProductList()
@@ -158,37 +151,43 @@ export default {
       return this.collectList.every(function (element, index, array) {
         if (element.checked === true) {
           return true;
-        } else {  
+        } else {
           return false;
         }
       });
     },
 
      // 点击“删除所选”
-    deleteGoods () {     
-      this.collectList.map(item => {
-        if(item.checked) {
-          this.deleteCartApi(item.Id)
-        }
-      })  
-    },
-     async deleteCartApi (id) {
+     async deleteGoods () {
       const openId = wx.getStorageSync('openId')
+      var idStr = ''
+      var ids = ''
+      this.collectList.map((item , index) => {
+          if(item.checked){
+            idStr += item.ProductId + ','
+            ids += item.Id + ','
+          }
+      })
       var par = {
         openId: openId,
-        Ids: id,      
+        Ids: ids,    
+        ProductIds: idStr 
       }
       this.$wx.showLoading()
+      
       const res = await api.CancelConcernProducts(par)
       this.$wx.hideLoading() 
       if(res.success) {
-        this.collectList = this.collectList.filter(function (element, index, array) {
-        if (element.Id === par.Ids) {        
-            return false;           
-          } else {
-            return true;            
-          }         
-        })         
+        // this.collectList = this.collectList.filter(function (element, index, array) {
+        // if (element.Id === par.Ids) {        
+        //     return false;           
+        //   } else {
+        //     return true;            
+        //   }         
+        // })    
+        this.pageNo = 0
+        this.collectList = []
+        this. GetFavoriteProductList()    
         this.$wx.showSuccessToast('移除成功!')
       } else {
         this.$wx.showErrorToast(res.msg)

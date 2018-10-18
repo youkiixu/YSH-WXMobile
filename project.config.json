@@ -30,7 +30,7 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 18,
+			"current": 19,
 			"list": [
 				{
 					"id": -1,
@@ -145,6 +145,12 @@
 					"name": "购物车下单页",
 					"pathName": "pages/cart/cartCheckout",
 					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "评论页",
+					"pathName": "pages/comment/comment",
+					"query": "valueId=61"
 				}
 			]
 		}

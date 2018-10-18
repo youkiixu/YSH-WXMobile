@@ -160,8 +160,8 @@ export default {
   // 原生的分享功能
   onShareAppMessage: function () {
     return {
-      title: 'sassShop',
-      desc: '印生活',
+      title: '印生活商城',
+      desc: '我的订单',
       path: '/pages/ucenter/order'
     }
   },

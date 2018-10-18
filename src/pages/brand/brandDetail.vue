@@ -57,7 +57,6 @@ export default {
         this.id = parseInt(this.$route.query.id);
       }
       const res = await api.getBrandDetail({ id: this.id });
-      // console.log('品牌详情，请求结果', res);
       if (res.errno === 0) {
         this.brand = res.data.brand;
         // 获取该制造商的商品信息
@@ -68,7 +67,6 @@ export default {
     // 获取商品列表信息
     async getGoodsList () {
       const res = await api.getGoodsList({ brandId: this.id, page: this.page, size: this.size });
-      // console.log('商品列表，请求结果', res);
       if (res.errno === 0) {
         this.goodsList = res.data.goodsList;
       }

@@ -25,30 +25,6 @@
     
     <view class="add-address"  @click="addressAddOrUpdate" data-address-id="0">新建</view>
 </view>
-
-<!-- <view class="container">
-    <view class="address-list" v-if="addressList.length">
-        <view class="item" v-for="(item, index) of addressList" :key="item.Id" @click="selectAddress(item)"
-          :data-address-id="item.Id" :data-index="index">
-            <view class="l">
-                <view class="name">{{item.ShipTo}}</view>
-                <view class="default" v-if="item.IsDefault">默认</view>
-            </view>
-            <view class="c">
-                <view class="mobile">{{item.Phone}}</view>
-                <view class="address">{{item.RegionFullName}} {{item.Address}}</view>
-            </view>
-            <view class="r">
-                <image @click.stop="addressAddOrUpdate" :data-address-id="item.Id" class="del" src="http://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/address-edit-7fee7b0d63.png"/>
-            </view>
-        </view>
-    </view>
-    <view class="empty-view" v-if="addressList.length <= 0">
-      <image class="icon" src="http://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/noAddress-26d570cefa.png"/>
-      <text class="text">收货地址在哪里</text>
-    </view>
-    <view class="add-address"  @click="addressAddOrUpdate" data-address-id="0">新建</view>
-</view> -->
 </template>
 
 <script>
@@ -70,7 +46,6 @@ export default {
     await Promise.all([
       this.getUserAddressList(this.userInfo.Id)
     ])
-    console.log(this.addressList)
   },
   methods: {
     ...mapMutations(['set_address']),
@@ -102,14 +77,6 @@ export default {
       // 回到下单页
       this.$router.back()
 
-    }
-  },
-  // 原生的分享功能
-  onShareAppMessage: function () {
-    return {
-      title: 'sassShop',
-      desc: '印生活',
-      path: '/pages/shopping/address'
     }
   }
 }

@@ -6,7 +6,7 @@
           <img class="img" :src="baseUrl+ item.pic" background-size="cover" />
           <view class="txt">
               <text class="name">{{item.title}}</text>
-              <text class="desc">新达标签印刷厂</text>
+              <!-- <text class="desc"></text> -->
               <text class="price">￥{{item.price}}</text>                        
             </view>
         </navigator>
@@ -85,13 +85,13 @@ export default {
 }
 .a-new .item .txt .name {
   display: block;
-  height: 40rpx;
+  height: 80rpx;
   line-height: 40rpx;
   font-size: 24rpx;
   color: #282828;
   width: 310rpx;
   overflow: hidden;
-  white-space: nowrap;
+  /* white-space: nowrap; */
   text-overflow:ellipsis;
 }
 .a-new .item .txt .desc {

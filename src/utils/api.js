@@ -2,7 +2,7 @@ import request from './request'
 
 let ApiKiyUrl = 'http://192.168.0.91:8008/'
 // const ApiKiyUrl = 'http://localhost:7634/'
-// ApiKiyUrl = 'https://www.kiy.cn/'
+//ApiKiyUrl = 'https://www.kiy.cn/'
 
 const api = {
   //获取sass首页
@@ -148,6 +148,10 @@ const api = {
   }),
    // 添加收藏
    AddFavoriteProduct: (paramObj) => request.post('/Wxmobile/Collection/AddFavoriteProduct', paramObj, {
+    baseURL: ApiKiyUrl
+  }),
+  // 判断商品是否已收藏
+  IsCollection: (paramObj) => request.post('/Wxmobile/Collection/IsCollection', paramObj, {
     baseURL: ApiKiyUrl
   }),
   // 取消收藏

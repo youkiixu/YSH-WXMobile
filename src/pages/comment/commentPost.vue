@@ -37,7 +37,6 @@ export default {
   methods: {
     // 监听输入事件
     bindInpuntValue (event) {
-      // console.log('监听输入事件', event);
       let value = event.target.value;
       // 判断是否超过140个字符
       if (value && value.length > 140) {
@@ -56,7 +55,6 @@ export default {
         typeId: this.typeId,
         content: this.content
       });
-      // console.log('提交评论，返回结果', res);
       if (res.errno === 0) {
         wx.showToast({
           title: '评论成功',
@@ -80,14 +78,6 @@ export default {
     // 返回上一页
     onClose () {
       this.$router.go(-1);
-    }
-  },
-  // 原生的分享功能
-  onShareAppMessage: function () {
-    return {
-      title: 'sassShop',
-      desc: '印生活',
-      path: '/pages/comment/commentPost'
     }
   }
 }

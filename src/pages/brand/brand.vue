@@ -40,11 +40,9 @@ export default {
   methods: {
     async getBrandList () {
       const res = await api.getBrandList({ page: this.page, size: this.size });
-      // console.log('品牌列表，请求结果', res);
       if (res.errno === 0) {
         // 品牌信息合并叠加
         this.brandList = this.brandList.concat(res.data.data);
-        // 总页码，47条/10 共5页
         this.totalPages = res.data.totalPages;
       }
     }

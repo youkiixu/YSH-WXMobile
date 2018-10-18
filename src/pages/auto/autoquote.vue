@@ -109,7 +109,6 @@ export default {
         }).exec()
       },
       queryQuote(item) {
-          console.log(item)
           if(item.IsPriceDisplayPage != 0 && item.ProductId != 0){
             // this.$wx.toDetail({id : item.ProductId , title: item.qName , code : item.Code} , this)
             this.$wx.toBaoJia({ pid: item.Code , title: item.qName , isDetail: true , ProductId: item.ProductId } , this)
@@ -141,7 +140,6 @@ export default {
   },
   watch: {
     currentIndex () {
-      // console.log(this.currentIndex)
       if(this.contentHeight < this.navulHeight) {
         let h = this.currentIndex * this.navItemHeight
         if(h > this.contentHeight) {
@@ -162,9 +160,9 @@ export default {
   // 原生的分享功能
   onShareAppMessage: function () {
     return {
-      title: 'sassShop',
-      desc: '印生活',
-      path: '/pages/brand/brand'
+      title: '印生活商城',
+      desc: '自助报价',
+      path: '/pages/auto/autoquote'
     }
   },
 

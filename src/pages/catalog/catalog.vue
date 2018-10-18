@@ -92,7 +92,7 @@ export default {
     // 原生的分享功能？？
     onShareAppMessage: function () {
       return {
-        title: 'sassShop',
+        title: '印生活商城',
         desc: '印生活',
         path: '/pages/index/index'
       }

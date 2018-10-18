@@ -14,9 +14,8 @@ import aNew from '@/components/index-components/goods-item/a-new'
 import aPopular from '@/components/index-components/goods-item/a-popular'
 import aTopic from '@/components/index-components/goods-item/a-topic'
 import goodGrid from '@/components/index-components/goods-item/good-grid'
-import api from '@/utils/api'
 // 商品：4
-export default {
+export default { 
     name: 'indexGoods',
     components: {
       aBrand,
@@ -29,23 +28,10 @@ export default {
         content: Object
     },
     mounted () {
-      // console.log(this.content.layout)
     },
     methods: {
       async toDetail(obj) {
-        const ProductId = obj.item_id
-        const res = await api.getProductQitemCode({Id : ProductId})
-        if(res.success) {
-          const pid = res.data
-          if( pid != 0 ) {
-            this.$wx.toBaoJia({ pid: pid , ProductId , isDetail: true , ProductId: ProductId } , this)
-          } else {
-            this.$wx.toDetail({id : ProductId , title: obj.title} , this)
-          }
-        } else {
-          this.$wx.showErrorToast(res.msg)
-        }
-
+        this.$emit('onClick' , obj)
       }
     }
 }

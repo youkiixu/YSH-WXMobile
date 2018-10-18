@@ -1,25 +1,11 @@
 <template >
 <view class="container">
-  <!-- <swiper class="banner" indicator-dots="true" autoplay="true" interval="3000" duration="1000">
-    <swiper-item v-for="item of banner" :key="item.id">
-      <navigator :url="item.link">
-        <img :src="item.image_url" background-size="cover" />
-      </navigator>
-    </swiper-item>
-  </swiper> -->
   <view class="index-searchbar">
     <searchBar></searchBar>
   </view>
   <view v-for="(item , index ) in sassIndex" :key="index">
     <indexComponent :item="item"></indexComponent>
   </view>
-  
-  <!-- <view class="m-menu">
-    <navigator  class="item" :url="item.url" v-for="item of channel" :key="item.id">
-      <img :src="item.icon_url" background-size="cover" />
-      <text>{{item.name}}</text>
-    </navigator>
-  </view> -->
 </view>
 </template>
 
@@ -62,7 +48,7 @@ export default {
   // 原生的分享功能
   onShareAppMessage: function () {
     return {
-      title: 'sassShop',
+      title: '印生活商城',
       desc: '印生活',
       path: '/pages/index/index'
     }

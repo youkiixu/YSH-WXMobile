@@ -7,7 +7,7 @@
             <img class="img" :src="baseUrl+ item.pic" background-size="cover" />
             <view class="txt">
               <text class="name">{{item.title}}</text>
-              <text class="desc">新达标签印刷厂</text>
+              <!-- <text class="desc"></text> -->
               <text class="price">￥{{item.price}}</text>             
             </view>
             
@@ -115,13 +115,13 @@ export default {
 }
 .good-grid .item .txt .name {
   display: block;
-  height: 30rpx;
+  height: 60rpx;
   line-height: 30rpx;
   font-size: 20rpx;
   color: #282828;
   width: 190rpx;
   overflow: hidden;
-  white-space: nowrap;
+  /* white-space: nowrap; */
   text-overflow:ellipsis;
 }
 .good-grid .item .txt .desc {

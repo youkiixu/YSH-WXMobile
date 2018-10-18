@@ -18,10 +18,9 @@
             详情
           </view>
         </view>
-        <button class="head-share" open-type="share">
-          <!-- <img src="/static/images/upload.png"/> -->
-          分享
-        </button>
+        <!-- <button class="head-share" open-type="share">
+          <img src="/static/images/upload.png"/>
+        </button> -->
       </view>
 
       <scroll-view :scroll-into-view="toView" scroll-y="true" scroll-with-animation="true" class="src">
@@ -29,7 +28,7 @@
           <!-- 图片轮播 -->
           <swiper class="goodsimgs" indicator-dots="true" autoplay="true" interval="3000" duration="1000">
               <swiper-item v-for="(item, index) of gallery" :key="item.id" :data-index="index">
-              <img :src="RequestUrl + item" background-size="cover"/>
+              <img :src="baseUrl + item" background-size="cover"/>
               </swiper-item>
           </swiper>
           <!-- 商品信息 -->
@@ -39,8 +38,8 @@
                 <view class="c-price" v-if="!detailInfo.IsCustom"><text class="price-icon" >￥</text>{{detailInfo.Price}}</view>
                 <!-- 非标品价格 -->
                 <view class="c-price"  v-else><text class="price-icon" >￥</text>{{ListPriceInfo.sprice}}</view>
-                <view class="c-collect" @click="addCannelCollect">           
-                    <img class="icon" :src="collectProduImage"/>           
+                <view :class="collectStatus ? 'c-collect collected' : 'c-collect'"  @click="addCannelCollect">           
+                    <!-- <img class="icon" :src="collectProduImage"/>            -->
                 </view>
               </view>
               <view class="con-text">
@@ -105,101 +104,102 @@
           <view class="proDetail" id="proDetail">
             <view class="title">商品详情</view>
             <view class="content">
-              <wxParse :imageProp="baseUrl" :content="goodDetailHTMLstr" />
+              <wxParse :imageProp="parseUrl" :content="goodDetailHTMLstr" />
             </view>
           </view>  
         </view> 
       </scroll-view>
     </view>
     <!-- 模态浮层 -->
-    <view class="attr-pop-box" :hidden="!openAttr">
-      <view class="attr-pop" >
-          <view class="close" @click="closeAttr">
-            <img class="icon" src="/static/images/icon_close.png"/>
+    <view class="attr-pop-box" :hidden="!openAttr"  @click="closeAttr">
+
+    </view>
+    <view class="attr-pop"  :hidden="!openAttr">
+      <view class="close" @click="closeAttr">
+        <img class="icon" src="/static/images/icon_close.png"/>
+      </view>
+      <view class="img-info clear">
+        <img class="img" :src="RequestUrl + gallery[0]"/>
+        <view class="info">
+          <view class="c">
+            <view class="p" v-if="!detailInfo.IsCustom"><text class="p-icon">￥</text>{{detailInfo.Price}}</view>
+            <view class="p" v-else><text class="p-icon">￥</text>{{ListPriceInfo.sprice}}</view>
+            <view class="s" v-if="!detailInfo.IsCustom">库存：{{Stock}}</view>
+            <view class="a" v-if="!detailInfo.IsCustom">已选：<text>{{selectSkuStr.Color}} {{selectSkuStr.Size}} {{selectSkuStr.Version}} {{selectSkuStr.Material}} {{selectSkuStr.Fashion}} {{selectSkuStr.Grams}} {{selectSkuStr.Ensemble}}</text></view>
+            <view class="a" v-if="detailInfo.IsCustom"><text>{{ListPriceInfo.paraStr}}</text></view>
           </view>
-          <view class="img-info clear">
-            <img class="img" :src="RequestUrl + gallery[0]"/>
-            <view class="info">
-              <view class="c">
-                <view class="p" v-if="!detailInfo.IsCustom"><text class="p-icon">￥</text>{{detailInfo.Price}}</view>
-                <view class="p" v-else><text class="p-icon">￥</text>{{ListPriceInfo.sprice}}</view>
-                <view class="s" v-if="!detailInfo.IsCustom">库存：{{Stock}}</view>
-                <view class="a" v-if="!detailInfo.IsCustom">已选：<text>{{selectSkuStr.Color}} {{selectSkuStr.Size}} {{selectSkuStr.Version}} {{selectSkuStr.Material}} {{selectSkuStr.Fashion}} {{selectSkuStr.Grams}} {{selectSkuStr.Ensemble}}</text></view>
-                <view class="a" v-if="detailInfo.IsCustom"><text>{{ListPriceInfo.paraStr}}</text></view>
-              </view>
-          </view>
-          </view>
-          <scroll-view scroll-y class="spec-con">
-            <view class="spec-item" v-if="detailInfo.IsCustom">
-                <view class="name">点击选择参数</view>
-                <view class="values">
-                  <view class="selected value" @click="toBaojia">{{ListPriceInfo.paraStr}}</view>
-                </view>
+      </view>
+      </view>
+      <scroll-view scroll-y class="spec-con">
+        <view class="spec-item" v-if="detailInfo.IsCustom">
+            <view class="name">点击选择参数</view>
+            <view class="values">
+              <view class="selected value" @click="toBaojia">{{ListPriceInfo.paraStr}}</view>
             </view>
-            <view class="spec-item" v-if="detailInfo.Color.length != 0">
-                <view class="name">选择颜色</view>
-                <view class="values">
-                <view :class="item.SkuId == selectSku.Color ? 'selected value' : 'value'" @click="clickSkuValue('Color' , item.SkuId , item.Value)" v-for="(item, index) of detailInfo.Color" :key="index" :data-value-id="item.SkuId" :data-index="index" >{{item.Value}}</view>
-                </view>
+        </view>
+        <view class="spec-item" v-if="detailInfo.Color.length != 0">
+            <view class="name">选择颜色</view>
+            <view class="values">
+            <view :class="item.SkuId == selectSku.Color ? 'selected value' : 'value'" @click="clickSkuValue('Color' , item.SkuId , item.Value)" v-for="(item, index) of detailInfo.Color" :key="index" :data-value-id="item.SkuId" :data-index="index" >{{item.Value}}</view>
             </view>
-            <view class="spec-item"  v-if="detailInfo.Size.length != 0">
-                <view class="name">选择尺寸</view>
-                <view class="values">
-                <view :class="item.SkuId == selectSku.Size ? 'selected value' : 'value'" @click="clickSkuValue('Size' , item.SkuId , item.Value)" v-for="(item, index) of detailInfo.Size" :key="item.SkuId" :data-value-id="item.SkuId" :data-index="index" :data-name-id="item.SkuId">{{item.Value}}</view>
-                </view>
+        </view>
+        <view class="spec-item"  v-if="detailInfo.Size.length != 0">
+            <view class="name">选择尺寸</view>
+            <view class="values">
+            <view :class="item.SkuId == selectSku.Size ? 'selected value' : 'value'" @click="clickSkuValue('Size' , item.SkuId , item.Value)" v-for="(item, index) of detailInfo.Size" :key="item.SkuId" :data-value-id="item.SkuId" :data-index="index" :data-name-id="item.SkuId">{{item.Value}}</view>
             </view>
-            <view class="spec-item"  v-if="detailInfo.Version.length != 0">
-                <view class="name">选择规格</view>
-                <view class="values">
-                <view :class="item.SkuId == selectSku.Version? 'selected value' : 'value'" @click="clickSkuValue('Version' , item.SkuId , item.Value)" v-for="(item, index) of detailInfo.Version" :key="item.SkuId" :data-value-id="item.SkuId" :data-index="index" :data-name-id="item.SkuId">{{item.Value}}</view>
-                </view>
+        </view>
+        <view class="spec-item"  v-if="detailInfo.Version.length != 0">
+            <view class="name">选择规格</view>
+            <view class="values">
+            <view :class="item.SkuId == selectSku.Version? 'selected value' : 'value'" @click="clickSkuValue('Version' , item.SkuId , item.Value)" v-for="(item, index) of detailInfo.Version" :key="item.SkuId" :data-value-id="item.SkuId" :data-index="index" :data-name-id="item.SkuId">{{item.Value}}</view>
             </view>
-            <view class="spec-item"  v-if="detailInfo.Material.length != 0">
-                <view class="name">选择材料</view>
-                <view class="values">
-                <view :class="item.SkuId == selectSku.Material ? 'selected value' : 'value'" @click="clickSkuValue('Material' , item.SkuId , item.Value)" v-for="(item, index) of detailInfo.Material" :key="item.SkuId" :data-value-id="item.SkuId" :data-index="index" :data-name-id="item.SkuId">{{item.Value}}</view>
-                </view>
+        </view>
+        <view class="spec-item"  v-if="detailInfo.Material.length != 0">
+            <view class="name">选择材料</view>
+            <view class="values">
+            <view :class="item.SkuId == selectSku.Material ? 'selected value' : 'value'" @click="clickSkuValue('Material' , item.SkuId , item.Value)" v-for="(item, index) of detailInfo.Material" :key="item.SkuId" :data-value-id="item.SkuId" :data-index="index" :data-name-id="item.SkuId">{{item.Value}}</view>
             </view>
-            <view class="spec-item"  v-if="detailInfo.Fashion.length != 0">
-                <view class="name">选择款式</view>
-                <view class="values">
-                <view :class="item.SkuId == selectSku.Fashion ? 'selected value' : 'value'" @click="clickSkuValue('Fashion' , item.SkuId , item.Value)" v-for="(item, index) of detailInfo.Fashion" :key="item.SkuId" :data-value-id="item.SkuId" :data-index="index" :data-name-id="item.SkuId">{{item.Value}}</view>
-                </view>
+        </view>
+        <view class="spec-item"  v-if="detailInfo.Fashion.length != 0">
+            <view class="name">选择款式</view>
+            <view class="values">
+            <view :class="item.SkuId == selectSku.Fashion ? 'selected value' : 'value'" @click="clickSkuValue('Fashion' , item.SkuId , item.Value)" v-for="(item, index) of detailInfo.Fashion" :key="item.SkuId" :data-value-id="item.SkuId" :data-index="index" :data-name-id="item.SkuId">{{item.Value}}</view>
             </view>
-            <view class="spec-item"  v-if="detailInfo.Grams.length != 0">
-                <view class="name">选择克重</view>
-                <view class="values">
-                <view :class="item.SkuId == selectSku.Grams ? 'selected value' : 'value'" @click="clickSkuValue('Grams' , item.SkuId , item.Value)" v-for="(item, index) of detailInfo.Grams" :key="item.SkuId" :data-value-id="item.SkuId" :data-index="index" :data-name-id="item.SkuId">{{item.Value}}</view>
-                </view>
+        </view>
+        <view class="spec-item"  v-if="detailInfo.Grams.length != 0">
+            <view class="name">选择克重</view>
+            <view class="values">
+            <view :class="item.SkuId == selectSku.Grams ? 'selected value' : 'value'" @click="clickSkuValue('Grams' , item.SkuId , item.Value)" v-for="(item, index) of detailInfo.Grams" :key="item.SkuId" :data-value-id="item.SkuId" :data-index="index" :data-name-id="item.SkuId">{{item.Value}}</view>
             </view>
-            <view class="spec-item"  v-if="detailInfo.Ensemble.length != 0">
-                <view class="name">选择套餐</view>
-                <view class="values">
-                <view :class="item.SkuId == selectSku.Ensemble ? 'selected value' : 'value'" @click="clickSkuValue('Ensemble' , item.SkuId , item.Value)" v-for="(item, index) of detailInfo.Ensemble" :key="item.SkuId" :data-value-id="item.SkuId" :data-index="index" :data-name-id="item.SkuId">{{item.Value}}</view>
-                </view>
+        </view>
+        <view class="spec-item"  v-if="detailInfo.Ensemble.length != 0">
+            <view class="name">选择套餐</view>
+            <view class="values">
+            <view :class="item.SkuId == selectSku.Ensemble ? 'selected value' : 'value'" @click="clickSkuValue('Ensemble' , item.SkuId , item.Value)" v-for="(item, index) of detailInfo.Ensemble" :key="item.SkuId" :data-value-id="item.SkuId" :data-index="index" :data-name-id="item.SkuId">{{item.Value}}</view>
             </view>
-            <view class="spec-item" >
-                <view class="name">点击选择物流方式</view>
-                <view class="values">
-                  <view class="selected value" @click="selectWuliu">{{strYjtype}}<span>></span></view>
-                </view>
+        </view>
+        <view class="spec-item" >
+            <view class="name">点击选择物流方式</view>
+            <view class="values">
+              <view class="selected value" @click="selectWuliu">{{strYjtype}}<span>></span></view>
             </view>
-            <view class="number-item" v-if="!detailInfo.IsCustom">
-                <view class="name">数量</view>
-                <view class="selnum">
-                <view class="cut" @click="cutNumber">-</view>
-                <input v-model="number" class="number"  type="number" confirm-type="done"/>
-                <view class="add" @click="addNumber">+</view>
-                </view>
+        </view>
+        <view class="number-item" v-if="!detailInfo.IsCustom">
+            <view class="name">数量</view>
+            <view class="selnum">
+            <view class="cut" @click="cutNumber">-</view>
+            <input v-model="number" class="number"  type="number" confirm-type="done"/>
+            <view class="add" @click="addNumber">+</view>
             </view>
-          </scroll-view>
-          <view class="car-btn clear" v-if="!SubmitByProductType">
-              <view class="car-add" @click="addToCart">加入购物车</view>
-              <view class="car-buy" @click="SubmitByProduct">立即购买</view>
-          </view>
-          <view class="car-btn clear" v-if="SubmitByProductType">
-              <view class="car-buy" style="width:100%;" @click="SubmitByProduct">立即购买</view>
-          </view>
+        </view>
+      </scroll-view>
+      <view class="car-btn clear" v-if="!SubmitByProductType">
+          <view class="car-add" @click="addToCart">加入购物车</view>
+          <view class="car-buy" @click="SubmitByProduct">立即购买</view>
+      </view>
+      <view class="car-btn clear" v-if="SubmitByProductType">
+          <view class="car-buy" style="width:100%;" @click="SubmitByProduct">立即购买</view>
       </view>
     </view>
     <!-- tabbar -->
@@ -248,6 +248,7 @@ export default {
         Ensemble: []
       },
       id: 0,
+      Ids: '',
       // goods: {},
       gallery: [],
       // attribute: [],
@@ -266,6 +267,7 @@ export default {
       collectProduImage:'/static/images/collect.png',
       collectBackImage: '/static/images/share.png',
       goodDetailHTMLstr: '',
+      collectStatus:false,
       skuInfo: [],
       selectSku: {
         Color: 0,
@@ -302,11 +304,13 @@ export default {
   },
   mounted () {
     // this.id = 146
-    console.log(this.$route.query)
+    //console.log(this.$route.query)
     if (this.$route.query.data) {
           const data = JSON.parse(this.$route.query.data);
           this.setTitle(data.ProductName)
           this.id = data.ProductId
+          console.log('data为:',data)
+
           // 非标报价id , 标准品为0
           this.code = data.code ? data.code : 0
 
@@ -330,6 +334,9 @@ export default {
       }
     },
     baseUrl () {
+      return this.$wx.baseUrl
+    },
+    parseUrl () {
       var obj = {
         mode: 'aspectFit',
         domain: 'kiy.cn'
@@ -582,15 +589,54 @@ export default {
     },
     // 购物车的五角星，添加或是取消收藏
     async addCannelCollect () {
-        const openId = wx.getStorageSync('openId')
-        const res = await api.AddFavoriteProduct({ ProductId: this.id , openId: openId })   
-         if (res.success) {
-            // let data = JSON.parse(res.data)   
-           this.$wx.showSuccessToast('收藏成功')
-        } else {
-          this.$wx.showSuccessToast('收藏失败')
-        }            
+        // 判断商品是否已收藏
+         const openId = wx.getStorageSync('openId')
+         const res = await api.IsCollection({ ProductId: this.id , openId: openId }) 
+         let data = JSON.parse(res.data)     
+         this.collectStatus = res.data;
+         console.log('Ids',this.Id)
+
+          if (this.collectStatus) {//取消收藏
+                const openId = wx.getStorageSync('openId')
+                const res2 = await api.CancelConcernProducts({ Ids: this.Ids ,ProductIds : this.id,  openId: openId })
+                if (res2.success) {
+                  this.collectStatus = false;
+                this.$wx.showSuccessToast('取消成功')
+              } else {        
+                this.$wx.showSuccessToast('取消失败')
+              }                                
+            } else {//添加收藏          
+                  const openId = wx.getStorageSync('openId')
+                  const res1 = await api.AddFavoriteProduct({ ProductId: this.id , openId: openId }) 
+                  if (res1.success) {
+                  this.collectStatus = true;                 
+                  this.$wx.showSuccessToast('收藏成功')
+                  }          
+              } 
+
+
+        // const openId = wx.getStorageSync('openId')
+        // const res = await api.AddFavoriteProduct({ ProductId: this.id , openId: openId })  
+        //  if (res.success) {
+        //    this.$wx.showSuccessToast('收藏成功')
+        // } else {
+        //   this.$wx.showSuccessToast('收藏失败')
+        // }  
+        
     },
+    // 判断商品是否已收藏
+    //  async IsCollection () {
+    //   const openId = wx.getStorageSync('openId')
+    //   const res = await api.IsCollection({ ProductId: this.id , openId: openId }) 
+
+    //    if (res.success) { 
+    //         return res.data
+    //     } else {
+    //      return false
+    //       // this.$wx.showSuccessToast('未收藏')
+    //     }  
+    // },
+
     // 跳转到购物车页面
     openCartPage () {
       wx.switchTab({
@@ -934,17 +980,31 @@ page{
 .c-price .price-icon{
   font-size: 34rpx;
 }
-.goods-info .c-collect{
+/* .goods-info .c-collect{
   float: right;
   margin-top: 3rpx;
   width: 44rpx;
   height: 44rpx;
+  border: 1rpx solid red;
 
-}
+} 
 .goods-info .c-collect img{
   width: 44rpx;
   height: 44rpx;
   text-align: center;
+}*/
+.goods-info .c-collect{
+    float: right;
+    margin-top: 3rpx;
+    width: 44rpx;
+    height: 44rpx;
+    background: url(http://www.kiy.cn/Areas/wxMobile/Content/img/collect.png) no-repeat;
+    background-size: 44rpx;
+}
+
+.goods-info .collected{
+    background: url(http://www.kiy.cn/Areas/wxMobile/Content/img/collect-color.png) no-repeat;
+    background-size: 44rpx;
 }
 .goods-info .con-text{
   padding:10rpx 50rpx 0 30rpx;

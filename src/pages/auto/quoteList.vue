@@ -82,7 +82,6 @@ export default {
         ...mapActions(['SubmitByProductId2']),
         toDetail(item) {
             const openId = wx.getStorageSync('openId')
-            console.log(item)
             var par = {
                 openId: openId,
                 skuIds: item.ProductId + '_0_0_0_0_0_0_0',
@@ -96,7 +95,6 @@ export default {
                 QuoteStr: item.QuoteStr,
                 LimitTimeBuyId: item.LimitTimeBuyId,
             }
-            console.log(par)
             this.SubmitByProductId2(par)
         },
         async toCart(item) {

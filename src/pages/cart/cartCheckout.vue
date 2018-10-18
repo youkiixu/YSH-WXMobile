@@ -398,14 +398,6 @@ export default {
   // 小程序原生下拉刷新
   onPullDownRefresh: function() {
     wx.stopPullDownRefresh()
-  },
-  // 原生的分享功能
-  onShareAppMessage: function () {
-    return {
-      title: 'sassShop',
-      desc: '印生活',
-      path: '/pages/shopping/checkout'
-    }
   }
 }
 </script>
@@ -669,7 +661,7 @@ export default {
     line-height: 85rpx;
     padding: 0 20rpx;
     box-sizing: border-box;
-    border-bottom: 1rpx solid #f5f5f5;
+    border-bottom: 2rpx solid #f5f5f5;
 }
 .order-box .order-item:first-child{
     height: 100rpx;

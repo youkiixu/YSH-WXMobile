@@ -225,14 +225,6 @@ export default {
         }
 
     }
-  },
-  // 原生的分享功能
-  onShareAppMessage: function () {
-    return {
-      title: 'sassShop',
-      desc: '印生活',
-      path: '/pages/ucenter/orderDetail'
-    }
   }
 }
 </script>

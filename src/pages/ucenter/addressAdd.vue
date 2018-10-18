@@ -38,10 +38,6 @@
       <view class="region-select" v-if="openSelectRegion">
         <view class="hd">
           <view class="region-selected">
-            <!-- <view :class="['item', { selected: item.id === selectRegionId }]"
-            @click="selectRegionType(item , index)"  v-for="(item, index) of selectRegionList" :key="index">
-              {{item.name}}
-            </view> -->
             <view :class="['item', { selected: regionChina.id === selectRegionId }]" @click="selectRegionType('China' , -1)">
               {{regionChina.name}}
             </view>
@@ -306,14 +302,6 @@ export default {
         this.$wx.showErrorToast('保存失败')
       }
       
-    }
-  },
-  // 原生的分享功能
-  onShareAppMessage: function () {
-    return {
-      title: 'xbyjShop',
-      desc: '仿网易严选小程序商城',
-      path: '/pages/ucenter/addressAdd'
     }
   }
 }
