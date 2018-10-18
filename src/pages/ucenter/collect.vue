@@ -11,16 +11,21 @@
       <view class="inner">全部</view>  
       <view class="inner">降价</view>  
       <view class="inner">特卖</view> 
-      <view class="inner manage">管理</view>   
+      <view class="inner manage" @click="editGoodsCollect">管理</view>   
   </view>
 </view>
 
- <view class="list">
+
+<!-- 商品收藏 -->
+<view class="goodsCollect" v-if="isgoodsCollect">
+  <view class="goodslist">
       <view class="group-item">
         <view class="goods">
-          <view class="item" @click="openGoods"  @touchstart="touchStart" @touchend="touchEnd"
+          <view class="item clear" @click="openGoods"  @touchstart="touchStart" @touchend="touchEnd"
       v-for="(item, index) of collectList" :key="item.id" :data-index="index">
-            <view class="cart-goods">
+      <!-- <view :class="selectGoods.Id == item.Id ? 'checked checkbox' : 'checkbox'"  :data-item-index="index"></view> -->
+            <view class="checkbox" v-if="iseditGoodsCollect"></view>
+            <view class="cart-goods clear">
               <img class="img" :src="item.imagePath"/>
               <view class="info">
                 <view class="t">
@@ -38,20 +43,38 @@
       </view>
     </view>
 
-
-
-<!--   
-  <view class="collect-list">
-    <view class="item" @click="openGoods"  @touchstart="touchStart" @touchend="touchEnd"
-      v-for="(item, index) of collectList" :key="item.id" :data-index="index">
-      <image class="img" :src="item.imagePath"/>
-      <view class="info">
-        <view class="name">{{item.ProductName}}</view>
-        <view class="subtitle">{{item.Date}}</view>
-        <view class="price">￥{{item.MinSalePrice}}</view>
-      </view>
+      <view class="cart-bottom clear" v-if="iseditGoodsCollect">
+      <!-- <view :class="checkedAllStatus ? 'checked checkbox' : 'checkbox'" @click="checkedAll">全选({{cartTotal.checkedGoodsCount}})</view> -->
+      <!-- <view class="delete" @click="deleteCart" v-if="isEditCart">删除</view> -->
+      <view class="checkbox" @click="checkedAll">全选</view>
+      <view class="delete" @click="deleteCart">删除</view>
+      
     </view>
-  </view> -->
+
+
+</view>
+ 
+
+<!-- 厂家收藏 -->
+ <view class="shopCollect" v-if="isshopCollect">
+   <view class="shoplist">
+      <view class="shop-item">
+        <view class="shop">
+          <view class="item clear" @click="openShop"  @touchstart="touchStart" @touchend="touchEnd">
+      <!-- <view :class="selectGoods.Id == item.Id ? 'checked checkbox' : 'checkbox'"  :data-item-index="index"></view> -->
+            <!-- <view class="checkbox"></view> -->
+            <view class="cart-shop clear">
+              <img class="img"/>
+              <view class="info">广州市艺彩印务有限公司</view>
+            </view>
+          </view>        
+        </view>
+      </view>
+   </view>
+ </view>
+
+
+
 </view>
 </template>
 
@@ -65,7 +88,10 @@ export default {
       typeId: 0,
       collectList: [],
       pageNo:0,
-      pageSize: 20
+      pageSize: 20,
+      isgoodsCollect:true,
+      isshopCollect:false,
+      iseditGoodsCollect:false
     }
   },
   async mounted () {
@@ -84,6 +110,26 @@ export default {
         this.collectList = this.collectList.concat(tableData.Table)
       }
     },
+    // 商品管理
+    editGoodsCollect () {
+      // 编辑状态
+      if (this.iseditGoodsCollect) {
+        // this.getCartList();
+        this.iseditGoodsCollect = !this.iseditGoodsCollect;
+      } else {
+        // 非编辑状态
+        // let tmpCartList = this.cartGoods.map(function (v) {
+        //   v.checked = false;
+        //   return v;
+        // });
+        // this.editCartList = this.cartGoods;
+        // this.cartGoods = tmpCartList;
+        this.iseditGoodsCollect = !this.iseditGoodsCollect;
+        // this.checkedAllStatus = this.isCheckedAll();
+        // this.cartTotal.checkedGoodsCount = this.getCheckedGoodsCount();
+      }
+    },
+
     // 长按删除，点击进入商品详情
     async openGoods (event) {
       const openId = wx.getStorageSync('openId')
@@ -150,6 +196,12 @@ page{
     background: #f1f1f1;
     height: 100%;
 }
+.clear:after{
+    display: block;
+    content:'';
+    clear: both;
+    height:0;
+    }
 .collect-head{
   position: fixed;
   left: 0;
@@ -192,20 +244,17 @@ page{
   border-left: 2rpx solid #f1f1f1;
 }
 
- .list{
+ .goodslist{
     height: auto;
-    width: 100%;
+    width: 750rpx;
     overflow: hidden;
     margin-top: 170rpx;
     margin-bottom: 120rpx;
 }
-
  .group-item{
     height: auto;
     width: 100%;
     background: #fff;
-    padding: 0 20rpx;
-    box-sizing: border-box;
     margin-bottom: 18rpx;
 }
 
@@ -215,24 +264,38 @@ page{
     overflow: hidden;
     border-bottom: 2rpx solid #f1f1f1;
 }
+.group-item .item .checkbox{
+    float: left;
+    height: 34rpx;
+    width: 34rpx;
+    margin: 100rpx 15rpx 100rpx 20rpx;
+    background: url(http://nos.netease.com/mailpub/hxm/yanxuan-wap/p/20150730/style/img/icon-normal/checkbox-0e09baa37e.png) no-repeat;
+    background-size: 34rpx;
+}
+
+.group-item .item .checkbox.checked{
+    background: url(http://nos.netease.com/mailpub/hxm/yanxuan-wap/p/20150730/style/img/icon-normal/checkbox-checked-822e54472a.png) no-repeat;
+    background-size: 34rpx;
+}
 .group-item .item .cart-goods{
     float: left;
     height: 228rpx;
-    width: 672rpx;
+    width: 630rpx;
     border-bottom: 1px solid #f4f4f4;
 }
 
 .group-item .item .img{
     float: left;
+    display: block;
     height:190rpx;
     width: 190rpx;
     background: #f4f4f4;
-    margin: 19.5rpx 18rpx 19.5rpx 0;
+    margin: 19.5rpx 20rpx 19.5rpx 20rpx;
 }
 
 .group-item .item .info{
     float: left;
-    width: 420rpx;
+    width: 360rpx;
     margin: 19.5rpx 26rpx 19.5rpx 0;
 }
 
@@ -265,63 +328,109 @@ page{
 }
 
 
-
-/* .collect-list{
-  width: 100%;
-  height: auto;
-  overflow: hidden;
-  background: #fff;
-  padding-left: 30rpx;
-  border-top: 1px solid #e1e1e1;
+.cart-bottom{
+    position: fixed;
+    bottom:0;
+    left:0;
+    height: 88rpx;
+    width: 100%;
+    background: #fff;
+    display: flex;
+    z-index: 10;
+    border-bottom: 3rpx solid #e8e8e8;
+    box-shadow: 1px 1px 3px 3px #e8e8e8;
 }
 
-.item{
-  height: 212rpx;
-  width: 720rpx;
-  background: #fff;
-  padding: 30rpx 30rpx 30rpx 0;
-  border-bottom: 1px solid #e1e1e1;
+.cart-bottom .checkbox{
+    height: 34rpx;
+    padding-left: 60rpx;
+    line-height: 34rpx;
+    margin: 33rpx 18rpx 33rpx 26rpx;
+    background: url(http://nos.netease.com/mailpub/hxm/yanxuan-wap/p/20150730/style/img/icon-normal/checkbox-0e09baa37e.png) no-repeat;
+    background-size: 34rpx;
+    font-size: 24rpx;
+    color: #666666;
+    flex: 1;
 }
 
-.item:last-child{
-  border-bottom: 1px solid #fff;
+.cart-bottom .checkbox.checked{
+    background: url(http://nos.netease.com/mailpub/hxm/yanxuan-wap/p/20150730/style/img/icon-normal/checkbox-checked-822e54472a.png) no-repeat;
+    background-size: 34rpx;
 }
 
-.item .img{
-  float: left;
-  width: 150rpx;
-  height: 150rpx;
+.cart-bottom .delete{
+    width: 180rpx;
+    height: 88rpx;
+    font-size: 28rpx;
+    float: right;
+    color: #fff;
+    text-align: center;
+    line-height: 88rpx;
+    background-color: #dc2121;
+
 }
 
-.item .info{
-  float: right;
-  width: 540rpx;
-  height: 150rpx;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding-left: 20rpx;
+.shoplist{
+    height: auto;
+    width: 750rpx;
+    overflow: hidden;
+    margin-top: 170rpx;
+    margin-bottom: 120rpx;
+}
+.shop-item{
+    height: auto;
+    width: 100%;
+    background: #fff;
+    margin-bottom: 18rpx;
 }
 
-.item .info .name{
-  font-size: 28rpx;
-  color: #333;
-  line-height: 40rpx;
+.shop-item .item{
+    height: 135rpx;
+    width: 100%;
+    overflow: hidden;
+    border-bottom: 2rpx solid #f1f1f1;
+}
+.shop-item .item .checkbox{
+    float: left;
+    height: 34rpx;
+    width: 34rpx;
+    margin: 100rpx 15rpx 100rpx 20rpx;
+    background: url(http://nos.netease.com/mailpub/hxm/yanxuan-wap/p/20150730/style/img/icon-normal/checkbox-0e09baa37e.png) no-repeat;
+    background-size: 34rpx;
 }
 
-
-.item .info .subtitle{
-  margin-top: 8rpx;
-  font-size: 24rpx;
-  color: #888;
-  line-height: 40rpx;
+.shop-item .item .checkbox.checked{
+    background: url(http://nos.netease.com/mailpub/hxm/yanxuan-wap/p/20150730/style/img/icon-normal/checkbox-checked-822e54472a.png) no-repeat;
+    background-size: 34rpx;
+}
+.shop-item .item .cart-goods{
+    float: left;
+    height: 135rpx;
+    width: 630rpx;
+    border-bottom: 1px solid #f4f4f4;
 }
 
-.item .info .price{
-  margin-top: 8rpx;
-  font-size: 28rpx;
-  color: #333;
-  line-height: 40rpx;
-} */
+.shop-item .item .img{
+    float: left;
+    display: block;
+    height:110rpx;
+    width: 110rpx;
+    background: #f4f4f4;
+    margin: 15rpx 20rpx 15rpx 20rpx;
+}
+
+.shop-item .item .info{
+    float: left;
+    width: 530rpx;
+    line-height: 110rpx;
+    vertical-align: middle;
+    margin: 15rpx 26rpx 15rpx 0;
+    color: #282828;
+    font-size: 28rpx;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
 
 </style>
