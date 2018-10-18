@@ -36,7 +36,7 @@
   </view>
   
 
-    <scroll-view scroll-y="true" scroll-top="scrollTop" :style="{'height': '100%'}" @bindscroll="onReachBottom">
+    <scroll-view scroll-y="true" :scroll-top="scrollTop" class="cate-out"  bindscroll="onPageScroll">
         <view class="cate-item">
             <!-- <view class="h">
                 <text class="name">{{currentCategory.name}}</text>
@@ -63,7 +63,7 @@
     </scroll-view>
 
 
-    <view class="scollTop">顶部</view>
+    <view class="scollTop"  @click="toTop" :hidden="!floorstatus">顶部</view>
 </view>
 </template>
 
@@ -86,8 +86,9 @@ export default {
       categoryFilter: false,
       keyword: '',
       scrollLeft: 0,
-      scrollTop: 0,
+      scrollTop: 5,
       scrollHeight: 0,
+      floorstatus: false,
       page: 1,
       size: 20, // 默认10000尽量大，查到所有符合的数据
       orderKey: 1
@@ -169,8 +170,11 @@ export default {
           this.refresh();
       }
     },
-
-
+  
+    //回到顶部
+    toTop: function (e) {  // 一键回到顶部      
+        this.scrollTop = 0      
+    },
     async searchGoods() {
       const res = await api.search({ cid: this.Id , pageNo: this.page , pageSize : this.size , orderKey: this.orderKey });
       if(res.success) {
@@ -214,11 +218,23 @@ export default {
       }
     }
   },
+
+     // 获取滚动条当前位置
+    onPageScroll : function(e){
+       console.log('滚动位置',e.detail.scrollTop)
+      if (e.detail.scrollTop > 100) {     
+          this.floorstatus = true      
+      } else {
+       this.floorstatus = false
+      }
+    // this.page++
+    // this.searchGoods()
+    },
   // 小程序原生上拉加载
-  onReachBottom () {
-    this.page++
-    this.searchGoods()
-  },
+  // onReachBottom () {
+  //   this.page++
+  //   this.searchGoods()
+  // },
   // 小程序原生下拉刷新
   onPullDownRefresh: function() {
     this.refresh()
@@ -238,6 +254,9 @@ export default {
 <style scoped>
 .container{
     background: #f1f1f1;
+}
+.cate-out{
+  height: 100vh;
 }
 .clear:after{
     display: block;

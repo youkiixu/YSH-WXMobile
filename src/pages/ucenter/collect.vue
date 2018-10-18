@@ -21,10 +21,10 @@
   <view class="goodslist">
       <view class="group-item">
         <view class="goods">
-          <view class="item clear"  @click="openGoods"  @touchstart="touchStart" @touchend="touchEnd"
+          <view class="item clear" @click="checkedItem(index)"  @touchstart="touchStart" @touchend="touchEnd"
       v-for="(item, index) of collectList" :key="item.Id" :data-index="index">
       <!-- <view :class="selectGoods.Id == item.Id ? 'checked checkbox' : 'checkbox'"  :data-item-index="index"></view> -->
-            <view :class="selectGoods.Id == item.Id ? 'checked checkbox' : 'checkbox'" @click="checkedItem(item)" :data-item-index="index" v-if="iseditGoodsCollect"></view>
+            <view :class="item.checked == true ? 'checked checkbox' : 'checkbox'"  :data-item-index="index" v-if="iseditGoodsCollect"></view>
             <view class="cart-goods clear">
               <img class="img" :src="item.imagePath"/>
               <view class="info">
@@ -46,7 +46,7 @@
       <view class="cart-bottom clear" v-if="iseditGoodsCollect">
       <!-- <view :class="checkedAllStatus ? 'checked checkbox' : 'checkbox'" @click="checkedAll">全选({{cartTotal.checkedGoodsCount}})</view> -->
       <!-- <view class="delete" @click="deleteCart" v-if="isEditCart">删除</view> -->
-      <view class="checkbox" @click="checkedAll">全选</view>
+      <view :class="checkedAllStatus ? 'checked checkbox' : 'checkbox'" @click="checkedAll">全选</view>
       <view class="delete" @click="deleteGoods">删除</view>
       
     </view>
@@ -92,9 +92,18 @@ export default {
       isgoodsCollect:true,
       isshopCollect:false,
       iseditGoodsCollect:false,
-      checkedAllStatus: true,
+      checkedAllStatus: false,
       selectGoods:0
     }
+  },
+   // 每次打开触发，更新数据
+  onShow () {
+    this.collectList = []
+    this.pageNo = 0
+    this.checkedAllStatus = false
+    this.iseditGoodsCollect = false
+    this.GetFavoriteProductList()
+    
   },
   async mounted () {
     await Promise.all([
@@ -125,10 +134,66 @@ export default {
       }
     },
     // checkbox的点击事件
-    async checkedItem (item) {
-      this.selectGoods = item
+    async checkedItem (index) {
+      var goodsList = this.collectList
+      this.collectList = []
+      if(goodsList[index].checked == undefined) {
+        goodsList[index].checked = false
+      }
+      goodsList[index].checked = !goodsList[index].checked
+      this.collectList = goodsList
+    },
+    // 点击底部的“全选”
+    checkedAll () {
+      var _this = this
+      let tmpGoodsList = this.collectList.map(function (v) {
+          v.checked = !_this.checkedAllStatus;
+          return v;
+      });
+      this.collectList = tmpGoodsList
+      this.checkedAllStatus = this.isCheckedAll();
+    },
+    // 判断购物车是否全选
+    isCheckedAll () {
+      return this.collectList.every(function (element, index, array) {
+        if (element.checked === true) {
+          return true;
+        } else {  
+          return false;
+        }
+      });
     },
 
+     // 点击“删除所选”
+    deleteGoods () {     
+      this.collectList.map(item => {
+        if(item.checked) {
+          this.deleteCartApi(item.Id)
+        }
+      })  
+    },
+     async deleteCartApi (id) {
+      const openId = wx.getStorageSync('openId')
+      var par = {
+        openId: openId,
+        Ids: id,      
+      }
+      this.$wx.showLoading()
+      const res = await api.CancelConcernProducts(par)
+      this.$wx.hideLoading() 
+      if(res.success) {
+        this.collectList = this.collectList.filter(function (element, index, array) {
+        if (element.Id === par.Ids) {        
+            return false;           
+          } else {
+            return true;            
+          }         
+        })         
+        this.$wx.showSuccessToast('移除成功!')
+      } else {
+        this.$wx.showErrorToast(res.msg)
+      }
+    },
     // 长按删除，点击进入商品详情
     async openGoods (event) {
       const openId = wx.getStorageSync('openId')
@@ -173,6 +238,37 @@ export default {
     touchEnd (e) {
       this.touch_end = e.timeStamp;
     }
+  },
+   watch: {
+    cartGoods (oldval , newval) {
+      if(oldval.length == 0 || newval.length == 0) {
+        return
+      }
+      const len = newval.length 
+      let num = 0
+      newval.map((item) => {
+        if(item.checked) {
+          num++
+        }
+      })
+      if(num == len) {
+        this.checkedAllStatus = true
+      } else {
+        this.checkedAllStatus = false
+      }
+    }
+  },
+    // 小程序原生上拉加载
+  onReachBottom () {
+    this.pageNo++
+    this.GetFavoriteProductList()
+  },
+  // 小程序原生下拉刷新
+  onPullDownRefresh: function() {
+    this.pageNo = 1
+    this.collectList = []
+    this.GetFavoriteProductList()
+    wx.stopPullDownRefresh()
   },
   // 原生的分享功能
   onShareAppMessage: function () {
