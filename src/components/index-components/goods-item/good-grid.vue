@@ -3,7 +3,7 @@
     <view class="b clear">
       <block v-for="item of content.goodslist" :key="item.item_id" :data-id="index">
         <view class="item">
-          <navigator :url="'../goods/goods?id=' + item.item_id" class="a">
+          <navigator  @click="toDetail(item)" class="a">
             <img class="img" :src="baseUrl+ item.pic" background-size="cover" />
             <view class="txt">
               <text class="name">{{item.title}}</text>
@@ -33,6 +33,11 @@ export default {
         baseUrl() {
             return this.$wx.baseUrl
         }
+    },
+    methods: {
+      toDetail(item) {
+        this.$emit('onClick' , item);
+      }
     }
 }
 </script>

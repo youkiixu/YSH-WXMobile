@@ -1,23 +1,16 @@
 <template >
 <view class="container">
-    <!-- <view class="search">
-        <navigator url="/pages/search/search" class="input">
-            <img class="icon"/>
-            <text class="txt">商品搜索, 共{{goodsCount}}款好物</text>
-        </navigator>
-    </view> -->
-
     <view class="index-searchbar">
       <searchBar></searchBar>
     </view>
     
 
     <view class="catalog" :style="{'height' : '100%'}">
-        <scroll-view class="nav" scroll-y="true">
+        <scroll-view class="nav" scroll-y="true"  :style="{'height' : '100%'}">
             <view :class="currentCategory.Id == item.Id ? 'active item' : 'item'" v-for="(item, index) of navList" :key="item.Id" :data-id="item.Id"
                 :data-index="index" @click="switchCateLog(index)">{{item.Name}}</view>
         </scroll-view>
-        <scroll-view class="cate" scroll-y="true" >
+        <scroll-view class="cate" scroll-y="true"  :style="{'height' : '100%'}">
             <view class="cate_item" v-for="( categoryChild , index1 ) of categoryList" :key="index1">
               <view class="hd">
                   <!-- <text class="line"></text> -->
@@ -100,7 +93,7 @@ export default {
     onShareAppMessage: function () {
       return {
         title: 'sassShop',
-        desc: '印生活SASS商城',
+        desc: '印生活',
         path: '/pages/index/index'
       }
     }
@@ -174,13 +167,12 @@ page {
 .catalog .nav .item.active {
   color: #20b2aa;
   font-size: 24rpx;
-  background-color: #fff;
+  background: #fff;
 }
 
 .catalog .cate {
-  border-left: 1px solid #fafafa;
+  /* border-left: 1px solid #fafafa; */
   flex: 1;
-  height: 92%;
   padding: 0 40rpx 0 40rpx;
 }
 

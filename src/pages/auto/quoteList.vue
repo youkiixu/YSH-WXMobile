@@ -82,6 +82,7 @@ export default {
         ...mapActions(['SubmitByProductId2']),
         toDetail(item) {
             const openId = wx.getStorageSync('openId')
+            console.log(item)
             var par = {
                 openId: openId,
                 skuIds: item.ProductId + '_0_0_0_0_0_0_0',
@@ -95,6 +96,7 @@ export default {
                 QuoteStr: item.QuoteStr,
                 LimitTimeBuyId: item.LimitTimeBuyId,
             }
+            console.log(par)
             this.SubmitByProductId2(par)
         },
         async toCart(item) {
@@ -227,20 +229,20 @@ page{
 
 .sort-box .item.active .txt{
     color: #009e96;
-}
+} 
 
 .sort-box .item.by-price , .sort-box .item.by-sales , .sort-box .item.by-comment{
-    background: url(http://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/no-3127092a69.png) 135rpx center no-repeat;
+    background: url(http://www.kiy.cn/Areas/wxMobile/Content/img/icon-none.png) 135rpx center no-repeat;
     background-size: 15rpx 21rpx;
 }
 
 .sort-box .item.by-price.active.asc , .sort-box .item.by-sales.active.asc , .sort-box .item.by-comment.active.asc{
-    background: url(http://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/up-636b92c0a5.png) 135rpx center no-repeat;
+    background: url(http://www.kiy.cn/Areas/wxMobile/Content/img/icon-asc.png) 135rpx center no-repeat;
     background-size: 15rpx 21rpx;
 }
 
 .sort-box .item.by-price.active.desc , .sort-box .item.by-sales.active.desc , .sort-box .item.by-comment.active.desc{
-    background: url(http://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/down-95e035f3e5.png) 135rpx center no-repeat;
+    background: url(http://www.kiy.cn/Areas/wxMobile/Content/img/icon-desc.png) 135rpx center no-repeat;
     background-size: 15rpx 21rpx;
 }
 
@@ -300,7 +302,7 @@ page{
     /* margin-top: 40rpx; */
   float: left;
   height: 177rpx;
-  width: 440rpx;
+  width: 472rpx;
   align-items: center;
 }
 .title {
@@ -313,7 +315,7 @@ page{
 }
 .p {
   font-size: 29rpx;
-  color: #333;
+  color: #666;
   height: 40rpx;
   line-height: 40rpx;
 }

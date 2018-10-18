@@ -161,7 +161,7 @@ export default {
   onShareAppMessage: function () {
     return {
       title: 'sassShop',
-      desc: '印生活SASS商城',
+      desc: '印生活',
       path: '/pages/ucenter/order'
     }
   },
@@ -328,13 +328,13 @@ page{
     box-sizing: border-box;
 }
 .item-check .total{
-    width: 50%;
+    width: 80%;
     font-size: 24rpx;
     color: #282828;
     float: left;
 }
 .item-check .btn{
-    width: 50%;
+    width: 20%;
     float: right;
 }
 .item-check .total .icon{

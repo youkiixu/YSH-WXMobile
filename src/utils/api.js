@@ -157,6 +157,22 @@ const api = {
   // 获取收藏列表
   GetFavoriteProductList: (paramObj) => request.post('/Wxmobile/Collection/GetFavoriteProductList', paramObj, {
     baseURL: ApiKiyUrl
+  }),
+  // 非标品单个商品报价
+  getOpenQuote: (paramObj) => request.post('/Wxmobile/Quote/OpenQuote', paramObj, {
+    baseURL: ApiKiyUrl
+  }),
+  // 购物车去下单页
+  submitByShoppingCart: (paramObj) => request.post('/Wxmobile/Orders/SubmitByShoppingCart', paramObj, {
+    baseURL: ApiKiyUrl
+  }),
+  // 购物车提交订单
+  submitOrderByShoppingCart2: (paramObj) => request.post('/Wxmobile/Orders/SubmitOrderByShoppingCart2', paramObj, {
+    baseURL: ApiKiyUrl
+  }),
+  // 根据产品Id获取qid
+  getProductQitemCode: (paramObj) => request.post('/Wxmobile/Product/GetProductQitemCode', paramObj, {
+    baseURL: ApiKiyUrl
   })
 }
 

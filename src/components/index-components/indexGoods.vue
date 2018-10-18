@@ -1,10 +1,10 @@
 <template>
     <view :class="{'nav a-section a-new': content.layout == 5 , 'good-grid': content.layout == 1 , 'nav a-section a-brand': content.layout == 2 , 'nav a-section a-popular': content.layout == 4 ,'nav a-section a-topic': content.layout == 3 ,  }">
-         <goodGrid v-if="content.layout == 1" :content="content"></goodGrid>
-         <aBrand v-if="content.layout == 2" :content="content"></aBrand>
-         <aPopular v-if="content.layout == 4" :content="content"></aPopular>
-         <aTopic v-if="content.layout == 3" :content="content"></aTopic>
-         <aNew v-if="content.layout == 5" :content="content"></aNew>
+         <goodGrid v-if="content.layout == 1" :content="content" @onClick="toDetail"></goodGrid>
+         <aBrand v-if="content.layout == 2" :content="content" @onClick="toDetail"></aBrand>
+         <aPopular v-if="content.layout == 4" :content="content" @onClick="toDetail"></aPopular>
+         <aTopic v-if="content.layout == 3" :content="content" @onClick="toDetail"></aTopic>
+         <aNew v-if="content.layout == 5" :content="content" @onClick="toDetail"></aNew>
     </view>
 </template>
 
@@ -14,6 +14,7 @@ import aNew from '@/components/index-components/goods-item/a-new'
 import aPopular from '@/components/index-components/goods-item/a-popular'
 import aTopic from '@/components/index-components/goods-item/a-topic'
 import goodGrid from '@/components/index-components/goods-item/good-grid'
+import api from '@/utils/api'
 // 商品：4
 export default {
     name: 'indexGoods',
@@ -29,6 +30,23 @@ export default {
     },
     mounted () {
       // console.log(this.content.layout)
+    },
+    methods: {
+      async toDetail(obj) {
+        const ProductId = obj.item_id
+        const res = await api.getProductQitemCode({Id : ProductId})
+        if(res.success) {
+          const pid = res.data
+          if( pid != 0 ) {
+            this.$wx.toBaoJia({ pid: pid , ProductId , isDetail: true , ProductId: ProductId } , this)
+          } else {
+            this.$wx.toDetail({id : ProductId , title: obj.title} , this)
+          }
+        } else {
+          this.$wx.showErrorToast(res.msg)
+        }
+
+      }
     }
 }
 </script>

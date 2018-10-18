@@ -6,18 +6,22 @@
       <view class="goodshead">
         <view class="head-classify">
           <view class="classify-item produ" @click="toNav" data-id="goodshead">
-            <img src="/static/images/posi.png"/>
+            <img v-if="toView == 'goodshead'" src="/static/images/posi.png"/>
             商品
           </view>
-          <!-- <view :url="'../comment/comment?valueId=' + id + '&typeId=0'"> -->
-          <view class="classify-item com" @click="toNav" data-id="comments">评论</view>
-          <!-- </navigator>           -->
-          <!-- <view class="classify-item detail"  @click="toNav('proDetail')">详情</view> -->
-          <view class="classify-item detail"  @click="toNav" data-id="proDetail">详情</view>
+          <view class="classify-item com" @click="toNav" data-id="comments">
+            <img v-if="toView == 'comments'" src="/static/images/posi.png"/>
+            评论
+          </view>
+          <view class="classify-item detail"  @click="toNav" data-id="proDetail">
+            <img v-if="toView == 'proDetail'" src="/static/images/posi.png"/>
+            详情
+          </view>
         </view>
-        <view class="head-share">
-          <img src="/static/images/upload.png"/>
-        </view>
+        <button class="head-share" open-type="share">
+          <!-- <img src="/static/images/upload.png"/> -->
+          分享
+        </button>
       </view>
 
       <scroll-view :scroll-into-view="toView" scroll-y="true" scroll-with-animation="true" class="src">
@@ -31,7 +35,10 @@
           <!-- 商品信息 -->
           <view class="goods-info">
               <view class="c clear">
-                <view class="c-price"><text class="price-icon">￥</text>{{detailInfo.Price}}</view>
+                <!-- 标准品价格 -->
+                <view class="c-price" v-if="!detailInfo.IsCustom"><text class="price-icon" >￥</text>{{detailInfo.Price}}</view>
+                <!-- 非标品价格 -->
+                <view class="c-price"  v-else><text class="price-icon" >￥</text>{{ListPriceInfo.sprice}}</view>
                 <view class="c-collect" @click="addCannelCollect">           
                     <img class="icon" :src="collectProduImage"/>           
                 </view>
@@ -43,9 +50,22 @@
           </view>
           <!-- 已选参数 -->
           <view class="section-nav section-attr" @click="switchAttrPop">
-              <view class="t">规格:<text class="td">{{selectSkuStr.Color}} {{selectSkuStr.Size}} {{selectSkuStr.Version}} {{selectSkuStr.Material}} {{selectSkuStr.Fashion}} {{selectSkuStr.Grams}} {{selectSkuStr.Ensemble}}</text></view>
-              <img class="i" src="/static/images/address_right.png" background-size="cover"/>
-              <view class="clear"></view>
+              <view class="t">
+              <!-- 非标品参数 -->
+              <view  v-if="detailInfo.IsCustom">
+                <text class="td"  >
+                  {{ListPriceInfo.paraStr}}
+                </text>
+              </view>
+              <!-- 标准品参数 -->
+              <view v-else>
+                <text class="td">
+                  规格:{{selectSkuStr.Color}} {{selectSkuStr.Size}} {{selectSkuStr.Version}} {{selectSkuStr.Material}} {{selectSkuStr.Fashion}} {{selectSkuStr.Grams}} {{selectSkuStr.Ensemble}}
+                </text>
+              </view>
+            </view>
+            <img class="i" src="/static/images/address_right.png" background-size="cover"/>
+            <view class="clear"></view>
           </view>
           <!-- 商家地址 -->
           <view class="address-nav address-attr clear">
@@ -70,17 +90,12 @@
                       <text>{{comment.UserName}}</text>
                   </view>
                   <view class="star">{{comment.star}}</view>
-                  <!-- <view class="clear"></view> -->
                 </view>
                 <view class="content">
-                {{comment.ReviewContent}}
+                  {{comment.ReviewContent}}
                 </view>
-                  <!-- <view class="imgs">
-                  <image class="img"/>
-                  </view>
-                  <view class="spec">白色 2件</view>  -->
               </view>
-              <view class="seeall">查看全部评价</view>
+              <navigator :url="'../comment/comment?valueId=' + id + '&typeId=0'" class="seeall">查看全部评价</navigator>
             </view>   
             <view class="b" v-else>
               <view class="seeall">暂无评价</view>
@@ -92,14 +107,9 @@
             <view class="content">
               <wxParse :imageProp="baseUrl" :content="goodDetailHTMLstr" />
             </view>
-          </view>
-      </view>
-    
-
+          </view>  
+        </view> 
       </scroll-view>
-
-     
-
     </view>
     <!-- 模态浮层 -->
     <view class="attr-pop-box" :hidden="!openAttr">
@@ -111,71 +121,77 @@
             <img class="img" :src="RequestUrl + gallery[0]"/>
             <view class="info">
               <view class="c">
-                <view class="p"><text class="p-icon">￥</text>{{detailInfo.Price}}</view>
-                <view class="s">库存：{{Stock}}</view>
-                <view class="a">已选：<text>{{selectSkuStr.Color}} {{selectSkuStr.Size}} {{selectSkuStr.Version}} {{selectSkuStr.Material}} {{selectSkuStr.Fashion}} {{selectSkuStr.Grams}} {{selectSkuStr.Ensemble}}</text></view>
-
-               
+                <view class="p" v-if="!detailInfo.IsCustom"><text class="p-icon">￥</text>{{detailInfo.Price}}</view>
+                <view class="p" v-else><text class="p-icon">￥</text>{{ListPriceInfo.sprice}}</view>
+                <view class="s" v-if="!detailInfo.IsCustom">库存：{{Stock}}</view>
+                <view class="a" v-if="!detailInfo.IsCustom">已选：<text>{{selectSkuStr.Color}} {{selectSkuStr.Size}} {{selectSkuStr.Version}} {{selectSkuStr.Material}} {{selectSkuStr.Fashion}} {{selectSkuStr.Grams}} {{selectSkuStr.Ensemble}}</text></view>
+                <view class="a" v-if="detailInfo.IsCustom"><text>{{ListPriceInfo.paraStr}}</text></view>
               </view>
           </view>
           </view>
           <scroll-view scroll-y class="spec-con">
-          <view class="spec-item" v-if="detailInfo.Color.length != 0">
-              <view class="name">选择颜色</view>
-              <view class="values">
-              <view :class="item.SkuId == selectSku.Color ? 'selected value' : 'value'" @click="clickSkuValue('Color' , item.SkuId , item.Value)" v-for="(item, index) of detailInfo.Color" :key="index" :data-value-id="item.SkuId" :data-index="index" >{{item.Value}}</view>
-              </view>
-          </view>
-          <view class="spec-item"  v-if="detailInfo.Size.length != 0">
-              <view class="name">选择尺寸</view>
-              <view class="values">
-              <view :class="item.SkuId == selectSku.Size ? 'selected value' : 'value'" @click="clickSkuValue('Size' , item.SkuId , item.Value)" v-for="(item, index) of detailInfo.Size" :key="item.SkuId" :data-value-id="item.SkuId" :data-index="index" :data-name-id="item.SkuId">{{item.Value}}</view>
-              </view>
-          </view>
-          <view class="spec-item"  v-if="detailInfo.Version.length != 0">
-              <view class="name">选择规格</view>
-              <view class="values">
-              <view :class="item.SkuId == selectSku.Version? 'selected value' : 'value'" @click="clickSkuValue('Version' , item.SkuId , item.Value)" v-for="(item, index) of detailInfo.Version" :key="item.SkuId" :data-value-id="item.SkuId" :data-index="index" :data-name-id="item.SkuId">{{item.Value}}</view>
-              </view>
-          </view>
-          <view class="spec-item"  v-if="detailInfo.Material.length != 0">
-              <view class="name">选择材料</view>
-              <view class="values">
-              <view :class="item.SkuId == selectSku.Material ? 'selected value' : 'value'" @click="clickSkuValue('Material' , item.SkuId , item.Value)" v-for="(item, index) of detailInfo.Material" :key="item.SkuId" :data-value-id="item.SkuId" :data-index="index" :data-name-id="item.SkuId">{{item.Value}}</view>
-              </view>
-          </view>
-          <view class="spec-item"  v-if="detailInfo.Fashion.length != 0">
-              <view class="name">选择款式</view>
-              <view class="values">
-              <view :class="item.SkuId == selectSku.Fashion ? 'selected value' : 'value'" @click="clickSkuValue('Fashion' , item.SkuId , item.Value)" v-for="(item, index) of detailInfo.Fashion" :key="item.SkuId" :data-value-id="item.SkuId" :data-index="index" :data-name-id="item.SkuId">{{item.Value}}</view>
-              </view>
-          </view>
-          <view class="spec-item"  v-if="detailInfo.Grams.length != 0">
-              <view class="name">选择克重</view>
-              <view class="values">
-              <view :class="item.SkuId == selectSku.Grams ? 'selected value' : 'value'" @click="clickSkuValue('Grams' , item.SkuId , item.Value)" v-for="(item, index) of detailInfo.Grams" :key="item.SkuId" :data-value-id="item.SkuId" :data-index="index" :data-name-id="item.SkuId">{{item.Value}}</view>
-              </view>
-          </view>
-          <view class="spec-item"  v-if="detailInfo.Ensemble.length != 0">
-              <view class="name">选择套餐</view>
-              <view class="values">
-              <view :class="item.SkuId == selectSku.Ensemble ? 'selected value' : 'value'" @click="clickSkuValue('Ensemble' , item.SkuId , item.Value)" v-for="(item, index) of detailInfo.Ensemble" :key="item.SkuId" :data-value-id="item.SkuId" :data-index="index" :data-name-id="item.SkuId">{{item.Value}}</view>
-              </view>
-          </view>
-          <view class="spec-item" >
-              <view class="name">点击选择物流方式</view>
-              <view class="values">
-                <view class="selected value" @click="selectWuliu">{{strYjtype}}<span>></span></view>
-              </view>
-          </view>
-          <view class="number-item">
-              <view class="name">数量</view>
-              <view class="selnum">
-              <view class="cut" @click="cutNumber">-</view>
-              <input v-model="number" class="number"  type="number" confirm-type="done"/>
-              <view class="add" @click="addNumber">+</view>
-              </view>
-          </view>
+            <view class="spec-item" v-if="detailInfo.IsCustom">
+                <view class="name">点击选择参数</view>
+                <view class="values">
+                  <view class="selected value" @click="toBaojia">{{ListPriceInfo.paraStr}}</view>
+                </view>
+            </view>
+            <view class="spec-item" v-if="detailInfo.Color.length != 0">
+                <view class="name">选择颜色</view>
+                <view class="values">
+                <view :class="item.SkuId == selectSku.Color ? 'selected value' : 'value'" @click="clickSkuValue('Color' , item.SkuId , item.Value)" v-for="(item, index) of detailInfo.Color" :key="index" :data-value-id="item.SkuId" :data-index="index" >{{item.Value}}</view>
+                </view>
+            </view>
+            <view class="spec-item"  v-if="detailInfo.Size.length != 0">
+                <view class="name">选择尺寸</view>
+                <view class="values">
+                <view :class="item.SkuId == selectSku.Size ? 'selected value' : 'value'" @click="clickSkuValue('Size' , item.SkuId , item.Value)" v-for="(item, index) of detailInfo.Size" :key="item.SkuId" :data-value-id="item.SkuId" :data-index="index" :data-name-id="item.SkuId">{{item.Value}}</view>
+                </view>
+            </view>
+            <view class="spec-item"  v-if="detailInfo.Version.length != 0">
+                <view class="name">选择规格</view>
+                <view class="values">
+                <view :class="item.SkuId == selectSku.Version? 'selected value' : 'value'" @click="clickSkuValue('Version' , item.SkuId , item.Value)" v-for="(item, index) of detailInfo.Version" :key="item.SkuId" :data-value-id="item.SkuId" :data-index="index" :data-name-id="item.SkuId">{{item.Value}}</view>
+                </view>
+            </view>
+            <view class="spec-item"  v-if="detailInfo.Material.length != 0">
+                <view class="name">选择材料</view>
+                <view class="values">
+                <view :class="item.SkuId == selectSku.Material ? 'selected value' : 'value'" @click="clickSkuValue('Material' , item.SkuId , item.Value)" v-for="(item, index) of detailInfo.Material" :key="item.SkuId" :data-value-id="item.SkuId" :data-index="index" :data-name-id="item.SkuId">{{item.Value}}</view>
+                </view>
+            </view>
+            <view class="spec-item"  v-if="detailInfo.Fashion.length != 0">
+                <view class="name">选择款式</view>
+                <view class="values">
+                <view :class="item.SkuId == selectSku.Fashion ? 'selected value' : 'value'" @click="clickSkuValue('Fashion' , item.SkuId , item.Value)" v-for="(item, index) of detailInfo.Fashion" :key="item.SkuId" :data-value-id="item.SkuId" :data-index="index" :data-name-id="item.SkuId">{{item.Value}}</view>
+                </view>
+            </view>
+            <view class="spec-item"  v-if="detailInfo.Grams.length != 0">
+                <view class="name">选择克重</view>
+                <view class="values">
+                <view :class="item.SkuId == selectSku.Grams ? 'selected value' : 'value'" @click="clickSkuValue('Grams' , item.SkuId , item.Value)" v-for="(item, index) of detailInfo.Grams" :key="item.SkuId" :data-value-id="item.SkuId" :data-index="index" :data-name-id="item.SkuId">{{item.Value}}</view>
+                </view>
+            </view>
+            <view class="spec-item"  v-if="detailInfo.Ensemble.length != 0">
+                <view class="name">选择套餐</view>
+                <view class="values">
+                <view :class="item.SkuId == selectSku.Ensemble ? 'selected value' : 'value'" @click="clickSkuValue('Ensemble' , item.SkuId , item.Value)" v-for="(item, index) of detailInfo.Ensemble" :key="item.SkuId" :data-value-id="item.SkuId" :data-index="index" :data-name-id="item.SkuId">{{item.Value}}</view>
+                </view>
+            </view>
+            <view class="spec-item" >
+                <view class="name">点击选择物流方式</view>
+                <view class="values">
+                  <view class="selected value" @click="selectWuliu">{{strYjtype}}<span>></span></view>
+                </view>
+            </view>
+            <view class="number-item" v-if="!detailInfo.IsCustom">
+                <view class="name">数量</view>
+                <view class="selnum">
+                <view class="cut" @click="cutNumber">-</view>
+                <input v-model="number" class="number"  type="number" confirm-type="done"/>
+                <view class="add" @click="addNumber">+</view>
+                </view>
+            </view>
           </scroll-view>
           <view class="car-btn clear" v-if="!SubmitByProductType">
               <view class="car-add" @click="addToCart">加入购物车</view>
@@ -210,7 +226,8 @@ import wx from 'wx';
 import wxParse from 'mpvue-wxparse'
 import express from '@/utils/express'
 import util from '@/utils/util'
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions ,mapMutations } from 'vuex'
+
 
 export default {
   components: {
@@ -219,7 +236,7 @@ export default {
   data () {
     return {
       navId: '',
-      toView: '',
+      toView: 'goodshead',
       RequestUrl: '',
       detailInfo: {
         Material: [],
@@ -274,17 +291,32 @@ export default {
       YjUse: 0,
       Stock: 0,
       SubmitByProductType: false,
-      comment: {}
+      comment: {},
+      code: 0,
+      ListPriceInfo: {
+        sprice : 1,
+        paraStr: ''
+      },
+      openQuotSuccess: false
     }
   },
   mounted () {
-    this.id = 146
+    // this.id = 146
+    console.log(this.$route.query)
     if (this.$route.query.data) {
           const data = JSON.parse(this.$route.query.data);
-          wx.setNavigationBarTitle({
-              title: data.ProductName
-          })
+          this.setTitle(data.ProductName)
           this.id = data.ProductId
+          // 非标报价id , 标准品为0
+          this.code = data.code ? data.code : 0
+
+          if(data.proSearchParam) {
+            console.log(util.decode(data.proSearchParam))
+            var param = {
+              dataStr: util.decode(data.proSearchParam)
+            }
+            this.data.setProSearchParam(param)
+          }
       }
     this.refresh()
   },
@@ -303,14 +335,23 @@ export default {
         domain: 'kiy.cn'
       }
       return obj
-    }
+    },
+    ...mapState([
+      'proSearchParam',
+      'userInfo'
+    ])
   },
   methods: {
-    ...mapActions(['submitByProductId']),
+    ...mapMutations(['setProSearchParam']),
+    ...mapActions(['submitByProductId' , 'SubmitByProductId2']),
     async refresh() {
       // 请空已选的kiuId
       this.comment = {}
       this.skuId = ''
+      this.ListPriceInfo = {
+        sprice : 1,
+        paraStr: ''
+      }
       // 2018.10.13:清空前一次的sku信息，防止下一次进来还存留
       this.selectSku = {
         Color: 0,
@@ -337,11 +378,51 @@ export default {
         this.getGoodsDesc(),
         this.getComment()
       ]);
-      // 选中默认选项
-      this.getSkuPrice()
+      this.$wx.hideLoading()
+      this.setTitle(this.detailInfo.ProductName)
+      // true等于非标
+      // this.detailInfo.IsCustom = true
+      if(this.detailInfo.IsCustom) {
+        // 获取非标报价的价格
+        this.getOpenQuote()
+      } else {
+        // 标准品默认选中
+        // 选中默认选项
+        this.getSkuPrice()
+      }
       // 默认选中配送方式
       this.selectWuliu()
+    },
+    // 获取非标的价格
+    async getOpenQuote () {
+      const _this = this;
+      const openId = wx.getStorageSync('openId')
+      let par = {
+        qid: this.code,
+        FId: this.detailInfo.ShopMapId,
+        data: this.proSearchParam.dataStr,
+        dataStr: '',
+        openId: openId,
+        productId: this.id
+      }
+      this.$wx.showLoading('正在报价...')
+      const res = await api.getOpenQuote(par)
       this.$wx.hideLoading()
+      this.openQuotSuccess = res.success
+      if(res.success) {
+        
+        const Data = JSON.parse(res.Data)
+        const ListPriceInfo  = Data.ListPriceInfo[0]
+        this.ListPriceInfo.sprice = res.SumPrice
+        this.ListPriceInfo.paraStr = ListPriceInfo.logJson[0].paraStr
+        this.ListPriceInfo.Data =ListPriceInfo
+        this.ListPriceInfo.res = res
+      } else {
+        this.ListPriceInfo.sprice = 0
+        this.ListPriceInfo.paraStr = ''
+        // this.$wx.showErrorToast('报价失败')
+      }
+      
     },
     // 获取商品SKu详情
     async getGoodsSkuInfo () {
@@ -481,10 +562,19 @@ export default {
     
     // 打开商品规格选择弹窗
     switchAttrPop () {
-      if (this.openAttr === false) {
-        this.SubmitByProductType = false
-        this.openAttr = !this.openAttr;
+        if (this.openAttr === false) {
+          this.SubmitByProductType = false
+          this.openAttr = !this.openAttr;
+        }
+    },
+    toBaojia() {
+      const par = {
+        pid: this.code,
+        title: this.detailInfo.ProductName,
+        isDetail : true,
+        detailCommon: true
       }
+      this.$wx.toBaoJia(par , this)
     },
     // 关闭规格弹窗
     closeAttr () {
@@ -513,17 +603,54 @@ export default {
         // 打开规格选择弹窗
         this.SubmitByProductType = true
         this.openAttr = !this.openAttr;
-      } else { 
-        if(this.checkStock()) return
+      } else {
+          if(this.detailInfo.IsCustom) {
+            this.buyOpenGood()
+          } else {
+            this.buyGood()
+          }
+       }
+
+
+    },
+    // 非标品立即购买
+    buyOpenGood() {
+      try {
+        const openId = wx.getStorageSync('openId')
         var par = {
-          skuIds: this.skuId,
-          counts: this.number,
-          Yjtype: this.Yjtype
-          // YjUse: this.YjUse
+            openId: openId,
+            skuIds: this.detailInfo.ProductId + '_0_0_0_0_0_0_0',
+            counts: 1,
+            regionId: this.userInfo.RegionId,
+            // YjUse: this.YjUse,//是否印捷配送
+            Yjtype: this.Yjtype,
+            price: this.ListPriceInfo.res.SumPrice,
+            quoteModel: this.ListPriceInfo.res.QuoteLogInfoId,
+            RemindPrice: 0,
+            GroupJson: JSON.stringify(this.ListPriceInfo.Data.GroupJson),
+            QuoteStr: this.proSearchParam.dataStr,
+            LimitTimeBuyId: this.ListPriceInfo.res.LimitTimeBuyId
         }
         this.openAttr = false
-        this.submitByProductId(par)
+        this.SubmitByProductId2(par)
+      } catch (error) {
+        this.$wx.showErrorToast('非标品下单失败')
       }
+        
+    },
+    // 标准品立即购买
+    buyGood () {
+   
+      if(this.checkStock()) return
+      var par = {
+        skuIds: this.skuId,
+        counts: this.number,
+        Yjtype: this.Yjtype
+        // YjUse: this.YjUse
+      }
+      this.openAttr = false
+      this.submitByProductId(par)
+      
     },
     // 加入购物车，多种判断哦~
     async addToCart () {
@@ -532,20 +659,38 @@ export default {
         this.SubmitByProductType = false
         this.openAttr = !this.openAttr;
       } else {
-        if(this.checkStock()) return
+        
         const openId = wx.getStorageSync('openId')
         var par = {
           openId: openId,
           productId: this.id,
-          isCustom: false,//标准品
+          isCustom: this.detailInfo.IsCustom,//标准品
           skuId: this.skuId,
           quantity: this.number,
           Yjtype: this.Yjtype
           // YjUse: this.YjUse
         }
+        
+        if(this.detailInfo.IsCustom) {
+          // 如果是定制品
+          // 重定义非标品的skuId和数量
+          par.skuId = this.detailInfo.ProductId + '_0_0_0_0_0_0_0'
+          par.quantity = 1
+          par = Object.assign(par , 
+            { 
+              dataStr : this.proSearchParam.dataStr , 
+              quoteJson: JSON.stringify(this.ListPriceInfo.Data.GroupJson) , 
+              ParaStr : this.ListPriceInfo.paraStr,
+              Price: this.ListPriceInfo.sprice
+            }
+          )
+        } else {
+          // 标准品检查库存
+          if(this.checkStock()) return
+        }
+        console.log(par)
         this.$wx.showLoading()
         const res = await api.modifyShoppingCart(par)
-        
         this.$wx.hideLoading()
         if(res.success) {
           this.$wx.showSuccessToast('加入购物车成功')
@@ -554,16 +699,20 @@ export default {
         }
       }
     },
+    // 选择物流
     selectWuliu(e) {
       const _this = this;
       const detailInfo =  this.detailInfo
+      const openId = wx.getStorageSync('openId')
       // 加载信息
       var info = {
         isYJPeiSong : detailInfo.IsYJPeiSong,
         YjUse: detailInfo.YjUse,
         useFreightTempalate: detailInfo.UseFreightTempalate,
-        productId : detailInfo.ProductId
+        productId : detailInfo.ProductId,
+        openId: openId
       }
+      console.log(info)
       // 根据上面的信息，返回文字数组
       var arr = express.selectExpress(info)
 
@@ -599,10 +748,13 @@ export default {
     },
     // 滚动到某位置
     toNav: function(e) {
-      // this.navId = id
-      console.log(e.currentTarget.dataset.id)
       this.toView = e.currentTarget.dataset.id
     },
+    setTitle (text) {
+        wx.setNavigationBarTitle({
+            title: text
+        })
+    }
   },
   watch: {
     number (e , b) {
@@ -610,19 +762,42 @@ export default {
         this.number = Number(this.detailInfo.SaleNumber)
       }
       this.getSkuInfoPirce()
+    },
+    proSearchParam (a , b ) {
+      if(this.detailInfo.IsCustom) {
+        this.getOpenQuote()
+      }
     }
-  },
+  }, 
   onPullDownRefresh: function() {
-    this.refresh()
+    // this.refresh()
     wx.stopPullDownRefresh()
   },
   // 原生的分享功能
   onShareAppMessage: function () {
-    return {
-      title: 'sassShop',
-      desc: '印生活SASS商城',
-      path: '/pages/goods/goods'
-    }
+     const data = JSON.parse(this.$route.query.data);
+      const ProductId = this.detailInfo.ProductId
+      // 非标报价id , 标准品为0
+      const code = this.code != 0 ? this.code : undefined
+      const par = {
+        ProductId: ProductId,
+        ProductName: this.detailInfo.ProductName,
+        code: code
+      }
+      let urlPath = '/pages/goods/goods?data=' + JSON.stringify(par)
+      if(this.detailInfo.IsCustom) {
+        urlPath += '&&proSearchParam=' + util.encode(this.proSearchParam.dataStr)
+      }
+
+      let shareInfo = {
+        title: this.detailInfo.ProductName,
+        desc: this.detailInfo.ShopName,
+        path: urlPath,
+        imageUrl: this.RequestUrl + this.gallery[0]
+      }
+
+
+    return shareInfo
   },
     // 每次打开触发，更新数据
   onShow () {
@@ -805,7 +980,7 @@ page{
 }
 .section-nav .t .td{
   color: #282828;
-  padding-left: 25rpx;
+  /* padding-left: 25rpx; */
   box-sizing: border-box;
 }
 .section-nav .i {
@@ -1072,7 +1247,7 @@ page{
 
 .detail image {
   width: 750rpx;
-  display: block;
+  /* display: block; */
 }
 
 .common-problem {
@@ -1429,7 +1604,7 @@ page{
 
 .spec-con .value {
   display: inline-block;
-  height: 55rpx;
+  min-height: 55rpx;
   line-height: 55rpx;
   text-align: center;
   margin-right: 24rpx;

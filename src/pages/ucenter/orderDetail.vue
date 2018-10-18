@@ -39,7 +39,8 @@
             <view class="m" v-if="orderInfo.Material">材料：<text class="t">{{orderInfo.Material}}</text></view>
             <view class="m" v-if="orderInfo.Fashion">款式：<text class="t">{{orderInfo.Fashion}}</text></view>
             <view class="m" v-if="orderInfo.Grams">克重：<text class="t">{{orderInfo.Grams}}</text></view>
-            <view class="m" v-if="orderInfo.Ensemble">套餐：<text class="t">{{orderInfo.Ensemble}}</text></view>           
+            <view class="m" v-if="orderInfo.Ensemble">套餐：<text class="t">{{orderInfo.Ensemble}}</text></view>      
+            <view class="m" v-if="orderGoods[0]"><text class="t">{{orderGoods[0].ParaStr}}</text></view>        
         </view>
     </view>
     
@@ -74,57 +75,6 @@
             <button class="confirm" v-if="canPay" @click="payOrder">确认支付</button> 
         </view>
     </view>
-
-  
-    <!-- <view class="order-goods">
-        <view class="h">
-            <view class="label">商品信息</view>
-            <view class="status">{{orderInfo.OrderStatusStr}}</view>
-        </view>
-        <view class="goods">
-            <view class="item" v-for="(item, index) in orderGoods" :key="item.id" :data-index="index">
-                <view class="img">
-                    <image :src="item.ThumbnailsUrl"/>
-                </view>
-                <view class="info">
-                    <view class="t">
-                        <text class="name">{{orderInfo.ProductName}}</text>
-                        
-                        <text class="number">x{{orderInfo.Quantity}}</text>
-                    </view>
-                    <view class="attr">{{item.ParaStr}}</view>
-                    
-                </view>
-            </view>
-        </view>
-    </view> -->
-
-<!-- <view class="price">￥{{item.ReceivedAmount}}</view> -->
-
-    <!-- <view class="order-bottom">
-        <view class="address">
-            <view class="t">
-                <text class="name">{{orderInfo.ShipTo}}</text>
-                <text class="mobile">{{orderInfo.CellPhone}}</text>
-            </view>
-            <view class="b">{{orderInfo.RegionFullName + orderInfo.Address}}</view>
-        </view>
-        <view class="total">
-            <view class="t">
-                <text class="label">商品合计：</text>
-                <text class="txt">￥{{orderInfo.ProductTotalAmount}}</text>
-            </view>
-            <view class="t">
-                <text class="label">运费：</text>
-                <text class="txt">￥{{orderInfo.ReceivedAmount}}</text>
-            </view>
-        </view>
-        <view class="pay-fee">
-            <text class="label">实付：</text>
-            <text class="txt">￥{{orderInfo.ProductTotalAmount}}</text>
-        </view>
-    </view> -->
-  
 </view> 
 
 </template>
@@ -280,7 +230,7 @@ export default {
   onShareAppMessage: function () {
     return {
       title: 'sassShop',
-      desc: '印生活SASS商城',
+      desc: '印生活',
       path: '/pages/ucenter/orderDetail'
     }
   }
