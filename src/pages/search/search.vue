@@ -93,8 +93,13 @@ export default {
     this.goodsList = []
     this.keyword = ''
     this.searchStatus = false
-    await Promise.all([
-    ])
+    if(this.$route.query.keyword) {
+      this.keyword = this.$route.query.keyword
+      await Promise.all([
+        this.getGoodsList()
+      ])
+    }
+    
   },
   methods: {
     // 点击“取消”

@@ -18,10 +18,9 @@
             详情
           </view>
         </view>
-        <button class="head-share" open-type="share">
-          <!-- <img src="/static/images/upload.png"/> -->
-          分享
-        </button>
+        <!-- <button class="head-share" open-type="share">
+          <img src="/static/images/upload.png"/>
+        </button> -->
       </view>
 
       <scroll-view :scroll-into-view="toView" scroll-y="true" scroll-with-animation="true" class="src">
@@ -112,94 +111,95 @@
       </scroll-view>
     </view>
     <!-- 模态浮层 -->
-    <view class="attr-pop-box" :hidden="!openAttr">
-      <view class="attr-pop" >
-          <view class="close" @click="closeAttr">
-            <img class="icon" src="/static/images/icon_close.png"/>
+    <view class="attr-pop-box" :hidden="!openAttr"  @click="closeAttr">
+
+    </view>
+    <view class="attr-pop"  :hidden="!openAttr">
+      <view class="close" @click="closeAttr">
+        <img class="icon" src="/static/images/icon_close.png"/>
+      </view>
+      <view class="img-info clear">
+        <img class="img" :src="RequestUrl + gallery[0]"/>
+        <view class="info">
+          <view class="c">
+            <view class="p" v-if="!detailInfo.IsCustom"><text class="p-icon">￥</text>{{detailInfo.Price}}</view>
+            <view class="p" v-else><text class="p-icon">￥</text>{{ListPriceInfo.sprice}}</view>
+            <view class="s" v-if="!detailInfo.IsCustom">库存：{{Stock}}</view>
+            <view class="a" v-if="!detailInfo.IsCustom">已选：<text>{{selectSkuStr.Color}} {{selectSkuStr.Size}} {{selectSkuStr.Version}} {{selectSkuStr.Material}} {{selectSkuStr.Fashion}} {{selectSkuStr.Grams}} {{selectSkuStr.Ensemble}}</text></view>
+            <view class="a" v-if="detailInfo.IsCustom"><text>{{ListPriceInfo.paraStr}}</text></view>
           </view>
-          <view class="img-info clear">
-            <img class="img" :src="RequestUrl + gallery[0]"/>
-            <view class="info">
-              <view class="c">
-                <view class="p" v-if="!detailInfo.IsCustom"><text class="p-icon">￥</text>{{detailInfo.Price}}</view>
-                <view class="p" v-else><text class="p-icon">￥</text>{{ListPriceInfo.sprice}}</view>
-                <view class="s" v-if="!detailInfo.IsCustom">库存：{{Stock}}</view>
-                <view class="a" v-if="!detailInfo.IsCustom">已选：<text>{{selectSkuStr.Color}} {{selectSkuStr.Size}} {{selectSkuStr.Version}} {{selectSkuStr.Material}} {{selectSkuStr.Fashion}} {{selectSkuStr.Grams}} {{selectSkuStr.Ensemble}}</text></view>
-                <view class="a" v-if="detailInfo.IsCustom"><text>{{ListPriceInfo.paraStr}}</text></view>
-              </view>
-          </view>
-          </view>
-          <scroll-view scroll-y class="spec-con">
-            <view class="spec-item" v-if="detailInfo.IsCustom">
-                <view class="name">点击选择参数</view>
-                <view class="values">
-                  <view class="selected value" @click="toBaojia">{{ListPriceInfo.paraStr}}</view>
-                </view>
+      </view>
+      </view>
+      <scroll-view scroll-y class="spec-con">
+        <view class="spec-item" v-if="detailInfo.IsCustom">
+            <view class="name">点击选择参数</view>
+            <view class="values">
+              <view class="selected value" @click="toBaojia">{{ListPriceInfo.paraStr}}</view>
             </view>
-            <view class="spec-item" v-if="detailInfo.Color.length != 0">
-                <view class="name">选择颜色</view>
-                <view class="values">
-                <view :class="item.SkuId == selectSku.Color ? 'selected value' : 'value'" @click="clickSkuValue('Color' , item.SkuId , item.Value)" v-for="(item, index) of detailInfo.Color" :key="index" :data-value-id="item.SkuId" :data-index="index" >{{item.Value}}</view>
-                </view>
+        </view>
+        <view class="spec-item" v-if="detailInfo.Color.length != 0">
+            <view class="name">选择颜色</view>
+            <view class="values">
+            <view :class="item.SkuId == selectSku.Color ? 'selected value' : 'value'" @click="clickSkuValue('Color' , item.SkuId , item.Value)" v-for="(item, index) of detailInfo.Color" :key="index" :data-value-id="item.SkuId" :data-index="index" >{{item.Value}}</view>
             </view>
-            <view class="spec-item"  v-if="detailInfo.Size.length != 0">
-                <view class="name">选择尺寸</view>
-                <view class="values">
-                <view :class="item.SkuId == selectSku.Size ? 'selected value' : 'value'" @click="clickSkuValue('Size' , item.SkuId , item.Value)" v-for="(item, index) of detailInfo.Size" :key="item.SkuId" :data-value-id="item.SkuId" :data-index="index" :data-name-id="item.SkuId">{{item.Value}}</view>
-                </view>
+        </view>
+        <view class="spec-item"  v-if="detailInfo.Size.length != 0">
+            <view class="name">选择尺寸</view>
+            <view class="values">
+            <view :class="item.SkuId == selectSku.Size ? 'selected value' : 'value'" @click="clickSkuValue('Size' , item.SkuId , item.Value)" v-for="(item, index) of detailInfo.Size" :key="item.SkuId" :data-value-id="item.SkuId" :data-index="index" :data-name-id="item.SkuId">{{item.Value}}</view>
             </view>
-            <view class="spec-item"  v-if="detailInfo.Version.length != 0">
-                <view class="name">选择规格</view>
-                <view class="values">
-                <view :class="item.SkuId == selectSku.Version? 'selected value' : 'value'" @click="clickSkuValue('Version' , item.SkuId , item.Value)" v-for="(item, index) of detailInfo.Version" :key="item.SkuId" :data-value-id="item.SkuId" :data-index="index" :data-name-id="item.SkuId">{{item.Value}}</view>
-                </view>
+        </view>
+        <view class="spec-item"  v-if="detailInfo.Version.length != 0">
+            <view class="name">选择规格</view>
+            <view class="values">
+            <view :class="item.SkuId == selectSku.Version? 'selected value' : 'value'" @click="clickSkuValue('Version' , item.SkuId , item.Value)" v-for="(item, index) of detailInfo.Version" :key="item.SkuId" :data-value-id="item.SkuId" :data-index="index" :data-name-id="item.SkuId">{{item.Value}}</view>
             </view>
-            <view class="spec-item"  v-if="detailInfo.Material.length != 0">
-                <view class="name">选择材料</view>
-                <view class="values">
-                <view :class="item.SkuId == selectSku.Material ? 'selected value' : 'value'" @click="clickSkuValue('Material' , item.SkuId , item.Value)" v-for="(item, index) of detailInfo.Material" :key="item.SkuId" :data-value-id="item.SkuId" :data-index="index" :data-name-id="item.SkuId">{{item.Value}}</view>
-                </view>
+        </view>
+        <view class="spec-item"  v-if="detailInfo.Material.length != 0">
+            <view class="name">选择材料</view>
+            <view class="values">
+            <view :class="item.SkuId == selectSku.Material ? 'selected value' : 'value'" @click="clickSkuValue('Material' , item.SkuId , item.Value)" v-for="(item, index) of detailInfo.Material" :key="item.SkuId" :data-value-id="item.SkuId" :data-index="index" :data-name-id="item.SkuId">{{item.Value}}</view>
             </view>
-            <view class="spec-item"  v-if="detailInfo.Fashion.length != 0">
-                <view class="name">选择款式</view>
-                <view class="values">
-                <view :class="item.SkuId == selectSku.Fashion ? 'selected value' : 'value'" @click="clickSkuValue('Fashion' , item.SkuId , item.Value)" v-for="(item, index) of detailInfo.Fashion" :key="item.SkuId" :data-value-id="item.SkuId" :data-index="index" :data-name-id="item.SkuId">{{item.Value}}</view>
-                </view>
+        </view>
+        <view class="spec-item"  v-if="detailInfo.Fashion.length != 0">
+            <view class="name">选择款式</view>
+            <view class="values">
+            <view :class="item.SkuId == selectSku.Fashion ? 'selected value' : 'value'" @click="clickSkuValue('Fashion' , item.SkuId , item.Value)" v-for="(item, index) of detailInfo.Fashion" :key="item.SkuId" :data-value-id="item.SkuId" :data-index="index" :data-name-id="item.SkuId">{{item.Value}}</view>
             </view>
-            <view class="spec-item"  v-if="detailInfo.Grams.length != 0">
-                <view class="name">选择克重</view>
-                <view class="values">
-                <view :class="item.SkuId == selectSku.Grams ? 'selected value' : 'value'" @click="clickSkuValue('Grams' , item.SkuId , item.Value)" v-for="(item, index) of detailInfo.Grams" :key="item.SkuId" :data-value-id="item.SkuId" :data-index="index" :data-name-id="item.SkuId">{{item.Value}}</view>
-                </view>
+        </view>
+        <view class="spec-item"  v-if="detailInfo.Grams.length != 0">
+            <view class="name">选择克重</view>
+            <view class="values">
+            <view :class="item.SkuId == selectSku.Grams ? 'selected value' : 'value'" @click="clickSkuValue('Grams' , item.SkuId , item.Value)" v-for="(item, index) of detailInfo.Grams" :key="item.SkuId" :data-value-id="item.SkuId" :data-index="index" :data-name-id="item.SkuId">{{item.Value}}</view>
             </view>
-            <view class="spec-item"  v-if="detailInfo.Ensemble.length != 0">
-                <view class="name">选择套餐</view>
-                <view class="values">
-                <view :class="item.SkuId == selectSku.Ensemble ? 'selected value' : 'value'" @click="clickSkuValue('Ensemble' , item.SkuId , item.Value)" v-for="(item, index) of detailInfo.Ensemble" :key="item.SkuId" :data-value-id="item.SkuId" :data-index="index" :data-name-id="item.SkuId">{{item.Value}}</view>
-                </view>
+        </view>
+        <view class="spec-item"  v-if="detailInfo.Ensemble.length != 0">
+            <view class="name">选择套餐</view>
+            <view class="values">
+            <view :class="item.SkuId == selectSku.Ensemble ? 'selected value' : 'value'" @click="clickSkuValue('Ensemble' , item.SkuId , item.Value)" v-for="(item, index) of detailInfo.Ensemble" :key="item.SkuId" :data-value-id="item.SkuId" :data-index="index" :data-name-id="item.SkuId">{{item.Value}}</view>
             </view>
-            <view class="spec-item" >
-                <view class="name">点击选择物流方式</view>
-                <view class="values">
-                  <view class="selected value" @click="selectWuliu">{{strYjtype}}<span>></span></view>
-                </view>
+        </view>
+        <view class="spec-item" >
+            <view class="name">点击选择物流方式</view>
+            <view class="values">
+              <view class="selected value" @click="selectWuliu">{{strYjtype}}<span>></span></view>
             </view>
-            <view class="number-item" v-if="!detailInfo.IsCustom">
-                <view class="name">数量</view>
-                <view class="selnum">
-                <view class="cut" @click="cutNumber">-</view>
-                <input v-model="number" class="number"  type="number" confirm-type="done"/>
-                <view class="add" @click="addNumber">+</view>
-                </view>
+        </view>
+        <view class="number-item" v-if="!detailInfo.IsCustom">
+            <view class="name">数量</view>
+            <view class="selnum">
+            <view class="cut" @click="cutNumber">-</view>
+            <input v-model="number" class="number"  type="number" confirm-type="done"/>
+            <view class="add" @click="addNumber">+</view>
             </view>
-          </scroll-view>
-          <view class="car-btn clear" v-if="!SubmitByProductType">
-              <view class="car-add" @click="addToCart">加入购物车</view>
-              <view class="car-buy" @click="SubmitByProduct">立即购买</view>
-          </view>
-          <view class="car-btn clear" v-if="SubmitByProductType">
-              <view class="car-buy" style="width:100%;" @click="SubmitByProduct">立即购买</view>
-          </view>
+        </view>
+      </scroll-view>
+      <view class="car-btn clear" v-if="!SubmitByProductType">
+          <view class="car-add" @click="addToCart">加入购物车</view>
+          <view class="car-buy" @click="SubmitByProduct">立即购买</view>
+      </view>
+      <view class="car-btn clear" v-if="SubmitByProductType">
+          <view class="car-buy" style="width:100%;" @click="SubmitByProduct">立即购买</view>
       </view>
     </view>
     <!-- tabbar -->

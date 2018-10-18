@@ -1,7 +1,7 @@
 <template>
-    <swiper :class="{ 'banner ' : content.space == 0 , 'banner2': content.space == 1 }" indicator-dots="true" autoplay="true" interval="3000" duration="1000">
+    <swiper :class="{ 'banner ' : content.space == 0 , 'banner2': content.space == 1 }" :indicator-dots="content.space == 0 ? true : false" autoplay="true" interval="3000" duration="1000">
         <swiper-item v-for="item of content.dataset" :key="item.id">
-        <navigator :url="item.link">
+        <navigator  @click="onClick(item)">
             <img :class="{ 'full' : content.space == 0 , 'nofull': content.space == 1 }" :src="baseUrl+item.pic" background-size="cover" />
         </navigator>
         </swiper-item>
@@ -17,10 +17,16 @@ export default {
         content: Object
     },
     mounted () {
+        console.log(this.content)
     },
     computed: {
         baseUrl() {
             return this.$wx.baseUrl
+        }
+    },
+    methods: {
+        onClick(item) {
+            this.$emit('onClick' , item);
         }
     }
 }

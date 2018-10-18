@@ -19,9 +19,6 @@
         <text class="txt">评论</text>
       </view>
     </view>
-    <!-- <view class="sort-box-category" v-if="categoryFilter">
-      <view :class="item.checked ? 'active item' : 'item'" v-for="(item, index) of filterCategory" :key="cate-item.id" :data-category-index="index" @click="selectCategory">{{item.name}}</view>
-    </view> -->
   </view>
 
 
@@ -38,10 +35,6 @@
 
     <scroll-view scroll-y="true" scroll-top="scrollTop" :style="{'height': '100%'}" @bindscroll="onReachBottom">
         <view class="cate-item">
-            <!-- <view class="h">
-                <text class="name">{{currentCategory.name}}</text>
-                <text class="desc">{{currentCategory.front_name}}</text>
-            </view> -->
             <view class="b">
                 <view v-for="item of goodsList" :key="item.ProductId" :class="(index + 1) % 2 === 0 ? 'item-b item' : 'item'"
                    @click="toGoods(item)" >
@@ -121,7 +114,6 @@ export default {
   methods: {
      // 三个排序条件的点击事件
     openSortFilter: function (event) {
-      // this.goodsList = []
       let currentId = event.currentTarget.id;
       switch (currentId) {        
         case 'salesSort':
@@ -181,7 +173,6 @@ export default {
     },
     // 切换商品类别
     switchCate (event) {
-      // console.log('触发了点击事件，event为：', event);
       if (this.Id === event.currentTarget.dataset.id) {
         return false;
       }
@@ -207,7 +198,6 @@ export default {
     toGoods(item) {
       // 标准品false
       if(item.IsCustom) {
-        // this.$wx.toDetail({id : item.ProductId , title: item.ProductName , code : item.QitemCode} , this)
         this.$wx.toBaoJia({ pid: item.QitemCode , title: item.ProductName , isDetail: true , ProductId: item.ProductId } , this)
       } else {
         this.$wx.toDetail({id : item.ProductId , title: item.ProductName} , this)
@@ -223,14 +213,6 @@ export default {
   onPullDownRefresh: function() {
     this.refresh()
     wx.stopPullDownRefresh()
-  },
-  // 原生的分享功能
-  onShareAppMessage: function () {
-    return {
-      title: 'sassShop',
-      desc: '印生活',
-      path: '/pages/category/category'
-    }
   }
 }
 </script>

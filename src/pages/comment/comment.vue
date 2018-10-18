@@ -90,36 +90,13 @@ export default {
       this.ProductId = this.$route.query.valueId     
       this.pageNo++
       const res = await api.getCommentList({ ProductId: this.ProductId , pageNo: this.pageNo , commentType: this.commentType});      
-      if (res.success === true) {
+      if (res.success) {
         this.baseUrl = res.RequestUrl
        this.comments = this.comments.concat(res.comments)      
        this.allCount = res.goodComment
        this.hasPicCount = res.hasImages  
       }
     },
-
-     // 获得 评论详情
-    // async getCommentList () {
-    //   const res = await api.getCommentList({
-    //     valueId: this.valueId,
-    //     typeId: this.typeId,
-    //     size: this.size,
-    //     page: (this.showType === 0 ? this.allPage : this.picPage),
-    //     showType: this.showType
-    //   });
-    //   // console.log('评论详情', res);
-    //   if (res.errno === 0) {
-    //     if (this.showType === 0) {
-    //       this.allCommentList = this.allCommentList.concat(res.data.data);
-    //       this.allPage = res.data.currentPage;
-    //       this.comments = this.allCommentList.concat(res.data.data);
-    //     } else {
-    //       this.picCommentList = this.picCommentList.concat(res.data.data);
-    //       this.picPage = res.data.currentPage;
-    //       this.comments = this.picCommentList.concat(res.data.data);
-    //     }
-    //   }
-    // },
     // “全部”和“有图”切换
     switchTab (num) {
       this.commentType = num
@@ -131,14 +108,6 @@ export default {
   // 原生的触底加载
   onReachBottom: function () {
     this.getCommentList();
-  },
-  // 原生的分享功能
-  onShareAppMessage: function () {
-    return {
-      title: 'sassShop',
-      desc: '印生活',
-      path: '/pages/comment/comment'
-    }
   }
 }
 </script>

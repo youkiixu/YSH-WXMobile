@@ -49,6 +49,7 @@ export default {
     await Promise.all([
       this.getExpressInfo()
     ])
+    
   },
   methods: {
     // 获取物流信息
@@ -100,14 +101,6 @@ export default {
       setTimeout(() => {
         this.$router.back()
       }, 1500);
-    }
-  },
-  // 原生的分享功能
-  onShareAppMessage: function () {
-    return {
-      title: 'sassShop',
-      desc: '印生活',
-      path: '/pages/ucenter/express'
     }
   }
 }

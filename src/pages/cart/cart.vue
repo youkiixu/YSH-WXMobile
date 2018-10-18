@@ -138,7 +138,6 @@ export default {
       if(res.success) {
         var resData = JSON.parse(res.data)
         this.cartGoods = this.cartGoods.concat(resData.Table)
-        console.log(this.cartGoods)
       }
       // this.checkedAllStatus = this.isCheckedAll();
     },
@@ -195,7 +194,6 @@ export default {
     cutNumber (event) {
       let itemIndex = event.target.dataset.itemIndex;
       let cartItem = this.cartGoods[itemIndex];
-      console.log(cartItem.SaleNumber)
       const saleNumber =  cartItem.SaleNumber;//最低销售量
       let number = cartItem.Quantity - 1
       if(number < saleNumber) {
