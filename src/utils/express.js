@@ -24,23 +24,30 @@ const ZITI = {
 }
 function selectExpress(info) {
   var arr = []
-  if (info.isYJPeiSong && info.YjUse) {
-    arr.push(YJPEISONG.name)
-    arr.push(DAIFA.name)
-  }
-  if (info.YjUse && !info.isYJPeiSong) {
-    if (info.useFreightTempalate && info.productId == 2101) {
-      arr.push(ZHIYOU.name)
-    } else {
+  if(info.openId) {
+    console.log(`isYJPeiSong:${info.isYJPeiSong}`, `YjUse:${info.YjUse}`, `useFreightTempalate:${info.useFreightTempalate}`)
+    if (info.isYJPeiSong != false && info.YjUse == 1) {
+      arr.push(YJPEISONG.name)
       arr.push(DAIFA.name)
     }
+    if (info.YjUse == 1 && info.isYJPeiSong == false) {
+      if (info.useFreightTempalate == 1 && (info.productId == 61 || info.productId == 119 || info.productId == 121 || info.productId == 122)) {
+        arr.push(ZHIYOU.name)
+      } else {
+        arr.push(DAIFA.name)
+      }
+    }
+    if (info.useFreightTempalate == 1 && info.productId != 61 && info.productId != 119 && info.productId != 121 && info.productId != 122) {
+      arr.push(ZHIYOU.name)
+    }
+    if (info.YjUse != 1 && info.useFreightTempalate != 1) {
+      arr.push(ZHIYOU.name)
+    }
+  } else {
+    // 未登录都显示代发快递
+    arr.push(DAIFA.name)
   }
-  if (info.useFreightTempalate == 1 && info.productId != 2101) {
-    arr.push(ZHIYOU.name)
-  }
-  if (info.YjUse != 1 && info.useFreightTempalate != 1) {
-    arr.push(ZHIYOU.name)
-  }
+
 
   return arr
 }
@@ -63,7 +70,7 @@ function wuliuId(str) {
 }
 
 function checkYjUse(num) {
-  // 0是商家只有，0以上都是印捷
+  // 0是商家直邮，0以上都是印捷
   if (num == 0) {
     return 0
   } else {

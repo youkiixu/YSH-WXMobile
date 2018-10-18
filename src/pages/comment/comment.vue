@@ -2,7 +2,7 @@
 <view class="comments">
     <view class="h">
         <view :class="commentType == 1 ? 'active item' : 'item'" @click="switchTab(1)">
-            <view class="txt">全部({{allCount}})</view>
+            <view class="txt">好评({{allCount}})</view>
         </view>
 
         <view :class="commentType == 4 ? 'active item' : 'item'" @click="switchTab(4)">
@@ -92,7 +92,9 @@ export default {
       const res = await api.getCommentList({ ProductId: this.ProductId , pageNo: this.pageNo , commentType: this.commentType});      
       if (res.success === true) {
         this.baseUrl = res.RequestUrl
-       this.comments = this.comments.concat(res.comments)        
+       this.comments = this.comments.concat(res.comments)      
+       this.allCount = res.goodComment
+       this.hasPicCount = res.hasImages  
       }
     },
 
@@ -134,7 +136,7 @@ export default {
   onShareAppMessage: function () {
     return {
       title: 'sassShop',
-      desc: '印生活SASS商城',
+      desc: '印生活',
       path: '/pages/comment/comment'
     }
   }
@@ -181,8 +183,8 @@ export default {
 }
 
 .comments .h .item.active .txt{
-    color: #ab2b2b;
-    border-bottom: 4rpx solid #ab2b2b;
+    color: #20b2aa;
+    border-bottom: 4rpx solid #20b2aa;
 }
 
 .comments .b{

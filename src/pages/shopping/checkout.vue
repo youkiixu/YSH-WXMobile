@@ -169,7 +169,7 @@
                             </div>
                             <div class="weui-cell__bd">
                                 <picker @change="expressCompanyChange" :range="expressCompany">
-                                <div class="weui-select weui-select_in-select-after">{{expressCompany[expressCompanyIndex]}}</div>
+                                <div class="weui-select weui-select_in-select-after">{{daifaInfo.expressCompany}}</div>
                                 </picker>
                             </div>
                         </div>
@@ -229,7 +229,8 @@ export default {
             IsDaiShouHuoKuan: false,//是否代收货款
             // isCashOnDelivery: false,//是否代货到付款
             daiShouMoney: 0,//代收金额
-            CarryCompany: 7,//快递公司id
+            CarryCompany: '顺丰快递',//快递公司名字
+            CarryCompanyId: 7
         },
         expressCompany : ['顺丰快递'  , '运通快递' , '优速快递'],
         expressCompanyId: [ 7 , 11 , 28],
@@ -276,7 +277,7 @@ export default {
         var par = {
             quoteLogModelId: this.checkOutInfo.QuoteLogModel,
             UserId: this.userInfo.Id,
-            CompanyId: this.daifaInfo.CarryCompany,
+            CompanyId: this.daifaInfo.CarryCompanyId,
             fahuoCity: this.checkOutInfo.ShopAddress,
             recieveCity: this.address.RegionFullName,
             shuliang: this.checkOutInfo.Count,
@@ -313,28 +314,27 @@ export default {
     selectWuliu(e) {
         var _this = this;
         var checkOutInfo = this.checkOutInfo
+        const openId = wx.getStorageSync('openId')
         // 加载信息
         var info = {
             isYJPeiSong : checkOutInfo.IsPeisong,
             YjUse: checkOutInfo.YjUse,
             useFreightTempalate: checkOutInfo.UseFreightTemplate,
-            productId : checkOutInfo.products.ProductId
+            productId : checkOutInfo.products.ProductId,
+            openId: openId
         }
         var arr = express.selectExpress(info)
         // 初次进来默认选中第一个选项
         if(e) {
             this.$wx.showActionSheet(arr).then(res => {
                 var wuliuStr = arr[res.tapIndex]
-                console.log(wuliuStr)
                 _this.checkOutOther.Remindtype = express.wuliuId(wuliuStr)
-                console.log(_this.checkOutOther.Remindtype)
                 _this.checkOutOther.RemindtypeStr = wuliuStr
                 _this.getYunFeiEvent(wuliuStr)
             })
         } else {
             var wuliuStr = arr[0]
             _this.checkOutOther.Remindtype = express.wuliuId(wuliuStr)
-            console.log(_this.checkOutOther.Remindtype)
             _this.checkOutOther.RemindtypeStr = wuliuStr
             _this.getYunFeiEvent(wuliuStr)
         }
@@ -365,7 +365,8 @@ export default {
         } else {
             this.expressCompanyIndex = 0
         }
-        this.daifaInfo.CarryCompany = this.expressCompanyId[this.expressCompanyIndex]
+        this.daifaInfo.CarryCompany = this.expressCompany[this.expressCompanyIndex]
+        this.daifaInfo.CarryCompanyId = this.expressCompanyId[this.expressCompanyIndex]
         this.getCalculateFreight()
     },
     // 选择收获地址
@@ -454,11 +455,15 @@ export default {
         }
     }
   },
+    // 小程序原生下拉刷新
+  onPullDownRefresh: function() {
+    wx.stopPullDownRefresh()
+  },
   // 原生的分享功能
   onShareAppMessage: function () {
     return {
       title: 'sassShop',
-      desc: '印生活SASS商城',
+      desc: '印生活',
       path: '/pages/shopping/checkout'
     }
   }

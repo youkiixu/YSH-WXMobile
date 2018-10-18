@@ -113,7 +113,7 @@ const store = new Vuex.Store({
           url: '../../pages/shopping/checkout'
         })
       } else {
-        wx.showToast({
+        wx.showToast({ 
           title: res.msg,
           image: '/static/images/icon_error.png'
         })
@@ -140,21 +140,56 @@ const store = new Vuex.Store({
         })
       }
     },
+    // 购物车去下单页
+    async submitByShoppingCart (vm , cardId) {
+      const openId = wx.getStorageSync('openId')
+      var par = Object.assign({
+        'openId': openId
+      }, cardId)
+      loading()
+      const res = await api.submitByShoppingCart(par)
+      hideLoading()
+      if (res.success) {
+        vm.commit('setCheckOutInfo' , res.data)
+        wx.navigateTo({
+          url: '../../pages/cart/cartCheckout'
+        })
+      }
+      
+    },
     // 获取非标品报价
     async getProSearchRst(vm , skuInfo) {
       const openId = wx.getStorageSync('openId')
       var par = Object.assign({
         'openId': openId
       }, skuInfo)
-      loading()
-      const res = await api.getProSearchRst(par)
-      hideLoading()
-      if(res.success) {
-        vm.commit('setProSearchParam', skuInfo)
-        vm.commit('setProSearchRst', res.data)
-        wx.navigateTo({
-          url: '../../pages/auto/quoteList'
-        })
+      console.log(skuInfo)
+      vm.commit('setProSearchParam', skuInfo)
+      if (skuInfo.isDetail) {
+        // 从detail页过来的,不重写加载
+        if(skuInfo.detailCommon) {
+          
+        } else {
+          // 去详情页
+          const data = {
+            ProductId: skuInfo.ProductId,
+            ProductName: skuInfo.title,
+            code: skuInfo.qitemCode,
+          }
+          wx.navigateTo({
+            url: `../../pages/goods/goods?data=${JSON.stringify(data)}`
+          })
+        }
+      } else {
+        loading()
+        const res = await api.getProSearchRst(par)
+        hideLoading()
+        if (res.success) {
+          vm.commit('setProSearchRst', res.data)
+          wx.navigateTo({
+            url: '../../pages/auto/quoteList'
+          })
+        }
       }
     }
   }

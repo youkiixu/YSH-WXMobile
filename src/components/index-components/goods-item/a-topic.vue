@@ -3,7 +3,7 @@
       <view class="b">
         <scroll-view scroll-x="true" class="list">
           <view class="item" v-for="item of content.goodslist" :key="item.item_id">
-            <navigator :url="'../topic/topicDetail?id=' + item.item_id" class="nav">
+            <navigator  @click="toDetail(item)" class="nav">
               <img class="img" :src="baseUrl+ item.pic" background-size="cover" />
               <view class="np">
                 <text class="name">{{item.title}}</text>
@@ -25,6 +25,11 @@ export default {
         baseUrl() {
             return this.$wx.baseUrl
         }
+    },
+    methods: {
+      toDetail(item) {
+        this.$emit('onClick' , item);
+      }
     }
 }
 </script>

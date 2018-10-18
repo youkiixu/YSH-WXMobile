@@ -9,7 +9,7 @@ const request = new Fly()
 request.interceptors.request.use((request) => {
   // 给所有请求添加自定义header，带上token信息让服务器验证用户登陆
   request.headers['X-sassShop-Token'] = wx.getStorageSync('token');
-  console.log('flyio发请求,request为', request);
+  // console.log('flyio发请求,request为', request);
   wx.showNavigationBarLoading()
   return request
 })

@@ -177,6 +177,23 @@ function accMul(arg1, arg2) {
   } catch (e) {}
   return Number(s1.replace(".", "")) * Number(s2.replace(".", "")) / Math.pow(10, m)
 }
+// 精确加法
+function addNum(num1, num2) {
+  // var sq1, sq2, m;
+  // try {
+  //   sq1 = num1.toString().split(".")[1].length;
+  // } catch (e) {
+  //   sq1 = 0;
+  // }
+  // try {
+  //   sq2 = num2.toString().split(".")[1].length;
+  // } catch (e) {
+  //   sq2 = 0;
+  // }
+  // m = Math.pow(10, Math.max(sq1, sq2));
+  // return (num1 * m + num2 * m) / m;
+  return (num1 * 3 + num2 * 3) / 3
+}
 // 获取图片
 
 function getImagePathGroup(path) {
@@ -187,6 +204,23 @@ function getImagePathGroup(path) {
   return arr
 }
 
+function deepCopy(params) {
+   const objectStr = JSON.stringify(params)
+   return JSON.parse(objectStr)
+}
+
+	function encode(input) {
+    const output = input.split('&')
+	  return output;
+	}
+
+	function decode(input) {
+    let output = ''
+    input.map(item => {
+      output += item + '&'
+    })
+	  return output;
+	}
 
 const util = {
   login,
@@ -195,7 +229,11 @@ const util = {
   formatTime,
   checkMobile,
   getImagePathGroup,
-  accMul
+  accMul,
+  addNum,
+  deepCopy,
+  encode,
+  decode
 }
 
 export default util

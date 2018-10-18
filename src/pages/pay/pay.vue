@@ -7,16 +7,11 @@
     <view class="pay-list">
         <view class="h">请选择支付方式</view>
         <view class="b">
-            <view class="item">
+            <!-- <view class="item">
                 <view class="checkbox"></view>
                 <view class="icon-alipay"></view>
                 <view class="name">支付宝</view>
-            </view>
-            <view class="item">
-                <view class="checkbox"></view>
-                <view class="icon-net"></view>
-                <view class="name">网易支付</view>
-            </view>
+            </view> -->
             <view class="item">
                 <view class="checkbox checked"></view>
                 <image src="/static/images/wxpay.png" class="icon"/>
@@ -36,44 +31,58 @@ import wx from 'wx'
 export default {
   data () {
     return {
-      orderId: 0,
-      actualPrice: 0.00
+      orderId: '',
+      actualPrice: ''
     }
   },
-  async mounted () {
-    if (this.$route.query.orderId && this.$route.query.actualPrice) {
-      this.orderId = this.$route.query.orderId;
-      this.actualPrice = this.$route.query.actualPrice;
+  async onShow () {
+    if (this.$route.query.id && this.$route.query.productInfo) {
+      this.orderId = this.$route.query.id;
+      this.actualPrice = this.$route.query.productInfo;
     }
   },
   methods: {
     // 点击确定
     async startPay () {
-      const res = await api.PayPrepayIdFunc({ orderId: this.orderId, payType: 1 });
-      // console.log('pay页直接支付,请求结果', res);
-      if (res.errno === 0) {
-        let payParam = res.data;
-        wx.requestPayment({
-          'timeStamp': payParam.timeStamp,
-          'nonceStr': payParam.timeStamp,
-          'package': payParam.nonceStr,
-          'signType': payParam.signType,
-          'paySign': payParam.paySign,
-          'success': function (res) {
-            wx.redirectTo({
-              url: '../pay/payResult?status==1&orderId=' + this.orderId
-            })
-          },
-          'fail': function (res) {
-            wx.redirectTo({
-              url: '../pay/payResult?status=0&orderId=' + this.orderId
-            })
+      let that = this;
+      const openId = wx.getStorageSync('openId')
+      const miniProgram = wx.getAccountInfoSync()
+      var par = {
+          openId: openId,
+          pappid: miniProgram.miniProgram.appId,
+          orderIds: this.orderId
+      }
+      this.$wx.showLoading()
+      const res = await api.getSaaSQRCode(par);
+      this.$wx.hideLoading()
+
+      if (res.success  ) {
+          if(!res.bPay) {
+            const data = JSON.parse(res.data.paySign)
+            // 原生的支付方法
+            wx.requestPayment({
+                'timeStamp': data.timeStamp,
+                'nonceStr': data.nonceStr,
+                'package': data.package,
+                'signType': data.signType,
+                'paySign': data.paySign,
+                'success': function (res) {
+                    wx.redirectTo({
+                        url: '../pay/payResult?status=1&Id=' + that.OrderId
+                    })
+                },
+                'fail': function (res) {
+                    wx.redirectTo({
+                        url: '../pay/payResult?status=0&Id=' + that.OrderId
+                    })
+                }
+            });
+          } else {
+              this.$wx.showErrorToast('此订单已支付')
           }
-        })
+
       } else {
-        wx.redirectTo({
-          url: '../pay/payResult?status=0&orderId=' + this.orderId
-        })
+        this.$wx.showErrorToast('发起支付失败')
       }
     }
   },
@@ -81,7 +90,7 @@ export default {
   onShareAppMessage: function () {
     return {
       title: 'sassShop',
-      desc: '印生活SASS商城',
+      desc: '印生活',
       path: '/pages/pay/pay'
     }
   }
@@ -198,7 +207,7 @@ page{
     width: 100%;
     text-align: center;
     line-height: 100rpx;
-    background: #b4282d;
+    background: #009e96;
     color: #fff;
     font-size: 30rpx;
 }

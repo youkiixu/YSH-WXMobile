@@ -51,9 +51,9 @@
                        <view class="ShopName">{{item.ShopName}}</view>
                        <view class="b-bottom clear">
                           <view class="price">
-                           <text class="icon">￥</text>{{item.MinSalePrice}}
+                           <text class="icon"></text>{{item.IsCustom ? '定制报价' : '￥' + item.MinSalePrice}}
                           </view> 
-                          <view class="dealNum">成交 124904 笔</view> 
+                          <view class="dealNum">成交 {{item.SaleCounts}} 笔</view> 
                        </view>
                       
                     </view>
@@ -205,13 +205,13 @@ export default {
     },
     // 跳转到商品下单页面
     toGoods(item) {
-      this.$wx.toGoodsDetail(item , this)
-      // // 标准品false
-      // if(item.IsCustom) {
-      //   this.$router.push({ path: '/pages/auto/queryquote', query: { pid: item.QitemCode } })
-      // } else {
-      //   this.$router.push({ path: '/pages/goods/goods', query: { data: JSON.stringify(item) } })
-      // }
+      // 标准品false
+      if(item.IsCustom) {
+        // this.$wx.toDetail({id : item.ProductId , title: item.ProductName , code : item.QitemCode} , this)
+        this.$wx.toBaoJia({ pid: item.QitemCode , title: item.ProductName , isDetail: true , ProductId: item.ProductId } , this)
+      } else {
+        this.$wx.toDetail({id : item.ProductId , title: item.ProductName} , this)
+      }
     }
   },
   // 小程序原生上拉加载
@@ -228,7 +228,7 @@ export default {
   onShareAppMessage: function () {
     return {
       title: 'sassShop',
-      desc: '印生活SASS商城',
+      desc: '印生活',
       path: '/pages/category/category'
     }
   }

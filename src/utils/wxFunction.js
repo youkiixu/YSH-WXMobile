@@ -64,6 +64,13 @@ function formatBoolToInt(object) {
 }
 
 function toGoodsDetail (item , vm) {
+    // vm.$router.push({
+    //   path: '/pages/goods/goods',
+    //   query: {
+    //     data: JSON.stringify(item)
+    //   }
+    // })
+  // 不区分是否非标，全部进入单个商品也
   // 标准品false , vm是this
   if (item.IsCustom) {
     vm.$router.push({
@@ -80,6 +87,38 @@ function toGoodsDetail (item , vm) {
       }
     })
   }
+}
+// 去商品详情页
+function toDetail(item , vm) {
+  let data = {
+    ProductId: item.id,
+    // ProductName: item.title
+  }
+  if(item.code) {
+    data = Object.assign(data , {code: item.code})
+  }
+  vm.$router.push({
+    path: '/pages/goods/goods',
+    query: {
+      data: JSON.stringify(data)
+    }
+  })
+}
+// 去非标报价页
+function toBaoJia(item , vm) {
+    let isDetail = item.isDetail ? true : false
+    let ProductId = item.ProductId ? item.ProductId : ''
+    let detailCommon = item.detailCommon ? item.detailCommon : false
+    vm.$router.push({
+      path: '/pages/auto/queryquote',
+      query: {
+        pid: item.pid,
+        title: item.title,
+        isDetail: isDetail,
+        ProductId: ProductId,
+        detailCommon: detailCommon
+      }
+    })
 }
 
 function toLogin(isBack) {
@@ -150,7 +189,9 @@ const wxFun = {
     baseUrl,
     toLogin,
     orderStatus,
-    getImagePath
+    getImagePath,
+    toBaoJia,
+    toDetail
 }
 
 export default wxFun

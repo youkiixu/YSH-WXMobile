@@ -195,6 +195,13 @@ module.exports = [
     }
   },
   {
+    path: 'pages/cart/cartCheckout',
+    name: 'cartCheckout',
+    config: {
+      navigationBarTitleText: '确认订单'
+    }
+  },
+  {
     path: 'pages/shopping/address',
     name: 'address',
     config: {
