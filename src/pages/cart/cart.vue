@@ -53,7 +53,7 @@
         </view>
       </view>
     </view>
-
+    
    <view class="cart-bottom">
       <view :class="checkedAllStatus ? 'checked checkbox' : 'checkbox'" @click="checkedAll">全选</view>
       <view class="total">总金额：<text class="total-price">{{'￥'+ allPrice}}</text></view>
@@ -70,6 +70,7 @@
 import api from '@/utils/api'
 import wx from 'wx'
 import util from '@/utils/util'
+
 import { mapState , mapActions } from 'vuex'
 
 export default {
