@@ -1,27 +1,5 @@
 {
   "pages": [
-    "pages/auto/autoquote",
-    "pages/index/index",
-    "pages/catalog/catalog",
-    "pages/cart/cart",
-    "pages/ucenter/index",
-    "pages/category/category",
-    "pages/newGoods/newGoods",
-    "pages/hotGoods/hotGoods",
-    "pages/comment/comment",
-    "pages/comment/commentPost",
-    "pages/search/search",
-    "pages/goods/goods",
-    "pages/ucenter/order",
-    "pages/ucenter/orderDetail",
-    "pages/ucenter/collect",
-    "pages/ucenter/address",
-    "pages/ucenter/addressAdd",
-    "pages/ucenter/express",
-    "pages/shopping/checkout",
-    "pages/shopping/address",
-    "pages/pay/pay",
-    "pages/pay/payResult"
   ],
   "window": {
     "backgroundTextStyle": "dark",

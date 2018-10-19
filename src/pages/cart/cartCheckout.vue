@@ -188,7 +188,7 @@ export default {
   computed: {
         ...mapState([
             'userInfo',
-            'checkOutInfo',
+            'cartCheckOutInfo',
             'address'
         ]),
         baseUrl () {
@@ -206,7 +206,7 @@ export default {
         }
     },      
   async mounted () {
-    const data = this.checkOutInfo
+    const data = this.cartCheckOutInfo
     this.goodList = []
     this.set_address(data.Address)
     var _this = this;
@@ -315,7 +315,7 @@ export default {
         }
         if(str == '印捷配送') {
             // 让选择印捷默认的地址
-            this.set_address(this.checkOutInfo.Address)
+            this.set_address(this.cartCheckOutInfo.Address)
             this.renderUI()
         }
         
@@ -349,13 +349,13 @@ export default {
             return
         }
         this.$router.push({
-            path: '../shopping/address'
+            path: '../../shoppingPages/address'
         })
     },
     // 添加收获地址
     addAddress () {
         this.$router.push({
-            path: '../shopping/addressAdd'
+            path: '../../addressPages/addressAdd'
         })
     },
     // 点击“去付款”

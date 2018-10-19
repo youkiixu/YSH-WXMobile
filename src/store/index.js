@@ -24,7 +24,8 @@ const store = new Vuex.Store({
     addressList: [],//个人地址列表
     checkOutInfo: {},//下单页面信息
     proSearchParam : {},//非标报价的参数
-    proSearchRst: {}//非标报价后的厂家价格列表
+    proSearchRst: {},//非标报价后的厂家价格列表
+    cartCheckOutInfo: {} //购物车下单页面参数
   },
   mutations: {
     getSassIndexData (state , res) {
@@ -52,6 +53,10 @@ const store = new Vuex.Store({
     // 设置非标报价的参数
     setProSearchParam (state , res) {
       state.proSearchParam = res
+    },
+    // 设置购物车下单信息
+    setCartCheckOutInfo(state, res) {
+      state.cartCheckOutInfo = res
     }
   },
   actions: {
@@ -110,7 +115,7 @@ const store = new Vuex.Store({
       if(res.success) {
         vm.commit('setCheckOutInfo', JSON.parse(res.data))
         wx.navigateTo({
-          url: '../../pages/shopping/checkout'
+          url: '../shoppingPages/checkout'
         })
       } else {
         wx.showToast({ 
@@ -131,7 +136,7 @@ const store = new Vuex.Store({
       if (res.success) {
         vm.commit('setCheckOutInfo', res.data)
         wx.navigateTo({
-          url: '../../pages/shopping/checkout'
+          url: '../shoppingPages/checkout'
         })
       } else {
         wx.showToast({
@@ -150,9 +155,9 @@ const store = new Vuex.Store({
       const res = await api.submitByShoppingCart(par)
       hideLoading()
       if (res.success) {
-        vm.commit('setCheckOutInfo' , res.data)
+        vm.commit('setCartCheckOutInfo' , res.data)
         wx.navigateTo({
-          url: '../../pages/cart/cartCheckout'
+          url: './cartCheckout'
         })
       }
       
@@ -176,7 +181,7 @@ const store = new Vuex.Store({
             code: skuInfo.qitemCode,
           }
           wx.navigateTo({
-            url: `../../pages/goods/goods?data=${JSON.stringify(data)}`
+            url: `../../goodsPages/goods?data=${JSON.stringify(data)}`
           })
         }
       } else {
@@ -186,7 +191,7 @@ const store = new Vuex.Store({
         if (res.success) {
           vm.commit('setProSearchRst', res.data)
           wx.navigateTo({
-            url: '../../pages/auto/quoteList'
+            url: './quoteList'
           })
         } else {
           wx.showToast({

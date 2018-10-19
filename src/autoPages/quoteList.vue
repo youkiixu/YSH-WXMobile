@@ -107,6 +107,8 @@ export default {
                 quantity: 1,
                 dataStr: item.QuoteStr,
                 quoteJson : item.GroupJson,
+                Price: item.Price,
+                paraStr: item.QuoteStr
                 // Yjtype: this.Yjtype
                 // YjUse: this.YjUse
             }

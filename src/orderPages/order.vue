@@ -153,16 +153,8 @@ export default {
       // 给pay页面传两个参数orderId,actualPrice
       // console.log('订单信息', currentOrder);
       wx.redirectTo({
-        url: '../pay/pay?orderId=' + currentOrder.id + '&actualPrice=' + currentOrder.actual_price
+        url: '../pages/pay/pay?orderId=' + currentOrder.id + '&actualPrice=' + currentOrder.actual_price
       })
-    }
-  },
-  // 原生的分享功能
-  onShareAppMessage: function () {
-    return {
-      title: '印生活商城',
-      desc: '我的订单',
-      path: '/pages/ucenter/order'
     }
   },
   // 小程序原生上拉加载

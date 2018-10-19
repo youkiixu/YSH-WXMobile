@@ -1,6 +1,6 @@
 module.exports = [
   {
-    path: '/pages/index/index',
+    path: 'pages/index/index',
     name: 'index',
     config: {
       enablePullDownRefresh: true
@@ -40,14 +40,16 @@ module.exports = [
     }
   },
   {
-    path: 'pages/comment/comment',
+    path: 'commentPages/comment',
+    subPackage: true,
     name: 'comment',
     config: {
       navigationBarTitleText: '商品评论'
     }
   },
   {
-    path: 'pages/comment/commentPost',
+    path: 'commentPages/commentPost',
+    subPackage: true,
     name: 'commentPost',
     config: {
       navigationBarTitleText: '提交评论'
@@ -61,24 +63,35 @@ module.exports = [
     }
   },
   {
-    path: 'pages/goods/goods',
+    path: 'goodsPages/goods',
+    subPackage: true,
     name: 'goods',
     config: {
       navigationBarTitleText: '商品详情'
     }
   },
   {
-    path: 'pages/ucenter/order',
+    path: 'orderPages/order',
+    subPackage: true,
     name: 'order',
     config: {
       navigationBarTitleText: '我的订单'
     }
   },
   {
-    path: 'pages/ucenter/orderDetail',
+    path: 'orderPages/orderDetail',
+    subPackage: true,
     name: 'orderDetail',
     config: {
       navigationBarTitleText: '订单详情'
+    }
+  },
+  {
+    path: 'orderPages/express',
+    subPackage: true,
+    name: 'express',
+    config: {
+      navigationBarTitleText: '物流查询'
     }
   },
   {
@@ -89,24 +102,19 @@ module.exports = [
     }
   },
   {
-    path: 'pages/ucenter/address',
+    path: 'addressPages/address',
+    subPackage: true,
     name: 'address',
     config: {
       navigationBarTitleText: '地址管理'
     }
   },
   {
-    path: 'pages/ucenter/addressAdd',
+    path: 'addressPages/addressAdd',
+    subPackage: true,
     name: 'addressAdd',
     config: {
       navigationBarTitleText: '编辑地址'
-    }
-  },
-  { 
-    path: 'pages/ucenter/express',
-    name: 'express',
-    config: {
-      navigationBarTitleText: '物流查询'
     }
   },
   {
@@ -117,7 +125,8 @@ module.exports = [
     }
   },
   {
-    path: 'pages/shopping/checkout',
+    path: 'shoppingPages/checkout',
+    subPackage: true,
     name: 'checkout',
     config: {
       navigationBarTitleText: '确认订单'
@@ -131,7 +140,8 @@ module.exports = [
     }
   },
   {
-    path: 'pages/shopping/address',
+    path: 'shoppingPages/address',
+    subPackage: true,
     name: 'address',
     config: {
       navigationBarTitleText: '地址管理'
@@ -152,7 +162,8 @@ module.exports = [
     }
   },
   {
-    path: 'pages/auto/autoquote',
+    path: 'autoPages/autoquote',
+    subPackage: true,
     name: 'autoquote',
     config: {
       navigationBarTitleText: '自助报价',
@@ -160,7 +171,8 @@ module.exports = [
     }
   },
   {
-    path: 'pages/auto/queryquote',
+    path: 'goodsPages/queryquote',
+    subPackage: true,
     name: 'queryquote',
     config: {
       navigationBarTitleText: '商品报价',
@@ -168,7 +180,8 @@ module.exports = [
     }
   },
   {
-    path: 'pages/auto/quoteList',
+    path: 'autoPages/quoteList',
+    subPackage: true,
     name: 'quoteList',
     config: {
       navigationBarTitleText: '厂家报价'

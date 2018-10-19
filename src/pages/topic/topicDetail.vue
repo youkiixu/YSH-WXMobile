@@ -112,7 +112,7 @@ export default {
     },
     // 进入“提交评论”页
     async postComment () {
-      this.$router.push('/pages/comment/commentPost?valueId=' + this.id + '&typeId=1');
+      this.$router.push('/packageA/comment/commentPost?valueId=' + this.id + '&typeId=1');
     }
   },
   // 原生的分享功能

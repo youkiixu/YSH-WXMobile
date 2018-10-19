@@ -27,7 +27,7 @@
   </view>
   <view class="myOrder">
       <view class="h clear">
-          <navigator url="/pages/ucenter/order">
+          <navigator url="/orderPages/order">
               <text class="t">我的订单</text>
               <text class="i">查看全部订单</text>            
           </navigator>
@@ -162,7 +162,7 @@ export default {
 
     toOrderList(orderStatus) {
       this.$router.push({
-        path: '/pages/ucenter/order',
+        path: '/orderPages/order',
         query: {
           orderStatus: orderStatus
         }
