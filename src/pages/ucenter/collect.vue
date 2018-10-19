@@ -21,13 +21,13 @@
   <view class="goodslist">
       <view class="group-item">
         <view class="goods">
-          <view class="item clear" @click="checkedItem(index)"  @touchstart="touchStart" @touchend="touchEnd"
+          <view class="item clear"    @touchstart="touchStart" @touchend="touchEnd"
       v-for="(item, index) of collectList" :key="item.Id" :data-index="index">
       <!-- <view :class="selectGoods.Id == item.Id ? 'checked checkbox' : 'checkbox'"  :data-item-index="index"></view> -->
-            <view :class="item.checked == true ? 'checked checkbox' : 'checkbox'"  :data-item-index="index" v-if="iseditGoodsCollect"></view>
+            <view :class="item.checked == true ? 'checked checkbox' : 'checkbox'" @click.stop="checkedItem(index)" :data-item-index="index" v-if="iseditGoodsCollect"></view>
             <view class="cart-goods clear">
-              <img class="img" :src="item.imagePath"/>
-              <view class="info">
+              <img class="img" :src="baseUrl + item.imagePath + '/1_350.png'"/>
+              <view class="info" @click="openGoods(item)">
                 <view class="t">
                   <text class="name">{{item.ProductName}}</text>                 
                 </view>
@@ -102,6 +102,11 @@ export default {
     await Promise.all([
       this.GetFavoriteProductList()
     ])
+  },
+  computed: {
+    baseUrl () {
+      return this.$wx.baseUrl
+    },
   },
   methods: {
     // 获取我的收藏信息
@@ -195,6 +200,9 @@ export default {
     },
     // 长按删除，点击进入商品详情
     async openGoods (event) {
+      console.log(event)
+      
+      return
       const openId = wx.getStorageSync('openId')
       let goodsId = this.collectList[event.currentTarget.dataset.index].Id;
       console.log('goodsId为：',goodsId)

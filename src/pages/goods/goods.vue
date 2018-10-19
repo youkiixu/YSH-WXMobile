@@ -950,19 +950,6 @@ page{
 .c-price .price-icon{
   font-size: 34rpx;
 }
-/* .goods-info .c-collect{
-  float: right;
-  margin-top: 3rpx;
-  width: 44rpx;
-  height: 44rpx;
-  border: 1rpx solid red;
-
-} 
-.goods-info .c-collect img{
-  width: 44rpx;
-  height: 44rpx;
-  text-align: center;
-}*/
 .goods-info .c-collect{
     float: right;
     margin-top: 3rpx;
@@ -1193,31 +1180,6 @@ page{
   font-size: 28rpx;
   color: #555555;
 }
-
-
-
-
-/* .comments .imgs {
-  width: 720rpx;
-  height: auto;
-  margin-bottom: 25rpx;
-}
-
-.comments .imgs .img {
-  height: 150rpx;
-  width: 150rpx;
-  margin-right: 28rpx;
-}
-
-.comments .spec {
-  width: 720rpx;
-  padding-right: 30rpx;
-  line-height: 30rpx;
-  font-size: 34rpx;
-  color: #999;
-  margin-bottom: 30rpx;
-} */
-
 .goods-attr {
   width: 750rpx;
   height: auto;

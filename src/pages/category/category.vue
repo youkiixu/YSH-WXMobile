@@ -32,13 +32,18 @@
     </view>
   </view>
   
-  <view class="search-result">
-    <scroll-view scroll-y="true"  :scroll-top="scrollTop" class="cate-out" @scroll="onPageScroll">
+  <!-- <view class="search-result">
+    <scroll-view scroll-y="true" id="loupanList" :scroll-top="scrollTop" class="cate-out"  lower-threshold="0"  @scroll="onPageScroll">
       <sortGoods :goodsList="goodsList"></sortGoods>
       <searchResultEmpty v-if="!goodsList.length"></searchResultEmpty>
     </scroll-view>   
+  </view> -->
+
+  <view class="search-result">
+      <sortGoods :goodsList="goodsList"></sortGoods>
+      <searchResultEmpty v-if="!goodsList.length"></searchResultEmpty>    
   </view>
-    <view class="scollTop"  @click="toTop" :hidden="!floorstatus">顶部</view>
+    <!-- <view class="scollTop"  @click="toTop" :hidden="!floorstatus">顶部</view> -->
 </view>
 </template>
 
@@ -152,9 +157,11 @@ export default {
       }
     },
     //回到顶部
-    toTop: function (e) {           
-        this.scrollTop = 0    
-        console.log('返回位置：',this.scrollTop)          
+    toTop: function (e) {      
+        console.log('点击事件')       
+        this.scrollTop = 0   
+        console.log('返回位置：',this.scrollTop)       
+        
     },
     async searchGoods() {
       const res = await api.search({ cid: this.Id , pageNo: this.page , pageSize : this.size , orderKey: this.orderKey });
@@ -198,21 +205,21 @@ export default {
     }
   },
 
-     // 获取滚动条当前位置
-    onPageScroll : function(e){
-      console.log('滚动位置：',e.scrollTop)
-      if (e.scrollTop > 5) {     
-          this.floorstatus = true  
-           this.scrollTop = e.scrollTop    
-      } else {
-       this.floorstatus = false
-       this.scrollTop = e.scrollTop 
-      }
-      console.log(this.scrollTop)
-      // if(e.scrollTop != 0) {
-      //   position:'fixed'
-      // } 
-    },
+    //  // 获取滚动条当前位置
+    // onPageScroll : function(e){
+    
+    //   if (e.scrollTop > 5) {     
+    //       this.floorstatus = true  
+    //        //this.scrollTop = e.scrollTop    
+    //   } else {
+    //    this.floorstatus = false
+    //    //this.scrollTop = e.scrollTop 
+    //   }
+
+    //   // if(e.scrollTop != 0) {
+    //   //   position:'fixed'
+    //   // } 
+    // },
   //小程序原生上拉加载
   onReachBottom () {
     this.page++
@@ -228,13 +235,19 @@ export default {
 
 <style scoped>
 @import "../../css/sortGoods.css";
-
+/* page {
+height: 100vh;
+width: 100vw;
+overflow: hidden;
+} */
 .container{
     background: #f1f1f1;
 }
-.cate-out{
-  height: 100vh;
-}
+/* .cate-out{
+  flex: 1;
+  overflow-x: hidden;
+  overflow-y: auto;
+} */
 .clear:after{
     display: block;
     content:'';
