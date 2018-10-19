@@ -1,6 +1,6 @@
 <template >
 <view class="container">
-  <view class="cate-head">
+  <view class="cate-head" :style="position">
     <view class="sort">
     <view class="sort-box">
       <view :class=" currentSortType == 'default' ? 'active item' : 'item'"  @click="openSortFilter" id="defaultSort">
@@ -33,7 +33,7 @@
   </view>
   
   <view class="search-result">
-    <scroll-view scroll-y="true" :scroll-top="scrollTop" class="cate-out" bindscroll="onPageScroll">
+    <scroll-view scroll-y="true"  :scroll-top="scrollTop" class="cate-out" @scroll="onPageScroll">
       <sortGoods :goodsList="goodsList"></sortGoods>
     </scroll-view>   
   </view>
@@ -64,12 +64,13 @@ export default {
       categoryFilter: false,
       keyword: '',
       scrollLeft: 0,
-      scrollTop: 1,
+      scrollTop: 0,
       scrollHeight: 0,
       floorstatus: false,
       page: 1,
       size: 20, // 默认10000尽量大，查到所有符合的数据
-      orderKey: 1
+      orderKey: 1,
+      position:''
     }
   }, 
   async mounted () {
@@ -147,10 +148,10 @@ export default {
           this.refresh();
       }
     },
-  
     //回到顶部
-    toTop: function (e) {  // 一键回到顶部      
-        this.scrollTop = 0      
+    toTop: function (e) {           
+        this.scrollTop = 0    
+        console.log('返回位置：',this.scrollTop)          
     },
     async searchGoods() {
       const res = await api.search({ cid: this.Id , pageNo: this.page , pageSize : this.size , orderKey: this.orderKey });
@@ -196,13 +197,18 @@ export default {
 
      // 获取滚动条当前位置
     onPageScroll : function(e){
-       console.log('滚动位置',e.detail.scrollTop)
-      if (e.detail.scrollTop > 100) {     
-          this.floorstatus = true      
+      console.log('滚动位置：',e.scrollTop)
+      if (e.scrollTop > 5) {     
+          this.floorstatus = true  
+           this.scrollTop = e.scrollTop    
       } else {
        this.floorstatus = false
+       this.scrollTop = e.scrollTop 
       }
-   
+      console.log(this.scrollTop)
+      // if(e.scrollTop != 0) {
+      //   position:'fixed'
+      // } 
     },
   //小程序原生上拉加载
   onReachBottom () {
@@ -219,6 +225,7 @@ export default {
 
 <style scoped>
 @import "../../css/sortGoods.css";
+
 .container{
     background: #f1f1f1;
 }
@@ -353,6 +360,7 @@ export default {
 
 .search-result{
     padding-top: 172rpx;
+    /* z-index: 10; */
 }
 
 .scollTop{

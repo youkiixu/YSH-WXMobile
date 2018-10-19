@@ -1,6 +1,6 @@
 <template>
 <view>
-  <scroll-view scroll-y="true" scroll-top="scrollTop" :style="{'height': '100%'}" @bindscroll="onReachBottom">
+  <scroll-view scroll-y="true" scroll-top="scrollTop" enable-back-to-top="true" :style="{'height': '100%'}" >
         <view class="cate-item">           
             <view class="b"> 
                   <view v-for="item of goodsList" :key="item.ProductId" :class="(index + 1) % 2 === 0 ? 'item-b item' : 'item'"

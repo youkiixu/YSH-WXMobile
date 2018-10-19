@@ -33,14 +33,20 @@
   </view>
 
   <view class="search-result" v-if="searchStatus && goodsList.length">
-    <sortGoods :goodsList = goodsList></sortGoods>
+    <scroll-view scroll-y="true" :scroll-top="scrollTop" class="cate-out" @bindscroll="onPageScroll">
+      <sortGoods :goodsList = goodsList></sortGoods>
+    </scroll-view>
   </view>
+
+ 
   
 
   <view class="search-result-empty" v-if="!goodsList.length && searchStatus">
     <img class="icon" src="http://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/noSearchResult-7572a94f32.png"/>
     <text class="text">您寻找的商品还未上架</text>
   </view>
+
+   <view class="scollTop"  @click="toTop" :hidden="!floorstatus">顶部</view>
 </scroll-view>
 </template>
 
@@ -68,7 +74,9 @@ export default {
       size: 20,
       currentSortOrder: 'desc',
       timer: null,
-      orderKey: 1
+      orderKey: 1,    
+      scrollTop: 0,
+      floorstatus: false
     }
   },
   async mounted () {
@@ -87,6 +95,10 @@ export default {
     // 点击“取消”
     closeSearch () {
       this.$router.back()
+    },
+     //回到顶部
+    toTop: function () {         
+        this.scrollTop = 0   
     },
     // 输入框获得焦点
     inputFocus () {
@@ -174,6 +186,18 @@ export default {
     }
     
   },
+
+    // 获取滚动条当前位置
+    onPageScroll : function(e){
+      console.log('滚动位置：',e.scrollTop)
+      if (e.scrollTop > 5) {     
+          this.floorstatus = true  
+          this.scrollTop = e.scrollTop    
+      } else {
+       this.floorstatus = false
+       this.scrollTop = e.scrollTop 
+      }  
+    },
   // 小程序原生上拉加载
   onReachBottom () {
     this.page++
@@ -200,6 +224,10 @@ export default {
 page{
   min-height: 100%;
   background-color: #f4f4f4;
+  
+}
+.cate-out{
+  height: 100vh;
 }
  .search-header{
     position: fixed;
@@ -492,5 +520,23 @@ page{
     font-size: 28rpx;
     text-align: center;
     color: #999;
+}
+
+.scollTop{
+  width: 86rpx;
+  height: 86rpx;
+  color: #585c63;
+  font-size: 20rpx;
+  text-align: center;
+  line-height: 120rpx;
+  border-radius: 50%;
+  box-shadow: 0px 0px 2px 2px #f1f1f1;
+  position: fixed;
+  bottom: 55rpx;
+  right: 20rpx;
+  z-index: 1000;
+  background: url(http://www.kiy.cn/Areas/wxMobile/Content/img/up-arrow.png) center 25% no-repeat;
+  background-size: 38rpx; 
+  background-color: #fff;
 }
 </style>
