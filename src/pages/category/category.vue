@@ -35,6 +35,7 @@
   <view class="search-result">
     <scroll-view scroll-y="true" :scroll-top="scrollTop" class="cate-out" bindscroll="onPageScroll">
       <sortGoods :goodsList="goodsList"></sortGoods>
+      <searchResultEmpty v-if="!goodsList.length"></searchResultEmpty>
     </scroll-view>   
   </view>
     <view class="scollTop"  @click="toTop" :hidden="!floorstatus">顶部</view>
@@ -46,10 +47,12 @@ import api from '@/utils/api'
 import wx from 'wx'
 import { mapState } from 'vuex'
 import sortGoods from '@/components/sortGoods'
+import searchResultEmpty from '@/components/searchResultEmpty'
 
 export default {
   components: {
-    sortGoods
+    sortGoods,
+    searchResultEmpty
   },
   data () {
     return {
@@ -196,7 +199,6 @@ export default {
 
      // 获取滚动条当前位置
     onPageScroll : function(e){
-       console.log('滚动位置',e.detail.scrollTop)
       if (e.detail.scrollTop > 100) {     
           this.floorstatus = true      
       } else {

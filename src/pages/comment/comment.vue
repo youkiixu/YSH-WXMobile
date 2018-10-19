@@ -25,7 +25,7 @@
       </view>
       <view class="comment">{{item.ReviewContent}}</view>
       <view class="imgs" v-if="item.Images">
-        <image class="img" v-for="(iitem, iindex) in item.AppendImages" :key="iitem.id" :src="iitem" :data-index="iindex" @click="previewImage(item.AppendImages , iindex)"/>
+        <image class="img" v-for="(iitem, iindex) in item.AppendImages" :key="iindex" :src="iitem"  @click="previewImage(item.AppendImages , iindex)"/>
       </view>
       <view class="customer-service" v-if="item.ReplyContent != '暂无回复'">
         <text class="u">卖家回复：</text>
@@ -126,7 +126,7 @@ export default {
     previewImage (images , index) {
         wx.previewImage({
             urls: images,
-            current: index
+            current: images[index]
         })
     }
   },

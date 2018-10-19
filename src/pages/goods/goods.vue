@@ -53,7 +53,7 @@
               <!-- 非标品参数 -->
               <view  v-if="detailInfo.IsCustom">
                 <text class="td"  >
-                  {{ListPriceInfo.paraStr}}
+                  <text v-for="(item , index) in ListPriceInfo.paraArr" :key="index">{{item.paraStr}}</text>
                 </text>
               </view>
               <!-- 标准品参数 -->
@@ -126,15 +126,15 @@
             <view class="p" v-else><text class="p-icon">￥</text>{{ListPriceInfo.sprice}}</view>
             <view class="s" v-if="!detailInfo.IsCustom">库存：{{Stock}}</view>
             <view class="a" v-if="!detailInfo.IsCustom">已选：<text>{{selectSkuStr.Color}} {{selectSkuStr.Size}} {{selectSkuStr.Version}} {{selectSkuStr.Material}} {{selectSkuStr.Fashion}} {{selectSkuStr.Grams}} {{selectSkuStr.Ensemble}}</text></view>
-            <view class="a" v-if="detailInfo.IsCustom"><text>{{ListPriceInfo.paraStr}}</text></view>
+            <view class="a" v-if="detailInfo.IsCustom"><text v-for="(item , index) in ListPriceInfo.paraArr" :key="index">{{item.paraStr}}</text></view>
           </view>
       </view>
       </view>
       <scroll-view scroll-y class="spec-con">
         <view class="spec-item" v-if="detailInfo.IsCustom">
             <view class="name">点击选择参数</view>
-            <view class="values">
-              <view class="selected value" @click="toBaojia">{{ListPriceInfo.paraStr}}</view>
+            <view class="values"  v-for="(item , index) in ListPriceInfo.paraArr" :key="index">
+              <view class="selected value" @click="toBaojia">{{item.paraStr}}</view>
             </view>
         </view>
         <view class="spec-item" v-if="detailInfo.Color.length != 0">
@@ -249,17 +249,7 @@ export default {
       },
       id: 0,
       Ids: '',
-      // goods: {},
       gallery: [],
-      // attribute: [],
-      // issueList: [],
-      // comment: [],
-      // brand: {},
-      // specificationList: [],
-      // productList: [],
-      // relatedGoods: [],
-      // cartGoodsCount: 0,
-      // userHasCollect: 0,
       number: 1,
       saleNumber: 1,
       checkedSpecText: '请选择规格数量',
@@ -297,31 +287,26 @@ export default {
       code: 0,
       ListPriceInfo: {
         sprice : 1,
-        paraStr: ''
+        paraArr: []
       },
       openQuotSuccess: false,
       defalutHead: 'http://www.kiy.cn/Areas/wxMobile/Content/img/detailpage/'+ Math.floor(Math.random() * 7 + 1) +'.png'
     }
   },
   mounted () {
-    // this.id = 146
     if (this.$route.query.data) {
           const data = JSON.parse(this.$route.query.data);
           if(data.ProductName) {
             this.setTitle(data.ProductName)
           }
           this.id = data.ProductId
-          console.log('data为:',data)
-
           // 非标报价id , 标准品为0
           this.code = data.code ? data.code : 0
-
-          if(data.proSearchParam) {
-            console.log(util.decode(data.proSearchParam))
+          if(this.$route.query.proSearchParam) {
             var param = {
-              dataStr: util.decode(data.proSearchParam)
+              dataStr: util.decode(this.$route.query.proSearchParam)
             }
-            this.data.setProSearchParam(param)
+            this.setProSearchParam(param)
           }
       }
     this.refresh()
@@ -351,7 +336,7 @@ export default {
       this.skuId = ''
       this.ListPriceInfo = {
         sprice : 1,
-        paraStr: ''
+        paraArr: []
       }
       // 2018.10.13:清空前一次的sku信息，防止下一次进来还存留
       this.selectSku = {
@@ -406,7 +391,7 @@ export default {
         openId: openId,
         productId: this.id
       }
-      this.$wx.showLoading('正在报价...')
+      this.$wx.showLoading( openId ? '正在报价...' : '登录后价格更优')
       const res = await api.getOpenQuote(par)
       this.$wx.hideLoading()
       this.openQuotSuccess = res.success
@@ -415,12 +400,13 @@ export default {
         const Data = JSON.parse(res.Data)
         const ListPriceInfo  = Data.ListPriceInfo[0]
         this.ListPriceInfo.sprice = res.SumPrice
-        this.ListPriceInfo.paraStr = ListPriceInfo.logJson[0].paraStr
+        this.ListPriceInfo.paraArr = ListPriceInfo.logJson
+
         this.ListPriceInfo.Data =ListPriceInfo
         this.ListPriceInfo.res = res
       } else {
         this.ListPriceInfo.sprice = 0
-        this.ListPriceInfo.paraStr = ''
+        this.ListPriceInfo.paraArr = []
         // this.$wx.showErrorToast('报价失败')
       }
       
@@ -586,7 +572,6 @@ export default {
          const res = await api.IsCollection({ ProductId: this.id , openId: openId }) 
          let data = JSON.parse(res.data)     
          this.collectStatus = res.data;
-         console.log('Ids',this.Id)
 
           if (this.collectStatus) {//取消收藏
                 const openId = wx.getStorageSync('openId')
@@ -714,11 +699,15 @@ export default {
           // 重定义非标品的skuId和数量
           par.skuId = this.detailInfo.ProductId + '_0_0_0_0_0_0_0'
           par.quantity = 1
+          let paraArr = ''
+          this.ListPriceInfo.paraArr.map(item => {
+            paraArr += item.paraStr + ','
+          })
           par = Object.assign(par , 
             { 
               dataStr : this.proSearchParam.dataStr , 
               quoteJson: JSON.stringify(this.ListPriceInfo.Data.GroupJson) , 
-              ParaStr : this.ListPriceInfo.paraStr,
+              paraStr : util.delLastStr(paraArr , ','),
               Price: this.ListPriceInfo.sprice
             }
           )
@@ -749,7 +738,6 @@ export default {
         productId : detailInfo.ProductId,
         openId: openId
       }
-      console.log(info)
       // 根据上面的信息，返回文字数组
       var arr = express.selectExpress(info)
 
@@ -812,29 +800,20 @@ export default {
   },
   // 原生的分享功能
   onShareAppMessage: function () {
-     const data = JSON.parse(this.$route.query.data);
-      const ProductId = this.detailInfo.ProductId
-      // 非标报价id , 标准品为0
-      const code = this.code != 0 ? this.code : undefined
-      const par = {
-        ProductId: ProductId,
-        ProductName: this.detailInfo.ProductName,
-        code: code
-      }
-      let urlPath = '/pages/goods/goods?data=' + JSON.stringify(par)
-      if(this.detailInfo.IsCustom) {
-        urlPath += '&&proSearchParam=' + util.encode(this.proSearchParam.dataStr)
-      }
+    const goodsUrl = util.getGoodsUrl({
+      ProductId: this.detailInfo.ProductId,
+      ProductName: this.detailInfo.ProductName,
+      code: this.code != 0 ? this.code : undefined,
+      IsCustom: this.detailInfo.IsCustom , 
+      dataStr: this.proSearchParam.dataStr
+    })
 
-      let shareInfo = {
-        title: this.detailInfo.ProductName,
-        desc: this.detailInfo.ShopName,
-        path: urlPath,
-        imageUrl: this.RequestUrl + this.gallery[0]
-      }
-
-
-    return shareInfo
+    return {
+      title: this.detailInfo.ProductName,
+      desc: this.detailInfo.ShopName,
+      path: goodsUrl,
+      imageUrl: this.baseUrl + this.gallery[0]
+    }
   },
     // 每次打开触发，更新数据
   onShow () {
@@ -1091,12 +1070,13 @@ page{
 
 .address-nav .t {
   float: left;
-  width: 600rpx;
+  width: 700rpx;
   height: 100rpx;
   line-height: 100rpx;
   font-size: 28rpx;
   color: #555555;
   margin-left: 31.25rpx;
+  overflow: hidden;
 }
 .address-nav .t .td{
   color: #282828;

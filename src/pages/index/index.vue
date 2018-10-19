@@ -1,11 +1,12 @@
 <template >
 <view class="container">
-  <view class="index-searchbar">
+  <view class="index-searchbar" v-if="sassIndex">
     <searchBar></searchBar>
   </view>
-  <view v-for="(item , index ) in sassIndex" :key="index">
+  <view v-for="(item , index ) in sassIndex" :key="index" v-if="sassIndex">
     <indexComponent :item="item"></indexComponent>
   </view>
+  <loadingComponent v-if="!sassIndex"></loadingComponent>
 </view>
 </template>
 
@@ -14,11 +15,13 @@
 import { mapState, mapActions } from 'vuex'
 import searchBar from '@/components/indexSearchBar'
 import indexComponent from '@/components/index-components/indexComponent'
+import loadingComponent from '@/components/loadingComponent'
 
 export default {
   components: {
     searchBar,
-    indexComponent
+    indexComponent,
+    loadingComponent
   },
   computed: {
     ...mapState([
@@ -27,7 +30,6 @@ export default {
   },
   async mounted () {
     const res = wx.getAccountInfoSync()
-    console.log(res)
     await Promise.all([
       // this.getIndexData(),
       this.getSassIndex()

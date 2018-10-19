@@ -34,13 +34,10 @@
 
   <view class="search-result" v-if="searchStatus && goodsList.length">
     <sortGoods :goodsList = goodsList></sortGoods>
-  </view>
+  </view> 
   
 
-  <view class="search-result-empty" v-if="!goodsList.length && searchStatus">
-    <img class="icon" src="http://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/noSearchResult-7572a94f32.png"/>
-    <text class="text">您寻找的商品还未上架</text>
-  </view>
+  <searchResultEmpty v-if="!goodsList.length && searchStatus"></searchResultEmpty>
 </scroll-view>
 </template>
 
@@ -49,11 +46,13 @@ import api from '@/utils/api'
 import wx from 'wx'
 import sortGoods from '@/components/sortGoods'
 import searchBar from '@/components/indexSearchBar'
+import searchResultEmpty from '@/components/searchResultEmpty'
 
 export default {
   components: {
     sortGoods,
-    searchBar
+    searchBar,
+    searchResultEmpty
   },
   data () {
     return {
@@ -97,7 +96,6 @@ export default {
     async getGoodsList () {
       this.historyKeyword = [];
       const res = await api.search({keywords: this.keyword , pageNo: this.page , pageSize: this.size , orderKey: this.orderKey})
-      console.log('搜索结果', res);
       if (res.success) {
         this.searchStatus = true;
         this.categoryFilter = false;
@@ -472,25 +470,5 @@ page{
 .search-result {
   padding-top: 172rpx;
 }
-.search-result-empty{
-    width: 100%;
-    height: 100%;
-    padding-top: 300rpx;
-}
 
-.search-result-empty .icon{
-    margin: 0 auto;
-    display: block;
-    width: 240rpx;
-    height: 240rpx;
-}
-
-.search-result-empty .text{
-    display: block;
-    width: 100%;
-    height: 40rpx;
-    font-size: 28rpx;
-    text-align: center;
-    color: #999;
-}
 </style>
