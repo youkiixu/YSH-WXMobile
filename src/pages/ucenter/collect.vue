@@ -162,7 +162,7 @@ export default {
       const openId = wx.getStorageSync('openId')
       var idStr = ''
       var ids = ''
-      this.collectList.map((item , index) => {
+      this.collectList.map((item , index) => {//循环
           if(item.checked){
             idStr += item.ProductId + ','
             ids += item.Id + ','
