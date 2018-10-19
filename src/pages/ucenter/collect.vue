@@ -201,8 +201,24 @@ export default {
     // 长按删除，点击进入商品详情
     async openGoods (event) {
       console.log(event)
-      
-      return
+
+
+            const ProductId = event.ProductId
+            const res = await api.getProductQitemCode({Id : ProductId})
+            if(res.success) {
+                const pid = res.data
+                if( pid != 0 ) {
+                this.$wx.toBaoJia({ pid: pid , title: ProductName , isDetail: true , ProductId: ProductId } , this)
+                } else {
+                this.$wx.toDetail({id : ProductId , title: event.ProductName} , this)
+                }
+            } else {
+                this.$wx.showErrorToast(res.msg)
+            }
+
+
+
+     
       const openId = wx.getStorageSync('openId')
       let goodsId = this.collectList[event.currentTarget.dataset.index].Id;
       console.log('goodsId为：',goodsId)

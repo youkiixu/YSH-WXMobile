@@ -89,10 +89,10 @@ export default {
     closeSearch () {
       this.$router.back()
     },
-     //回到顶部
-    toTop: function () {         
-        this.scrollTop = 0   
-    },
+    //  //回到顶部
+    // toTop: function () {         
+    //     this.scrollTop = 0   
+    // },
     // 输入框获得焦点
     inputFocus () {
       this.searchStatus = false;
@@ -179,17 +179,17 @@ export default {
     
   },
 
-    // 获取滚动条当前位置
-    onPageScroll : function(e){
-      console.log('滚动位置：',e.scrollTop)
-      if (e.scrollTop > 5) {     
-          this.floorstatus = true  
-          this.scrollTop = e.scrollTop    
-      } else {
-       this.floorstatus = false
-       this.scrollTop = e.scrollTop 
-      }  
-    },
+    // // 获取滚动条当前位置
+    // onPageScroll : function(e){
+    //   console.log('滚动位置：',e.scrollTop)
+    //   if (e.scrollTop > 5) {     
+    //       this.floorstatus = true  
+    //       this.scrollTop = e.scrollTop    
+    //   } else {
+    //    this.floorstatus = false
+    //    this.scrollTop = e.scrollTop 
+    //   }  
+    // },
   // 小程序原生上拉加载
   onReachBottom () {
     this.page++
