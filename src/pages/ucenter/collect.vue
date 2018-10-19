@@ -3,8 +3,8 @@
 
 <view class="collect-head">
    <view class="sort">  
-      <view class="item">商品收藏</view>  
-      <view class="item">厂家收藏</view>  
+      <view class="item" @click="GoodsCollect">商品收藏</view>  
+      <view class="item" @click="shopCollect">厂家收藏</view>  
       <view class="item">我的足迹</view>   
   </view>
   <view class="classifi">  
@@ -21,10 +21,10 @@
   <view class="goodslist">
       <view class="group-item">
         <view class="goods">
-          <view class="item clear" @click="openGoods"  @touchstart="touchStart" @touchend="touchEnd"
-      v-for="(item, index) of collectList" :key="item.id" :data-index="index">
+          <view class="item clear" @click="checkedItem(index)"  @touchstart="touchStart" @touchend="touchEnd"
+      v-for="(item, index) of collectList" :key="item.Id" :data-index="index">
       <!-- <view :class="selectGoods.Id == item.Id ? 'checked checkbox' : 'checkbox'"  :data-item-index="index"></view> -->
-            <view class="checkbox" v-if="iseditGoodsCollect"></view>
+            <view :class="item.checked == true ? 'checked checkbox' : 'checkbox'"  :data-item-index="index" v-if="iseditGoodsCollect"></view>
             <view class="cart-goods clear">
               <img class="img" :src="item.imagePath"/>
               <view class="info">
@@ -46,8 +46,8 @@
       <view class="cart-bottom clear" v-if="iseditGoodsCollect">
       <!-- <view :class="checkedAllStatus ? 'checked checkbox' : 'checkbox'" @click="checkedAll">全选({{cartTotal.checkedGoodsCount}})</view> -->
       <!-- <view class="delete" @click="deleteCart" v-if="isEditCart">删除</view> -->
-      <view class="checkbox" @click="checkedAll">全选</view>
-      <view class="delete" @click="deleteCart">删除</view>
+      <view :class="checkedAllStatus ? 'checked checkbox' : 'checkbox'" @click="checkedAll">全选</view>
+      <view class="delete" @click="deleteGoods">删除</view>
       
     </view>
 
@@ -91,9 +91,13 @@ export default {
       pageSize: 20,
       isgoodsCollect:true,
       isshopCollect:false,
-      iseditGoodsCollect:false
+      iseditGoodsCollect:false,
+      checkedAllStatus: false,
+      selectGoods:0,
+      ProductIds:0
     }
   },
+   // 每次打开触发，更新数据
   async mounted () {
     await Promise.all([
       this.GetFavoriteProductList()
@@ -114,22 +118,81 @@ export default {
     editGoodsCollect () {
       // 编辑状态
       if (this.iseditGoodsCollect) {
-        // this.getCartList();
+        this.GetFavoriteProductList()
         this.iseditGoodsCollect = !this.iseditGoodsCollect;
       } else {
         // 非编辑状态
-        // let tmpCartList = this.cartGoods.map(function (v) {
-        //   v.checked = false;
-        //   return v;
-        // });
-        // this.editCartList = this.cartGoods;
-        // this.cartGoods = tmpCartList;
         this.iseditGoodsCollect = !this.iseditGoodsCollect;
-        // this.checkedAllStatus = this.isCheckedAll();
-        // this.cartTotal.checkedGoodsCount = this.getCheckedGoodsCount();
+      
       }
     },
+    // checkbox的点击事件
+    async checkedItem (index) {
+      var goodsList = this.collectList
+      this.collectList = []
+      if(goodsList[index].checked == undefined) {
+        goodsList[index].checked = false
+      }
+      goodsList[index].checked = !goodsList[index].checked
+      this.collectList = goodsList
+    },
+    // 点击底部的“全选”
+    checkedAll () {
+      var _this = this
+      let tmpGoodsList = this.collectList.map(function (v) {
+          v.checked = !_this.checkedAllStatus;
+          return v;
+      });
+      this.collectList = tmpGoodsList
+      this.checkedAllStatus = this.isCheckedAll();
+    },
+    // 判断购物车是否全选
+    isCheckedAll () {
+      return this.collectList.every(function (element, index, array) {
+        if (element.checked === true) {
+          return true;
+        } else {
+          return false;
+        }
+      });
+    },
 
+     // 点击“删除所选”
+     async deleteGoods () {
+      const openId = wx.getStorageSync('openId')
+      var idStr = ''
+      var ids = ''
+      this.collectList.map((item , index) => {
+          if(item.checked){
+            idStr += item.ProductId + ','
+            ids += item.Id + ','
+          }
+      })
+      var par = {
+        openId: openId,
+        Ids: ids,    
+        ProductIds: idStr 
+      }
+      this.$wx.showLoading()
+      
+      const res = await api.CancelConcernProducts(par)
+      this.$wx.hideLoading() 
+      if(res.success) {
+        // this.collectList = this.collectList.filter(function (element, index, array) {
+        // if (element.Id === par.Ids) {        
+        //     return false;           
+        //   } else {
+        //     return true;            
+        //   }         
+        // })    
+        this.pageNo = 0
+        this.collectList = []
+        this. GetFavoriteProductList()    
+        this.$wx.showSuccessToast('移除成功!')
+      } else {
+        this.$wx.showErrorToast(res.msg)
+      }
+    },
     // 长按删除，点击进入商品详情
     async openGoods (event) {
       const openId = wx.getStorageSync('openId')
@@ -155,7 +218,7 @@ export default {
                   icon: 'success',
                   duration: 2000
                 });
-                that.getCollectList();
+                that.GetFavoriteProductList();
               }
             }
           }
@@ -173,6 +236,45 @@ export default {
     // 按下事件结束
     touchEnd (e) {
       this.touch_end = e.timeStamp;
+    }
+  },
+   watch: {
+    cartGoods (oldval , newval) {
+      if(oldval.length == 0 || newval.length == 0) {
+        return
+      }
+      const len = newval.length 
+      let num = 0
+      newval.map((item) => {
+        if(item.checked) {
+          num++
+        }
+      })
+      if(num == len) {
+        this.checkedAllStatus = true
+      } else {
+        this.checkedAllStatus = false
+      }
+    }
+  },
+    // 小程序原生上拉加载
+  onReachBottom () {
+    this.pageNo++
+    this.GetFavoriteProductList()
+  },
+  // 小程序原生下拉刷新
+  onPullDownRefresh: function() {
+    this.pageNo = 1
+    this.collectList = []
+    this.GetFavoriteProductList()
+    wx.stopPullDownRefresh()
+  },
+  // 原生的分享功能
+  onShareAppMessage: function () {
+    return {
+      title: 'sassShop',
+      desc: '印生活',
+      path: '/pages/ucenter/collect'
     }
   }
 }

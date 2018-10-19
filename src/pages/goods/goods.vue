@@ -38,8 +38,8 @@
                 <view class="c-price" v-if="!detailInfo.IsCustom"><text class="price-icon" >￥</text>{{detailInfo.Price}}</view>
                 <!-- 非标品价格 -->
                 <view class="c-price"  v-else><text class="price-icon" >￥</text>{{ListPriceInfo.sprice}}</view>
-                <view class="c-collect" @click="addCannelCollect">           
-                    <img class="icon" :src="collectProduImage"/>           
+                <view :class="collectStatus ? 'c-collect collected' : 'c-collect'"  @click="addCannelCollect">           
+                    <!-- <img class="icon" :src="collectProduImage"/>            -->
                 </view>
               </view>
               <view class="con-text">
@@ -248,6 +248,7 @@ export default {
         Ensemble: []
       },
       id: 0,
+      Ids: '',
       // goods: {},
       gallery: [],
       // attribute: [],
@@ -266,6 +267,7 @@ export default {
       collectProduImage:'/static/images/collect.png',
       collectBackImage: '/static/images/share.png',
       goodDetailHTMLstr: '',
+      collectStatus:false,
       skuInfo: [],
       selectSku: {
         Color: 0,
@@ -309,6 +311,8 @@ export default {
             this.setTitle(data.ProductName)
           }
           this.id = data.ProductId
+          console.log('data为:',data)
+
           // 非标报价id , 标准品为0
           this.code = data.code ? data.code : 0
 
@@ -577,15 +581,54 @@ export default {
     },
     // 购物车的五角星，添加或是取消收藏
     async addCannelCollect () {
-        const openId = wx.getStorageSync('openId')
-        const res = await api.AddFavoriteProduct({ ProductId: this.id , openId: openId })   
-         if (res.success) {
-            // let data = JSON.parse(res.data)   
-           this.$wx.showSuccessToast('收藏成功')
-        } else {
-          this.$wx.showSuccessToast('收藏失败')
-        }            
+        // 判断商品是否已收藏
+         const openId = wx.getStorageSync('openId')
+         const res = await api.IsCollection({ ProductId: this.id , openId: openId }) 
+         let data = JSON.parse(res.data)     
+         this.collectStatus = res.data;
+         console.log('Ids',this.Id)
+
+          if (this.collectStatus) {//取消收藏
+                const openId = wx.getStorageSync('openId')
+                const res2 = await api.CancelConcernProducts({ Ids: this.Ids ,ProductIds : this.id,  openId: openId })
+                if (res2.success) {
+                  this.collectStatus = false;
+                this.$wx.showSuccessToast('取消成功')
+              } else {        
+                this.$wx.showSuccessToast('取消失败')
+              }                                
+            } else {//添加收藏          
+                  const openId = wx.getStorageSync('openId')
+                  const res1 = await api.AddFavoriteProduct({ ProductId: this.id , openId: openId }) 
+                  if (res1.success) {
+                  this.collectStatus = true;                 
+                  this.$wx.showSuccessToast('收藏成功')
+                  }          
+              } 
+
+
+        // const openId = wx.getStorageSync('openId')
+        // const res = await api.AddFavoriteProduct({ ProductId: this.id , openId: openId })  
+        //  if (res.success) {
+        //    this.$wx.showSuccessToast('收藏成功')
+        // } else {
+        //   this.$wx.showSuccessToast('收藏失败')
+        // }  
+        
     },
+    // 判断商品是否已收藏
+    //  async IsCollection () {
+    //   const openId = wx.getStorageSync('openId')
+    //   const res = await api.IsCollection({ ProductId: this.id , openId: openId }) 
+
+    //    if (res.success) { 
+    //         return res.data
+    //     } else {
+    //      return false
+    //       // this.$wx.showSuccessToast('未收藏')
+    //     }  
+    // },
+
     // 跳转到购物车页面
     openCartPage () {
       wx.switchTab({
@@ -928,17 +971,31 @@ page{
 .c-price .price-icon{
   font-size: 34rpx;
 }
-.goods-info .c-collect{
+/* .goods-info .c-collect{
   float: right;
   margin-top: 3rpx;
   width: 44rpx;
   height: 44rpx;
+  border: 1rpx solid red;
 
-}
+} 
 .goods-info .c-collect img{
   width: 44rpx;
   height: 44rpx;
   text-align: center;
+}*/
+.goods-info .c-collect{
+    float: right;
+    margin-top: 3rpx;
+    width: 44rpx;
+    height: 44rpx;
+    background: url(http://www.kiy.cn/Areas/wxMobile/Content/img/collect.png) no-repeat;
+    background-size: 44rpx;
+}
+
+.goods-info .collected{
+    background: url(http://www.kiy.cn/Areas/wxMobile/Content/img/collect-color.png) no-repeat;
+    background-size: 44rpx;
 }
 .goods-info .con-text{
   padding:10rpx 50rpx 0 30rpx;

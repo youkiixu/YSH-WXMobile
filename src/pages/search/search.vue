@@ -1,14 +1,17 @@
 <template >
 <scroll-view class="container" style="height: 100%;">
+  
   <view class="search-header">
     <view class="input-box">
-      <img class="icon" @click="getSeach" src="http://nos.netease.com/mailpub/hxm/yanxuan-wap/p/20150730/style/img/icon-normal/search2-2fb94833aa.png"/>
-       <!-- @input="inputChange" @focus="inputFocus" @confirm="onKeywordConfirm" -->
-      <input name="input" class="keywrod" focus="true" v-model="keyword" confirm-type="search" @confirm="onKeywordConfirm"  :placeholder="defaultKeyword.keyword" />
-      <img class="del" v-if="keyword" @click="clearKeyword" src="http://nos.netease.com/mailpub/hxm/yanxuan-wap/p/20150730/style/img/icon-normal/clearIpt-f71b83e3c2.png"/>
+      <img class="icon" @click="getSeach" />
+      <!-- @input="inputChange" @focus="inputFocus" @confirm="onKeywordConfirm" -->
+      <input name="input" class="keywrod" focus="true" v-model="keyword" confirm-type="search" @confirm="onKeywordConfirm"  placeholder="商品搜索" />
+      <!-- <img class="del" v-if="keyword" @click="clearKeyword" src="http://nos.netease.com/mailpub/hxm/yanxuan-wap/p/20150730/style/img/icon-normal/clearIpt-f71b83e3c2.png"/> -->
     </view>
-    <view class="right" @click="closeSearch">取消</view>
+    <!-- <view class="right" @click="closeSearch">取消</view> -->
   </view>
+ 
+
   <view class="sort" v-if="searchStatus">
     <view class="sort-box">
       <view :class=" currentSortType == 'default' ? 'active item' : 'item'"  @click="openSortFilter" id="defaultSort">
@@ -32,6 +35,7 @@
   <view class="search-result" v-if="searchStatus && goodsList.length">
     <sortGoods :goodsList = goodsList></sortGoods>
   </view>
+  
 
   <view class="search-result-empty" v-if="!goodsList.length && searchStatus">
     <img class="icon" src="http://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/noSearchResult-7572a94f32.png"/>
@@ -44,10 +48,12 @@
 import api from '@/utils/api'
 import wx from 'wx'
 import sortGoods from '@/components/sortGoods'
+import searchBar from '@/components/indexSearchBar'
 
 export default {
   components: {
-    sortGoods
+    sortGoods,
+    searchBar
   },
   data () {
     return {
@@ -189,11 +195,113 @@ export default {
 }
 </script>
 
+
 <style>
 page{
   min-height: 100%;
   background-color: #f4f4f4;
 }
+ .search-header{
+    position: fixed;
+    top: 0;
+    width: 700rpx;
+    height: 91rpx;
+    display: flex;
+    background: #fff;
+    border-bottom: 1px solid rgba(0,0,0,.15);
+    padding: 0 31.25rpx;
+    font-size: 29rpx;
+    color: #333;
+    z-index: 99;
+}
+
+.search-header .input-box{
+    width:606rpx;
+    height:60rpx;
+    background-color:#f7f7f7;
+    color:#9b9b9b;
+    border-radius:30rpx;
+    display:flex;
+    align-items:center;
+    padding-left:40rpx;
+    margin-left:24rpx;
+}
+.search-header .icon{
+  background: url(http://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/search2-2fb94833aa.png) left center no-repeat;
+  background-size: 50%;
+  width: 28rpx;
+  height: 28rpx;
+  flex: 1;
+}
+.search-header .input-box .keywrod{
+  width: 600rpx;
+  height: 100%;
+  color: #000;
+  font-size: 30rpx;
+  flex: 10;
+}
+
+
+
+/* .search-header .del{
+    position: absolute;
+    top: 3rpx;
+    right: 10rpx;
+    width: 53rpx;
+    height: 53rpx;
+    z-index: 10;
+}
+
+.search-header .keywrod{
+    position: absolute;
+    top: 0;
+    left: 40rpx;
+    width: 506rpx;
+    height: 59rpx;
+    padding-left: 30rpx;
+}
+
+.search-header .right{
+    margin-top: 24rpx;
+    margin-left: 31rpx;
+    margin-right: 6rpx;
+    width: 58rpx;
+    height: 43rpx;
+    line-height: 43rpx;
+    float: right;
+} 
+.search-header{
+ height: 88rpx;
+  width: 100%;
+  padding: 0 30rpx;
+  background: #fff; 
+  display: flex;
+  align-items: center;
+}
+.input-box{
+  width: 690rpx;
+  height: 56rpx;
+  background: #ededed;
+  border-radius: 8rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 24rpx;
+ 
+} */
+/* .index-searchbar {
+  position: fixed;
+  z-index: 99;
+  left: 0rpx;
+  width:750rpx;
+  overflow: hidden;
+  padding:10rpx 0;
+  height:74rpx;
+  background: #fff;
+} */
+
+
+
 .sort{
     position: fixed;
     height: 78rpx;
@@ -281,67 +389,7 @@ page{
   background-color: #f4f4f4;
 }
 
-.search-header{
-    position: fixed;
-    top: 0;
-    width: 700rpx;
-    height: 91rpx;
-    display: flex;
-    background: #fff;
-    border-bottom: 1px solid rgba(0,0,0,.15);
-    padding: 0 31.25rpx;
-    font-size: 29rpx;
-    color: #333;
-    z-index: 9999;
-}
 
-.search-header .input-box{
-    position: relative;
-    margin-top: 16rpx;
-    float: left;
-    width: 0;
-    flex: 1;
-    height: 59rpx;
-    line-height: 59rpx;
-    padding: 0 20rpx;
-    background: #f4f4f4;
-}
-
-.search-header .icon{
-    position: absolute;
-    top: 14rpx;
-    left: 20rpx;
-    width: 31rpx;
-    height: 31rpx;
-}
-
-.search-header .del{
-    position: absolute;
-    top: 3rpx;
-    right: 10rpx;
-    width: 53rpx;
-    height: 53rpx;
-    z-index: 10;
-}
-
-.search-header .keywrod{
-    position: absolute;
-    top: 0;
-    left: 40rpx;
-    width: 506rpx;
-    height: 59rpx;
-    padding-left: 30rpx;
-}
-
-.search-header .right{
-    margin-top: 24rpx;
-    margin-left: 31rpx;
-    margin-right: 6rpx;
-    width: 58rpx;
-    height: 43rpx;
-    line-height: 43rpx;
-    float: right;
-}
 
 .no-search{
     height: auto;

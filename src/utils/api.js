@@ -150,6 +150,10 @@ const api = {
    AddFavoriteProduct: (paramObj) => request.post('/Wxmobile/Collection/AddFavoriteProduct', paramObj, {
     baseURL: ApiKiyUrl
   }),
+  // 判断商品是否已收藏
+  IsCollection: (paramObj) => request.post('/Wxmobile/Collection/IsCollection', paramObj, {
+    baseURL: ApiKiyUrl
+  }),
   // 取消收藏
   CancelConcernProducts: (paramObj) => request.post('/Wxmobile/Collection/CancelConcernProducts', paramObj, {
     baseURL: ApiKiyUrl
