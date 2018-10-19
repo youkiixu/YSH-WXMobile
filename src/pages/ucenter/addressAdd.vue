@@ -159,7 +159,9 @@ export default {
     },
     // 获得对应级别的地市信息
     async getRegionList (regionId) {
+      this.$wx.showLoading()
       const res = await api.getYinJieRegion({id: regionId});
+      this.$wx.hideLoading()
       this.regionList = res
     },
     // 设置是否为默认地址

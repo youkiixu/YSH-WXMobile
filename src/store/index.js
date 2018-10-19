@@ -163,7 +163,6 @@ const store = new Vuex.Store({
       var par = Object.assign({
         'openId': openId
       }, skuInfo)
-      console.log(skuInfo)
       vm.commit('setProSearchParam', skuInfo)
       if (skuInfo.isDetail) {
         // 从detail页过来的,不重写加载
@@ -188,6 +187,11 @@ const store = new Vuex.Store({
           vm.commit('setProSearchRst', res.data)
           wx.navigateTo({
             url: '../../pages/auto/quoteList'
+          })
+        } else {
+          wx.showToast({
+            title: res.msg,
+            image: '/static/images/icon_error.png'
           })
         }
       }

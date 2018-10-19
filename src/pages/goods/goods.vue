@@ -85,7 +85,7 @@
               <view class="item">
                 <view class="info clear">
                   <view class="user">
-                      <img />
+                      <img :src="defalutHead" />
                       <text>{{comment.UserName}}</text>
                   </view>
                   <view class="star">{{comment.star}}</view>
@@ -119,7 +119,7 @@
         <img class="icon" src="/static/images/icon_close.png"/>
       </view>
       <view class="img-info clear">
-        <img class="img" :src="RequestUrl + gallery[0]"/>
+        <img class="img" :src="baseUrl + gallery[0]"/>
         <view class="info">
           <view class="c">
             <view class="p" v-if="!detailInfo.IsCustom"><text class="p-icon">￥</text>{{detailInfo.Price}}</view>
@@ -297,15 +297,17 @@ export default {
         sprice : 1,
         paraStr: ''
       },
-      openQuotSuccess: false
+      openQuotSuccess: false,
+      defalutHead: 'http://www.kiy.cn/Areas/wxMobile/Content/img/detailpage/'+ Math.floor(Math.random() * 7 + 1) +'.png'
     }
   },
   mounted () {
     // this.id = 146
-    console.log(this.$route.query)
     if (this.$route.query.data) {
           const data = JSON.parse(this.$route.query.data);
-          this.setTitle(data.ProductName)
+          if(data.ProductName) {
+            this.setTitle(data.ProductName)
+          }
           this.id = data.ProductId
           // 非标报价id , 标准品为0
           this.code = data.code ? data.code : 0
@@ -321,14 +323,6 @@ export default {
     this.refresh()
   },
   computed: {
-    selected() {
-      return {
-        borderWidth: '1px',
-        borderStyle: 'solid',
-        borderColor: this.detailInfo.BorderSelectionColor,
-        color: '#b4282d'
-      }
-    },
     baseUrl () {
       return this.$wx.baseUrl
     },
@@ -459,8 +453,6 @@ export default {
       const res = await api.getGoodsDetail(par)
       if(res.success){
         this.RequestUrl = res.RequestUrl
-        // https下面展示没有图片
-        this.RequestUrl = this.$wx.baseUrl
         this.detailInfo = res.data
         this.gallery = util.getImagePathGroup(this.detailInfo.imagePath)
         this.number = Number(this.detailInfo.SaleNumber)
@@ -691,7 +683,6 @@ export default {
           // 标准品检查库存
           if(this.checkStock()) return
         }
-        console.log(par)
         this.$wx.showLoading()
         const res = await api.modifyShoppingCart(par)
         this.$wx.hideLoading()
@@ -1118,7 +1109,6 @@ page{
   text-align: center;
   margin-right: 17rpx;
   border-radius: 50%;
-  border: 1px solid green;
 }
 
 .comments .user text {

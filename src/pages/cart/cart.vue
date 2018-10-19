@@ -13,7 +13,7 @@
   </view>
 
 
-  <view class="cart-view" v-if="cartGoods.length">
+  <view class="cart-view" v-if="cartGoods.length != 0">
     <view class="cart-address clear">
       <!-- <view class="posi-img">
         <img src="/static/images/icon_cart_position.png" background-size="cover"/>
@@ -92,12 +92,16 @@ export default {
     }
   },
   // 每次打开触发，更新数据
-  onShow () {
+  async onShow () {
     this.cartGoods = []
     this.pageNo = 1
     this.checkedAllStatus = false
     this.isEditCart = false
-    this.getCartList()
+    this.$wx.showLoading()
+    await Promise.all([
+      this.getCartList()
+    ])
+    this.$wx.hideLoading()
     
   },
   computed: {
