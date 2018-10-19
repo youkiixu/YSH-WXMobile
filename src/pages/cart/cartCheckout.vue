@@ -1,6 +1,6 @@
 <template >
 <view class="container">  
-        <view class="order-content" >     
+        <view class="order-content" v-if="goodList.length != 0">     
             <view class="address-box">
                 <view class="address-item" @click="selectAddress" v-if="address.Id > 0">
                     <view class="name clear">
@@ -34,8 +34,8 @@
                             </view>
                             <view class="info">
                                 <view class="t">
-                                    <text class="name">{{item.ProductName}}</text>
-                                    <text class="number">x{{item.Count}}</text>
+                                    <text class="name" v-if="item.ProductName">{{item.ProductName}}</text>
+                                    <text class="number" v-if="item.Count">x{{item.Count}}</text>
                                 </view>
                                 
                                 <view class="m" v-if="item.paraStr">参数:{{item.paraStr}}</view>
@@ -236,13 +236,14 @@ export default {
     },
     // 获取代发快递
     async getCalculateFreight(index) {
+        console.log(this.goodList[index])
         var par = {
             quoteLogModelId: this.goodList[index].QuoteLogModel,
             UserId: this.userInfo.Id,
             CompanyId: this.goodList[index].CarryCompanyId,
             fahuoCity: this.goodList[index].ShopAddress,
             recieveCity: this.address.RegionFullName,
-            shuliang: this.goodList[index].Count,
+            shuliang: this.goodList[index].IsCustom ? this.goodList[index].ShuLiang : this.goodList[index].Count,
             Price: this.goodList[index].totalAmount
         }
         this.$wx.showLoading('正在加载...')
@@ -297,7 +298,7 @@ export default {
                 item.Remindtype = express.wuliuId(wuliuStr)
                 item.RemindtypeStr = wuliuStr
                 _this.goodList[index] = item
-                item.getYunFeiEvent(index, wuliuStr)
+                _this.getYunFeiEvent(index, wuliuStr)
             })
         }
         
@@ -315,6 +316,7 @@ export default {
         if(str == '印捷配送') {
             // 让选择印捷默认的地址
             this.set_address(this.checkOutInfo.Address)
+            this.renderUI()
         }
         
     },

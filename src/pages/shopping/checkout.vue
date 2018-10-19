@@ -275,12 +275,12 @@ export default {
     // 获取代发快递
     async getCalculateFreight() {
         var par = {
-            quoteLogModelId: this.checkOutInfo.QuoteLogModel,
+            quoteLogModelId: this.checkOutInfo.products.IsCustom ? this.checkOutInfo.QuoteLogId : this.checkOutInfo.QuoteLogModel,
             UserId: this.userInfo.Id,
             CompanyId: this.daifaInfo.CarryCompanyId,
             fahuoCity: this.checkOutInfo.ShopAddress,
             recieveCity: this.address.RegionFullName,
-            shuliang: this.checkOutInfo.Count,
+            shuliang: this.checkOutInfo.products.IsCustom ? this.checkOutInfo.ShuLiang : this.checkOutInfo.Count,
             Price: this.checkOutInfo.totalAmount
         }
         this.$wx.showLoading('正在加载...')

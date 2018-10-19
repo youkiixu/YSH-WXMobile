@@ -35,6 +35,7 @@
   <view class="search-result">
     <scroll-view scroll-y="true"  :scroll-top="scrollTop" class="cate-out" @scroll="onPageScroll">
       <sortGoods :goodsList="goodsList"></sortGoods>
+      <searchResultEmpty v-if="!goodsList.length"></searchResultEmpty>
     </scroll-view>   
   </view>
     <view class="scollTop"  @click="toTop" :hidden="!floorstatus">顶部</view>
@@ -46,10 +47,12 @@ import api from '@/utils/api'
 import wx from 'wx'
 import { mapState } from 'vuex'
 import sortGoods from '@/components/sortGoods'
+import searchResultEmpty from '@/components/searchResultEmpty'
 
 export default {
   components: {
-    sortGoods
+    sortGoods,
+    searchResultEmpty
   },
   data () {
     return {

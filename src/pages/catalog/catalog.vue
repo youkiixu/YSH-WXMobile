@@ -1,11 +1,11 @@
 <template >
 <view class="container">
-    <view class="index-searchbar">
+    <view class="index-searchbar" v-if="categoryList">
       <searchBar></searchBar>
     </view>
     
 
-    <view class="catalog" :style="{'height' : '100%'}">
+    <view class="catalog" :style="{'height' : '100%'}"  v-if="categoryList">
         <scroll-view class="nav" scroll-y="true"  :style="{'height' : '100%'}">
             <view :class="currentCategory.Id == item.Id ? 'active item' : 'item'" v-for="(item, index) of navList" :key="item.Id" :data-id="item.Id"
                 :data-index="index" @click="switchCateLog(index)">{{item.Name}}</view>
@@ -20,13 +20,14 @@
               <view class="bd">
                   <navigator @click="$router.push({ path: '/pages/category/category', query: { Id: item.Id ,categoryChild: JSON.stringify(categoryChild.SubCategories) } })"  :class="(index2+1) % 3 == 0 ? 'last item' : 'item'" v-for="(item, index2) of categoryChild.SubCategories"
                       :key="item.Id">
-                      <img class="icon" :src="item.Image ?  baseUrl + item.Image : 'http://www.kiy.cn/Areas/Mobile/Templates/Default/Images/default.png'"/>
+                      <img class="icon" :src="item.Image ?  baseUrl + item.Image : 'http://www.kiy.cn/Areas/wxMobile/Content/img/defalutimg.png'"/>
                       <text class="txt">{{item.Name}}</text>
                   </navigator>
               </view>
             </view>
         </scroll-view>
     </view>
+    <loadingComponent  v-if="!categoryList"></loadingComponent>
 </view>
 </template>
 
@@ -35,10 +36,12 @@ import api from '@/utils/api'
 import { formatCatelog } from '@/utils/format'
 import { mapState, mapActions } from 'vuex'
 import searchBar from '@/components/indexSearchBar'
+import loadingComponent from '@/components/loadingComponent'
 
 export default {
   components: {
-    searchBar
+    searchBar,
+    loadingComponent
   },
   data () {
     return {

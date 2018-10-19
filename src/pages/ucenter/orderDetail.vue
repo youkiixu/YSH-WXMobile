@@ -47,7 +47,7 @@
 
     <view class="message-info clear">
         <view class="l">留言:</view>
-        <view class="r">{{orderInfo.OrderRemarks}}</view>
+        <view class="r">{{orderInfo.OrderRemarks ? orderInfo.OrderRemarks : ''}}</view>
     </view>
 
     <view class="price-total">
@@ -221,7 +221,7 @@ export default {
             this.$wx.showSuccessToast(res.msg)
             this.getUserOrderDetail()
         } else {
-            this.$wx.showSuccessToast(res.msg)
+            this.$wx.showErrorToast(res.msg)
         }
 
     }

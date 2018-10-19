@@ -204,23 +204,39 @@ function getImagePathGroup(path) {
   return arr
 }
 
+// 去最后一个字符串
+function delLastStr (str , point) {
+  return (str.substring(str.length - 1) == point) ? str.substring(0, str.length - 1) : str;
+}
+
 function deepCopy(params) {
    const objectStr = JSON.stringify(params)
    return JSON.parse(objectStr)
 }
 
 	function encode(input) {
-    const output = input.split('&')
-	  return output;
+	  return encodeURIComponent(input);
 	}
 
 	function decode(input) {
-    let output = ''
-    input.map(item => {
-      output += item + '&'
-    })
-	  return output;
-	}
+	  return decodeURIComponent(input)
+  }
+  
+  //ProductId , ProductName , code , IsCustom ,  dataStr
+  function getGoodsUrl(param) {
+    // 非标报价id , 标准品为0
+    const par = {
+      ProductId: param.ProductId,
+      ProductName: param.ProductName,
+      code: param.code
+    }
+    let urlPath = '/pages/goods/goods?data=' + JSON.stringify(par)
+    if (param.IsCustom) {
+      urlPath += '&&proSearchParam=' + encode(param.dataStr)
+    }
+
+    return urlPath
+  }
 
 const util = {
   login,
@@ -233,7 +249,9 @@ const util = {
   addNum,
   deepCopy,
   encode,
-  decode
+  decode,
+  getGoodsUrl,
+  delLastStr
 }
 
 export default util

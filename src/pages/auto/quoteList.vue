@@ -273,9 +273,6 @@ page{
   min-height: 100%;
   /* background-color: #f4f4f4; */
 }
-.list-content {
-    
-}
 .list-item {
     width: 750rpx;
     height: 255rpx;

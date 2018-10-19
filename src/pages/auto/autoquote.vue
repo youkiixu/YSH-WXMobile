@@ -18,7 +18,7 @@
               <view class="bd">
                   <navigator @click="queryQuote(item)" :class="(index2+1) % 3 == 0 ? 'last item' : 'item'" v-for="(item, index2) of listItem.itemList"
                       :key="item.Code">
-                      <img class="icon" :src="item.Images ?  baseUrl+ item.Images : 'http://www.kiy.cn/Areas/Mobile/Templates/Default/Images/default.png'"/>
+                      <img class="icon" :src="item.Images ?  baseUrl+ item.Images : 'http://www.kiy.cn/Areas/wxMobile/Content/img/defalutimg.png'"/>
                       <text class="txt">{{item.qName}}</text>
                   </navigator>
               </view>
@@ -295,7 +295,7 @@ page {
 .catalog .bd .item .icon {
   height: 127rpx;
   width: 127rpx;
-  border-radius: 50%;
+  /* border-radius: 50%; */
   overflow: hidden;
 }
 
