@@ -4,7 +4,7 @@
     <view class="success" v-if="status == true">
       <view class="msg">{{isShopping ? '下单成功' : '付款成功'}}</view>
       <view class="btns">
-        <navigator class="btn" url="../ucenter/order" open-type="redirect">查看订单</navigator>
+        <navigator class="btn" url="../../orderPages/order" open-type="redirect">查看订单</navigator>
         <navigator class="btn" url="../index/index" open-type="switchTab">继续逛</navigator>
       </view>
     </view>
@@ -15,8 +15,7 @@
         <!-- <view class="p">否则订单将会被系统取消</view> -->
       </view>
       <view class="btns">
-        <!-- <navigator class="btn" url="/pages/ucenter/order/order" open-type="redirect">查看订单</navigator> -->
-        <navigator class="btn" url="../ucenter/order" open-type="redirect">查看订单</navigator>
+        <navigator class="btn" url="../../orderPages/order" open-type="redirect">查看订单</navigator>
         <navigator class="btn" url="../index/index" open-type="switchTab">继续逛</navigator>
       </view>
     </view>

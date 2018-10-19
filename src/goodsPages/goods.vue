@@ -75,7 +75,7 @@
           <!-- 商品评论 -->
           <view class="comments" id="comments" >
             <view class="h clear">
-              <navigator :url="'../comment/comment?valueId=' + id + '&typeId=0'">
+              <navigator :url="'../commentPages/comment?valueId=' + id + '&typeId=0'">
                   <text class="t">评价</text>
                   <text class="i">查看全部评价</text>
                   <!-- <view class="clear"></view> -->
@@ -94,7 +94,7 @@
                   {{comment.ReviewContent}}
                 </view>
               </view>
-              <navigator :url="'../comment/comment?valueId=' + id + '&typeId=0'" class="seeall">查看全部评价</navigator>
+              <navigator :url="'../commentPages/comment?valueId=' + id + '&typeId=0'" class="seeall">查看全部评价</navigator>
             </view>   
             <view class="b" v-else>
               <view class="seeall">暂无评价</view>
@@ -807,7 +807,7 @@ export default {
       IsCustom: this.detailInfo.IsCustom , 
       dataStr: this.proSearchParam.dataStr
     })
-
+    console.log(goodsUrl)
     return {
       title: this.detailInfo.ProductName,
       desc: this.detailInfo.ShopName,
@@ -823,7 +823,7 @@ export default {
 </script>
 
 <style>
-@import "../../utils/wxParse/wxParse.wxss";
+@import "../utils/wxParse/wxParse.wxss";
 
 page{
   height: 100%;

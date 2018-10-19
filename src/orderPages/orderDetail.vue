@@ -184,12 +184,12 @@ export default {
                 'paySign': data.paySign,
                 'success': function (res) {
                     wx.redirectTo({
-                        url: '../pay/payResult?status=1&Id=' + that.OrderId
+                        url: '../pages/pay/payResult?status=1&Id=' + that.OrderId
                     })
                 },
                 'fail': function (res) {
                     wx.redirectTo({
-                        url: '../pay/payResult?status=0&Id=' + that.OrderId
+                        url: '../pages/pay/payResult?status=0&Id=' + that.OrderId
                     })
                 }
             });

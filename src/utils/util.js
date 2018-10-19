@@ -230,7 +230,7 @@ function deepCopy(params) {
       ProductName: param.ProductName,
       code: param.code
     }
-    let urlPath = '/pages/goods/goods?data=' + JSON.stringify(par)
+    let urlPath = '/goodsPages/goods?data=' + JSON.stringify(par)
     if (param.IsCustom) {
       urlPath += '&&proSearchParam=' + encode(param.dataStr)
     }

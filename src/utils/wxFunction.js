@@ -64,24 +64,18 @@ function formatBoolToInt(object) {
 }
 
 function toGoodsDetail (item , vm) {
-    // vm.$router.push({
-    //   path: '/pages/goods/goods',
-    //   query: {
-    //     data: JSON.stringify(item)
-    //   }
-    // })
   // 不区分是否非标，全部进入单个商品也
   // 标准品false , vm是this
   if (item.IsCustom) {
     vm.$router.push({
-      path: '/pages/auto/queryquote',
+      path: '/goodsPages/queryquote',
       query: {
         pid: item.QitemCode
       }
     })
   } else {
     vm.$router.push({
-      path: '/pages/goods/goods',
+      path: '/goodsPages/goods',
       query: {
         data: JSON.stringify(item)
       }
@@ -98,7 +92,7 @@ function toDetail(item , vm) {
     data = Object.assign(data , {code: item.code})
   }
   vm.$router.push({
-    path: '/pages/goods/goods',
+    path: '/goodsPages/goods',
     query: {
       data: JSON.stringify(data)
     }
@@ -110,7 +104,7 @@ function toBaoJia(item , vm) {
     let ProductId = item.ProductId ? item.ProductId : ''
     let detailCommon = item.detailCommon ? item.detailCommon : false
     vm.$router.push({
-      path: '/pages/auto/queryquote',
+      path: '/goodsPages/queryquote',
       query: {
         pid: item.pid,
         title: item.title,

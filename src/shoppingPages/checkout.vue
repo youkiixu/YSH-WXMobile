@@ -376,13 +376,13 @@ export default {
             return
         }
         this.$router.push({
-            path: '../shopping/address'
+            path: '../shoppingPages/address'
         })
     },
     // 添加收获地址
     addAddress () {
         this.$router.push({
-            path: '../shopping/addressAdd'
+            path: '../addressPages/addressAdd'
         })
     },
     // 点击“去付款”
@@ -448,7 +448,7 @@ export default {
             // url: '../pay/payResult?status=1&orderId=' + res.data
             // });
             this.$router.replace({
-                path: '../pay/payResult?status=1&isShopping=1&Id=' + res.data
+                path: '../pages/pay/payResult?status=1&isShopping=1&Id=' + res.data
             })
         } else {
             this.$wx.showErrorToast(res.msg)

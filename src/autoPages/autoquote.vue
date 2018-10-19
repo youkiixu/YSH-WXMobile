@@ -162,7 +162,7 @@ export default {
     return {
       title: '印生活商城',
       desc: '自助报价',
-      path: '/pages/auto/autoquote'
+      path: '/autoPages/autoquote'
     }
   },
 
