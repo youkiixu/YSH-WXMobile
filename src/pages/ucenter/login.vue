@@ -14,14 +14,17 @@
                 </view>
                 <button class="VerCode_btn"  @click="getCode">获取验证码</button>                
             </view>
-            <!-- <view class="register_pwd">
-               <input v-model="userInfo.Password" placeholder="请输入密码" password confirm-type="done">         
-            </view> -->
+            <view class="register_pwd">
+               <input v-model="registerInfo.Password" placeholder="请输入密码" password confirm-type="done">         
+            </view>
+            <view class="register_pwd">
+               <input v-model="Password2" placeholder="请再次输入密码" password confirm-type="done">         
+            </view>
             <view  class="register_btn">
                 <button @click="btnHandler">注册</button>
             </view>                       
             <view  class="to_register">
-                <button @click="transferText">已有账号?去登陆...</button>
+                <button @click="transferText">已有账号</button>
             </view>  
         </view>
 
@@ -62,8 +65,10 @@ export default {
             },
             registerInfo: {
                 CellPhone: '',
-                Code: ''
+                Code: '',
+                Password: ''
             },
+            Password2 : '',
             isRegister: false
         }
     },
@@ -90,8 +95,12 @@ export default {
             }
             if(this.registerInfo.Code == '') {
                 this.$wx.showErrorToast('请输入验证码')
+                return
             }
-
+            if(this.registerInfo.Password != this.Password2) {
+                this.$wx.showErrorToast('输入密码不一致')
+                return
+            }
             const openId = wx.getStorageSync('openId')
             _this.registerInfo.OpenId = openId
             this.$wx.showLoading()
@@ -146,8 +155,10 @@ export default {
             }
             this.registerInfo= {
                 CellPhone: '',
-                Code: ''
+                Code: '',
+                Password: ''
             }
+            this.Password2 = ''
         },
         forgetPwd() {
             this.$wx.showErrorToast('暂未支持')

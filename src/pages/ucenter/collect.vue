@@ -198,44 +198,23 @@ export default {
         this.$wx.showErrorToast(res.msg)
       }
     },
-    // 长按删除，点击进入商品详情
+    //点击进入商品详情
     async openGoods (event) {
       console.log(event)
-      
-      return
-      const openId = wx.getStorageSync('openId')
-      let goodsId = this.collectList[event.currentTarget.dataset.index].Id;
-      console.log('goodsId为：',goodsId)
-      // 触摸时间距离页面打开的毫秒数
-      var touchTime = this.touch_end - this.touch_start;
-      // console.log(touchTime);
-      // 如果按下时间大于350为长按
-      if (touchTime > 350) {
-        var that = this;
-        wx.showModal({
-          title: '',
-          content: '取消收藏？',
-          success: async function (res) {
-            // console.log('确定取消收藏', res);
-            if (res.confirm) {
-              // const res = await api.CollectAddOrDelete({ typeId: that.typeId, valueId: goodsId });
-              const res = await api.CancelConcernProducts({ openId: openId, Ids: goodsId });
-              if (res.success) {
-                wx.showToast({
-                  title: '删除成功',
-                  icon: 'success',
-                  duration: 2000
-                });
-                that.GetFavoriteProductList();
-              }
+            const ProductId = event.ProductId
+            const res = await api.getProductQitemCode({Id : ProductId})
+            if(res.success) {
+                const pid = res.data
+                const fid = res.ShopMapId
+                if( pid != 0 ) {
+                this.$wx.toBaoJia({ pid: pid , title: event.ProductName , isDetail: true , ProductId: ProductId , fid : fid } , this)
+                } else {
+                this.$wx.toDetail({id : ProductId , title: event.ProductName} , this)
+                }
+            } else {
+                this.$wx.showErrorToast(res.msg)
             }
-          }
-        })
-      } else {
-        wx.navigateTo({
-          url: '../goods/goods?id=' + goodsId
-        });
-      }
+
     },
     // 按下事件开始
     touchStart (e) {

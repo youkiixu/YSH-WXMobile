@@ -371,7 +371,8 @@ export default {
         this.getGoodsSkuInfo(),
         this.getGoodsDetail(),
         this.getGoodsDesc(),
-        this.getComment()
+        this.getComment(),
+        this.IsCollection()
       ]);
       // this.$wx.hideLoading()
       this.setTitle(this.detailInfo.ProductName)
@@ -581,12 +582,6 @@ export default {
     },
     // 购物车的五角星，添加或是取消收藏
     async addCannelCollect () {
-        // 判断商品是否已收藏
-         const openId = wx.getStorageSync('openId')
-         const res = await api.IsCollection({ ProductId: this.id , openId: openId }) 
-         let data = JSON.parse(res.data)     
-         this.collectStatus = res.data;
-
           if (this.collectStatus) {//取消收藏
                 const openId = wx.getStorageSync('openId')
                 const res2 = await api.CancelConcernProducts({ Ids: this.Ids ,ProductIds : this.id,  openId: openId })
@@ -604,29 +599,15 @@ export default {
                   this.$wx.showSuccessToast('收藏成功')
                   }          
               } 
-
-
-        // const openId = wx.getStorageSync('openId')
-        // const res = await api.AddFavoriteProduct({ ProductId: this.id , openId: openId })  
-        //  if (res.success) {
-        //    this.$wx.showSuccessToast('收藏成功')
-        // } else {
-        //   this.$wx.showSuccessToast('收藏失败')
-        // }  
-        
     },
-    // 判断商品是否已收藏
-    //  async IsCollection () {
-    //   const openId = wx.getStorageSync('openId')
-    //   const res = await api.IsCollection({ ProductId: this.id , openId: openId }) 
-
-    //    if (res.success) { 
-    //         return res.data
-    //     } else {
-    //      return false
-    //       // this.$wx.showSuccessToast('未收藏')
-    //     }  
-    // },
+   // 判断商品是否已收藏
+     async IsCollection () {
+         const openId = wx.getStorageSync('openId')
+         const res = await api.IsCollection({ ProductId: this.id , openId: openId }) 
+         let data = JSON.parse(res.data)   
+         this.collectStatus = data;
+         console.log('this.collectStatus',this.collectStatus)    
+    },
 
     // 跳转到购物车页面
     openCartPage () {
@@ -1596,7 +1577,7 @@ page{
    border-bottom: 2rpx solid #ececec;
 }
 .spec-con .name {
-  height: 32rpx;
+  /* height: 32rpx; */
   margin-bottom: 22rpx;
   font-size: 34rpx;
   color: #555;

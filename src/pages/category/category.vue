@@ -21,7 +21,6 @@
     </view>
   </view>
 
-
     <view class="cate-nav">
         <scroll-view scroll-x="true" scroll-with-animation class="cate-nav-body" style="width: 750rpx;" :scroll-left="scrollLeft">
             <view  v-for="(item , index) of navList" :class="Id == item.Id ? 'active item' : 'item'" :key="item.Id"
@@ -32,6 +31,11 @@
     </view>
   </view>
   
+   <!-- <view class="search-result">
+      <sortGoods :goodsList="goodsList"></sortGoods>
+      <searchResultEmpty v-if="!goodsList.length"></searchResultEmpty>    
+  </view> -->
+
   <!-- <view class="search-result">
     <scroll-view scroll-y="true" id="loupanList" :scroll-top="scrollTop" class="cate-out"  lower-threshold="0"  @scroll="onPageScroll">
       <sortGoods :goodsList="goodsList"></sortGoods>
@@ -44,7 +48,9 @@
       <searchResultEmpty v-if="!goodsList.length && !loading"></searchResultEmpty>
       <loadingComponent v-if="loading"></loadingComponent>
   </view>
-    <!-- <view class="scollTop"  @click="toTop" :hidden="!floorstatus">顶部</view> -->
+
+  <!-- <view class="scollTop"  @click="toTop" :hidden="!floorstatus">顶部</view>  -->
+  
 </view>
 </template>
 
@@ -163,11 +169,8 @@ export default {
       }
     },
     //回到顶部
-    toTop: function (e) {      
-        console.log('点击事件')       
-        this.scrollTop = 0   
-        console.log('返回位置：',this.scrollTop)       
-        
+    toTop: function (e) {       
+        this.scrollTop = 0             
     },
     async searchGoods() {
       
@@ -209,19 +212,15 @@ export default {
   },
 
     //  // 获取滚动条当前位置
-    // onPageScroll : function(e){
-    
-    //   if (e.scrollTop > 5) {     
+    // onPageScroll : function(e){  
+    //   console.log('滚动位置：',e.scrollTop) 
+    //   if (e.scrollTop > 100) {     
     //       this.floorstatus = true  
-    //        //this.scrollTop = e.scrollTop    
+    //        this.scrollTop = e.scrollTop    
     //   } else {
     //    this.floorstatus = false
     //    //this.scrollTop = e.scrollTop 
     //   }
-
-    //   // if(e.scrollTop != 0) {
-    //   //   position:'fixed'
-    //   // } 
     // },
   //小程序原生上拉加载
   onReachBottom () {
@@ -246,11 +245,11 @@ overflow: hidden;
 .container{
     background: #f1f1f1;
 }
-/* .cate-out{
+.cate-out{
   flex: 1;
   overflow-x: hidden;
   overflow-y: auto;
-} */
+}
 .clear:after{
     display: block;
     content:'';
