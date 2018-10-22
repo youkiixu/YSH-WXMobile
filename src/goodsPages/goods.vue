@@ -1063,6 +1063,7 @@ page{
 .comments  {
   width: 750rpx;
   padding: 0 30rpx 30rpx 30rpx;
+  box-sizing: border-box;
   background-color: white;
   margin-top: 30rpx;
 }
@@ -1072,7 +1073,7 @@ page{
   height: 100rpx;
   line-height: 100rpx;
   background-color: white;
-  padding: 0 30rpx;
+  padding: 0 30rpx 0 0;
   box-sizing: border-box;
   border-bottom: 1rpx solid #f1f1f1;
 }
@@ -1090,9 +1091,9 @@ page{
   float: right;
   font-size: 22rpx;
   text-align: right;
-  padding-right: 50rpx;
+  padding-right: 70rpx;
   color: #c5c5c5;
-  background: url(http://nos.netease.com/mailpub/hxm/yanxuan-wap/p/20150730/style/img/icon-normal/address-right-990628faa7.png) right center no-repeat;
+  background: url(http://nos.netease.com/mailpub/hxm/yanxuan-wap/p/20150730/style/img/icon-normal/address-right-990628faa7.png) 86% center no-repeat;
   background-size: 52rpx;
 }
 .comments .info {
@@ -1140,6 +1141,7 @@ page{
   color: #555555;
   padding: 15rpx 30rpx;
   box-sizing: border-box;
+  text-align: center;
 }
 .comments .seeall{
   font-size: 28rpx;
