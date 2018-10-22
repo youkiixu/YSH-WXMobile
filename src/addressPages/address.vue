@@ -80,13 +80,19 @@ export default {
     // 点击修改，或者点击底部“新建”
     async addressAddOrUpdate (event) {
       var addressId = event.currentTarget.dataset.addressId
+      if(!this.userInfo.Id) {
+        this.$wx.showErrorToast('请先登录')
+        return
+      }
       var par = {}
       if(addressId != 0) {
+        this.$wx.showLoading()
         const res = await api.getSassUserAddress({ Id: addressId , UserId: this.userInfo.Id});
         const data = JSON.parse(res.data)
         par = data[0];
+        this.$wx.hideLoading()
       }
-      this.$router.push({path: '../addressPages/addressAdd' , query: {address: JSON.stringify(par)}})
+      this.$router.push({path: './addressAdd' , query: {address: JSON.stringify(par)}})
     },
     // 点击删除图标
     async deleteAddress (event) {

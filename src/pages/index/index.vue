@@ -1,12 +1,12 @@
 <template >
 <view class="container">
-  <view class="index-searchbar" v-if="sassIndex">
+  <view class="index-searchbar" v-if="sassIndex && !loading">
     <searchBar></searchBar>
   </view>
   <view v-for="(item , index ) in sassIndex" :key="index" v-if="sassIndex">
     <indexComponent :item="item"></indexComponent>
   </view>
-  <loadingComponent v-if="!sassIndex"></loadingComponent>
+  <loadingComponent v-if="loading"></loadingComponent>
 </view>
 </template>
 
@@ -18,6 +18,11 @@ import indexComponent from '@/components/index-components/indexComponent'
 import loadingComponent from '@/components/loadingComponent'
 
 export default {
+  data () {
+    return {
+      loading: true  
+    }
+  },
   components: {
     searchBar,
     indexComponent,
@@ -30,10 +35,12 @@ export default {
   },
   async mounted () {
     const res = wx.getAccountInfoSync()
+
     await Promise.all([
       // this.getIndexData(),
       this.getSassIndex()
     ])
+    this.loading = false
   },
 
   methods: {

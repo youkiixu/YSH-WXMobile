@@ -2,11 +2,18 @@
     <view class="search-result-empty" >
         <img class="icon"
              src="http://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/noSearchResult-7572a94f32.png" />
-        <text class="text">您寻找的商品还未上架</text>
+        <text class="text">{{text}}</text>
     </view>
 </template>
 <script>
-export default {};
+export default {
+  props: {
+    text: {
+        type: String,
+        default: '您寻找的商品还未上架'
+    }
+  }
+};
 </script>
 <style scoped>
 .search-result-empty {

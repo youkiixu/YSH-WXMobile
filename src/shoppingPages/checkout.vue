@@ -1,30 +1,5 @@
 <template >
 <view class="container">  
-    <!-- <view class="address-box">
-        <view class="address-item" @click="selectAddress" v-if="address.Id > 0">
-            <view class="l">
-                <text class="name">{{address.ShipTo}}</text>
-                <text class="default" v-if="address.IsDefault === 1">默认</text>
-            </view>
-            <view class="m">
-                <text class="mobile">{{address.Phone}}</text>
-                <text class="address">{{address.RegionFullName + address.Address}}</text>
-            </view>
-            <view class="r" v-if="checkOutOther.Remindtype != 3">
-                <image src="/static/images/address_right.png"/>
-            </view>
-        </view>     
-    </view> -->
-
-  <!-- <view class="address-item address-empty" @click="addAddress" v-if="checkOutInfo.Address">
-            <view class="m">
-               还没有收货地址，去添加
-            </view>
-            <view class="r">
-                <image src="/static/images/address_right.png"/>
-            </view>
-   </view> -->
-   
         <scroll-view scroll-y class="order-content">     
 
              <view class="address-box">
@@ -69,7 +44,7 @@
                     <view class="info">
                         <view class="t">
                             <text class="name">{{checkOutInfo.products.ProductName}}</text>
-                            <text class="number">x{{checkOutInfo.Count}}</text>
+                            <text class="number">x{{checkOutInfo.products.IsCustom ? checkOutInfo.ShuLiang : checkOutInfo.Count}}</text>
                         </view>
                         
                         <view class="m" v-if="ParaStr">参数:{{ParaStr}}</view>
@@ -98,15 +73,35 @@
                         <text class="txt">{{checkOutOther.RemindtypeStr}}</text>
                     </view>
                 </view>
-                
-                <!-- <view class="order-item clear">
-                    <view class="l">
-                        <text class="name">优惠券码</text>
-                    </view>
-                    <view class="r distribution">            
-                        <text class="txt">20元立减券</text>
-                    </view>
-                </view> -->
+                                <!-- 代发快递 -->
+                <div class="box-content" v-if="checkOutOther.Remindtype == 1">
+                    <div class="weui-cells weui-cells_after-title">
+                        <div class="weui-cell weui-cell_switch" v-if="daifaInfo.CarryCompanyId != 7">
+                            <div class="weui-cell__bd">代收货款</div>
+                            <div class="weui-cell__ft">
+                                <switch :checked="daifaInfo.IsDaiShouHuoKuan" @change="daifaSwitch('IsDaiShouHuoKuan')"/>
+                            </div>
+                        </div>
+                        <div class="weui-cell weui-cell_switch" v-if="daifaInfo.IsDaiShouHuoKuan">
+                            <div class="weui-cell__bd">代收货款金额</div>
+                            <div class="weui-cell__ft">
+                                <input class="weui-input" v-model="daifaInfo.daiShouMoney" type="number" placeholder="请输入代收货款金额" />
+                            </div>
+                        </div>
+                        <!-- 快递公司	 -->
+                        <div class="weui-cell weui-cell_select">
+                            <div class="weui-cell__hd weui-cell__hd_in-select-after">
+                                <div class="weui-label">快递公司</div>
+                            </div>
+                            <div class="weui-cell__bd">
+                                <picker @change="expressCompanyChange" :range="expressCompany">
+                                <div class="weui-select weui-select_in-select-after">{{daifaInfo.CarryCompany}}</div>
+                                </picker>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <view class="order-item clear">
                     <view class="l">
                         <text class="name">买家留言</text>
@@ -140,41 +135,7 @@
                 </view>
 
             
-                <!-- 代发快递 -->
-                <div class="box-content" v-if="checkOutOther.Remindtype == 1">
-                    <div class="weui-cells__title">代发快递方式</div>
-                    <div class="weui-cells weui-cells_after-title">
-                        <!-- <div class="weui-cell weui-cell_switch">
-                            <div class="weui-cell__bd">是否到付</div>
-                            <div class="weui-cell__ft">
-                                <switch :checked="daifaInfo.isCashOnDelivery" @change="daifaSwitch('isCashOnDelivery')"/>
-                            </div>
-                        </div> -->
-                        <div class="weui-cell weui-cell_switch">
-                            <div class="weui-cell__bd">代收货款</div>
-                            <div class="weui-cell__ft">
-                                <switch :checked="daifaInfo.IsDaiShouHuoKuan" @change="daifaSwitch('IsDaiShouHuoKuan')"/>
-                            </div>
-                        </div>
-                        <div class="weui-cell weui-cell_switch" v-if="daifaInfo.IsDaiShouHuoKuan">
-                            <div class="weui-cell__bd">代收货款金额</div>
-                            <div class="weui-cell__ft">
-                                <input class="weui-input" v-model="daifaInfo.daiShouMoney" type="number" placeholder="请输入代收货款金额" />
-                            </div>
-                        </div>
-                        <!-- 快递公司	 -->
-                        <div class="weui-cell weui-cell_select">
-                            <div class="weui-cell__hd weui-cell__hd_in-select-after">
-                                <div class="weui-label">快递公司</div>
-                            </div>
-                            <div class="weui-cell__bd">
-                                <picker @change="expressCompanyChange" :range="expressCompany">
-                                <div class="weui-select weui-select_in-select-after">{{daifaInfo.expressCompany}}</div>
-                                </picker>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+
         
             </view>
         </scroll-view>
@@ -229,11 +190,14 @@ export default {
             IsDaiShouHuoKuan: false,//是否代收货款
             // isCashOnDelivery: false,//是否代货到付款
             daiShouMoney: 0,//代收金额
-            CarryCompany: '顺丰快递',//快递公司名字
-            CarryCompanyId: 7
+            CarryCompany: '优速快递',//快递公司名字
+            CarryCompanyId: 28,
+            ExpressFreight : 0,
+            ExpressWeight: 0,
+            ExpressFreightLog: 0
         },
-        expressCompany : ['顺丰快递'  , '运通快递' , '优速快递'],
-        expressCompanyId: [ 7 , 11 , 28],
+        expressCompany : [  '优速快递' ,  '运通快递'  , '顺丰快递'],
+        expressCompanyId: [    28 , 11 , 7],
         expressCompanyIndex: 0,
         remindInfo: {},
         calculateFreight: {},
@@ -255,6 +219,7 @@ export default {
     // 获取印捷提点
     //将默认的地址存到全局那里
     this.ParaStr = ''
+    this.refresh()
     this.set_address(this.checkOutInfo.Address)
     this.productImg = this.$wx.getImagePath(this.checkOutInfo.products.imagePath)
     await Promise.all([
@@ -272,6 +237,39 @@ export default {
   },
   methods: {
     ...mapMutations(['set_address']),
+    refresh () {
+        this.daifaInfo = {
+            isDaifa: false,//是否代发
+            IsDaiShouHuoKuan: false,//是否代收货款
+            // isCashOnDelivery: false,//是否代货到付款
+            daiShouMoney: 0,//代收金额
+            CarryCompany: '优速快递',//快递公司名字
+            CarryCompanyId: 28,
+            ExpressFreight : 0,
+            ExpressWeight: 0,
+            ExpressFreightLog: 0
+        }
+        this.checkOutInfo = {
+            isCashOnDelivery : 0,
+            orderRemarks: '',
+            Remindtype: 0,
+            RemindtypeStr: '',
+            isDaifa: '是否代发',
+            Paymenttype: '支付类型',
+            daiShouMoney: '代收金额',
+            CarryCompany: '快递公司id',
+            SenderPeople: '备注',
+            ExpressFreight: '代发快递运费',
+            ExpressWeight: '代发快递重量',
+            ExpressFreightLog: '代发快递参数',
+            filename: '文件名',
+            quoteLogModel: '报价日志id',
+            strId: '临时文件名',
+            IsRemind: '是否有提点费',
+            IsNotNeedFile: '是否需要传文件',
+            LimitTimeBuyId: '限时购id'
+        }
+    },
     // 获取代发快递
     async getCalculateFreight() {
         var par = {
@@ -286,13 +284,9 @@ export default {
         this.$wx.showLoading('正在加载...')
         const res = await api.getCalculateFreight(par)
         if(res.success) {
-            var data = {
-                ExpressFreight : res.data.DiscountFreight,
-                ExpressWeight: res.data.Weight,
-                ExpressFreightLog: res.data.logId,
-            }
-            this.daifaInfo = Object.assign(this.daifaInfo , data)
-            // this.calculateFreight = res.data
+            this.daifaInfo.ExpressFreight = res.data.DiscountFreight
+            this.daifaInfo.ExpressWeight= res.data.Weight
+            this.daifaInfo.ExpressFreightLog= res.data.logId
         }
         this.$wx.hideLoading()
     },
@@ -333,8 +327,9 @@ export default {
                 _this.getYunFeiEvent(wuliuStr)
             })
         } else {
-            var wuliuStr = arr[0]
-            _this.checkOutOther.Remindtype = express.wuliuId(wuliuStr)
+            // 根据返回的ID选择对应的字符串
+            var wuliuStr = express.wuliuStr(checkOutInfo.Yjtype)
+            _this.checkOutOther.Remindtype = checkOutInfo.Yjtype
             _this.checkOutOther.RemindtypeStr = wuliuStr
             _this.getYunFeiEvent(wuliuStr)
         }
@@ -354,9 +349,9 @@ export default {
             this.set_address(this.checkOutInfo.Address)
         }
     },
-    // 代发快递信息选项
+    // 代收货款
     daifaSwitch(item) {
-        this.daifaInfo[item] = !this.daifaInfo[item]
+        this.daifaInfo['IsDaiShouHuoKuan'] = !this.daifaInfo['IsDaiShouHuoKuan']
     },
     // 代发快递公司选择
     expressCompanyChange(e) {
@@ -367,7 +362,16 @@ export default {
         }
         this.daifaInfo.CarryCompany = this.expressCompany[this.expressCompanyIndex]
         this.daifaInfo.CarryCompanyId = this.expressCompanyId[this.expressCompanyIndex]
+        // 如果是顺丰快递，没有代收货款
+        if(this.daifaInfo.CarryCompanyId == 7) {
+            this.isShunFeng()
+        }
         this.getCalculateFreight()
+    },
+    // 如果是顺丰快递，不能代收货款,金额为0
+    isShunFeng () {
+        this.daifaInfo.IsDaiShouHuoKuan = false
+        this.daifaInfo.daiShouMoney = 0
     },
     // 选择收获地址
     selectAddress () {
@@ -767,7 +771,7 @@ export default {
     width: 100%;
     height: 85rpx;
     line-height: 85rpx;
-    color: #a9a9a9;
+    color: #000000;
     font-size: 28rpx;
 }
 .order-box .order-item .price{

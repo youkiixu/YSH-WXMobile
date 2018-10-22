@@ -14,9 +14,12 @@
                 </view>
                 <button class="VerCode_btn"  @click="getCode">获取验证码</button>                
             </view>
-            <!-- <view class="register_pwd">
-               <input v-model="userInfo.Password" placeholder="请输入密码" password confirm-type="done">         
-            </view> -->
+            <view class="register_pwd">
+               <input v-model="registerInfo.Password" placeholder="请输入密码" password confirm-type="done">         
+            </view>
+            <view class="register_pwd">
+               <input v-model="Password2" placeholder="请再次输入密码" password confirm-type="done">         
+            </view>
             <view  class="register_btn">
                 <button @click="btnHandler">注册</button>
             </view>                       
@@ -62,8 +65,10 @@ export default {
             },
             registerInfo: {
                 CellPhone: '',
-                Code: ''
+                Code: '',
+                Password: ''
             },
+            Password2 : '',
             isRegister: false
         }
     },
@@ -90,11 +95,17 @@ export default {
             }
             if(this.registerInfo.Code == '') {
                 this.$wx.showErrorToast('请输入验证码')
+                return
             }
-
+            if(this.registerInfo.Password != this.Password2) {
+                this.$wx.showErrorToast('输入密码不一致')
+                return
+            }
             const openId = wx.getStorageSync('openId')
             _this.registerInfo.OpenId = openId
+            this.$wx.showLoading()
             const res = await api.sassRegister(this.registerInfo)
+            this.$wx.hideLoading()
             if(res.success) {
                 this.$wx.showSuccessToast(res.msg)
                 setTimeout(() => {
@@ -108,9 +119,11 @@ export default {
         async getCode () {
             const isPhone = util.checkMobile(this.registerInfo.CellPhone)
             if(isPhone){
+                this.$wx.showLoading()
                 const res = api.verificationCode({
                     phone: this.registerInfo.CellPhone
                 })
+                this.$wx.hideLoading()
                 this.$wx.showSuccessToast( res.msg)
             } else {
                 this.$wx.showErrorToast('请正确输入手机号码')
@@ -142,8 +155,10 @@ export default {
             }
             this.registerInfo= {
                 CellPhone: '',
-                Code: ''
+                Code: '',
+                Password: ''
             }
+            this.Password2 = ''
         },
         forgetPwd() {
             this.$wx.showErrorToast('暂未支持')

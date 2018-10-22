@@ -29,7 +29,7 @@ export default {
   methods: {
     toDetail (item) {
       if(item.IsCustom) {
-        this.$wx.toBaoJia({ pid: item.QitemCode , title: item.ProductName , isDetail: true , ProductId: item.ProductId } , this)
+        this.$wx.toBaoJia({ pid: item.QitemCode , title: item.ProductName , isDetail: true , ProductId: item.ProductId , fid: item.ShopMapId} , this)
       } else {
         this.$wx.toDetail({id : item.ProductId , title: item.ProductName} , this)
       }

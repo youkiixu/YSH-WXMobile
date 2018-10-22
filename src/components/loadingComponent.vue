@@ -1,11 +1,8 @@
 <template>
-    <div class="spinner">
-        <div class="rect1"></div>
-        <div class="rect2"></div>
-        <div class="rect3"></div>
-        <div class="rect4"></div>
-        <div class="rect5"></div>
-    </div>
+  <div id="preloader">
+    <div id="loader"></div>
+  </div>
+
 </template>
 
 <script>
@@ -15,57 +12,80 @@ export default {
 </script>
 
 <style scoped>
-.spinner {
-  margin: 150px auto;
-  width: 50px;
-  height: 60px;
-  text-align: center;
-  font-size: 10px;
+#preloader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
 }
- 
-.spinner > div {
-  background-color: #009e96;
-  height: 100%;
-  width: 6px;
-  display: inline-block;
-   
-  -webkit-animation: stretchdelay 1.2s infinite ease-in-out;
-  animation: stretchdelay 1.2s infinite ease-in-out;
+#loader {
+    display: block;
+    position: relative;
+    left: 50%;
+    top: 50%;
+    width: 150rpx;
+    height: 150rpx;
+    margin: -75rpx 0 0 -75rpx;
+    border-radius: 50%;
+    border: 3px solid transparent;
+    /* border-top-color: #9370DB; */
+    border-top-color: rgb(199, 242, 243);
+    -webkit-animation: spin 2s linear infinite;
+    animation: spin 2s linear infinite;
 }
- 
-.spinner .rect2 {
-  -webkit-animation-delay: -1.1s;
-  animation-delay: -1.1s;
+#loader:before {
+    content: "";
+    position: absolute;
+    top: 5rpx;
+    left: 5rpx;
+    right: 5rpx;
+    bottom: 5rpx;
+    border-radius: 50%;
+    border: 3px solid transparent;
+    /* border-top-color: #BA55D3; */
+    border-top-color: rgb(111, 217, 221);
+    -webkit-animation: spin 3s linear infinite;
+    animation: spin 3s linear infinite;
 }
- 
-.spinner .rect3 {
-  -webkit-animation-delay: -1.0s;
-  animation-delay: -1.0s;
+#loader:after {
+    content: "";
+    position: absolute;
+    top: 15rpx;
+    left: 15rpx;
+    right: 15rpx;
+    bottom: 15rpx;
+    border-radius: 50%;
+    border: 3px solid transparent;
+    /* border-top-color: #FF00FF; */
+    border-top-color: #009e96;
+    -webkit-animation: spin 1.5s linear infinite;
+    animation: spin 1.5s linear infinite;
 }
- 
-.spinner .rect4 {
-  -webkit-animation-delay: -0.9s;
-  animation-delay: -0.9s;
+@-webkit-keyframes spin {
+    0%   {
+        -webkit-transform: rotate(0deg);
+        -ms-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+        -ms-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
 }
- 
-.spinner .rect5 {
-  -webkit-animation-delay: -0.8s;
-  animation-delay: -0.8s;
+@keyframes spin {
+    0%   {
+        -webkit-transform: rotate(0deg);
+        -ms-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+        -ms-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
 }
- 
-@-webkit-keyframes stretchdelay {
-  0%, 40%, 100% { -webkit-transform: scaleY(0.4) } 
-  20% { -webkit-transform: scaleY(1.0) }
-}
- 
-@keyframes stretchdelay {
-  0%, 40%, 100% {
-    transform: scaleY(0.4);
-    -webkit-transform: scaleY(0.4);
-  }  20% {
-    transform: scaleY(1.0);
-    -webkit-transform: scaleY(1.0);
-  }
-}
+
 </style>
 

@@ -5,7 +5,7 @@
     </view>
     
 
-    <view class="catalog" :style="{'height' : '100%'}"  v-if="categoryList">
+    <view class="catalog" :style="{'height' : '100%'}"  v-if="!loading">
         <scroll-view class="nav" scroll-y="true"  :style="{'height' : '100%'}">
             <view :class="currentCategory.Id == item.Id ? 'active item' : 'item'" v-for="(item, index) of navList" :key="item.Id" :data-id="item.Id"
                 :data-index="index" @click="switchCateLog(index)">{{item.Name}}</view>
@@ -27,7 +27,7 @@
             </view>
         </scroll-view>
     </view>
-    <loadingComponent  v-if="!categoryList"></loadingComponent>
+    <loadingComponent  v-if="loading"></loadingComponent>
 </view>
 </template>
 
@@ -50,7 +50,8 @@ export default {
       scrollLeft: 0,
       scrollTop: 0,
       goodsCount: 0,
-      scrollHeight: 0
+      scrollHeight: 0,
+      loading: true
     }
   },
   async mounted () {
@@ -83,8 +84,10 @@ export default {
     }, 
     // 选择不同分分类
     switchCateLog(index) {
+
         this.currentCategory = this.navList[index]
         this.getCategoryList(this.currentCategory.SubCategories)
+        this.loading = false
       }
     },
     // 小程序原生下拉刷新

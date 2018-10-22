@@ -60,8 +60,12 @@ export default {
     },
     // 点击修改图标，或者底部“新建”
     async addressAddOrUpdate (event) {
+      if(!this.userInfo.Id) {
+        this.$wx.showErrorToast('请先登录')
+        return
+      }
       var addressId = event.currentTarget.dataset.addressId
-        var par = {}
+      var par = {}
       if(addressId != 0) {
         const res = await api.getSassUserAddress({ Id: addressId , UserId: this.userInfo.Id});
         const data = JSON.parse(res.data)

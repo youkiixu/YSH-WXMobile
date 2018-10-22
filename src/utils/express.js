@@ -69,6 +69,23 @@ function wuliuId(str) {
   }
 }
 
+function wuliuStr (id) {
+    switch (id) {
+      case YJPEISONG.value:
+        return YJPEISONG.name
+        break;
+      case DAIFA.value:
+        return DAIFA.name
+        break;
+      case ZITI.value:
+        return ZITI.name
+        break;
+      default: //商家直邮
+        return ZHIYOU.name
+        break;
+    }
+}
+
 function checkYjUse(num) {
   // 0是商家直邮，0以上都是印捷
   if (num == 0) {
@@ -82,7 +99,8 @@ function checkYjUse(num) {
 const express = {
   wuliuId,
   checkYjUse,
-  selectExpress
+  selectExpress,
+  wuliuStr
 }
 
 export default express

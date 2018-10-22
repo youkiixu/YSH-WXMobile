@@ -205,8 +205,9 @@ export default {
             const res = await api.getProductQitemCode({Id : ProductId})
             if(res.success) {
                 const pid = res.data
+                const fid = res.ShopMapId
                 if( pid != 0 ) {
-                this.$wx.toBaoJia({ pid: pid , title: ProductName , isDetail: true , ProductId: ProductId } , this)
+                this.$wx.toBaoJia({ pid: pid , title: event.ProductName , isDetail: true , ProductId: ProductId , fid : fid } , this)
                 } else {
                 this.$wx.toDetail({id : ProductId , title: event.ProductName} , this)
                 }
