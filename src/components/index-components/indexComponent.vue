@@ -34,17 +34,17 @@ export default {
             const res = await api.getProductQitemCode({Id : ProductId})
             if(res.success) {
                 const pid = res.data
+                const fid = res.ShopMapId
                 if( pid != 0 ) {
-                this.$wx.toBaoJia({ pid: pid , ProductId , isDetail: true , ProductId: ProductId } , this)
+                    this.$wx.toBaoJia({ pid: pid , ProductId , isDetail: true , ProductId: ProductId , fid: fid } , this)
                 } else {
-                this.$wx.toDetail({id : ProductId , title: obj.title} , this)
+                    this.$wx.toDetail({id : ProductId , title: obj.title} , this)
                 }
             } else {
                 this.$wx.showErrorToast(res.msg)
             }
         },
         ADEvent(item) {
-            console.log(item)
             const type = item.linkType
             switch (type) {
                 case 1:

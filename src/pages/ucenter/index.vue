@@ -69,7 +69,7 @@
         <view class="t">我的足迹</view>
         <img class="i" src="/static/images/address_right.png" background-size="cover"/>       
   </view>
-   <navigator url="../ucenter/address" class="address list clear">    
+   <navigator url="../../addressPages/address" class="address list clear">    
         <view class="t">地址管理</view>
         <img class="i" src="/static/images/address_right.png" background-size="cover"/>       
   </navigator>
@@ -110,7 +110,8 @@ export default {
       'sassLogin'
     ]),
     ...mapMutations ([
-      'setUserInfo'
+      'setUserInfo',
+      'setUserAddressList'
     ]),
     // 点击登陆
     goLogin (isLogin) {
@@ -137,27 +138,6 @@ export default {
       }
 
     },
-    
-    // 退出登陆
-    exitLogin () {
-      wx.showModal({
-        title: '',
-        confirmColor: '#b4282d',
-        content: '退出登录？',
-        success: function (res) {
-          if (res.confirm) {
-            wx.removeStorageSync('token');
-            wx.removeStorageSync('userInfo');
-            wx.switchTab({
-              url: '/pages/ucenter/index',
-              success: function (e) {
-
-              }
-            });
-          }
-        }
-      })
-    },
     // 去详情页
 
     toOrderList(orderStatus) {
@@ -182,6 +162,7 @@ export default {
             if(res.success) {
               // 清空缓存
               _this.setUserInfo({})
+              _this.setUserAddressList([])
               wx.removeStorageSync('openId')
             }
           }

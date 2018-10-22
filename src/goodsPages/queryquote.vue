@@ -26,10 +26,10 @@ export default {
             }).catch(() => {
                 _this.$router.back()
             })
-        }
+        } 
 
         if (this.$route.query.pid) {
-            this.quoteUrl = 'https://www.kiy.cn//m-mobile/autobaojia/index?pid=' + this.$route.query.pid
+            this.quoteUrl = 'https://www.kiy.cn//m-mobile/autobaojia/index?pid=' + this.$route.query.pid + '&&fid=' + this.$route.query.fid
             this.qitemCode = this.$route.query.pid
             this.isDetail = this.$route.query.isDetail ? this.$route.query.isDetail : false
             this.ProductId = this.$route.query.ProductId ? this.$route.query.ProductId : ''

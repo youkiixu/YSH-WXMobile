@@ -216,7 +216,9 @@ export default {
             OrderId: this.OrderId,
             UserId: this.userInfo.Id
         }
+        this.$wx.showLoading()
         const res = await api.setOrderClose(par)
+        this.$wx.hideLoading()
         if(res.success){
             this.$wx.showSuccessToast(res.msg)
             this.getUserOrderDetail()

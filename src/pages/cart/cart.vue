@@ -1,11 +1,6 @@
 <template >
 <view class="container">
-  <!-- <view class="service-policy">
-    <view class="item">30天无忧退货</view>
-    <view class="item">48小时快速退款</view>
-    <view class="item">满88元免邮费</view>
-  </view> -->
-  <view class="no-cart" v-if="cartGoods.length <= 0">
+  <view class="no-cart" v-if="cartGoods.length <= 0 && !loading">
     <view class="c">
       <img src="http://nos.netease.com/mailpub/hxm/yanxuan-wap/p/20150730/style/img/icon-normal/noCart-a8fe3f12e5.png" />
       <text>购物车空空如也,快去逛逛吧</text>
@@ -13,7 +8,7 @@
   </view>
 
 
-  <view class="cart-view" v-if="cartGoods.length != 0">
+  <view class="cart-view"  >
     <view class="cart-address clear">
       <!-- <view class="posi-img">
         <img src="/static/images/icon_cart_position.png" background-size="cover"/>
@@ -23,7 +18,7 @@
        <view class="edit" @click="editCart">{{!isEditCart ? '编辑商品' : '完成'}}</view>       
     </view>
 
-     <view class="list">
+     <view class="list" v-if="cartGoods.length != 0 && !loading">
       <view class="group-item">
         <view class="goods">
           <view :class="isEditCart ? 'edit item' : 'item'" v-for="(item, index) of cartGoods" :key="item.Id" @click="checkedItem(index)">
@@ -53,14 +48,15 @@
         </view>
       </view>
     </view>
+    <loadingComponent v-if="loading"></loadingComponent>
+
     
-   <view class="cart-bottom">
+    <view class="cart-bottom">
       <view :class="checkedAllStatus ? 'checked checkbox' : 'checkbox'" @click="checkedAll">全选</view>
       <view class="total">总金额：<text class="total-price">{{'￥'+ allPrice}}</text></view>
       <view class="checkout" @click="checkoutOrder" v-if="!isEditCart">去结算</view>
       <view class="delete" @click="deleteCart" v-if="isEditCart">删除</view>
     </view>
-
   </view>
 
 </view>
@@ -70,10 +66,13 @@
 import api from '@/utils/api'
 import wx from 'wx'
 import util from '@/utils/util'
-
+import loadingComponent from '@/components/loadingComponent'
 import { mapState , mapActions } from 'vuex'
 
 export default {
+  components: {
+    loadingComponent
+  },
   data () {
     return {
       cartGoods: [],
@@ -89,7 +88,8 @@ export default {
         Price: 0
       },
       pageNo: 1,
-      pageSize: 15
+      pageSize: 15,
+      loading: true
     }
   },
   // 每次打开触发，更新数据
@@ -98,11 +98,11 @@ export default {
     this.pageNo = 1
     this.checkedAllStatus = false
     this.isEditCart = false
-    this.$wx.showLoading()
+    this.loading = true
     await Promise.all([
       this.getCartList()
     ])
-    this.$wx.hideLoading()
+    this.loading = false
     
   },
   computed: {

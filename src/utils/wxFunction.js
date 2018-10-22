@@ -103,6 +103,7 @@ function toBaoJia(item , vm) {
     let isDetail = item.isDetail ? true : false
     let ProductId = item.ProductId ? item.ProductId : ''
     let detailCommon = item.detailCommon ? item.detailCommon : false
+    let fid = item.fid ? item.fid : undefined
     vm.$router.push({
       path: '/goodsPages/queryquote',
       query: {
@@ -110,13 +111,14 @@ function toBaoJia(item , vm) {
         title: item.title,
         isDetail: isDetail,
         ProductId: ProductId,
+        fid: fid,
         detailCommon: detailCommon
       }
     })
 }
 
 function toLogin(isBack) {
-  showErrorToast('请先登陆')
+  showErrorToast('请先登录')
   setTimeout(() => {
     if (isBack) {
       wx.navigateTo({

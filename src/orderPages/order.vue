@@ -35,37 +35,9 @@
                 </view>
             </view>
         </view>
+        <searchResultEmpty v-if="!orderList.length && !loading" text="该分类下没有订单信息"></searchResultEmpty>
+        <loadingComponent v-if="loading"></loadingComponent>
     </view>
-    <!-- <view class="orders">
-        <navigator :url="'./orderDetail?Id=' + item.Id" class="order" v-for="(item, index) in orderList" :key="item.id" :data-index="index">
-            <view class="h">
-                <view class="l">订单编号：{{item.Id}}</view>
-                <view class="shop-name"> {{item.ShopName}}</view>
-                <view class="r">{{item.OrderDate}}</view>
-            </view>
-            <view class="goods">
-                <view class="img">
-                    <image :src="item.ThumbnailsUrl"/>
-                </view>
-                <view class="info">
-                    
-                    <text class="name">{{item.ProductName}}</text>
-                    <text class="number">共{{item.Quantity}}件商品</text>
-                </view>
-                <view class="status"></view>
-            </view>
-            <view class="b">
-                <view class="l">实付：￥{{item.ProductTotalAmount + item.Freight}}    (运费：{{item.Freight}})</view>
-                
-                <view class="r">
-                    <button class="btn" @click="payOrder">去付款</button>
-                </view>
-                <view class="r" style="margin-right: 10rpx;">
-                    <button class="btn" @click="checkExpress(item)">查物流</button>
-                </view>
-            </view>
-        </navigator>
-    </view> -->
 </view>
 </template>
 
@@ -73,14 +45,21 @@
 import api from '@/utils/api'
 import wx from 'wx'
 import orderInfoStatus from '@/utils/orderInfoStatus'
+import loadingComponent from '@/components/loadingComponent'
+import searchResultEmpty from '@/components/searchResultEmpty'
 
 export default {
+    components: {
+        loadingComponent,
+        searchResultEmpty
+    },
   data () {
     return {
       orderList: [],
       pageNo: 1,
       pageSize: 15,
-      orderStatus: false
+      orderStatus: false,
+      loading: true
     }
   },
   computed: {
@@ -107,9 +86,11 @@ export default {
     // 获取用户订单数据
     async getUserOrderList () {
         const openId = wx.getStorageSync('openId')
-        this.$wx.showLoading()
+        // this.$wx.showLoading()
+        this.loading = true
+
         const res = await api.getUserOrderList({ openId: openId , pageNo: this.pageNo , pageSize: this.pageSize , orderStatus: this.orderStatus })               
-        this.$wx.hideLoading()
+        // this.$wx.hideLoading()
         if (res.success) {
             var arr = []
             let data = JSON.parse(res.data)      
@@ -118,6 +99,7 @@ export default {
                 arr.push(item)
             })
             this.orderList = this.orderList.concat(arr)
+            this.loading = false
         } else {
             // 没有登陆请登录
             this.$wx.toLogin()

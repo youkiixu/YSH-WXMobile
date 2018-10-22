@@ -165,7 +165,7 @@ export default {
                 this.currentSortOrder = 'desc';
                 this.orderKey = '默认'
                 this.refresh();
-            }
+            } 
         },
         async refresh () {
             const openId = wx.getStorageSync('openId')

@@ -37,7 +37,8 @@
   </view> 
   
 
-  <searchResultEmpty v-if="!goodsList.length && searchStatus"></searchResultEmpty>
+  <searchResultEmpty v-if="!goodsList.length && searchStatus && !loading"></searchResultEmpty>
+  <loadingComponent v-if="loading"></loadingComponent>
 </scroll-view>
 </template>
 
@@ -47,12 +48,14 @@ import wx from 'wx'
 import sortGoods from '@/components/sortGoods'
 import searchBar from '@/components/indexSearchBar'
 import searchResultEmpty from '@/components/searchResultEmpty'
+import loadingComponent from '@/components/loadingComponent'
 
 export default {
   components: {
     sortGoods,
     searchBar,
-    searchResultEmpty
+    searchResultEmpty,
+    loadingComponent
   },
   data () {
     return {
@@ -69,15 +72,19 @@ export default {
       timer: null,
       orderKey: 1,    
       scrollTop: 0,
-      floorstatus: false
+      floorstatus: false,
+      loading: false
+      
     }
   },
   async mounted () {
     this.goodsList = []
     this.keyword = ''
     this.searchStatus = false
+    this.currentSortOrder = 'desc';
     if(this.$route.query.keyword) {
       this.keyword = this.$route.query.keyword
+      this.loading = true
       await Promise.all([
         this.getGoodsList()
       ])
@@ -101,12 +108,13 @@ export default {
     // 获得搜索结果的商品列表
     async getGoodsList () {
       this.historyKeyword = [];
-      const res = await api.search({keywords: this.keyword , pageNo: this.page , pageSize: this.size , orderKey: this.orderKey})
+      const res = await api.search({keywords: this.keyword , pageNo: this.page , pageSize: this.size , orderKey: this.orderKey , orderByKey:this.currentSortOrder == 'desc' ? 0 : 1})
       if (res.success) {
         this.searchStatus = true;
         this.categoryFilter = false;
         var dataTable = JSON.parse(res.data)
         this.goodsList = this.goodsList.concat(dataTable.Table);
+        this.loading = false
       }
     },
     // 关键词被点击
@@ -115,12 +123,14 @@ export default {
     },
     // 上一个方法调用
     getSearchResult () {
+      this.loading = true
       this.page = 1;
       this.goodsList = [];
       this.getGoodsList();
     },
     // 三个排序条件的点击事件
     openSortFilter: function (event) {
+      
       let currentId = event.currentTarget.id;
       switch (currentId) {        
         case 'salesSort':

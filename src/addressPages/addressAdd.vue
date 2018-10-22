@@ -57,10 +57,11 @@
           <view :class="regionStreet.id != undefined ? 'done' : 'disabled done'" @click="doneSelectRegion">确定</view>
         </view>
         <view class="bd">
-          <view class="region-list">
+          <view class="region-list"  v-if="!loading">
             <view :class="item.selected ? 'selected item' : 'item'" @click="selectRegion(item)"
             v-for="(item, index) of regionList" :key="index">{{item.name}}</view>
           </view>
+          <loadingSpinComponent v-if="loading"></loadingSpinComponent>
         </view>
       </view>
   </view>
@@ -73,8 +74,12 @@ import api from '@/utils/api'
 import wx from 'wx'
 import util from '@/utils/util'
 import { mapState  , mapActions } from 'vuex'
+import loadingSpinComponent from '@/components/loadingSpinComponent'
 
 export default {
+  components: {
+    loadingSpinComponent
+  },
   data () {
     return {
       address: {},
@@ -105,7 +110,8 @@ export default {
       },
       regionStreet:{
         name: '街道'
-      }
+      },
+      loading: true
     }
   },
   async mounted () {
@@ -121,6 +127,7 @@ export default {
     this.regionStreet = {name: '街道'}
     this.selectRegionId = 0
     this.regionType = 0 
+    this.openSelectRegion = false
     if(this.$route.query.address && this.$route.query.address != '{}') {
       this.address = JSON.parse(this.$route.query.address)
       console.log(this.address)
@@ -159,9 +166,9 @@ export default {
     },
     // 获得对应级别的地市信息
     async getRegionList (regionId) {
-      this.$wx.showLoading()
+      this.loading = true
       const res = await api.getYinJieRegion({id: regionId});
-      this.$wx.hideLoading()
+      this.loading = false
       this.regionList = res
     },
     // 设置是否为默认地址
@@ -292,8 +299,9 @@ export default {
         par = Object.assign(par , { Id : 0 , rowState: null})
       }
       
-
+      this.$wx.showLoading()
       const res = await api.modifyUserAddress(par);
+      this.$wx.hideLoading()
       if(res.success) {
         this.$wx.showSuccessToast('保存成功')
         this.getUserAddressList(this.userInfo.Id)

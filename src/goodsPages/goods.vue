@@ -1,7 +1,7 @@
 <template >
 <view class=" openAttr ? 'scroll' : 'scroll-lock' " >
     <!-- 主体容器 -->
-    <view class="container">
+    <view class="container" v-if="!loading">
       <!-- 头部导航 -->
       <view class="goodshead">
         <view class="head-classify">
@@ -216,7 +216,7 @@
       <view class="c" @click="addToCart">加入购物车</view>
       <view class="r" @click="SubmitByProduct" >立即购买</view>
     </view>
-
+    <loadingComponent v-if="loading"></loadingComponent>
 </view>
 </template>
 
@@ -226,12 +226,14 @@ import wx from 'wx';
 import wxParse from 'mpvue-wxparse'
 import express from '@/utils/express'
 import util from '@/utils/util'
+import loadingComponent from '@/components/loadingComponent'
 import { mapState, mapActions ,mapMutations } from 'vuex'
 
 
 export default {
   components: {
-    wxParse
+    wxParse,
+    loadingComponent
   },
   data () {
     return {
@@ -290,7 +292,8 @@ export default {
         paraArr: []
       },
       openQuotSuccess: false,
-      defalutHead: 'http://www.kiy.cn/Areas/wxMobile/Content/img/detailpage/'+ Math.floor(Math.random() * 7 + 1) +'.png'
+      defalutHead: 'http://www.kiy.cn/Areas/wxMobile/Content/img/detailpage/'+ Math.floor(Math.random() * 7 + 1) +'.png',
+      loading: true
     }
   },
   mounted () {
@@ -327,6 +330,12 @@ export default {
       'userInfo'
     ])
   },
+  onReady() {
+    this.loading = true
+  },
+  onUnload() {
+    this.loading = true
+  },
   methods: {
     ...mapMutations(['setProSearchParam']),
     ...mapActions(['submitByProductId' , 'SubmitByProductId2']),
@@ -357,14 +366,14 @@ export default {
         Grams: '',
         Ensemble: ''
       }
-      this.$wx.showLoading()
+      // this.$wx.showLoading()
       await Promise.all([
         this.getGoodsSkuInfo(),
         this.getGoodsDetail(),
         this.getGoodsDesc(),
         this.getComment()
       ]);
-      this.$wx.hideLoading()
+      // this.$wx.hideLoading()
       this.setTitle(this.detailInfo.ProductName)
       // true等于非标
       // this.detailInfo.IsCustom = true
@@ -378,6 +387,8 @@ export default {
       }
       // 默认选中配送方式
       this.selectWuliu()
+
+      this.loading = false
     },
     // 获取非标的价格
     async getOpenQuote () {
@@ -557,8 +568,11 @@ export default {
         pid: this.code,
         title: this.detailInfo.ProductName,
         isDetail : true,
+        fid: this.detailInfo.ShopMapId,
         detailCommon: true
       }
+
+      this.openAttr = false;
       this.$wx.toBaoJia(par , this)
     },
     // 关闭规格弹窗

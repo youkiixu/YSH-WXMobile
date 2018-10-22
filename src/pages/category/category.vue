@@ -23,7 +23,7 @@
 
 
     <view class="cate-nav">
-        <scroll-view scroll-x="true" class="cate-nav-body" style="width: 750rpx;" :scroll-left="scrollLeft">
+        <scroll-view scroll-x="true" scroll-with-animation class="cate-nav-body" style="width: 750rpx;" :scroll-left="scrollLeft">
             <view  v-for="(item , index) of navList" :class="Id == item.Id ? 'active item' : 'item'" :key="item.Id"
             @click="switchCate" :data-Id="item.Id" :data-index="index">
                 <view class="name">{{item.Name}}</view>
@@ -40,8 +40,9 @@
   </view> -->
 
   <view class="search-result">
-      <sortGoods :goodsList="goodsList"></sortGoods>
-      <searchResultEmpty v-if="!goodsList.length"></searchResultEmpty>    
+      <sortGoods :goodsList="goodsList" v-if="goodsList && !loading"></sortGoods>
+      <searchResultEmpty v-if="!goodsList.length && !loading"></searchResultEmpty>
+      <loadingComponent v-if="loading"></loadingComponent>
   </view>
     <!-- <view class="scollTop"  @click="toTop" :hidden="!floorstatus">顶部</view> -->
 </view>
@@ -53,11 +54,13 @@ import wx from 'wx'
 import { mapState } from 'vuex'
 import sortGoods from '@/components/sortGoods'
 import searchResultEmpty from '@/components/searchResultEmpty'
+import loadingComponent from '@/components/loadingComponent'
 
 export default {
   components: {
     sortGoods,
-    searchResultEmpty
+    searchResultEmpty,
+    loadingComponent
   },
   data () {
     return {
@@ -78,10 +81,12 @@ export default {
       page: 1,
       size: 20, // 默认10000尽量大，查到所有符合的数据
       orderKey: 1,
-      position:''
+      position:'',
+      loading: true
     }
   }, 
   async mounted () {
+    this.currentSortOrder = 'desc';
     Object.assign(this.$data, this.$options.data())
     if (this.$route.query.Id) {
       this.navList = JSON.parse(this.$route.query.categoryChild)
@@ -97,6 +102,7 @@ export default {
     await Promise.all([
       this.searchGoods()
     ])
+
   },
   computed: {
     ...mapState([
@@ -164,11 +170,13 @@ export default {
         
     },
     async searchGoods() {
-      const res = await api.search({ cid: this.Id , pageNo: this.page , pageSize : this.size , orderKey: this.orderKey });
+      
+      const res = await api.search({ cid: this.Id , pageNo: this.page , pageSize : this.size , orderKey: this.orderKey , orderByKey:this.currentSortOrder == 'desc' ? 0 : 1});
+      
       if(res.success) {
         var tableData = JSON.parse(res.data)
         this.goodsList = this.goodsList.concat(tableData.Table)
-        
+        this.loading = false
       }
     },
     // 切换商品类别
@@ -179,29 +187,24 @@ export default {
 
       var clientX = event.clientX;
       var currentTarget = event.currentTarget;
-      if (clientX < 60) {
-        this.scrollLeft = currentTarget.offsetLeft - 60
-      } else if (clientX > 330) {
-        this.scrollLeft = currentTarget.offsetLeft
-      }
+      // if (clientX < 60) {
+      //   this.scrollLeft = 0 
+      // } else if (clientX > 330) {
+        this.scrollLeft = currentTarget.offsetLeft - 130
+      // }
+      // console.log(event.clientX)
+      // console.log(this.scrollLeft)  
+      
       this.Id = event.currentTarget.dataset.id
       // 重新请求数据
       this.refresh();
     },
     // 刷新
     refresh () {
+      this.loading = true
       this.page = 1
       this.goodsList = []
       this.searchGoods()
-    },
-    // 跳转到商品下单页面
-    toGoods(item) {
-      // 标准品false
-      if(item.IsCustom) {
-        this.$wx.toBaoJia({ pid: item.QitemCode , title: item.ProductName , isDetail: true , ProductId: item.ProductId } , this)
-      } else {
-        this.$wx.toDetail({id : item.ProductId , title: item.ProductName} , this)
-      }
     }
   },
 

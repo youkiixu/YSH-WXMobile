@@ -94,7 +94,9 @@ export default {
 
             const openId = wx.getStorageSync('openId')
             _this.registerInfo.OpenId = openId
+            this.$wx.showLoading()
             const res = await api.sassRegister(this.registerInfo)
+            this.$wx.hideLoading()
             if(res.success) {
                 this.$wx.showSuccessToast(res.msg)
                 setTimeout(() => {
@@ -108,9 +110,11 @@ export default {
         async getCode () {
             const isPhone = util.checkMobile(this.registerInfo.CellPhone)
             if(isPhone){
+                this.$wx.showLoading()
                 const res = api.verificationCode({
                     phone: this.registerInfo.CellPhone
                 })
+                this.$wx.hideLoading()
                 this.$wx.showSuccessToast( res.msg)
             } else {
                 this.$wx.showErrorToast('请正确输入手机号码')
