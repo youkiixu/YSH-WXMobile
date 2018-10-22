@@ -21,7 +21,7 @@
                 <button @click="btnHandler">注册</button>
             </view>                       
             <view  class="to_register">
-                <button @click="transferText">已有账号?去登陆...</button>
+                <button @click="transferText">已有账号</button>
             </view>  
         </view>
 

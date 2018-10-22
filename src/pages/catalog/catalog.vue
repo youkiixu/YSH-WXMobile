@@ -223,7 +223,7 @@ page {
 }
 
 .catalog .hd .txt {
-  font-size: 20rpx;
+  font-size: 22rpx;
   text-align: left;
   color: #282828;
   width: auto;

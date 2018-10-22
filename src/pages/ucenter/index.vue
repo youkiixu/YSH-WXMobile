@@ -69,7 +69,7 @@
         <view class="t">我的足迹</view>
         <img class="i" src="/static/images/address_right.png" background-size="cover"/>       
   </view>
-   <navigator url="../ucenter/address" class="address list clear">    
+   <navigator url="/addressPages/address" class="address list clear">    
         <view class="t">地址管理</view>
         <img class="i" src="/static/images/address_right.png" background-size="cover"/>       
   </navigator>
