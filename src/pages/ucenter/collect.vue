@@ -247,13 +247,12 @@ export default {
     // 小程序原生上拉加载
   onReachBottom () {
     this.pageNo++
-    this.GetFavoriteProductList()
+    //this.GetFavoriteProductList()
   },
   // 小程序原生下拉刷新
   onPullDownRefresh: function() {
     this.pageNo = 1
     this.collectList = []
-    this.GetFavoriteProductList()
     wx.stopPullDownRefresh()
   },
   // 原生的分享功能

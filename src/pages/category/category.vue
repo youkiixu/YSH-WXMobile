@@ -1,5 +1,6 @@
 <template >
 <view class="container">
+  <scroll-view  style="position: absolute; left: 0; top:0; bottom: 0; right: 0;" :scroll-top="scrollTop" :scroll-y="true" @scrolltolower="scrolltolower" @scroll="scroll" >
   <view class="cate-head" :style="position">
     <view class="sort">
     <view class="sort-box">
@@ -49,8 +50,8 @@
       <loadingComponent v-if="loading"></loadingComponent>
   </view>
 
-  <!-- <view class="scollTop"  @click="toTop" :hidden="!floorstatus">顶部</view>  -->
-  
+  <view class="scollTop"  @click="toTop" :hidden="!floorstatus">顶部</view> 
+  </scroll-view>
 </view>
 </template>
 
@@ -172,6 +173,17 @@ export default {
     toTop: function (e) {       
         this.scrollTop = 0             
     },
+      // 获取滚动条当前位置  
+    scroll:function(e,res){
+      console.log(e);
+    //容器滚动时将此时的滚动距离赋值给 this.data.scrollTop
+      this.scrollTop=e.mp.detail.scrollTop;
+      if(e.mp.detail.scrollTop > 100){
+        this.floorstatus=true
+      }else {
+        this.floorstatus=false;
+          }
+      },
     async searchGoods() {
       
       const res = await api.search({ cid: this.Id , pageNo: this.page , pageSize : this.size , orderKey: this.orderKey , orderByKey:this.currentSortOrder == 'desc' ? 0 : 1});
@@ -211,17 +223,7 @@ export default {
     }
   },
 
-    //  // 获取滚动条当前位置
-    // onPageScroll : function(e){  
-    //   console.log('滚动位置：',e.scrollTop) 
-    //   if (e.scrollTop > 100) {     
-    //       this.floorstatus = true  
-    //        this.scrollTop = e.scrollTop    
-    //   } else {
-    //    this.floorstatus = false
-    //    //this.scrollTop = e.scrollTop 
-    //   }
-    // },
+   
   //小程序原生上拉加载
   onReachBottom () {
     this.page++
