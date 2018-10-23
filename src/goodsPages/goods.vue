@@ -589,7 +589,7 @@ export default {
                   this.collectStatus = false;
                 this.$wx.showSuccessToast('取消成功')
               } else {        
-                this.$wx.showSuccessToast('取消失败')
+                this.$wx.showErrorToast('取消失败')
               }                                
             } else {//添加收藏          
                   const openId = wx.getStorageSync('openId')
@@ -597,7 +597,9 @@ export default {
                   if (res1.success) {
                   this.collectStatus = true;                 
                   this.$wx.showSuccessToast('收藏成功')
-                  }          
+                  }else {        
+                    this.$wx.showErrorToast('请先登录')
+                   }             
               } 
     },
    // 判断商品是否已收藏

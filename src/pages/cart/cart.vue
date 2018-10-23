@@ -51,7 +51,7 @@
     <loadingComponent v-if="loading"></loadingComponent>
 
     
-    <view class="cart-bottom">
+    <view class="cart-bottom" v-if="cartGoods.length > 0 ">
       <view :class="checkedAllStatus ? 'checked checkbox' : 'checkbox'" @click="checkedAll">全选</view>
       <view class="total">总金额：<text class="total-price">{{'￥'+ allPrice}}</text></view>
       <view class="checkout" @click="checkoutOrder" v-if="!isEditCart">去结算</view>

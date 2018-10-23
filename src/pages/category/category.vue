@@ -1,7 +1,7 @@
 <template >
 <view class="container">
-  <scroll-view  style="position: absolute; left: 0; top:0; bottom: 0; right: 0;" :scroll-top="scrollTop" :scroll-y="true" @scrolltolower="scrolltolower" @scroll="scroll" >
-  <view class="cate-head" :style="position">
+  <scroll-view class="cate-out"  @scrolltolower="scrolltolower" :scroll-top="scrollTop" :scroll-y="true"  @scroll="onPageScroll" >
+  <view class="cate-head">
     <view class="sort">
     <view class="sort-box">
       <view :class=" currentSortType == 'default' ? 'active item' : 'item'"  @click="openSortFilter" id="defaultSort">
@@ -32,11 +32,6 @@
     </view>
   </view>
   
-   <!-- <view class="search-result">
-      <sortGoods :goodsList="goodsList"></sortGoods>
-      <searchResultEmpty v-if="!goodsList.length"></searchResultEmpty>    
-  </view> -->
-
   <!-- <view class="search-result">
     <scroll-view scroll-y="true" id="loupanList" :scroll-top="scrollTop" class="cate-out"  lower-threshold="0"  @scroll="onPageScroll">
       <sortGoods :goodsList="goodsList"></sortGoods>
@@ -88,7 +83,6 @@ export default {
       page: 1,
       size: 20, // 默认10000尽量大，查到所有符合的数据
       orderKey: 1,
-      position:'',
       loading: true
     }
   }, 
@@ -170,20 +164,13 @@ export default {
       }
     },
     //回到顶部
-    toTop: function (e) {       
-        this.scrollTop = 0             
+    toTop() {       
+        //this.scrollTop = 0     
+        wx.pageScrollTo({
+          scrollTop: 0,
+          duration: 300
+        })     
     },
-      // 获取滚动条当前位置  
-    scroll:function(e,res){
-      console.log(e);
-    //容器滚动时将此时的滚动距离赋值给 this.data.scrollTop
-      this.scrollTop=e.mp.detail.scrollTop;
-      if(e.mp.detail.scrollTop > 100){
-        this.floorstatus=true
-      }else {
-        this.floorstatus=false;
-          }
-      },
     async searchGoods() {
       
       const res = await api.search({ cid: this.Id , pageNo: this.page , pageSize : this.size , orderKey: this.orderKey , orderByKey:this.currentSortOrder == 'desc' ? 0 : 1});
@@ -222,6 +209,16 @@ export default {
       this.searchGoods()
     }
   },
+      // 获取滚动条当前位置
+    onPageScroll : function(e){
+      console.log('e的值：',e)
+      console.log('滚动位置：',e.scrollTop)
+      if (e.scrollTop > 100) {     
+          this.floorstatus = true   
+      } else {
+       this.floorstatus = false     
+      }   
+    },
 
    
   //小程序原生上拉加载
@@ -239,19 +236,16 @@ export default {
 
 <style scoped>
 @import "../../css/sortGoods.css";
-/* page {
-height: 100vh;
-width: 100vw;
-overflow: hidden;
-} */
 .container{
     background: #f1f1f1;
 }
-.cate-out{
-  flex: 1;
-  overflow-x: hidden;
-  overflow-y: auto;
-}
+/* .cate-out{
+  position: absolute;
+  left: 0; 
+  top:0;
+  bottom: 0;
+  right: 0;
+} */
 .clear:after{
     display: block;
     content:'';
@@ -259,7 +253,7 @@ overflow: hidden;
     height:0;
     }
 .cate-head{
-   background: #fff;
+    background: #fff;
     width: 100%;
     position: fixed;
     left:0;
@@ -271,7 +265,6 @@ overflow: hidden;
 }
 
 .sort-box{
-    background: #fff;
     width: 690rpx;
     height: 78rpx;
     overflow: hidden;
@@ -341,12 +334,11 @@ overflow: hidden;
     color: #b4282d;
     border: 1px solid #b4282d;
 }
-/* .cate-nav{
+ /* .cate-nav{
     position: fixed;
     left:0;
     top:78rpx;
-    z-index: 1000;
-} */
+}  */
 
 .cate-nav-body{
     height: 84rpx;
@@ -360,7 +352,7 @@ overflow: hidden;
     display: inline-block;
     height: 84rpx;
     min-width: 130rpx;
-    padding: 0 15rpx;
+    padding: 0 15rpx;   
 }
 
 .cate-nav .item .name{

@@ -177,7 +177,6 @@ page{
 .address-info .info-icon{
   width: 45rpx;
   height: 50rpx;
-  margin-top: 12rpx;
   display: flex;
   justify-content: center;
   align-items: center;
