@@ -517,9 +517,12 @@ page{
     float: left;
     width: 435rpx;
     margin: 19.5rpx 26rpx 19.5rpx 0;
+    height: 190rpx;
+    position: relative;
 }
 
 .cart-view .item .t{
+    /* height: 65rpx; */
     margin: 8rpx 0;
     font-size: 24rpx;
     color: #282828;
@@ -547,15 +550,17 @@ page{
 
 .cart-view .item .attr{
     width: 400rpx;
-    height: 75rpx;
+    /* height: 55rpx;  */
     margin-top: 10rpx;
-    margin-bottom: 17rpx;
+    margin-bottom: 15rpx;
     line-height: 25rpx;
     font-size: 20rpx;
     color: #666;
-    overflow: hidden;/*超出部分隐藏*/
-    /* white-space: nowrap; */
-    text-overflow:ellipsis;/*超出部分文字以...显示*/  
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
 }
 
 .cart-view .item .b{   
@@ -563,7 +568,8 @@ page{
     font-size: 32rpx;
     color: #dc2121;
     overflow: hidden;
-    margin-top: 30rpx;
+    position: absolute;
+    bottom: 4rpx;
 }
 .cart-view .item .b .icon{
   font-size: 28rpx;

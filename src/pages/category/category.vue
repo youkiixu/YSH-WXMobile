@@ -1,6 +1,5 @@
 <template >
 <view class="container">
-  <scroll-view class="cate-out"  @scrolltolower="scrolltolower" :scroll-top="scrollTop" :scroll-y="true"  @scroll="onPageScroll" >
   <view class="cate-head">
     <view class="sort">
     <view class="sort-box">
@@ -23,21 +22,15 @@
   </view>
 
     <view class="cate-nav">
-        <scroll-view scroll-x="true" scroll-with-animation class="cate-nav-body" style="width: 750rpx;" :scroll-left="scrollLeft">
+        <scroll-view scroll-x="true" scroll-with-animation class="cate-nav-body" style="width: 100%;">
             <view  v-for="(item , index) of navList" :class="Id == item.Id ? 'active item' : 'item'" :key="item.Id"
             @click="switchCate" :data-Id="item.Id" :data-index="index">
                 <view class="name">{{item.Name}}</view>
             </view>
         </scroll-view>
     </view>
+
   </view>
-  
-  <!-- <view class="search-result">
-    <scroll-view scroll-y="true" id="loupanList" :scroll-top="scrollTop" class="cate-out"  lower-threshold="0"  @scroll="onPageScroll">
-      <sortGoods :goodsList="goodsList"></sortGoods>
-      <searchResultEmpty v-if="!goodsList.length"></searchResultEmpty>
-    </scroll-view>   
-  </view> -->
 
   <view class="search-result">
       <sortGoods :goodsList="goodsList" v-if="goodsList && !loading"></sortGoods>
@@ -46,7 +39,6 @@
   </view>
 
   <view class="scollTop"  @click="toTop" :hidden="!floorstatus">顶部</view> 
-  </scroll-view>
 </view>
 </template>
 
@@ -169,7 +161,7 @@ export default {
         wx.pageScrollTo({
           scrollTop: 0,
           duration: 300
-        })     
+        })        
     },
     async searchGoods() {
       
@@ -206,21 +198,21 @@ export default {
       this.loading = true
       this.page = 1
       this.goodsList = []
-      this.searchGoods()
+      this.searchGoods()  
     }
   },
-      // 获取滚动条当前位置
+      // 小程序原生获取滚动条当前位置
     onPageScroll : function(e){
-      console.log('e的值：',e)
-      console.log('滚动位置：',e.scrollTop)
+      // console.log('e的值：',e)
+      // console.log('滚动位置：',e.scrollTop)
       if (e.scrollTop > 100) {     
           this.floorstatus = true   
       } else {
        this.floorstatus = false     
-      }   
+      }  
+     
     },
 
-   
   //小程序原生上拉加载
   onReachBottom () {
     this.page++
@@ -353,6 +345,7 @@ export default {
     height: 84rpx;
     min-width: 130rpx;
     padding: 0 15rpx;   
+    z-index: 999;
 }
 
 .cate-nav .item .name{
