@@ -18,12 +18,9 @@
             详情
           </view>
         </view>
-        <!-- <button class="head-share" open-type="share">
-          <img src="/static/images/upload.png"/>
-        </button> -->
       </view>
 
-      <scroll-view :scroll-into-view="toView" scroll-y="true" scroll-with-animation="true" class="src">
+      <scroll-view  scroll-y="true" scroll-with-animation="true" class="src">
         <view class="outside" id="goodshead">
           <!-- 图片轮播 -->
           <swiper class="goodsimgs" indicator-dots="true" autoplay="true" interval="3000" duration="1000">
@@ -37,9 +34,8 @@
                 <!-- 标准品价格 -->
                 <view class="c-price" v-if="!detailInfo.IsCustom"><text class="price-icon" >￥</text>{{detailInfo.Price}}</view>
                 <!-- 非标品价格 -->
-                <view class="c-price"  v-else><text class="price-icon" >￥</text>{{ListPriceInfo.sprice}}</view>
+                <view class="c-price"  v-else><text class="price-icon" >￥</text>{{ListPriceInfo.sprice + detailInfo.RemindPrice}}</view>
                 <view :class="collectStatus ? 'c-collect collected' : 'c-collect'"  @click="addCannelCollect">           
-                    <!-- <img class="icon" :src="collectProduImage"/>            -->
                 </view>
               </view>
               <view class="con-text">
@@ -104,7 +100,7 @@
           <view class="proDetail" id="proDetail">
             <view class="title">商品详情</view>
             <view class="content">
-              <wxParse :imageProp="parseUrl" :content="goodDetailHTMLstr" />
+              <wxParse :imageProp="parseUrl" :content="goodDetailHTMLstr"/>
             </view>
           </view>  
         </view> 
@@ -123,7 +119,7 @@
         <view class="info">
           <view class="c">
             <view class="p" v-if="!detailInfo.IsCustom"><text class="p-icon">￥</text>{{detailInfo.Price}}</view>
-            <view class="p" v-else><text class="p-icon">￥</text>{{ListPriceInfo.sprice}}</view>
+            <view class="p" v-else><text class="p-icon">￥</text>{{ListPriceInfo.sprice + detailInfo.RemindPrice}}</view>
             <view class="s" v-if="!detailInfo.IsCustom">库存：{{Stock}}</view>
             <view class="a" v-if="!detailInfo.IsCustom">已选：<text>{{selectSkuStr.Color}} {{selectSkuStr.Size}} {{selectSkuStr.Version}} {{selectSkuStr.Material}} {{selectSkuStr.Fashion}} {{selectSkuStr.Grams}} {{selectSkuStr.Ensemble}}</text></view>
             <view class="a" v-if="detailInfo.IsCustom"><text v-for="(item , index) in ListPriceInfo.paraArr" :key="index">{{item.paraStr}}</text></view>
@@ -203,7 +199,7 @@
       </view>
     </view>
     <!-- tabbar -->
-    <view class="bottom-btn">
+    <view class="bottom-btn" v-if="!loading">
       <view class="l l-collect" @click="addCannelCollect">
           <img class="icon" :src="collectBackImage"/>
       </view>
@@ -256,7 +252,6 @@ export default {
       saleNumber: 1,
       checkedSpecText: '请选择规格数量',
       openAttr: false,
-      collectProduImage:'/static/images/collect.png',
       collectBackImage: '/static/images/share.png',
       goodDetailHTMLstr: '',
       collectStatus:false,
@@ -321,7 +316,9 @@ export default {
     parseUrl () {
       var obj = {
         mode: 'aspectFit',
-        domain: 'kiy.cn'
+        domain: this.$wx.baseUrl,
+        lazyLoad: true,
+        padding: 1
       }
       return obj
     },
@@ -335,6 +332,7 @@ export default {
   },
   onUnload() {
     this.loading = true
+    
   },
   methods: {
     ...mapMutations(['setProSearchParam']),
@@ -380,7 +378,9 @@ export default {
       // this.detailInfo.IsCustom = true
       if(this.detailInfo.IsCustom) {
         // 获取非标报价的价格
-        this.getOpenQuote()
+        await Promise.all([
+          this.getOpenQuote()
+        ])
       } else {
         // 标准品默认选中
         // 选中默认选项
@@ -388,7 +388,7 @@ export default {
       }
       // 默认选中配送方式
       this.selectWuliu()
-
+      // this.toView = 'goodshead'
       this.loading = false
     },
     // 获取非标的价格
@@ -401,14 +401,14 @@ export default {
         data: this.proSearchParam.dataStr,
         dataStr: '',
         openId: openId,
-        productId: this.id
+        productId: this.id,
+        getOpenQuote: this.Yjtype
       }
       this.$wx.showLoading( openId ? '正在报价...' : '登录后价格更优')
       const res = await api.getOpenQuote(par)
       this.$wx.hideLoading()
       this.openQuotSuccess = res.success
       if(res.success) {
-        
         const Data = JSON.parse(res.Data)
         const ListPriceInfo  = Data.ListPriceInfo[0]
         this.ListPriceInfo.sprice = res.SumPrice
@@ -419,9 +419,9 @@ export default {
       } else {
         this.ListPriceInfo.sprice = 0
         this.ListPriceInfo.paraArr = []
-        // this.$wx.showErrorToast('报价失败')
       }
-      
+      // 获取运费提点
+      this.getYJFreightCalculate()
     },
     // 获取商品SKu详情
     async getGoodsSkuInfo () {
@@ -474,6 +474,30 @@ export default {
         }
         this.comment.star = star
       }
+    },
+    // 获取印捷提点
+    // 获取印捷提点运费
+    async getYJFreightCalculate() {
+        // console.log(this.detailInfo)
+        if(this.detailInfo.IsRemind) {
+          let item = this.detailInfo
+          var par = {
+              UserId: this.userInfo.Id,
+              UserAddress: item.ShippingAddress,
+              ShopId: item.ShopId,
+              Yjtype: this.Yjtype,
+              Price: this.detailInfo.IsCustom ? this.ListPriceInfo.sprice : this.detailInfo.Price
+          }
+          const res = await api.getYJFreightCalculate(par)
+          if(res.success) {
+              this.detailInfo.RemindPrice = res.data.RemindPrice
+              this.detailInfo.ReMind = res.data.ReMind
+              this.detailInfo.RemindLogId = res.data.RemindLogId
+          }
+        } else {
+          this.detailInfo.RemindPrice = 0
+        }
+        
     },
     // 规格弹窗中，每个规则项的点击事件
     clickSkuValue (skuName , skuId , skuValue) {
@@ -606,9 +630,8 @@ export default {
          const res = await api.IsCollection({ ProductId: this.id , openId: openId }) 
          let data = JSON.parse(res.data)   
          this.collectStatus = data;
-         console.log('this.collectStatus',this.collectStatus)    
     },
-
+    
     // 跳转到购物车页面
     openCartPage () {
       wx.switchTab({
@@ -644,7 +667,7 @@ export default {
             Yjtype: this.Yjtype,
             price: this.ListPriceInfo.res.SumPrice,
             quoteModel: this.ListPriceInfo.res.QuoteLogInfoId,
-            RemindPrice: 0,
+            RemindPrice: this.detailInfo.RemindPrice,
             GroupJson: JSON.stringify(this.ListPriceInfo.Data.GroupJson),
             QuoteStr: this.proSearchParam.dataStr,
             LimitTimeBuyId: this.ListPriceInfo.res.LimitTimeBuyId
@@ -703,7 +726,7 @@ export default {
               dataStr : this.proSearchParam.dataStr , 
               quoteJson: JSON.stringify(this.ListPriceInfo.Data.GroupJson) , 
               paraStr : util.delLastStr(paraArr , ','),
-              Price: this.ListPriceInfo.sprice
+              Price: util.addNum(this.ListPriceInfo.sprice , this.detailInfo.RemindPrice)
             }
           )
         } else {
@@ -742,12 +765,15 @@ export default {
           _this.strYjtype = arr[res.tapIndex]
           _this.Yjtype = express.wuliuId(_this.strYjtype)
           _this.YjUse = express.checkYjUse(_this.Yjtype)
+          // 获取提点
+          _this.getYJFreightCalculate()
         })
       } else {
         _this.strYjtype = arr[0]
         _this.Yjtype = express.wuliuId(_this.strYjtype)
         _this.YjUse = express.checkYjUse(_this.Yjtype)
       }
+      
     },
     // 检查库存
     checkStock() {
@@ -769,6 +795,16 @@ export default {
     // 滚动到某位置
     toNav: function(e) {
       this.toView = e.currentTarget.dataset.id
+      const query = wx.createSelectorQuery()
+      query.select('#' + this.toView).boundingClientRect()
+      query.selectViewport().scrollOffset()
+      query.exec(function(res){
+        console.log(res[0].top)
+        wx.pageScrollTo({
+          scrollTop: res[0].top,
+          duration: 300
+        })
+      })
     },
     setTitle (text) {
         wx.setNavigationBarTitle({
@@ -818,7 +854,6 @@ export default {
 </script>
 
 <style>
-@import "../utils/wxParse/wxParse.wxss";
 
 page{
   height: 100%;
@@ -1165,7 +1200,7 @@ page{
   margin-top: 30rpx;
   background-color: white;
   width: 100%;
-  padding: 0 20rpx 100rpx 20rpx;
+  padding: 0 0rpx 100rpx 0rpx;
   box-sizing: border-box;
 }
 .proDetail .title{

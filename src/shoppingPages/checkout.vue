@@ -2,8 +2,8 @@
 <view class="container">  
         <scroll-view scroll-y class="order-content">     
 
-             <view class="address-box">
-            <view class="address-item" @click="selectAddress" v-if="address.Id > 0">
+            <view class="address-box">
+                <view class="address-item" @click="selectAddress" v-if="address">
                     <view class="name clear">
                         <text class="s">收货人：</text>
                         <text class="t">{{address.ShipTo}}</text>
@@ -23,14 +23,11 @@
                     </view>
                 </view>
 
-                <!-- <view class="address-item address-empty" @click="addAddress" v-if="checkOutInfo.Address">
+                <view class="address-item address-empty" @click="addAddress" v-if="!address">
                     <view class="m">
                     还没有收货地址，去添加
                     </view>
-                    <view class="r">
-                        <image src="/static/images/address_right.png"/>
-                    </view>
-                </view> -->
+                </view>
             </view>
             <view class="line">
                 <img src="/static/images/icon-order-division.png"/>
@@ -116,8 +113,8 @@
                         <text class="name">合计</text>
                     </view>
                     <view class="r price">            
-                    <view class="txt" v-if="daifaInfo.isDaifa">￥ {{checkOutInfo.totalAmount + daifaInfo.ExpressFreight}}</view>
-                    <view class="txt" v-if="!daifaInfo.isDaifa">￥ {{checkOutInfo.totalAmount}}</view>
+                    <view class="txt">￥ {{allToTal}}</view>
+                    <!-- <view class="txt" v-if="!daifaInfo.isDaifa">￥ {{checkOutInfo.IsRemind ? (checkOutInfo.totalAmount + remindInfo.RemindPrice) : checkOutInfo.totalAmount}}</view> -->
                     </view>
                 </view>
                 </view>
@@ -125,7 +122,7 @@
                     <view class="price-total">
                         <view class="product-price clear">
                             <view class="l">商品金额</view>
-                            <view class="r">￥{{checkOutInfo.totalAmount}}</view>
+                            <view class="r">￥{{allToTal - (daifaInfo.isDaifa ? daifaInfo.ExpressFreight : 0)}}</view>
                         </view>
                         <view class="express-price clear">
                             <view class="l">运费</view>
@@ -144,9 +141,9 @@
     <view class="order-total" >
         <view class="t">
         <!-- 如果是代发，需要加上代发运费 -->
-        <view  v-if="daifaInfo.isDaifa">合计：￥{{checkOutInfo.totalAmount + daifaInfo.ExpressFreight}}</view>
+        <view>合计：￥{{allToTal}}</view>
         <!-- 如果是印捷配送，直接显示价格 -->
-        <view v-if="!daifaInfo.isDaifa">合计：￥{{checkOutInfo.totalAmount}}</view>
+        <!-- <view v-if="!daifaInfo.isDaifa">合计：￥{{checkOutInfo.IsRemind ? (checkOutInfo.totalAmount + remindInfo.RemindPrice) : checkOutInfo.totalAmount}}</view> -->
         </view>
         
         <view class="b" @click="submitOrder">确认下单</view>
@@ -213,6 +210,13 @@ export default {
         ]),
         baseUrl () {
             return this.$wx.baseUrl
+        },
+        allToTal () {
+            let num = 0
+            num = this.checkOutInfo.IsRemind ? util.addNum(this.checkOutInfo.totalAmount , this.remindInfo.RemindPrice) : this.checkOutInfo.totalAmount
+            num = this.daifaInfo.isDaifa ? util.addNum(num , this.daifaInfo.ExpressFreight) : num
+            
+            return num
         }
     },  
   async mounted () {
@@ -223,7 +227,6 @@ export default {
     this.set_address(this.checkOutInfo.Address)
     this.productImg = this.$wx.getImagePath(this.checkOutInfo.products.imagePath)
     await Promise.all([
-        this.getYJFreightCalculate(),
         this.getCalculateFreight()
     ])
     this.selectWuliu()
@@ -285,23 +288,26 @@ export default {
         const res = await api.getCalculateFreight(par)
         if(res.success) {
             this.daifaInfo.ExpressFreight = res.data.DiscountFreight
-            this.daifaInfo.ExpressWeight= res.data.Weight
-            this.daifaInfo.ExpressFreightLog= res.data.logId
+            this.daifaInfo.ExpressWeight = res.data.Weight
+            this.daifaInfo.ExpressFreightLog = res.data.logId
         }
+        
         this.$wx.hideLoading()
     },
     // 获取印捷提点运费
     async getYJFreightCalculate() {
-        var par = {
-            UserId: this.userInfo.Id,
-            UserAddress: this.address.RegionId,
-            ShopId: this.checkOutInfo.products.ShopId,
-            Yjtype: this.checkOutInfo.Yjtype,
-            Price: this.checkOutInfo.totalAmount
-        }
-        const res = await api.getYJFreightCalculate(par)
-        if(res.success) {
-            this.remindInfo = res.data
+        if(this.checkOutInfo.IsRemind) {
+            var par = {
+                UserId: this.userInfo.Id,
+                UserAddress: this.address.RegionFullName,
+                ShopId: this.checkOutInfo.products.ShopId,
+                Yjtype: this.checkOutOther.Remindtype,
+                Price: this.checkOutInfo.totalAmount
+            }
+            const res = await api.getYJFreightCalculate(par)
+            if(res.success) {
+                this.remindInfo = res.data
+            }
         }
     },
     // 选择配送方式
@@ -348,6 +354,7 @@ export default {
             // 让选择印捷默认的地址
             this.set_address(this.checkOutInfo.Address)
         }
+        this.getYJFreightCalculate()
     },
     // 代收货款
     daifaSwitch(item) {
@@ -366,7 +373,9 @@ export default {
         if(this.daifaInfo.CarryCompanyId == 7) {
             this.isShunFeng()
         }
+        // 获取提点
         this.getCalculateFreight()
+
     },
     // 如果是顺丰快递，不能代收货款,金额为0
     isShunFeng () {
@@ -386,14 +395,17 @@ export default {
     // 添加收获地址
     addAddress () {
         this.$router.push({
-            path: '../addressPages/addressAdd'
+            path: '../shoppingPages/address'
         })
     },
     // 点击“去付款”
     submitOrder () {
-        
         let res = undefined
         const openId = wx.getStorageSync('openId')
+        if(!this.address) {
+            this.$wx.showErrorToast('请先添加地址')            
+            return
+        }
         //   标准品提交订单
         let par = {
             openId : openId,
@@ -403,7 +415,16 @@ export default {
             userAddressId: this.address.Id,
             orderRemarks: this.checkOutOther.orderRemarks,
             quoteLogModel: this.checkOutInfo.QuoteLogModel,
-            Paymenttype: 1
+            Paymenttype: 1,
+            IsRemind: this.checkOutInfo.IsRemind
+        }
+        // 是否有印捷提点 
+        if(this.checkOutInfo.IsRemind) { 
+            const remindInfo = {
+                Remind : this.remindInfo.RemindPrice,
+                RemindLogId: this.remindInfo.RemindLogId
+            }
+            par = Object.assign(par , remindInfo )
         }
         // 是否代发
         if(this.daifaInfo.isDaifa) {
@@ -432,8 +453,8 @@ export default {
         }
     },
     async submitOrderByProductId (par) {
-        this.$wx.showLoading()
         console.log(JSON.stringify(par))
+        this.$wx.showLoading()
         const res = await api.submitOrderByProductId(par)
         this.$wx.hideLoading()
         this.submitAfter(res)
@@ -448,9 +469,6 @@ export default {
     },
     submitAfter (res) {
         if(res.success) {
-            // wx.redirectTo({
-            // url: '../pay/payResult?status=1&orderId=' + res.data
-            // });
             this.$router.replace({
                 path: '../pages/pay/payResult?status=1&isShopping=1&Id=' + res.data
             })
@@ -458,6 +476,12 @@ export default {
             this.$wx.showErrorToast(res.msg)
         }
     }
+  },
+  watch: {
+    address (oldval , newval) {
+        this.getCalculateFreight()
+        this.getYJFreightCalculate()
+    }  
   },
     // 小程序原生下拉刷新
   onPullDownRefresh: function() {

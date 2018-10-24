@@ -13,16 +13,14 @@
         <scroll-view class="cate" scroll-y="true"  :style="{'height' : '100%'}">
             <view class="cate_item" v-for="( categoryChild , index1 ) of categoryList" :key="index1">
               <view class="hd">
-                  <!-- <text class="line"></text> -->
                   <text class="txt">{{categoryChild.Name}}分类</text>
-                  <!-- <text class="line"></text> -->
               </view>
               <view class="bd">
-                  <navigator @click="$router.push({ path: '/pages/category/category', query: { Id: item.Id ,categoryChild: JSON.stringify(categoryChild.SubCategories) } })"  :class="(index2+1) % 3 == 0 ? 'last item' : 'item'" v-for="(item, index2) of categoryChild.SubCategories"
+                  <view @click="$router.push({ path: '/pages/category/category', query: { Id: item.Id ,categoryChild: JSON.stringify(categoryChild.SubCategories) } })"  :class="(index2+1) % 3 == 0 ? 'last item' : 'item'" v-for="(item, index2) of categoryChild.SubCategories"
                       :key="item.Id">
                       <img class="icon" :src="item.Image ?  baseUrl + item.Image : 'http://www.kiy.cn/Areas/wxMobile/Content/img/defalutimg.png'"/>
                       <text class="txt">{{item.Name}}</text>
-                  </navigator>
+                  </view>
               </view>
             </view>
         </scroll-view>

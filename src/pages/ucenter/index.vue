@@ -4,7 +4,7 @@
   <view class="profile-info clear" >
     <view class="user_info clear" v-if="userInfo.Id">
       <view class="user_info_img" @click="goLogin(true)">
-        <img :src="baseUrl+userInfo.photo" />
+        <img :src="userInfo.photo ? baseUrl+userInfo.photo : 'http://www.kiy.cn/Areas/wxMobile/Content/img/userHead.png'" />
       </view>
       <view class="user_info_txt">
         <view class="info_name">{{userInfo.UserName}}</view>
@@ -17,7 +17,7 @@
         <img class="icon" src="/static/images/ic_menu_me_pressed.png"/>
       </view>
       <view class="user_info_txt">
-        <button v-if="canIUse" open-type="getUserInfo" @getuserinfo="goLogin" class="goLoginBtn" >点击，授权登录~</button>   
+        <button v-if="canIUse" open-type="getUserInfo"  @getuserinfo="goLogin" class="goLoginBtn" >点击，授权登录~</button>   
       </view>
       </view>
 

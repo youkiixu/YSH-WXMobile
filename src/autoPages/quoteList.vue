@@ -22,23 +22,23 @@
         <div class="list-content">
             <div class="list-item" v-for="(item , index) in quoteList" :key="index" >
                 <div class="list-item-box">
-                    <img class="list-img" :src="baseUrl + '/Storage/Shop/'+ item.ShopId +'/Products/' + item.ProductId + '/1_350.png'" alt="">
+                    <img class="list-img" :src="baseUrl + '/Storage/Shop/'+ item.ShopId +'/Products/' + item.ProductId + '/1_350.png'" alt="" @click="toDetail(item)">
                     <div class="list-info">
                         <div class="list-info-content">
-                            <div class="title">
+                            <div class="title" @click="toDetail(item)">
                                 {{item.ShopName}}
                             </div>
-                            <div class="p price">
+                            <div class="p price" @click="toDetail(item)">
                                 ￥{{item.Price}}
                             </div>
                             
-                            <div class="bottom">
+                            <div class="bottom" @click="toDetail(item)">
                                 <div class="bottom-left p">{{item.SaleCounts}}销量 {{item.ProductMark}}好评</div>
                                 <div class="bottom-right p">货期{{item.DeliveryTime}}</div>
                             </div>
                             <div class="btn-group">
-                                <kiyButton  text="去下单" @onClick="toDetail(item)"></kiyButton>
-                                <kiyButton :solid="true" text="加入购物车" @onClick="toCart(item)"></kiyButton>
+                                <kiyButton  text="去下单" @onClick="toCheckOut(item)"></kiyButton>
+                                <!-- <kiyButton :solid="true" text="加入购物车" @onClick="toCart(item)"></kiyButton> -->
                             </div>
                         </div>
                     </div>
@@ -51,6 +51,7 @@
 <script>
 import kiyButton from '@/components/kiyButton'
 import { mapState , mapActions } from 'vuex';
+import util from '@/utils/util'
 import api from '@/utils/api'
 
 export default {
@@ -80,7 +81,18 @@ export default {
     },
     methods: {
         ...mapActions(['SubmitByProductId2']),
+        // 去商品页面
         toDetail(item) {
+            const goodsUrl = util.getGoodsUrl({
+                ProductId: item.ProductId,
+                ProductName: this.proSearchRst.MainSale,
+                code: this.proSearchRst.QItemCode,
+                IsCustom: true, 
+                dataStr: item.QuoteStr
+            })
+            this.$router.push(goodsUrl)
+        },
+        toCheckOut(item) {
             const openId = wx.getStorageSync('openId')
             var par = {
                 openId: openId,

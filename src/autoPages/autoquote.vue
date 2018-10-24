@@ -16,11 +16,11 @@
                   <!-- <text class="line"></text> -->
               </view>
               <view class="bd">
-                  <navigator @click="queryQuote(item)" :class="(index2+1) % 3 == 0 ? 'last item' : 'item'" v-for="(item, index2) of listItem.itemList"
+                  <view @click="queryQuote(item)" :class="(index2+1) % 3 == 0 ? 'last item' : 'item'" v-for="(item, index2) of listItem.itemList"
                       :key="item.Code">
                       <img class="icon" :src="item.Images ?  baseUrl+ item.Images : 'http://www.kiy.cn/Areas/wxMobile/Content/img/defalutimg.png'"/>
                       <text class="txt">{{item.qName}}</text>
-                  </navigator>
+                  </view>
               </view>
             </view>
         </scroll-view>
