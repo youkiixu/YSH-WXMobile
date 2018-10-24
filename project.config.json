@@ -30,7 +30,7 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 4,
+			"current": 6,
 			"list": [
 				{
 					"id": -1,
@@ -60,7 +60,7 @@
 					"id": 4,
 					"name": "标准品下单",
 					"pathName": "goodsPages/goods",
-					"query": "data={\"ProductId\":127,\"ProductName\":\"铜版纸名片\",\"code\":68}&&proSearchParam=xx%3D90%26yy%3D54%26danshuang%3D2%26cailiao%3D300%E5%85%8B%E9%93%9C%E7%89%88%E7%BA%B8%E4%B8%8D%E5%A4%8D%E8%86%9C%26kuans%3D1%26hesu%3D5%26yx%3D1%26dk%3D1%26tj%3D%E7%83%AB%E9%87%91(%E5%B0%8F%E6%A0%87%E5%BF%97)%26tjds%3D%E7%83%AB%E9%87%91%E5%8D%95%E9%9D%A2%26ty%3D%E7%83%AB%E9%93%B6(%E5%B0%8F%E6%A0%87%E5%BF%97)%26tyds%3D%E7%83%AB%E9%93%B6%E5%8D%95%E9%9D%A2%26"
+					"query": "data={\"ProductId\":43,\"ProductName\":\"专版画册\",\"code\":12}&&proSearchParam=xx%3D285%26yy%3D210%26shuliang%3D1000%26danshuang%3D2%26hjg%3D%E9%AA%91%E9%A9%AC%E9%92%89%26textfield%3D4%26ysys%3D4%26yongzhi%3D%E5%8F%8C%E9%93%9C%E7%BA%B8%26kezhong%3D80%26tempps1%3D16%26neips%3D16%26neiys%3D4%26neiyeyongzhi%3D%E5%8F%8C%E9%93%9C%E7%BA%B8%26neiyekezhong%3D80%26hjg%3D%E5%8D%95%E9%9D%A2%E8%A6%86%E4%BA%AE%E8%86%9C%26byx%3D1%26pvcx%3D%26pvcy%3D%26tjx%3D%26tjy%3D%26jtx%3D%26jty%3D%26tyx%3D%26tyy%3D%26uvx%3D%26uvy%3D%26"
 				},
 				{
 					"id": -1,
@@ -69,7 +69,7 @@
 					"query": ""
 				},
 				{
-					"id": -1,
+					"id": 6,
 					"name": "购物车",
 					"pathName": "pages/cart/cart",
 					"query": ""

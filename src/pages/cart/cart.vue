@@ -34,7 +34,7 @@
                 <view class="attr" v-else>已选：{{item.Color}} {{item.Size}} {{item.Version}} {{item.Material}} {{item.Fashion}} {{item.Grams}} {{item.Ensemble}}</view>
                 <view class="b">
                   <view class="price">
-                    <text class="icon">￥</text>{{item.IsCustom ? item.fbpPrice : ( item.bpPrice * item.Quantity ) }}
+                    <text class="icon">￥</text>{{item.IsCustom ? item.fbpPrice : item.bpTotal }}
                   </view>
                   <view class="selnum" v-if="false">
                     <view class="cut" @click.stop="cutNumber" :data-item-index="index">-</view>
@@ -51,7 +51,7 @@
     <loadingComponent v-if="loading"></loadingComponent>
 
     
-    <view class="cart-bottom" v-if="cartGoods.length > 0 ">
+    <view class="cart-bottom" v-if="cartGoods.length != 0 && !loading">
       <view :class="checkedAllStatus ? 'checked checkbox' : 'checkbox'" @click="checkedAll">全选</view>
       <view class="total">总金额：<text class="total-price">{{'￥'+ allPrice}}</text></view>
       <view class="checkout" @click="checkoutOrder" v-if="!isEditCart">去结算</view>
@@ -119,12 +119,11 @@ export default {
             num = util.addNum(num , v.fbpPrice)
           }
           if(v.checked && !v.IsCustom) {
-            const toTal = util.accMul(v.bpPrice , v.Quantity)
+            let toTal = util.accMul(v.bpPrice , v.Quantity)
             num = util.addNum(num , toTal)
           }
       })
-
-      return num.toFixed(2)
+      return num
     }
   },
   methods: {
@@ -142,7 +141,12 @@ export default {
       const res = await api.getShoppingCartList(par);
       if(res.success) {
         var resData = JSON.parse(res.data)
-        this.cartGoods = this.cartGoods.concat(resData.Table)
+        let resArr = []
+        resData.Table.map(item => {
+          item.bpTotal = util.accMul(item.bpPrice , item.Quantity)
+          resArr.push(item)
+        })
+        this.cartGoods = this.cartGoods.concat(resArr)
       }
       // this.checkedAllStatus = this.isCheckedAll();
     },
@@ -276,6 +280,15 @@ export default {
       } else {
         this.$wx.showErrorToast(res.msg)
       }
+    },
+    async refresh() {
+      this.pageNo = 1
+      this.cartGoods = []
+      this.loading = true
+      await Promise.all([
+        this.getCartList()
+      ])
+      this.loading = false
     }
   },
   watch: {
@@ -304,9 +317,7 @@ export default {
   },
   // 小程序原生下拉刷新
   onPullDownRefresh: function() {
-    this.pageNo = 1
-    this.cartGoods = []
-    this.getCartList()
+    this.refresh()
     wx.stopPullDownRefresh()
   },
   // 原生的分享功能

@@ -2,7 +2,7 @@
 <view class="container">  
         <view class="order-content" v-if="goodList.length != 0">     
             <view class="address-box">
-                <view class="address-item" @click="selectAddress" v-if="address.Id > 0">
+                <view class="address-item" @click="selectAddress" v-if="address">
                     <view class="name clear">
                         <text class="s">收货人：</text>
                         <text class="t">{{address.ShipTo}}</text>
@@ -19,6 +19,11 @@
                     <view class="info-go" v-if="checkOutOther.Remindtype != 3">
                         <img src="/static/images/address_right.png"/>
                     </view>
+                    </view>
+                </view>
+                <view class="address-item address-empty" @click="addAddress" v-if="!address">
+                    <view class="m">
+                    还没有收货地址，去添加
                     </view>
                 </view>
             </view>
@@ -65,14 +70,8 @@
                         <!-- 代发快递 -->
                         <div class="box-content" v-if="item.Remindtype == 1">
                             <!-- <div class="weui-cells__title">代发快递方式</div> -->
-                            <div class="weui-cells weui-cells_after-title">
-                                <!-- <div class="weui-cell weui-cell_switch">
-                                    <div class="weui-cell__bd">是否到付</div>
-                                    <div class="weui-cell__ft">
-                                        <switch :checked="daifaInfo.isCashOnDelivery" @change="daifaSwitch('isCashOnDelivery')"/>
-                                    </div>
-                                </div> -->
-                                <div class="weui-cell weui-cell_switch">
+                            <div class="weui-cells weui-cells_after-title" >
+                                <div class="weui-cell weui-cell_switch"  v-if="item.CarryCompanyId != 7">
                                     <div class="weui-cell__bd">代收货款</div>
                                     <div class="weui-cell__ft">
                                         <switch :checked="item.IsDaiShouHuoKuan" @change="daifaSwitch(index)"/>
@@ -109,7 +108,7 @@
                             <view class="price-total">
                                 <view class="product-price clear">
                                     <view class="l">商品金额</view>
-                                    <view class="r">￥{{item.totalAmount}}</view>
+                                    <view class="r">￥{{item.totalAmount + item.RemindPrice}}</view>
                                 </view>
                                 <view class="express-price clear">
                                     <view class="l">运费</view>
@@ -122,16 +121,11 @@
                                 <text class="name">合计</text>
                             </view>
                             <view class="r price">            
-                                <view class="txt" v-if="item.isDaifa">￥ {{item.totalAmount + item.ExpressFreight}}</view>
-                                <view class="txt" v-if="!item.isDaifa">￥ {{item.totalAmount}}</view>
+                                <view class="txt" v-if="item.isDaifa">￥ {{item.totalAmount + item.RemindPrice + item.ExpressFreight}}</view>
+                                <view class="txt" v-if="!item.isDaifa">￥ {{item.totalAmount + item.RemindPrice}}</view>
                                 </view>
                             </view>
                         </view>
-
-
-                    
-
-                
                     </view>
                     <view class="line">
                         <img src="/static/images/icon-order-division.png"/>
@@ -173,15 +167,21 @@ export default {
             IsDaiShouHuoKuan: false,//是否代收货款
             // isCashOnDelivery: false,//是否代货到付款
             daiShouMoney: 0,//代收金额
-            CarryCompany: '顺丰快递',//快递公司名字
-            CarryCompanyId: 7,
+            CarryCompany: '优速快递',//快递公司名字
+            CarryCompanyId: 28,
             ExpressFreight: 0,
             ExpressWeight: 0,
             ExpressFreightLog: 0
 
         },
-        expressCompany : ['顺丰快递'  , '运通快递' , '优速快递'],
-        expressCompanyId: [ 7 , 11 , 28],
+        // 运费提点
+        remindInfo : {
+            RemindPrice: 0,
+            RemindLogId: 0,
+            ReMind: 0
+        },
+        expressCompany : [ '优速快递'  , '运通快递' ,'顺丰快递'],
+        expressCompanyId: [ 28 , 11 , 7],
         goodList: []
     }
   },
@@ -197,8 +197,10 @@ export default {
         totalAmount () {
             let sum = 0
             this.goodList.map(item => {
-                sum = util.addNum(sum , item.totalAmount)
+                // 如果有印捷提点，加上提点的费用，否者直接用返回的商品价格
+                sum = item.IsRemind ? util.addNum(util.addNum(sum , item.totalAmount) , item.RemindPrice) : util.addNum(sum , item.totalAmount)
                 if(item.isDaifa) {
+                    // 如果有代发，加上代发的费用
                     sum = util.addNum(sum , item.ExpressFreight)
                 }
             })
@@ -210,15 +212,23 @@ export default {
     this.goodList = []
     this.set_address(data.Address)
     var _this = this;
+    // 遍历购物车信息，加入默认的参数
     data.ProductInfo.map(item => {
+        // 加入默认的代发快递信息
         item = Object.assign(item , this.daifaInfo)
+        // 加入默认的表单信息
         item = Object.assign(item , this.checkOutOther)
+        // 加入默认的提点信息
+        item= Object.assign(item , this.remindInfo)
+        //如果非标报价，需要加上非标报价的信息，做展示使用
         if(item.RecordModel != '') {
             const RecordModel = JSON.parse(item.RecordModel)
             item.paraStr = RecordModel[0].paraStr
         }
+        // 加入到数组里，渲染到页面上
         this.goodList.push(item)
     })
+    // 遍历，获取默认的信息
     this.goodList.map((item, index) => {
         _this.init(index)
     })
@@ -227,49 +237,56 @@ export default {
     ...mapMutations(['set_address']),
     // 首次进来
     async init(index) {
-        
         await Promise.all([
-            this.getYJFreightCalculate(index),
-            this.getCalculateFreight(index)
+            // 获取印捷代发快递费用
+            // this.getCalculateFreight(index),
         ])
+        // 获取默认的配送方式
         this.selectWuliu(index , true)
     },
     // 获取代发快递
     async getCalculateFreight(index) {
-        console.log(this.goodList[index])
-        var par = {
-            quoteLogModelId: this.goodList[index].QuoteLogModel,
-            UserId: this.userInfo.Id,
-            CompanyId: this.goodList[index].CarryCompanyId,
-            fahuoCity: this.goodList[index].ShopAddress,
-            recieveCity: this.address.RegionFullName,
-            shuliang: this.goodList[index].IsCustom ? this.goodList[index].ShuLiang : this.goodList[index].Count,
-            Price: this.goodList[index].totalAmount
+        const item = this.goodList[index]
+        if(item.isDaifa) {
+            var par = {
+                quoteLogModelId: this.goodList[index].QuoteLogModel,//报价id
+                UserId: this.userInfo.Id,//用户Id
+                CompanyId: this.goodList[index].CarryCompanyId,//物流公司id
+                fahuoCity: this.goodList[index].ShopAddress,//商店地址
+                recieveCity: this.address.RegionFullName,//地址全称
+                shuliang: this.goodList[index].IsCustom ? this.goodList[index].ShuLiang : this.goodList[index].Count,//产品数量
+                Price: this.goodList[index].totalAmount//商品价格
+            }
+            this.$wx.showLoading('正在加载...')
+            const res = await api.getCalculateFreight(par)
+            this.goodList[index].ExpressFreight = res.data.DiscountFreight
+            this.goodList[index].ExpressWeight = res.data.Weight
+            this.goodList[index].ExpressFreightLog = res.data.logId
+            this.renderUI()
+            this.$wx.hideLoading()
         }
-        this.$wx.showLoading('正在加载...')
-        const res = await api.getCalculateFreight(par)
-        this.goodList[index].ExpressFreight = res.data.DiscountFreight
-        this.goodList[index].ExpressWeight = res.data.Weight
-        this.goodList[index].ExpressFreightLog = res.data.logId
-        this.renderUI()
-        this.$wx.hideLoading()
+
     },
     // 获取印捷提点运费
     async getYJFreightCalculate(index) {
         let item = this.goodList[index]
-        var par = {
-            UserId: this.userInfo.Id,
-            UserAddress: this.address.RegionId,
-            ShopId: item.ShopId,
-            Yjtype: item.Yjtype,
-            Price: item.totalAmount
+        if(item.IsRemind) {
+            var par = {
+                UserId: this.userInfo.Id,//用户Id
+                UserAddress: this.address.RegionFullName,//地址全称
+                ShopId: item.ShopId,//商店地址
+                Yjtype: item.Remindtype,//配送类型
+                Price: item.totalAmount//商品价格
+            }
+            const res = await api.getYJFreightCalculate(par)
+            if(res.success) {
+                this.goodList[index].ReMind = res.data.ReMind
+                this.goodList[index].RemindLogId = res.data.RemindLogId
+                this.goodList[index].RemindPrice = res.data.RemindPrice
+                this.renderUI()
+            }
         }
-        const res = await api.getYJFreightCalculate(par)
-        if(res.success) {
-            item = Object.assign(item , res.data)
-            // this.remindInfo = res.data
-            this.goodList[index] = item
-        }
+        
     },
     // 选择配送方式
     selectWuliu(index , init) {
@@ -278,26 +295,33 @@ export default {
         const openId = wx.getStorageSync('openId')
         // 加载信息
         var info = {
-            isYJPeiSong : item.IsPeisong,
-            YjUse: item.YjUse,
-            useFreightTempalate: item.UseFreightTemplate,
+            isYJPeiSong : item.IsPeisong,//是否印捷配送
+            YjUse: item.YjUse,//是否使用印捷配送
+            useFreightTempalate: item.UseFreightTemplate,//运费模板
             productId : item.ProductId,
             openId: openId
         }
+        // 根据上面的信息，得到可以选择的配送类型
         var arr = express.selectExpress(info)
         // 初次进来默认选中第一个选项
         if(init) {
             var wuliuStr = arr[0]
+            // 配送类型id
             item.Remindtype = express.wuliuId(wuliuStr)
+            // 配送配型字符串
             item.RemindtypeStr = wuliuStr
             _this.goodList[index] = item
+            // 选择运费类型会产生的事件
             _this.getYunFeiEvent(index, wuliuStr)
         } else {
             this.$wx.showActionSheet(arr).then(res => {
                 var wuliuStr = arr[res.tapIndex]
+                // 配送类型id
                 item.Remindtype = express.wuliuId(wuliuStr)
+                // 配送配型字符串
                 item.RemindtypeStr = wuliuStr
                 _this.goodList[index] = item
+                // 选择运费类型会产生的事件
                 _this.getYunFeiEvent(index, wuliuStr)
             })
         }
@@ -307,6 +331,7 @@ export default {
     // 选择运费类型会产生的事件
     getYunFeiEvent(index , str) {
         if(str == '代发快递'){
+            // 如果是代发快递，获取代发快递的价格
             this.goodList[index].isDaifa = true
             this.getCalculateFreight(index)
         } else {
@@ -314,11 +339,13 @@ export default {
             this.renderUI()
         }
         if(str == '印捷配送') {
-            // 让选择印捷默认的地址
+            // 让选择印捷默认的地址，讲默认的地址传到vuex里面
             this.set_address(this.cartCheckOutInfo.Address)
             this.renderUI()
         }
-        
+
+        // 配送类型变了，根据当前的配送类型获取印捷提点
+        this.getYJFreightCalculate(index)
     },
     // 代发快递信息选项
     daifaSwitch(index) {
@@ -331,7 +358,15 @@ export default {
         const index = Number(e.mp.target.id)
         this.goodList[index].CarryCompany = this.expressCompany[expressCompanyIndex]
         this.goodList[index].CarryCompanyId = this.expressCompanyId[expressCompanyIndex]
+        // 如果是顺丰快递，没有代收货款
+        if(this.goodList[index].CarryCompanyId == 7) {
+            this.isShunFeng(index)
+        }
         this.getCalculateFreight(index)
+    },
+    isShunFeng (index) {
+        this.goodList[index].IsDaiShouHuoKuan = false
+        this.goodList[index].daiShouMoney = 0
     },
     // 选择收获地址
     selectAddress () {
@@ -355,7 +390,7 @@ export default {
     // 添加收获地址
     addAddress () {
         this.$router.push({
-            path: '../../addressPages/addressAdd'
+            path: '../../shoppingPages/address'
         })
     },
     // 点击“去付款”
@@ -378,6 +413,7 @@ export default {
         this.$wx.hideLoading()
         this.submitAfter(res , productInfoStr)
     },
+    // 提交按钮的下一步事件
     submitAfter (res , productInfoStr) {
         if(res.success) {
             this.$router.replace({
@@ -391,11 +427,22 @@ export default {
             this.$wx.showErrorToast(res.msg)
         }
     },
+    // 因为小程序的模板引擎问题，需要对列表重新赋值才能显示
     renderUI () {
         const template = this.goodList
         this.goodList = []
         this.goodList = template
     }
+  },
+  watch: {
+    //   如果地址变了,需要重新获取运费和提点
+    address () {
+        const _this = this;
+        this.goodList.map((item , index) => {
+            _this.getCalculateFreight(index)
+            _this.getYJFreightCalculate(index)
+        })
+    }  
   },
   // 小程序原生下拉刷新
   onPullDownRefresh: function() {

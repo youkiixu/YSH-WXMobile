@@ -55,6 +55,10 @@
             <view class="l">商品金额</view>
             <view class="r">￥{{orderInfo.ProductTotalAmount}}</view>
         </view>
+        <view class="product-price clear">
+            <view class="l">已付金额</view>
+            <view class="r">￥{{orderInfo.ReceivedAmount}}</view>
+        </view>
         <view class="express-price clear">
             <view class="l">运费</view>
             <view class="r">￥{{orderInfo.Freight}}</view>
@@ -68,7 +72,7 @@
 
      <view class="order-bottom clear">
         <view class="total">
-            合计：<text class="icon">￥</text><text class="t">{{orderInfo.ProductTotalAmount + orderInfo.Freight}}</text>
+            合计：<text class="icon">￥</text><text class="t">{{orderInfo.ProductTotalAmount + orderInfo.Freight - orderInfo.ReceivedAmount}}</text>
         </view>
         <view class="btn">
             <button class="cancel" v-if="canCancel" @click="cancelOrder">取消订单</button>
@@ -127,7 +131,7 @@ export default {
 
         if (res.success === true) {
             const data = JSON.parse(res.data)
-            this.orderInfo = data[0];
+            this.orderInfo = data[0]; 
             this.orderGoods = data[1].QuoteRecord;   
             this.orderInfo.OrderStatusStr = this.$wx.orderStatus(this.orderInfo.OrderStatus)
             // 判断按钮可不可以用
@@ -136,7 +140,7 @@ export default {
             this.$router.back()
         }
     },
-    init () {
+    init () { 
         const m = this.orderInfo
         this.canCancel = false
         this.canPay = false
@@ -148,12 +152,16 @@ export default {
                 this.canCancel = true
             }
         } 
-        if(m.OrderStatus == orderInfoStatus.OrderOperateStatus.WaitPay || (!m.IsCleared && m.OrderStatus != orderInfoStatus.OrderOperateStatus.Close && m.ReceivedAmount == 0)) {
-            if (!m.IsCleared && m.ReceivedAmount == 0 && !m.IsReprint || (m.IsReprint && m.OrderTotalAmount > 0))
-            {
-                this.canPay = true
-            }
+
+        if(!m.IsCleared && m.OrderStatus != orderInfoStatus.OrderOperateStatus.Close && !m.IsReprint ) {
+            this.canPay = true
         }
+        // if(m.OrderStatus == orderInfoStatus.OrderOperateStatus.WaitPay || (!m.IsCleared && m.OrderStatus != orderInfoStatus.OrderOperateStatus.Close && m.ReceivedAmount == 0)) {
+        //     if (!m.IsCleared && m.ReceivedAmount == 0 && !m.IsReprint || (m.IsReprint && m.OrderTotalAmount > 0))
+        //     {
+        //         this.canPay = true
+        //     }
+        // }
         
         
     },

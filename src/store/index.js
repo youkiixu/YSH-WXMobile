@@ -15,6 +15,13 @@ function hideLoading() {
   wx.hideLoading()
 }
 
+function showError(msg) {
+    wx.showToast({
+      title: msg,
+      image: '/static/images/icon_error.png'
+    })
+}
+
 const store = new Vuex.Store({
   state: {
     sassIndex: [], // 首页数据
@@ -118,10 +125,7 @@ const store = new Vuex.Store({
           url: '../shoppingPages/checkout'
         })
       } else {
-        wx.showToast({ 
-          title: res.msg,
-          image: '/static/images/icon_error.png'
-        })
+        showError(res.msg)
       }
     },
     // 非标品去到下单也
@@ -139,10 +143,7 @@ const store = new Vuex.Store({
           url: '../shoppingPages/checkout'
         })
       } else {
-        wx.showToast({
-          title: res.msg,
-          image: '/static/images/icon_error.png'
-        })
+        showError(res.msg)
       }
     },
     // 购物车去下单页
@@ -159,6 +160,8 @@ const store = new Vuex.Store({
         wx.navigateTo({
           url: './cartCheckout'
         })
+      } else {
+        showError(res.msg)
       }
       
     },
@@ -194,10 +197,7 @@ const store = new Vuex.Store({
             url: './quoteList'
           })
         } else {
-          wx.showToast({
-            title: res.msg,
-            image: '/static/images/icon_error.png'
-          })
+          showError(res.msg)
         }
       }
     }
