@@ -504,7 +504,6 @@ export default {
 .address-info .info-icon{
   width: 45rpx;
   height: 50rpx;
-  margin-top: 12rpx;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -889,14 +888,14 @@ export default {
     background-color: #fff;
     padding: 20rpx;
     box-sizing: border-box;
-    box-shadow: 0 -2px 0 #f5f5f5;
+    box-shadow:2rpx 2rpx 6rpx 6rpx #e8e8e8;
     z-index: 1000;
 }
 
 .order-total .t{
     flex: 1;
     height: 70rpx;
-    line-height: 70rpx;
+    line-height: 55rpx;
     color: #000;
     font-size: 28rpx;
     text-align: center;
@@ -912,7 +911,7 @@ export default {
     font-size: 34rpx;
     margin: 0 auto;
     border-radius: 6rpx;
-    box-shadow: 2rpx 3rpx 9rpx 2rpx rgba(0, 150, 158, 0.6);
+    box-shadow:  2px 2px 8px rgba(0, 150, 158, 0.6);
 
 }
 .line-bg {

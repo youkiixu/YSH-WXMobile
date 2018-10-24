@@ -373,6 +373,9 @@ page{
     background-size: 38rpx 486rpx;
 }
 
+button::after{
+border:none;
+}
 .add-address .btns{
     position: fixed;
     bottom: 0;

@@ -269,6 +269,7 @@ page{
   width: 40rpx;
   height: 40rpx;
   text-align: center;
+  margin-top: 4rpx;
 }
 .myOrder{
   height: 240rpx;
