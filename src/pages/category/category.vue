@@ -1,7 +1,7 @@
 <template >
 <view class="container">
   <view class="cate-head">
-    <view class="sort">
+  <view class="sort">
     <view class="sort-box">
       <view :class=" currentSortType == 'default' ? 'active item' : 'item'"  @click="openSortFilter" id="defaultSort">
         <text class="txt">综合</text>
@@ -22,17 +22,16 @@
   </view>
 
     <view class="cate-nav">
-        <scroll-view scroll-x="true" scroll-with-animation class="cate-nav-body" style="width: 100%;">
+        <view  class="cate-nav-body">
             <view  v-for="(item , index) of navList" :class="Id == item.Id ? 'active item' : 'item'" :key="item.Id"
             @click="switchCate" :data-Id="item.Id" :data-index="index">
                 <view class="name">{{item.Name}}</view>
             </view>
-        </scroll-view>
-    </view>
-
+        </view>
+    </view>    
   </view>
 
-  <view class="search-result">
+ <view class="search-result">
       <sortGoods :goodsList="goodsList" v-if="goodsList && !loading"></sortGoods>
       <searchResultEmpty v-if="!goodsList.length && !loading"></searchResultEmpty>
       <loadingComponent v-if="loading"></loadingComponent>
@@ -161,7 +160,7 @@ export default {
         wx.pageScrollTo({
           scrollTop: 0,
           duration: 300
-        })        
+        })          
     },
     async searchGoods() {
       
@@ -229,15 +228,9 @@ export default {
 <style scoped>
 @import "../../css/sortGoods.css";
 .container{
-    background: #f1f1f1;
+    width: 100%;   
+    background: #f1f1f1; 
 }
-/* .cate-out{
-  position: absolute;
-  left: 0; 
-  top:0;
-  bottom: 0;
-  right: 0;
-} */
 .clear:after{
     display: block;
     content:'';
@@ -300,59 +293,31 @@ export default {
     background: url(http://www.kiy.cn/Areas/wxMobile/Content/img/icon-desc.png) 135rpx center no-repeat;
     background-size: 15rpx 21rpx;
 }
-
-.sort-box-category{
-    background: #fff;
+.cate-nav{
     width: 100%;
-    height: auto;
-    overflow: hidden;
-    padding: 40rpx 40rpx 0 0;
-    border-bottom: 1px solid #d9d9d9;
-}
-
-.sort-box-category .item{
-    height: 54rpx;
-    line-height: 54rpx;
-    text-align: center;
-    float: left;
-    padding: 0 16rpx;
-    margin: 0 0 40rpx 40rpx;
-    border: 1px solid #666;
-    color: #333;
-    font-size: 24rpx;
-}
-
-.sort-box-category .item.active{
-    color: #b4282d;
-    border: 1px solid #b4282d;
-}
- /* .cate-nav{
-    position: fixed;
-    left:0;
-    top:78rpx;
-}  */
+}  
 
 .cate-nav-body{
+    width: 100%;
     height: 84rpx;
     white-space: nowrap;
     background: #fff;
     border-top: 1px solid rgba(0,0,0,.15);
-    overflow: hidden;
+    overflow-x: auto;    
 }
 
 .cate-nav .item{
-    display: inline-block;
+    display: inline-block; 
     height: 84rpx;
     min-width: 130rpx;
-    padding: 0 15rpx;   
-    z-index: 999;
+    padding: 0 15rpx;    
 }
 
 .cate-nav .item .name{
     display: block;
     height: 84rpx;
     padding: 0 20rpx;
-    line-height: 84rpx;
+    line-height: 84rpx; 
     color: #333;
     font-size: 30rpx;
     width: auto;
@@ -365,7 +330,6 @@ export default {
 
 .search-result{
     padding-top: 172rpx;
-    /* z-index: 10; */
 }
 
 .scollTop{
