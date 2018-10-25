@@ -1,12 +1,12 @@
 function showSuccessToast(msg) {
   wx.showToast({
-    title: msg
+    title: msg ? msg : '操作成功'
   })
 }
 
 function showErrorToast(msg) {
   wx.showToast({
-    title: msg,
+    title: msg ? msg : '操作失败',
     image: '/static/images/icon_error.png'
   })
 }

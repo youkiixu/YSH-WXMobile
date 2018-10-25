@@ -2,9 +2,9 @@
     <view class="a-section">
          <view class="h">
                 <text class="txt float-l">{{content.title}}</text>
-            <navigator url="../brand/brand">
+            <!-- <navigator url="../brand/brand">
                 <text class="txt float-r">{{content.subtitle}}</text>
-            </navigator>
+            </navigator> -->
         </view>
     </view>
 </template>
@@ -15,6 +15,9 @@ export default {
     name: 'indexTitle',
     props: {
         content: Object
+    },
+    mounted () {
+        // console.log(this.content)
     }
 }
 </script>

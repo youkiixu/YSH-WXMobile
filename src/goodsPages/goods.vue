@@ -3,7 +3,7 @@
     <!-- 主体容器 -->
     <view class="container" v-if="!loading">
       <!-- 头部导航 -->
-      <view class="goodshead">
+      <!-- <view class="goodshead">
         <view class="head-classify">
           <view class="classify-item produ" @click="toNav" data-id="goodshead">
             <img v-if="toView == 'goodshead'" src="/static/images/posi.png"/>
@@ -18,7 +18,7 @@
             详情
           </view>
         </view>
-      </view>
+      </view> -->
 
       <scroll-view  scroll-y="true" scroll-with-animation="true" class="src">
         <view class="outside" id="goodshead">
@@ -34,7 +34,7 @@
                 <!-- 标准品价格 -->
                 <view class="c-price" v-if="!detailInfo.IsCustom"><text class="price-icon" >￥</text>{{detailInfo.Price}}</view>
                 <!-- 非标品价格 -->
-                <view class="c-price"  v-else><text class="price-icon" >￥</text>{{ListPriceInfo.sprice + detailInfo.RemindPrice}}</view>
+                <view class="c-price"  v-else><text class="price-icon" >￥</text>{{ListPriceInfo.sprice + detailInfo.RemindPrice}} <text class="original-price" v-if="ListPriceInfo.sprice != ListPriceInfo.OriginalPrice">{{ListPriceInfo.OriginalPrice}}</text></view>
                 <view :class="collectStatus ? 'c-collect collected' : 'c-collect'"  @click="addCannelCollect">           
                 </view>
               </view>
@@ -200,12 +200,12 @@
     </view>
     <!-- tabbar -->
     <view class="bottom-btn" v-if="!loading">
-      <view class="l l-collect" @click="addCannelCollect">
-          <img class="icon" :src="collectBackImage"/>
+      <view class="l l-collect">
+          <img class="icon" src="/static/images/share.png"/>
       </view>
       <view class="l l-cart">
           <view class="box">
-          <!-- <text class="cart-count">{{cartGoodsCount}}</text> -->
+          <text class="cart-count">{{shoppingCartCount}}</text>
           <img @click="openCartPage" class="icon" src="/static/images/shopping-car.png"/>
           </view>
       </view>
@@ -252,7 +252,6 @@ export default {
       saleNumber: 1,
       checkedSpecText: '请选择规格数量',
       openAttr: false,
-      collectBackImage: '/static/images/share.png',
       goodDetailHTMLstr: '',
       collectStatus:false,
       skuInfo: [],
@@ -288,7 +287,9 @@ export default {
       },
       openQuotSuccess: false,
       defalutHead: 'http://www.kiy.cn/Areas/wxMobile/Content/img/detailpage/'+ Math.floor(Math.random() * 7 + 1) +'.png',
-      loading: true
+      loading: true,
+      OriginalPrice: 0,
+      allCount: 0
     }
   },
   mounted () {
@@ -324,7 +325,8 @@ export default {
     },
     ...mapState([
       'proSearchParam',
-      'userInfo'
+      'userInfo',
+      'shoppingCartCount'
     ])
   },
   onReady() {
@@ -336,7 +338,7 @@ export default {
   },
   methods: {
     ...mapMutations(['setProSearchParam']),
-    ...mapActions(['submitByProductId' , 'SubmitByProductId2']),
+    ...mapActions(['submitByProductId' , 'SubmitByProductId2' , 'getShoppingCartCount']),
     async refresh() {
       // 请空已选的kiuId
       this.comment = {}
@@ -370,7 +372,8 @@ export default {
         this.getGoodsDetail(),
         this.getGoodsDesc(),
         this.getComment(),
-        this.IsCollection()
+        this.IsCollection(),
+        this.getShoppingCartCount()
       ]);
       // this.$wx.hideLoading()
       this.setTitle(this.detailInfo.ProductName)
@@ -388,6 +391,7 @@ export default {
       }
       // 默认选中配送方式
       this.selectWuliu()
+      
       // this.toView = 'goodshead'
       this.loading = false
     },
@@ -413,7 +417,7 @@ export default {
         const ListPriceInfo  = Data.ListPriceInfo[0]
         this.ListPriceInfo.sprice = res.SumPrice
         this.ListPriceInfo.paraArr = ListPriceInfo.logJson
-
+        this.ListPriceInfo.OriginalPrice = res.OriginalPrice
         this.ListPriceInfo.Data =ListPriceInfo
         this.ListPriceInfo.res = res
       } else {
@@ -498,6 +502,14 @@ export default {
           this.detailInfo.RemindPrice = 0
         }
         
+    },
+    // 获得 评论数量
+    async getCommentCount () {
+      this.ProductId = this.$route.query.valueId      
+      const res = await api.getCommentCount({ ProductId: this.ProductId });
+      if (res.success === true) {
+        this.allCount = res.Comments;
+      }
     },
     // 规格弹窗中，每个规则项的点击事件
     clickSkuValue (skuName , skuId , skuValue) {
@@ -739,6 +751,7 @@ export default {
         const res = await api.modifyShoppingCart(par)
         this.$wx.hideLoading()
         if(res.success) {
+          this.getShoppingCartCount()
           this.$wx.showSuccessToast('加入购物车成功')
         } else {
           this.$wx.showErrorToast('加入购物车失败')
@@ -774,6 +787,7 @@ export default {
         _this.strYjtype = arr[0]
         _this.Yjtype = express.wuliuId(_this.strYjtype)
         _this.YjUse = express.checkYjUse(_this.Yjtype)
+        _this.getYJFreightCalculate()
       }
       
     },
@@ -803,7 +817,7 @@ export default {
       query.exec(function(res){
         console.log(res[0].top)
         wx.pageScrollTo({
-          scrollTop: res[0].top,
+          scrollTop: 0,
           duration: 300
         })
       })
@@ -864,7 +878,7 @@ page{
   height: 100vh;
 }
 .outside{
-  margin-top: 65rpx;
+  /* margin-top: 65rpx; */
 }
 .scroll-lock{
   height: 100%;
@@ -1028,8 +1042,12 @@ page{
   text-overflow: ellipsis;
 }
 .section-nav .t .td{
+  width: 600rpx;
   color: #282828;
   /* padding-left: 25rpx; */
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
   box-sizing: border-box;
 }
 .section-nav .i {
@@ -1486,6 +1504,7 @@ page{
   color: #fff;
   line-height: 28rpx;
   border-radius: 50%;
+  padding: 2rpx;
 }
 
 .bottom-btn .l.l-cart .icon {
@@ -1729,5 +1748,8 @@ page{
   text-align: center;
   background-color: #009e96;
 }
-
+.original-price {
+  text-decoration: line-through;
+    color: #999;
+}
 </style>

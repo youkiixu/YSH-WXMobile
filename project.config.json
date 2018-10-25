@@ -30,7 +30,7 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 6,
+			"current": 4,
 			"list": [
 				{
 					"id": -1,
@@ -60,7 +60,7 @@
 					"id": 4,
 					"name": "标准品下单",
 					"pathName": "goodsPages/goods",
-					"query": "data={\"ProductId\":43,\"ProductName\":\"专版画册\",\"code\":12}&&proSearchParam=xx%3D285%26yy%3D210%26shuliang%3D1000%26danshuang%3D2%26hjg%3D%E9%AA%91%E9%A9%AC%E9%92%89%26textfield%3D4%26ysys%3D4%26yongzhi%3D%E5%8F%8C%E9%93%9C%E7%BA%B8%26kezhong%3D80%26tempps1%3D16%26neips%3D16%26neiys%3D4%26neiyeyongzhi%3D%E5%8F%8C%E9%93%9C%E7%BA%B8%26neiyekezhong%3D80%26hjg%3D%E5%8D%95%E9%9D%A2%E8%A6%86%E4%BA%AE%E8%86%9C%26byx%3D1%26pvcx%3D%26pvcy%3D%26tjx%3D%26tjy%3D%26jtx%3D%26jty%3D%26tyx%3D%26tyy%3D%26uvx%3D%26uvy%3D%26"
+					"query": "data={\"ProductId\":52,\"ProductName\":\"水晶字 特惠\",\"code\":28}&&proSearchParam=%5B%7B'TypeStr'%3A'%E5%95%86%E6%A0%87'%2C'Face'%3A'%E5%A4%A7%E7%BA%A2(811)'%2C'Foot'%3A'3'%2C'XX'%3A'10'%2C'YY'%3A'10'%2C'FontLength'%3A'1'%2C'InstallTemp'%3A'%E7%A1%AC%E7%BA%B8%E6%9D%BF'%7D%2C%7B'TypeStr'%3A'%E5%95%86%E6%A0%87'%2C'Face'%3A'%E5%A4%A7%E7%BA%A2(811)'%2C'Foot'%3A'3'%2C'XX'%3A'10'%2C'YY'%3A'10'%2C'FontLength'%3A'1'%2C'InstallTemp'%3A'%E7%A1%AC%E7%BA%B8%E6%9D%BF'%7D%2C%7B'TypeStr'%3A'%E5%95%86%E6%A0%87'%2C'Face'%3A'%E5%A4%A7%E7%BA%A2(811)'%2C'Foot'%3A'3'%2C'XX'%3A'10'%2C'YY'%3A'10'%2C'FontLength'%3A'1'%2C'InstallTemp'%3A'%E7%A1%AC%E7%BA%B8%E6%9D%BF'%7D%5D"
 				},
 				{
 					"id": -1,

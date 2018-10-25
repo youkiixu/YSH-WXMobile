@@ -1,76 +1,71 @@
 <template >
  <view class="container">
-     <scroll-view scroll-y class="order-content">
-           <view class="order-info" >
-        <view class="info-item">订单状态：<text class="t">{{orderInfo.OrderStatusStr}}</text></view>
-        <view class="info-item">订单编号：{{orderInfo.Id}}</view>
-        <view class="info-item">下单时间：{{orderInfo.OrderDate}}</view>
-        <!-- <view class="item-c">
-            <view class="l">实付：<text class="cost">￥{{orderInfo.ProductTotalAmount}}</text></view>
-            <view class="r">
-                <view class="btn" @click="cancelOrder" v-if="canCancel">取消订单</view>
-                <view class="btn active" @click="payOrder" v-if="canPay">去付款</view>
-            </view>
-        </view> -->
-    </view>
-    <view class="address-info">
-        <view class="address-item">收货人：<text class="t">{{orderInfo.ShipTo}} {{orderInfo.CellPhone}}</text></view>
-        <view class="address-item">收货地址：<text class="t">{{orderInfo.RegionFullName + orderInfo.Address}}</text></view>
-        <view class="address-item">配送方式：<text class="t">{{orderInfo.RemindtypeStr}}</text></view>
-    </view>
+    <scroll-view scroll-y class="order-content">
+        <view class="order-info" >
+            <view class="info-item">订单状态：<text class="t">{{orderInfo.OrderStatusStr}}</text><text v-if="orderInfo.CloseReason"> ({{orderInfo.CloseReason}})</text></view>
+            <view class="info-item">订单编号：{{orderInfo.Id}}</view>
+            <view class="info-item">下单时间：{{orderInfo.OrderDate}}</view>
+        </view>
+        <view class="address-info">
+            <view class="address-item">收货人：<text class="t">{{orderInfo.ShipTo}} {{orderInfo.CellPhone}}</text></view>
+            <view class="address-item">收货地址：<text class="t">{{orderInfo.RegionFullName + orderInfo.Address}}</text></view>
+            <view class="address-item">配送方式：<text class="t">{{orderInfo.RemindtypeStr}}</text></view>
+        </view>
 
-    <view class="goods-info">
-        <view class="info-t clear">
-        <view class="img">
-            <image :src="baseUrl + orderInfo.ThumbnailsUrl + '/1_350.png'"/>
-        </view>
-        <view class="txt">
-            <view class="txt-t">
-                <view class="txt-title">{{orderInfo.ProductName}}</view>
-                <view class="txt-num">共{{orderInfo.Quantity}}件商品</view>
+        <view class="goods-info">
+            <view class="info-t clear">
+                <view class="img">
+                    <image :src="baseUrl + orderInfo.ThumbnailsUrl + '/1_350.png'"/>
+                </view>
+                <view class="txt">
+                    <view class="txt-t">
+                        <view class="txt-title">{{orderInfo.ProductName}}</view>
+                        <view class="txt-num">共{{orderInfo.Quantity}}件商品</view>
+                    </view>
+                    <view class="txt-price">价格：￥<text class="t">{{orderInfo.ProductTotalAmount}}</text></view>
+                </view>
             </view>
-            <view class="txt-price">价格：￥<text class="t">{{orderInfo.ProductTotalAmount}}</text></view>
+            <view class="info-bottom">
+                <view class="m" v-if="orderInfo.Color">颜色：<text class="t">{{orderInfo.Color}}</text></view>
+                <view class="m" v-if="orderInfo.Size">尺寸：<text class="t">{{orderInfo.Size}}</text></view>
+                <view class="m" v-if="orderInfo.Version">规格：<text class="t">{{orderInfo.Version}}</text></view>
+                <view class="m" v-if="orderInfo.Material">材料：<text class="t">{{orderInfo.Material}}</text></view>
+                <view class="m" v-if="orderInfo.Fashion">款式：<text class="t">{{orderInfo.Fashion}}</text></view>
+                <view class="m" v-if="orderInfo.Grams">克重：<text class="t">{{orderInfo.Grams}}</text></view>
+                <view class="m" v-if="orderInfo.Ensemble">套餐：<text class="t">{{orderInfo.Ensemble}}</text></view>      
+                <view class="m" v-if="item.ParaStr" v-for="(item , index) in orderGoods" :key="index" >
+                    <text class="t" >{{item.ParaStr}}</text>
+                </view>        
+            </view>
         </view>
-    </view>
-        <view class="info-bottom">
-            <view class="m" v-if="orderInfo.Color">颜色：<text class="t">{{orderInfo.Color}}</text></view>
-            <view class="m" v-if="orderInfo.Size">尺寸：<text class="t">{{orderInfo.Size}}</text></view>
-            <view class="m" v-if="orderInfo.Version">规格：<text class="t">{{orderInfo.Version}}</text></view>
-            <view class="m" v-if="orderInfo.Material">材料：<text class="t">{{orderInfo.Material}}</text></view>
-            <view class="m" v-if="orderInfo.Fashion">款式：<text class="t">{{orderInfo.Fashion}}</text></view>
-            <view class="m" v-if="orderInfo.Grams">克重：<text class="t">{{orderInfo.Grams}}</text></view>
-            <view class="m" v-if="orderInfo.Ensemble">套餐：<text class="t">{{orderInfo.Ensemble}}</text></view>      
-            <view class="m" v-if="orderGoods[0]"><text class="t">{{orderGoods[0].ParaStr}}</text></view>        
-        </view>
-    </view>
     
 
-    <view class="message-info clear">
-        <view class="l">留言:</view>
-        <view class="r">{{orderInfo.OrderRemarks ? orderInfo.OrderRemarks : ''}}</view>
-    </view>
+        <view class="message-info clear">
+            <view class="l">留言:</view>
+            <view class="r">{{orderInfo.OrderRemarks ? orderInfo.OrderRemarks : ''}}</view>
+        </view>
 
-    <view class="price-total">
-        <view class="product-price clear">
-            <view class="l">商品金额</view>
-            <view class="r">￥{{orderInfo.ProductTotalAmount}}</view>
+        <view class="price-total">
+            <view class="product-price clear">
+                <view class="l">商品金额</view>
+                <view class="r">￥{{orderInfo.ProductTotalAmount}}</view>
+            </view>
+            <view class="product-price clear">
+                <view class="l">已付金额</view>
+                <view class="r">￥{{orderInfo.ReceivedAmount}}</view>
+            </view>
+            <view class="express-price clear">
+                <view class="l">运费</view>
+                <view class="r">￥{{orderInfo.Freight}}</view>
+            </view>
+            <view class="actual-pay">
+                实际支付：<text class="t">￥ {{orderInfo.ProductTotalAmount + orderInfo.Freight}}</text>
+            </view>
         </view>
-        <view class="product-price clear">
-            <view class="l">已付金额</view>
-            <view class="r">￥{{orderInfo.ReceivedAmount}}</view>
-        </view>
-        <view class="express-price clear">
-            <view class="l">运费</view>
-            <view class="r">￥{{orderInfo.Freight}}</view>
-        </view>
-        <view class="actual-pay">
-            实际支付：<text class="t">￥ {{orderInfo.ProductTotalAmount + orderInfo.Freight}}</text>
-        </view>
-    </view>
 
-     </scroll-view>
+    </scroll-view>
 
-     <view class="order-bottom clear">
+    <view class="order-bottom clear">
         <view class="total">
             合计：<text class="icon">￥</text><text class="t">{{orderInfo.ProductTotalAmount + orderInfo.Freight - orderInfo.ReceivedAmount}}</text>
         </view>
@@ -79,6 +74,8 @@
             <button class="confirm" v-if="canPay" @click="payOrder">确认支付</button> 
         </view>
     </view>
+
+
 </view> 
 
 </template>
@@ -88,8 +85,12 @@ import api from '@/utils/api'
 import wx from 'wx'
 import { mapState } from 'vuex'
 import orderInfoStatus from '@/utils/orderInfoStatus'
+import loadingComponent from '@/components/loadingComponent'
 
 export default {
+    components: {
+      loadingComponent  
+    },
   data () {
     return {
       OrderId:'',

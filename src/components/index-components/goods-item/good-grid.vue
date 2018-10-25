@@ -3,7 +3,7 @@
     <view class="b clear">
       <block v-for="item of content.goodslist" :key="item.item_id" :data-id="index">
         <view class="item">
-          <navigator  @click="toDetail(item)" class="a">
+          <view  @click="toDetail(item)" class="a">
             <img class="img" :src="baseUrl+ item.pic" background-size="cover" />
             <view class="txt">
               <text class="name">{{item.title}}</text>
@@ -11,7 +11,7 @@
               <text class="price">￥{{item.price}}</text>             
             </view>
             
-          </navigator>
+          </view>
         </view>
       </block>
       <!-- <view class="item item-b item-more">

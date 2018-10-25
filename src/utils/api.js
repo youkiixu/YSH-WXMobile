@@ -180,7 +180,11 @@ const api = {
   // 根据产品Id获取qid
   getProductQitemCode: (paramObj) => request.post('/Wxmobile/Product/GetProductQitemCode', paramObj, {
     baseURL: ApiKiyUrl
-  })
+  }),
+  // 获取购物车数量
+  getShoppingCartCount: (paramObj) => request.post('/Wxmobile/ShoppingCart/GetShoppingCartCount', paramObj, {
+    baseURL: ApiKiyUrl
+  }),
 }
 
 export default api

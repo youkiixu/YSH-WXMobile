@@ -108,7 +108,7 @@ export default {
     // 获得搜索结果的商品列表
     async getGoodsList () {
       this.historyKeyword = [];
-      const res = await api.search({keywords: this.keyword , pageNo: this.page , pageSize: this.size , orderKey: this.orderKey , orderByKey:this.currentSortOrder == 'desc' ? 0 : 1})
+      const res = await api.search({keywords: this.keyword , pageNo: this.page , pageSize: this.size , orderKey: this.orderKey , orderType:this.currentSortOrder != 'desc' ? 1 : 2})
       if (res.success) {
         this.searchStatus = true;
         this.categoryFilter = false;

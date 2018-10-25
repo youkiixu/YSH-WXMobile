@@ -6,7 +6,9 @@ export default {
   mpType: 'app',
   async mounted () {
     // this.newOpenIdlogin()
-    this.oldOpenIdLogin()
+    await Promise.all([
+      this.oldOpenIdLogin()
+    ])
   },
   methods: {
     ...mapActions([

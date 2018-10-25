@@ -3,13 +3,13 @@
       <view class="b">
         <scroll-view scroll-x="true" class="list">
           <view class="item" v-for="item of content.goodslist" :key="item.item_id">
-            <navigator  @click="toDetail(item)" class="nav">
+            <view  @click="toDetail(item)" class="nav">
               <img class="img" :src="baseUrl+ item.pic" background-size="cover" />
               <view class="np">
                 <text class="name">{{item.title}}</text>
                <text class="price">￥{{item.price}}</text>   
               </view>
-            </navigator>
+            </view>
           </view>
         </scroll-view>
       </view>  

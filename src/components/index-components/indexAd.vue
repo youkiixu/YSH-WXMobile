@@ -1,9 +1,9 @@
 <template>
     <swiper :class="{ 'banner ' : content.space == 0 , 'banner2': content.space == 1 }" :indicator-dots="content.space == 0 ? true : false" autoplay="true" interval="3000" duration="1000">
         <swiper-item v-for="item of content.dataset" :key="item.id">
-        <navigator  @click="onClick(item)">
+        <view  @click="onClick(item)">
             <img :class="{ 'full' : content.space == 0 , 'nofull': content.space == 1 }" :src="baseUrl+item.pic" background-size="cover" />
-        </navigator>
+        </view>
         </swiper-item>
     </swiper>
 </template>
@@ -17,7 +17,7 @@ export default {
         content: Object
     },
     mounted () {
-        console.log(this.content)
+        // console.log(this.content)
     },
     computed: {
         baseUrl() {

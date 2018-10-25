@@ -58,8 +58,9 @@ export default {
                     this.toDetail(par)
                     break;
                 case 10:
-                    // 类型10是搜索
-                    this.toSearch(item.link)
+                    // 类型10是连接
+                    
+                    this.$router.push(item.link)
                     break;
                 default:
                     this.$wx.showErrorToast('暂时没有' + item.title)

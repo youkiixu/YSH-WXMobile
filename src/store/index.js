@@ -32,7 +32,8 @@ const store = new Vuex.Store({
     checkOutInfo: {},//下单页面信息
     proSearchParam : {},//非标报价的参数
     proSearchRst: {},//非标报价后的厂家价格列表
-    cartCheckOutInfo: {} //购物车下单页面参数
+    cartCheckOutInfo: {}, //购物车下单页面参数
+    shoppingCartCount: 0
   },
   mutations: {
     getSassIndexData (state , res) {
@@ -64,6 +65,10 @@ const store = new Vuex.Store({
     // 设置购物车下单信息
     setCartCheckOutInfo(state, res) {
       state.cartCheckOutInfo = res
+    },
+    // 设置购物车数量
+    setShoppingCartCount (state , res) {
+      state.shoppingCartCount = res
     }
   },
   actions: {
@@ -198,6 +203,17 @@ const store = new Vuex.Store({
           })
         } else {
           showError(res.msg)
+        }
+      }
+    },
+    async getShoppingCartCount ({ commit }) {
+      const openId = wx.getStorageSync('openId')
+      if (openId) {
+        const res = await api.getShoppingCartCount({
+          openId: openId
+        })
+        if(res.success) {
+          commit('setShoppingCartCount', res.data)
         }
       }
     }

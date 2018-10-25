@@ -223,7 +223,11 @@ export default {
         //如果非标报价，需要加上非标报价的信息，做展示使用
         if(item.RecordModel != '') {
             const RecordModel = JSON.parse(item.RecordModel)
-            item.paraStr = RecordModel[0].paraStr
+            item.paraStr = ''
+            RecordModel.map(iitem => {
+                item.paraStr +=  iitem.paraStr + ','
+            })
+            item.paraStr = util.delLastStr(item.paraStr , ',')
         }
         // 加入到数组里，渲染到页面上
         this.goodList.push(item)
@@ -270,7 +274,8 @@ export default {
     // 获取印捷提点运费
     async getYJFreightCalculate(index) {
         let item = this.goodList[index]
-        if(item.IsRemind) {
+        if(item.IsRemind && item.Remindtype != 0) {
+            console.log(index , item.Remindtype)
             var par = {
                 UserId: this.userInfo.Id,//用户Id
                 UserAddress: this.address.RegionFullName,//地址全称

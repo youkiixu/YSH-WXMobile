@@ -2,10 +2,10 @@
   <view class="nav a-section a-brand">
     <view class="b clear">
       <view class="item item-1" v-for="item of content.goodslist" :key="item.item_id">
-        <navigator @click="toDetail(item)">
+        <view @click="toDetail(item)">
               <text class="name">{{item.title}}</text>
               <img class="img" :src="baseUrl+ item.pic" mode="aspectFill" background-size="cover" />
-        </navigator>
+        </view>
       </view>
     </view>
   </view>

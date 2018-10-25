@@ -232,8 +232,12 @@ export default {
     this.selectWuliu()
 
     try {
+
         var QuoteLogModel=  JSON.parse(this.checkOutInfo.QuoteLogModel)
-        this.ParaStr = QuoteLogModel[0].ParaStr
+        QuoteLogModel.map(iitem => {
+            this.ParaStr +=  iitem.ParaStr + ','
+        })
+        this.ParaStr = util.delLastStr(this.ParaStr , ',')
     } catch (error) {
         
     }
@@ -296,6 +300,7 @@ export default {
     },
     // 获取印捷提点运费
     async getYJFreightCalculate() {
+        console.log(this.checkOutInfo.IsRemind)
         if(this.checkOutInfo.IsRemind) {
             var par = {
                 UserId: this.userInfo.Id,

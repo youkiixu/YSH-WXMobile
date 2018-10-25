@@ -2,14 +2,14 @@
   <view class="nav a-section a-new">
     <view class="b clear">
       <view class="item" v-for="item of content.goodslist" :key="item.item_id">
-        <navigator  @click="toDetail(item)">
+        <view  @click="toDetail(item)">
           <img class="img" :src="baseUrl+ item.pic" background-size="cover" />
           <view class="txt">
               <text class="name">{{item.title}}</text>
               <!-- <text class="desc"></text> -->
               <text class="price">￥{{item.price}}</text>                        
             </view>
-        </navigator>
+        </view>
       </view>
     </view>
   </view>

@@ -123,7 +123,7 @@ export default {
             num = util.addNum(num , toTal)
           }
       })
-      return num
+      return Number(num.toString().match(/^\d+(?:\.\d{0,2})?/))
     }
   },
   methods: {
@@ -541,7 +541,7 @@ page{
     line-height: 30rpx;
     font-size: 24rpx;
     color: #282828;
-    width: 360rpx;
+    width: 350rpx;
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
@@ -550,7 +550,7 @@ page{
 }
 
 .cart-view .item .num{
-    width: 60rpx;
+    width: 70rpx;
     height: 28rpx;
     line-height: 28rpx;
     float: right;
@@ -730,7 +730,6 @@ page{
     background-size: 34rpx;
     font-size: 24rpx;
     color: #666666;
-    flex: 1;
 }
 
 .cart-bottom .checkbox.checked{
@@ -744,9 +743,10 @@ page{
     flex: 1;
     font-size: 24rpx;
     color: #666666;
-    text-align: left;
-    padding-left: 20rpx;
+    text-align: right;
+    padding-right: 20rpx;
     box-sizing: border-box;
+
 }
 .cart-bottom .total .total-price{
   color: #009e96;
