@@ -1,6 +1,5 @@
 <template >
-<scroll-view class="container" style="height: 100%;">
-  
+<view class="container">
   <view class="search-header">
     <view class="input-box">
       <img class="icon" @click="getSeach" />
@@ -39,7 +38,9 @@
 
   <searchResultEmpty v-if="!goodsList.length && searchStatus && !loading"></searchResultEmpty>
   <loadingComponent v-if="loading"></loadingComponent>
-</scroll-view>
+
+  <view class="scollTop"  @click="toTop" :hidden="!floorstatus">顶部</view> 
+</view>
 </template>
 
 <script>
@@ -96,10 +97,6 @@ export default {
     closeSearch () {
       this.$router.back()
     },
-    //  //回到顶部
-    // toTop: function () {         
-    //     this.scrollTop = 0   
-    // },
     // 输入框获得焦点
     inputFocus () {
       this.searchStatus = false;
@@ -185,21 +182,28 @@ export default {
     // 键盘搜索图标进行搜索
     getSeach: function (event) {
       this.getSearchResult();
+    },
+     //回到顶部
+    toTop() {       
+        //this.scrollTop = 0     
+        wx.pageScrollTo({
+          scrollTop: 0,
+          duration: 300
+        })     
     }
     
   },
 
-    // // 获取滚动条当前位置
-    // onPageScroll : function(e){
-    //   console.log('滚动位置：',e.scrollTop)
-    //   if (e.scrollTop > 5) {     
-    //       this.floorstatus = true  
-    //       this.scrollTop = e.scrollTop    
-    //   } else {
-    //    this.floorstatus = false
-    //    this.scrollTop = e.scrollTop 
-    //   }  
-    // },
+     // 获取滚动条当前位置
+    onPageScroll : function(e){
+      console.log('e的值：',e)
+      console.log('滚动位置：',e.scrollTop)
+      if (e.scrollTop > 100) {     
+          this.floorstatus = true   
+      } else {
+       this.floorstatus = false     
+      }   
+    },
   // 小程序原生上拉加载
   onReachBottom () {
     this.page++
@@ -223,13 +227,15 @@ export default {
 
 
 <style>
-page{
+/* page{
   min-height: 100%;
   background-color: #f4f4f4;
   
-}
-.cate-out{
-  height: 100vh;
+} */
+
+.container{
+    height: 100%;
+    background: #f1f1f1;
 }
  .search-header{
     position: fixed;
@@ -270,68 +276,6 @@ page{
   font-size: 30rpx;
   flex: 10;
 }
-
-
-
-/* .search-header .del{
-    position: absolute;
-    top: 3rpx;
-    right: 10rpx;
-    width: 53rpx;
-    height: 53rpx;
-    z-index: 10;
-}
-
-.search-header .keywrod{
-    position: absolute;
-    top: 0;
-    left: 40rpx;
-    width: 506rpx;
-    height: 59rpx;
-    padding-left: 30rpx;
-}
-
-.search-header .right{
-    margin-top: 24rpx;
-    margin-left: 31rpx;
-    margin-right: 6rpx;
-    width: 58rpx;
-    height: 43rpx;
-    line-height: 43rpx;
-    float: right;
-} 
-.search-header{
- height: 88rpx;
-  width: 100%;
-  padding: 0 30rpx;
-  background: #fff; 
-  display: flex;
-  align-items: center;
-}
-.input-box{
-  width: 690rpx;
-  height: 56rpx;
-  background: #ededed;
-  border-radius: 8rpx;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-left: 24rpx;
- 
-} */
-/* .index-searchbar {
-  position: fixed;
-  z-index: 99;
-  left: 0rpx;
-  width:750rpx;
-  overflow: hidden;
-  padding:10rpx 0;
-  height:74rpx;
-  background: #fff;
-} */
-
-
-
 .sort{
     position: fixed;
     height: 78rpx;
@@ -339,9 +283,6 @@ page{
     top: 91rpx;
     z-index: 1000;
     background: #fff;
-    /* width: 100%;
-    height: 78rpx;
-    margin-top: 91rpx; */
 }
 
 .sort-box{
@@ -414,12 +355,6 @@ page{
     color: #b4282d;
     border: 1px solid #b4282d;
 }
-.container{
-  min-height: 100%;
-  background-color: #f4f4f4;
-}
-
-
 
 .no-search{
     height: auto;
@@ -502,5 +437,21 @@ page{
 .search-result {
   padding-top: 172rpx;
 }
-
+.scollTop{
+  width: 86rpx;
+  height: 86rpx;
+  color: #585c63;
+  font-size: 20rpx;
+  text-align: center;
+  line-height: 120rpx;
+  border-radius: 50%;
+  box-shadow: 0px 0px 2px 2px #f1f1f1;
+  position: fixed;
+  bottom: 55rpx;
+  right: 20rpx;
+  z-index: 1000;
+  background: url(http://www.kiy.cn/Areas/wxMobile/Content/img/up-arrow.png) center 25% no-repeat;
+  background-size: 38rpx; 
+  background-color: #fff;
+}
 </style>
