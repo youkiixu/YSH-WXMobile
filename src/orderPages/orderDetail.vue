@@ -9,7 +9,7 @@
         <view class="address-info">
             <view class="address-item">收货人：<text class="t">{{orderInfo.ShipTo}} {{orderInfo.CellPhone}}</text></view>
             <view class="address-item">收货地址：<text class="t">{{orderInfo.RegionFullName + orderInfo.Address}}</text></view>
-            <view class="address-item">配送方式：<text class="t">{{orderInfo.RemindtypeStr}}</text></view>
+            <view class="address-item">配送方式：<text class="t">{{orderInfo.DeliveryMemo}}</text></view>
         </view>
 
         <view class="goods-info">

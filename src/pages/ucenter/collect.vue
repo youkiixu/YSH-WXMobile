@@ -3,18 +3,31 @@
 
 <view class="collect-head">
    <view class="sort">  
-      <view class="item" @click="GoodsCollect">商品收藏</view>  
-      <view class="item" @click="shopCollect">厂家收藏</view>  
-      <view class="item">我的足迹</view>   
+      <view class="item" @click="GoodsCollect"></view>  
+      <view class="item" @click="shopCollect"></view>  
+      <view class="item"></view>   
+  </view>
+  <view class="classifi">  
+      <view class="inner"></view>  
+      <view class="inner"></view>  
+      <view class="inner"></view> 
+      <view  :class="iseditGoodsCollect ? 'edit inner manage' : 'inner manage'" @click="editGoodsCollect">管理</view>   
+  </view>
+</view>
+
+<!-- <view class="collect-head">
+   <view class="sort">  
+      <view :class="isCollectSelect ? 'item' : 'select item'" @click="SelectCollect()">商品收藏</view>  
+      <view :class="isCollectSelect ? 'select item' : 'item'" @click="SelectCollect()">厂家收藏</view>  
+      <view :class="isCollectSelect ? 'select item' : 'item'" @click="SelectCollect()">我的足迹</view>   
   </view>
   <view class="classifi">  
       <view class="inner">全部</view>  
       <view class="inner">降价</view>  
       <view class="inner">特卖</view> 
-      <view class="inner manage" @click="editGoodsCollect">管理</view>   
+      <view :class="iseditGoodsCollect ? 'edit inner manage' : 'inner manage'" @click="editGoodsCollect">管理</view>   
   </view>
-</view>
-
+</view> -->
 
 <!-- 商品收藏 -->
 <view class="goodsCollect" v-if="isgoodsCollect">
@@ -74,7 +87,6 @@
  </view>
 
 
-
 </view>
 </template>
 
@@ -89,6 +101,7 @@ export default {
       collectList: [],
       pageNo:0,
       pageSize: 20,
+      isCollectSelect:false,
       isgoodsCollect:true,
       isshopCollect:false,
       iseditGoodsCollect:false,
@@ -253,6 +266,7 @@ export default {
   onPullDownRefresh: function() {
     this.pageNo = 1
     this.collectList = []
+    this.GetFavoriteProductList()
     wx.stopPullDownRefresh()
   },
   // 原生的分享功能
@@ -305,6 +319,10 @@ page{
 .collect-head .sort .item:last-child{
   margin-right: 60rpx;
 }
+.collect-head .sort .select{
+  color: #009e96;
+  border-bottom: 2rpx solid #009e96;
+}
 .collect-head .classifi{
   height: 70rpx;
   width: 750rpx;
@@ -318,6 +336,9 @@ page{
     color: #282828;
     font-size: 24rpx;
     margin-left: 60rpx;
+}
+.collect-head .classifi .edit {
+  color: #009e96;
 }
 .collect-head .classifi .manage{
   flex:1.5;

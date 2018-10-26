@@ -77,10 +77,10 @@ export default {
 .good-grid .b .item {
   float: left;
   background: #fff;
-  width: 32%;
+  width: 228rpx;
   height: 365rpx;
-  margin-top: 15rpx;
-  margin-left: 15rpx;
+  margin-top: 13rpx;
+  margin-left: 13rpx;
   border-radius: 7rpx;
   box-shadow: 2px 2px 2px #f3f3f3;
 }

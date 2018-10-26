@@ -53,9 +53,10 @@ export default {
         height: 220rpx; 
         padding: 0 20rpx 20rpx 20rpx;
         box-sizing: border-box;
+        align-items: center;
+        justify-content: center;
     }
-    
-
+   
     .full {
         width: 100%;
         height: 353rpx;
@@ -66,7 +67,7 @@ export default {
         margin:  0 20rpx;
     } */
     .nofull {
-        width: 700rpx;
+        width: 710rpx;
         height: 193rpx;
         border-radius:10rpx;
     }

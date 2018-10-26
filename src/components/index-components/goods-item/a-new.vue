@@ -49,10 +49,11 @@ export default {
     }
 .a-new .b .item {
   float: left;
-  width: 49%;
+  width: 349rpx;
   height: 510rpx;
   margin-top: 10rpx;
   margin-left: 10rpx;
+  overflow: hidden;
 }
 .a-new .b .item:nth-child(1),.a-new .b .item:nth-child(2){
   margin-top: 0;
