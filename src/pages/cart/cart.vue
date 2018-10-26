@@ -9,7 +9,7 @@
 
 
   <view class="cart-view"  >
-    <view class="cart-address clear">
+    <view class="cart-address clear" v-if="cartGoods.length != 0 && !loading">
       <!-- <view class="posi-img">
         <img src="/static/images/icon_cart_position.png" background-size="cover"/>
       </view> -->
@@ -758,14 +758,23 @@ page{
   color: #009e96;
   font-size: 32rpx;
 }
-.cart-bottom .delete{
+/* .cart-bottom .delete{
     height: 34rpx;
     width: auto;
     margin: 33rpx 18rpx;
     font-size: 29rpx;
-}
+} */
 
 .cart-bottom .checkout{
+    height: 88rpx;
+    width: 180rpx;
+    text-align: center;
+    line-height: 88rpx;
+    font-size: 28rpx;
+    background: #009e96;
+    color: #fff;
+}
+.cart-bottom .delete{
     height: 88rpx;
     width: 180rpx;
     text-align: center;
