@@ -76,15 +76,19 @@
    </view>
  </view>
 
-
+<loadingComponent v-if="loading"></loadingComponent>
 </view>
 </template>
 
 <script>
 import api from '@/utils/api'
 import wx from 'wx'
+import loadingComponent from '@/components/loadingComponent'
 
 export default {
+   components: {
+    loadingComponent
+  },
   data () {
     return {
       typeId: 0,
@@ -97,14 +101,18 @@ export default {
       iseditGoodsCollect:false,
       checkedAllStatus: false,
       selectGoods:0,
-      ProductIds:0
+      ProductIds:0,
+      loading: true
     }
   },
    // 每次打开触发，更新数据
   async mounted () {
+    this.collectList = []
+    this.loading = true
     await Promise.all([
       this.GetFavoriteProductList()
     ])
+    this.loading = false
   },
   computed: {
     baseUrl () {
@@ -218,14 +226,16 @@ export default {
             }
 
     },
-    // 按下事件开始
-    touchStart (e) {
-      this.touch_start = e.timeStamp;
-    },
-    // 按下事件结束
-    touchEnd (e) {
-      this.touch_end = e.timeStamp;
+    async refresh() {
+      this.pageNo = 1
+      this.collectList = []
+      this.loading = true
+      await Promise.all([
+        this.GetFavoriteProductList()
+      ])
+      this.loading = false
     }
+    
   },
    watch: {
     cartGoods (oldval , newval) {
@@ -253,9 +263,7 @@ export default {
   },
   // 小程序原生下拉刷新
   onPullDownRefresh: function() {
-    this.pageNo = 1
-    this.collectList = []
-    this.GetFavoriteProductList()
+    this.refresh()
     wx.stopPullDownRefresh()
   },
   // 原生的分享功能
