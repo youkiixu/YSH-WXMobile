@@ -1,20 +1,10 @@
 <template >
 <view class="container">
 
-<view class="collect-head">
-   <view class="sort">  
-      <view class="item" @click="GoodsCollect"></view>  
-      <view class="item" @click="shopCollect"></view>  
-      <view class="item"></view>   
-  </view>
-  <view class="classifi">  
-      <view class="inner"></view>  
-      <view class="inner"></view>  
-      <view class="inner"></view> 
-      <view  :class="iseditGoodsCollect ? 'edit inner manage' : 'inner manage'" @click="editGoodsCollect">管理</view>   
-  </view>
+<view class="manage-head clear">
+   <view  :class="iseditGoodsCollect ? 'edit management ' : 'management '" @click="editGoodsCollect">管理</view>   
 </view>
-
+  
 <!-- <view class="collect-head">
    <view class="sort">  
       <view :class="isCollectSelect ? 'item' : 'select item'" @click="SelectCollect()">商品收藏</view>  
@@ -136,7 +126,6 @@ export default {
     editGoodsCollect () {
       // 编辑状态
       if (this.iseditGoodsCollect) {
-        this.GetFavoriteProductList()
         this.iseditGoodsCollect = !this.iseditGoodsCollect;
       } else {
         // 非编辑状态
@@ -296,6 +285,28 @@ page{
     clear: both;
     height:0;
     }
+
+.manage-head{
+  width: 750rpx;
+  height: 60rpx;
+  position: fixed;
+  z-index: 10;
+  background-color: #fff;
+}
+.manage-head .management{
+    width: 85rpx;
+    height: 60rpx;
+    text-align: center;
+    line-height: 60rpx;
+    color: #282828;
+    font-size: 24rpx;
+    float: right;
+}
+.manage-head .edit {
+  color: #009e96;
+}
+
+
 .collect-head{
   position: fixed;
   left: 0;
@@ -349,7 +360,8 @@ page{
     height: auto;
     width: 750rpx;
     overflow: hidden;
-    margin-top: 170rpx;
+    /* margin-top: 170rpx; */
+    margin-top: 80rpx;
     margin-bottom: 120rpx;
 }
  .group-item{
