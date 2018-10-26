@@ -10,9 +10,6 @@
 
   <view class="cart-view"  >
     <view class="cart-address clear">
-      <!-- <view class="posi-img">
-        <img src="/static/images/icon_cart_position.png" background-size="cover"/>
-      </view> -->
        <view class="from">此购物车价格仅供参考</view>
        <view class="to">请以下单的价格为标准</view>
        <view class="edit" @click="editCart">{{!isEditCart ? '编辑商品' : '完成'}}</view>       
@@ -23,7 +20,7 @@
         <view class="goods">
           <view :class="isEditCart ? 'edit item' : 'item'" v-for="(item, index) of cartGoods" :key="item.Id" @click="checkedItem(index)">
             <view :class="item.checked == true ? 'checked checkbox' : 'checkbox'"  :data-item-index="index"></view>
-            <view class="cart-goods">
+            <view class="cart-goods" @click.stop="toDetail(item)">
               <img class="img" :src="baseUrl + item.ImagePath + '/1_350.png'"/>
               <view class="info">
                 <view class="t">
@@ -53,7 +50,7 @@
     
     <view class="cart-bottom" v-if="cartGoods.length != 0 && !loading">
       <view :class="checkedAllStatus ? 'checked checkbox' : 'checkbox'" @click="checkedAll">全选</view>
-      <view class="total">总金额：<text class="total-price">{{'￥'+ allPrice}}</text></view>
+      <view class="total">总金额：<text class="total-price" v-if="allPrice != undefined">{{'￥'+ allPrice}}</text></view>
       <view class="checkout" @click="checkoutOrder" v-if="!isEditCart">去结算</view>
       <view class="delete" @click="deleteCart" v-if="isEditCart">删除</view>
     </view>
@@ -93,7 +90,7 @@ export default {
     }
   },
   // 每次打开触发，更新数据
-  async onShow () {
+  async mounted () {
     this.cartGoods = []
     this.pageNo = 1
     this.checkedAllStatus = false
@@ -107,7 +104,8 @@ export default {
   },
   computed: {
     ...mapState([
-      'userInfo'
+      'userInfo',
+      'shoppingCartCount'
     ]),
     baseUrl () {
       return this.$wx.baseUrl
@@ -284,11 +282,23 @@ export default {
     async refresh() {
       this.pageNo = 1
       this.cartGoods = []
+      this.checkedAllStatus = false
       this.loading = true
       await Promise.all([
         this.getCartList()
       ])
       this.loading = false
+    },
+    toDetail(item) {
+      const goodsUrl = util.getGoodsUrl({
+            ProductId: item.ProductId,
+            ProductName: item.ProductName,
+            code: item.QitemCode,
+            IsCustom: item.IsCustom , 
+            dataStr: item.DataStr,
+            skuId: item.SkuId
+          })
+      this.$router.push(goodsUrl)
     }
   },
   watch: {
@@ -308,6 +318,12 @@ export default {
       } else {
         this.checkedAllStatus = false
       }
+    },
+    shoppingCartCount () {
+      this.refresh()
+    },
+    userInfo () {
+      this.refresh()
     }
   },
     // 小程序原生上拉加载

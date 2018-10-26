@@ -23,23 +23,6 @@
         </view>
     </view>
 
-    <!-- <view class="address-list" v-if="addressList.length">
-        <view class="item" v-for="(item, index) of addressList" :key="item.Id" @click="addressAddOrUpdate"
-          :data-address-id="item.Id" :data-index="index">
-            <view class="l">
-                <view class="name">{{item.ShipTo}}</view>
-                <view class="default" v-if="item.IsDefault">默认</view>
-                
-            </view>
-            <view class="c">
-                <view class="mobile">{{item.Phone}}</view>
-                <view class="address">{{item.Province + item.City + item.Area + item.Street + item.Address }}</view>
-            </view>
-            <view class="r"> 
-                <image @click.stop="deleteAddress" :data-address-id="item.Id" class="del" src="/static/images/del-address.png"/>
-            </view>
-        </view>
-    </view> -->
 
     <view class="empty-view" v-if="addressList.length <= 0">
       <image class="icon" src="http://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/noAddress-26d570cefa.png"/>

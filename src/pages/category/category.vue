@@ -21,8 +21,8 @@
     </view>
   </view>
 
-    <view class="cate-nav">
-        <scroll-view scroll-x="true" scroll-with-animation class="cate-nav-body" style="width: 100%;">
+    <view class="cate-nav" v-if="navList.length != 0">
+        <scroll-view scroll-x="true" scroll-with-animation class="cate-nav-body" style="width: 100%;"  :scroll-left="scrollLeft">
             <view  v-for="(item , index) of navList" :class="Id == item.Id ? 'active item' : 'item'" :key="item.Id"
             @click="switchCate" :data-Id="item.Id" :data-index="index">
                 <view class="name">{{item.Name}}</view>
@@ -32,7 +32,7 @@
 
   </view>
 
-  <view class="search-result">
+  <view :class="[navList.length != 0 ? 'search-result' : 'search-result-nopadding']">
       <sortGoods :goodsList="goodsList" v-if="goodsList && !loading"></sortGoods>
       <searchResultEmpty v-if="!goodsList.length && !loading"></searchResultEmpty>
       <loadingComponent v-if="loading"></loadingComponent>
@@ -46,6 +46,7 @@
 import api from '@/utils/api'
 import wx from 'wx'
 import { mapState } from 'vuex'
+import util from '@/utils/util'
 import sortGoods from '@/components/sortGoods'
 import searchResultEmpty from '@/components/searchResultEmpty'
 import loadingComponent from '@/components/loadingComponent'
@@ -75,15 +76,19 @@ export default {
       page: 1,
       size: 20, // 默认10000尽量大，查到所有符合的数据
       orderKey: 1,
-      loading: true
+      loading: true,
+      title: ''
     }
   }, 
   async mounted () {
     this.currentSortOrder = 'desc';
     Object.assign(this.$data, this.$options.data())
-    if (this.$route.query.Id) {
-      this.navList = JSON.parse(this.$route.query.categoryChild)
-      this.Id = parseInt(this.$route.query.Id);
+    if (this.$route.query.cid) {
+      if(this.$route.query.categoryChild) {
+        this.navList = JSON.parse(this.$route.query.categoryChild)
+      }
+      this.Id = parseInt(this.$route.query.cid);
+      this.setTitle(this.$route.query.title)
     }
     let that = this;
     // 获得系统信息
@@ -199,6 +204,11 @@ export default {
       this.page = 1
       this.goodsList = []
       this.searchGoods()  
+    },
+    setTitle (text) {
+        wx.setNavigationBarTitle({
+            title: text ? text : '分类'
+        })
     }
   },
       // 小程序原生获取滚动条当前位置
@@ -222,6 +232,16 @@ export default {
   onPullDownRefresh: function() {
     this.refresh()
     wx.stopPullDownRefresh()
+  },
+    // 原生的分享功能
+  onShareAppMessage: function () {
+    const urlPath = util.getCateGoryUrl(this.Id)
+    console.log(urlPath)
+    return {
+      title: this.$route.query.title ? this.$route.query.title : '分类',
+      desc: '印生活',
+      path: urlPath
+    }
   }
 }
 </script>
@@ -366,6 +386,9 @@ export default {
 .search-result{
     padding-top: 172rpx;
     /* z-index: 10; */
+}
+.search-result-nopadding {
+  padding-top: 70rpx;
 }
 
 .scollTop{

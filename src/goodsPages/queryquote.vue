@@ -27,7 +27,7 @@ export default {
                 _this.$router.back()
             })
         } 
-
+        this.quoteUrl = ''
         if (this.$route.query.pid) {
             this.quoteUrl = 'https://www.kiy.cn//m-mobile/autobaojia/index?pid=' + this.$route.query.pid + '&&fid=' + this.$route.query.fid
             this.qitemCode = this.$route.query.pid

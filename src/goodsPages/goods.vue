@@ -25,7 +25,7 @@
           <!-- 图片轮播 -->
           <swiper class="goodsimgs" indicator-dots="true" autoplay="true" interval="3000" duration="1000">
               <swiper-item v-for="(item, index) of gallery" :key="item.id" :data-index="index">
-              <img :src="baseUrl + item" background-size="cover"/>
+                <img :src="baseUrl + item" background-size="cover" @error="imgError(item)"/>
               </swiper-item>
           </swiper>
           <!-- 商品信息 -->
@@ -115,7 +115,7 @@
         <img class="icon" src="/static/images/icon_close.png"/>
       </view>
       <view class="img-info clear">
-        <img class="img" :src="baseUrl + gallery[0]"/>
+        <img class="img" :src="baseUrl + detailInfo.imagePath + '/1_350.png'"/>
         <view class="info">
           <view class="c">
             <view class="p" v-if="!detailInfo.IsCustom"><text class="p-icon">￥</text>{{detailInfo.Price}}</view>
@@ -377,8 +377,11 @@ export default {
       ]);
       // this.$wx.hideLoading()
       this.setTitle(this.detailInfo.ProductName)
-      // true等于非标
+      // 默认选中配送方式，必须在报价之前选中默认的报价
+      this.selectWuliu()
       // this.detailInfo.IsCustom = true
+      // true等于非标
+
       if(this.detailInfo.IsCustom) {
         // 获取非标报价的价格
         await Promise.all([
@@ -389,8 +392,7 @@ export default {
         // 选中默认选项
         this.getSkuPrice()
       }
-      // 默认选中配送方式
-      this.selectWuliu()
+      
       
       // this.toView = 'goodshead'
       this.loading = false
@@ -400,13 +402,13 @@ export default {
       const _this = this;
       const openId = wx.getStorageSync('openId')
       let par = {
-        qid: this.code,
-        FId: this.detailInfo.ShopMapId,
-        data: this.proSearchParam.dataStr,
+        qid: this.code, //报价qid
+        FId: this.detailInfo.ShopMapId, //商家店铺fid
+        data: this.proSearchParam.dataStr, //参数字符串
         dataStr: '',
         openId: openId,
-        productId: this.id,
-        getOpenQuote: this.Yjtype
+        productId: this.id,//商品id
+        RemindType: this.Yjtype //配送类型
       }
       this.$wx.showLoading( openId ? '正在报价...' : '登录后价格更优')
       const res = await api.getOpenQuote(par)
@@ -540,19 +542,38 @@ export default {
     // 选择skuInfo最低价,获取价格和默认选项
     getLowPrice() {
       const skuInfo = this.skuInfo
-      skuInfo.sort(function(a , b){
-        var a1 = a.Price
-        var b1 = b.Price
-        if(a1<b1){  
-          return -1;  
-        }else if(a1>b1){  
-          return 1;  
-        }  
-        return 0; 
-      })
+      const _this = this;
+      if(this.$route.query.skuId) {
+        this.getRouteSku()
+        return
+      } else {
+        skuInfo.sort(function(a , b){
+          var a1 = a.Price
+          var b1 = b.Price
+          if(a1<b1){  
+            return -1;  
+          }else if(a1>b1){  
+            return 1;  
+          }  
+          return 0; 
+        })
+      }
       this.skuId = skuInfo[0].SkuId
       this.Stock = skuInfo[0].Stock
       this.detailInfo.Price = skuInfo[0].Price * this.number
+      this.getDefalutSelect()
+    },
+    getRouteSku () {
+      const skuInfo = this.skuInfo
+      let skuItem = {}
+      skuInfo.map(item => {
+        if(item.SkuId == this.$route.query.skuId) {
+          skuItem = item
+        }
+      })
+      this.skuId = skuItem.SkuId
+      this.Stock = skuItem.Stock
+      this.detailInfo.Price = skuItem.Price * this.number
       this.getDefalutSelect()
     },
     // 选择skuInfo的价格
@@ -789,7 +810,6 @@ export default {
         _this.YjUse = express.checkYjUse(_this.Yjtype)
         _this.getYJFreightCalculate()
       }
-      
     },
     // 检查库存
     checkStock() {
@@ -826,6 +846,15 @@ export default {
         wx.setNavigationBarTitle({
             title: text
         })
+    },
+    imgError (e) {
+      const arr = []
+      this.gallery.map(item => {
+        if(item != e) {
+          arr.push(item)
+        }
+      })
+      this.gallery = arr
     }
   },
   watch: {
@@ -852,7 +881,8 @@ export default {
       ProductName: this.detailInfo.ProductName,
       code: this.code != 0 ? this.code : undefined,
       IsCustom: this.detailInfo.IsCustom , 
-      dataStr: this.proSearchParam.dataStr
+      dataStr: this.proSearchParam.dataStr,
+      skuId: this.skuId
     })
     console.log(goodsUrl)
     return {
@@ -1623,6 +1653,7 @@ page{
   font-size: 24rpx;
   color: #333;
   line-height: 35rpx;
+  min-height: 70rpx;
 }
 
 .spec-con {

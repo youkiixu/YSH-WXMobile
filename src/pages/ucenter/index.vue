@@ -53,27 +53,28 @@
 
   </view>
 
-  <view class="ShoppingCar list clear">    
+  <navigator url="../cart/cart" open-type="switchTab" class="ShoppingCar list clear">    
         <view class="t">购物车</view>
         <img class="i" src="/static/images/address_right.png" background-size="cover"/>       
-  </view>
+  </navigator>
+  <navigator url="../../addressPages/address" class="address list clear">    
+        <view class="t">地址管理</view>
+        <img class="i" src="/static/images/address_right.png" background-size="cover"/>       
+  </navigator>
   <navigator url="../ucenter/collect" class="collection list clear">    
         <view class="t">我的收藏</view>
         <img class="i" src="/static/images/address_right.png" background-size="cover"/>       
   </navigator>
-   <view class="integral list clear">    
+   <view class="integral list clear" @click="noEvent">    
         <view class="t">我的积分</view>
         <img class="i" src="/static/images/address_right.png" background-size="cover"/>       
   </view>
-   <view class="footprint list clear">    
+   <view class="footprint list clear" @click="noEvent">    
         <view class="t">我的足迹</view>
         <img class="i" src="/static/images/address_right.png" background-size="cover"/>       
   </view>
-   <navigator url="../../addressPages/address" class="address list clear">    
-        <view class="t">地址管理</view>
-        <img class="i" src="/static/images/address_right.png" background-size="cover"/>       
-  </navigator>
-   <view class="service list clear">    
+   
+   <view class="service list clear" @click="noEvent">    
         <view class="t">售后客服</view>
         <img class="i" src="/static/images/address_right.png" background-size="cover"/>       
   </view>
@@ -168,6 +169,9 @@ export default {
           }
         }
       })
+    },
+    noEvent () {
+      this.$wx.showErrorToast('暂未开放!')
     }
 
   }
@@ -355,7 +359,7 @@ page{
   height: 44rpx;
   margin-top: 20rpx;
 }
-.collection{
+.address{
   margin-top: 20rpx;
 }
 .list{

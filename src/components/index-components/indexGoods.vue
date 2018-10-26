@@ -27,8 +27,6 @@ export default {
     props: {
         content: Object
     },
-    mounted () {
-    },
     methods: {
       async toDetail(obj) {
         this.$emit('onClick' , obj)

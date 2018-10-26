@@ -60,7 +60,7 @@
 					"id": 4,
 					"name": "标准品下单",
 					"pathName": "goodsPages/goods",
-					"query": "data={\"ProductId\":52,\"ProductName\":\"水晶字 特惠\",\"code\":28}&&proSearchParam=%5B%7B'TypeStr'%3A'%E5%95%86%E6%A0%87'%2C'Face'%3A'%E5%A4%A7%E7%BA%A2(811)'%2C'Foot'%3A'3'%2C'XX'%3A'10'%2C'YY'%3A'10'%2C'FontLength'%3A'1'%2C'InstallTemp'%3A'%E7%A1%AC%E7%BA%B8%E6%9D%BF'%7D%2C%7B'TypeStr'%3A'%E5%95%86%E6%A0%87'%2C'Face'%3A'%E5%A4%A7%E7%BA%A2(811)'%2C'Foot'%3A'3'%2C'XX'%3A'10'%2C'YY'%3A'10'%2C'FontLength'%3A'1'%2C'InstallTemp'%3A'%E7%A1%AC%E7%BA%B8%E6%9D%BF'%7D%2C%7B'TypeStr'%3A'%E5%95%86%E6%A0%87'%2C'Face'%3A'%E5%A4%A7%E7%BA%A2(811)'%2C'Foot'%3A'3'%2C'XX'%3A'10'%2C'YY'%3A'10'%2C'FontLength'%3A'1'%2C'InstallTemp'%3A'%E7%A1%AC%E7%BA%B8%E6%9D%BF'%7D%5D"
+					"query": "data={\"ProductId\":4660,\"ProductName\":\"厂家订做纸袋白卡购物手提袋免费设计 广告礼品手挽袋 服装纸袋\"}&&skuId=4660_0_105_0_0_0_0_0"
 				},
 				{
 					"id": -1,
@@ -157,6 +157,18 @@
 					"name": "标准品下单",
 					"pathName": "goodsPages/goods",
 					"query": "data={\"ProductId\":4589,\"ProductName\":\"特价X展架 特价展架 促销展架 画面展示支架\"}"
+				},
+				{
+					"id": 21,
+					"name": "搜索页",
+					"pathName": "pages/search/search",
+					"query": "keyword=不干胶"
+				},
+				{
+					"id": 22,
+					"name": "分类页",
+					"pathName": "pages/category/category",
+					"query": "cid=886"
 				}
 			]
 		}

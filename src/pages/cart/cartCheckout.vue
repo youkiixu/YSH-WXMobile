@@ -40,7 +40,7 @@
                             <view class="info">
                                 <view class="t">
                                     <text class="name" v-if="item.ProductName">{{item.ProductName}}</text>
-                                    <text class="number" v-if="item.Count">x{{item.Count}}</text>
+                                    <text class="number">x{{item.IsCustom ? item.ShuLiang : item.Count}}</text>
                                 </view>
                                 
                                 <view class="m" v-if="item.paraStr">参数:{{item.paraStr}}</view>

@@ -14,12 +14,6 @@
           </view>
         </view>
       </block>
-      <!-- <view class="item item-b item-more">
-          <navigator :url="'/pages/category/category?id=' + item.price" class="more-a">
-            <view class="txt">{{'更多'+item.title+'好物'}}</view>
-            <image class="icon" src="../../static/images/icon_go_more.png" background-size="cover"/>
-          </navigator>
-      </view> -->
     </view>
   </view>
 </template>

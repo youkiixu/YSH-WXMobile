@@ -216,7 +216,7 @@ export default {
             num = this.checkOutInfo.IsRemind ? util.addNum(this.checkOutInfo.totalAmount , this.remindInfo.RemindPrice) : this.checkOutInfo.totalAmount
             num = this.daifaInfo.isDaifa ? util.addNum(num , this.daifaInfo.ExpressFreight) : num
             
-            return num
+            return num.toFixed(2)
         }
     },  
   async mounted () {

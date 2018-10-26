@@ -1,9 +1,9 @@
 <template>
     <view class="component">
         <indexTitle v-if="item.type === 2" :content="item.content"></indexTitle>
-        <indexNaV v-if="item.type === 8" :content="item.content"></indexNaV>
+        <indexNaV v-if="item.type === 8" :content="item.content" @onClick="navEvent"></indexNaV>
         <indexGoods v-if="item.type === 4" :content="item.content" @onClick="toDetail"></indexGoods>
-        <indexAd v-if="item.type === 9" :content="item.content" @onClick="ADEvent"></indexAd>
+        <indexAd v-if="item.type === 9" :content="item.content" @onClick="ADEvent" @onBrandClick="onBrandClick"></indexAd>
         <indexLine v-if="item.type === 11" :content="item.content"></indexLine>
     </view>
 </template>
@@ -36,7 +36,7 @@ export default {
                 const pid = res.data
                 const fid = res.ShopMapId
                 if( pid != 0 ) {
-                    this.$wx.toBaoJia({ pid: pid , ProductId , isDetail: true , ProductId: ProductId , fid: fid } , this)
+                    this.$wx.toBaoJia({ pid: pid , title: obj.title , isDetail: true , ProductId: ProductId , fid: fid } , this)
                 } else {
                     this.$wx.toDetail({id : ProductId , title: obj.title} , this)
                 }
@@ -44,7 +44,8 @@ export default {
                 this.$wx.showErrorToast(res.msg)
             }
         },
-        ADEvent(item) {
+        ADEvent(item) { 
+            
             const type = item.linkType
             switch (type) {
                 case 1:
@@ -59,13 +60,43 @@ export default {
                     break;
                 case 10:
                     // 类型10是连接
-                    
-                    this.$router.push(item.link)
+                    this.$router.push({
+                        path: item.link + `&&title=${item.showtitle}`
+                    })
                     break;
                 default:
                     this.$wx.showErrorToast('暂时没有' + item.title)
                     break;
             }
+        },
+        navEvent (item) {
+            const type = item.linkType
+            switch (type) {
+                case 1:
+                    // 类型一是去商品详情页
+                    const links = item.link.split('/')
+                    const len = links.length
+                    const par = {
+                        item_id : links[len - 1],
+                        title: item.title
+                    }
+                    this.toDetail(par)
+                    break;
+                case 10:
+                    // 类型10是连接
+                    let url = item.link
+                    if(url.split('?').length > 1) {
+                        url +=  `&&title=${item.showtitle}`
+                    }
+                    this.$router.push({
+                        path: '../../' + url
+                    })
+                    break;
+                default:
+                    this.$wx.showErrorToast('暂时没有' + item.title)
+                    break;
+            }
+            
         },
         toSearch(keyword) {
             this.$router.push({

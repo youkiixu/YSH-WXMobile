@@ -1,9 +1,9 @@
 <template>
     <view class="m-menu">
-        <navigator  class="item" :url="'../../' + item.link" v-for="item of content.dataset" :key="item.id">
+        <view  class="item" v-for="item of content.dataset" :key="item.id" @click="toDetail(item)">
             <img :src="baseUrl+ item.pic" background-size="cover" />
             <text>{{item.showtitle}}</text>
-        </navigator>
+        </view>
     </view>
 </template>
 
@@ -18,7 +18,13 @@ export default {
         baseUrl() {
             return this.$wx.baseUrl
         }
+    },
+    methods: {
+        toDetail (item) {
+            this.$emit('onClick' , item)
+        }
     }
+    
 }
 </script>
 <style scoped>

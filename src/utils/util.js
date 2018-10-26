@@ -234,7 +234,27 @@ function deepCopy(params) {
     if (param.IsCustom) {
       urlPath += '&&proSearchParam=' + encode(param.dataStr)
     }
+    if (!param.IsCustom && param.skuId) {
+      urlPath += '&&skuId=' + param.skuId
+    }
 
+
+    return urlPath
+  }
+
+  function getSearchUrl(keyword) {
+    let urlPath = '/pages/search/search'
+    if (keyword) {
+      urlPath += `?keyword=${keyword}`
+    }
+    return urlPath
+  }
+
+  function getCateGoryUrl (cid) {
+    let urlPath = 'pages/category/category'
+    if(cid) {
+      urlPath += `?Id=${cid}`
+    }
     return urlPath
   }
 
@@ -251,7 +271,9 @@ const util = {
   encode,
   decode,
   getGoodsUrl,
-  delLastStr
+  delLastStr,
+  getSearchUrl,
+  getCateGoryUrl
 }
 
 export default util

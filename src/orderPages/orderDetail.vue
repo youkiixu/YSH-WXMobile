@@ -86,6 +86,7 @@ import wx from 'wx'
 import { mapState } from 'vuex'
 import orderInfoStatus from '@/utils/orderInfoStatus'
 import loadingComponent from '@/components/loadingComponent'
+import express from '@/utils/express'
 
 export default {
     components: {
@@ -135,6 +136,7 @@ export default {
             this.orderInfo = data[0]; 
             this.orderGoods = data[1].QuoteRecord;   
             this.orderInfo.OrderStatusStr = this.$wx.orderStatus(this.orderInfo.OrderStatus)
+            this.orderInfo.RemindtypeStr = express.wuliuStr(this.orderInfo.Remindtype)
             // 判断按钮可不可以用
             this.init()
         } else {

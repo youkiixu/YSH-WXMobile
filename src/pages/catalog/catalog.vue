@@ -16,7 +16,7 @@
                   <text class="txt">{{categoryChild.Name}}分类</text>
               </view>
               <view class="bd">
-                  <view @click="$router.push({ path: '/pages/category/category', query: { Id: item.Id ,categoryChild: JSON.stringify(categoryChild.SubCategories) } })"  :class="(index2+1) % 3 == 0 ? 'last item' : 'item'" v-for="(item, index2) of categoryChild.SubCategories"
+                  <view @click="$router.push({ path: '/pages/category/category', query: { cid : item.Id ,categoryChild: JSON.stringify(categoryChild.SubCategories) } })"  :class="(index2+1) % 3 == 0 ? 'last item' : 'item'" v-for="(item, index2) of categoryChild.SubCategories"
                       :key="item.Id">
                       <img class="icon" :src="item.Image ?  baseUrl + item.Image : 'http://www.kiy.cn/Areas/wxMobile/Content/img/defalutimg.png'"/>
                       <text class="txt">{{item.Name}}</text>

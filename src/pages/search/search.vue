@@ -4,7 +4,7 @@
     <view class="input-box">
       <img class="icon" @click="getSeach" />
       <!-- @input="inputChange" @focus="inputFocus" @confirm="onKeywordConfirm" -->
-      <input name="input" class="keywrod" focus="true" v-model="keyword" confirm-type="search" @confirm="onKeywordConfirm"  placeholder="商品搜索" />
+      <input name="input" class="keywrod"  v-model="keyword" confirm-type="search" @confirm="onKeywordConfirm"  placeholder="商品搜索" />
       <!-- <img class="del" v-if="keyword" @click="clearKeyword" src="http://nos.netease.com/mailpub/hxm/yanxuan-wap/p/20150730/style/img/icon-normal/clearIpt-f71b83e3c2.png"/> -->
     </view>
     <!-- <view class="right" @click="closeSearch">取消</view> -->
@@ -50,6 +50,7 @@ import sortGoods from '@/components/sortGoods'
 import searchBar from '@/components/indexSearchBar'
 import searchResultEmpty from '@/components/searchResultEmpty'
 import loadingComponent from '@/components/loadingComponent'
+import util from '@/utils/util'
 
 export default {
   components: {
@@ -196,8 +197,6 @@ export default {
 
      // 获取滚动条当前位置
     onPageScroll : function(e){
-      console.log('e的值：',e)
-      console.log('滚动位置：',e.scrollTop)
       if (e.scrollTop > 100) {     
           this.floorstatus = true   
       } else {
@@ -216,10 +215,12 @@ export default {
   },
   // 原生的分享功能
   onShareAppMessage: function () {
+    const urlPath = util.getSearchUrl(this.keyword)
+    console.log(urlPath)
     return {
-      title: 'sassShop',
+      title: this.keyword ? this.keyword : '搜索',
       desc: '印生活',
-      path: '/pages/search/search'
+      path: urlPath
     }
   }
 }
