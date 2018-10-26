@@ -107,6 +107,7 @@ export default {
   },
    // 每次打开触发，更新数据
   async mounted () {
+    this.iseditGoodsCollect = false
     this.collectList = []
     this.loading = true
     await Promise.all([
