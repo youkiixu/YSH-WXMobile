@@ -22,12 +22,12 @@
     </view>
 
     <view class="cate-nav" v-if="navList.length != 0">
-        <scroll-view scroll-x="true" scroll-with-animation class="cate-nav-body" style="width: 100%;"  :scroll-left="scrollLeft">
+        <view  class="cate-nav-body">
             <view  v-for="(item , index) of navList" :class="Id == item.Id ? 'active item' : 'item'" :key="item.Id"
             @click="switchCate" :data-Id="item.Id" :data-index="index">
                 <view class="name">{{item.Name}}</view>
             </view>
-        </scroll-view>
+        </view>
     </view>    
   </view>
 
@@ -161,7 +161,7 @@ export default {
     },
     //回到顶部
     toTop() {       
-        //this.scrollTop = 0     
+        //this.scrollTop = 0  
         wx.pageScrollTo({
           scrollTop: 0,
           duration: 300
