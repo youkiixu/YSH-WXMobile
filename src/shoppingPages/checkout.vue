@@ -300,7 +300,6 @@ export default {
     },
     // 获取印捷提点运费
     async getYJFreightCalculate() {
-        console.log(this.checkOutInfo.IsRemind)
         if(this.checkOutInfo.IsRemind) {
             var par = {
                 UserId: this.userInfo.Id,
@@ -309,10 +308,12 @@ export default {
                 Yjtype: this.checkOutOther.Remindtype,
                 Price: this.checkOutInfo.totalAmount
             }
+            this.$wx.showLoading()
             const res = await api.getYJFreightCalculate(par)
             if(res.success) {
                 this.remindInfo = res.data
             }
+            this.$wx.hideLoading()
         }
     },
     // 选择配送方式

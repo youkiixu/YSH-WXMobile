@@ -60,7 +60,7 @@
 					"id": 4,
 					"name": "标准品下单",
 					"pathName": "goodsPages/goods",
-					"query": "data={\"ProductId\":4660,\"ProductName\":\"厂家订做纸袋白卡购物手提袋免费设计 广告礼品手挽袋 服装纸袋\"}&&skuId=4660_0_105_0_0_0_0_0"
+					"query": "data={\"ProductId\":4589,\"ProductName\":\"特价X展架 特价展架 促销展架 画面展示支架\"}&&skuId=4589_0_77_80_0_0_0_1322"
 				},
 				{
 					"id": -1,

@@ -249,7 +249,7 @@ export default {
       Ids: '',
       gallery: [],
       number: 1,
-      saleNumber: 1,
+      saleNumber: 0,
       checkedSpecText: '请选择规格数量',
       openAttr: false,
       goodDetailHTMLstr: '',
@@ -463,6 +463,7 @@ export default {
         this.RequestUrl = res.RequestUrl
         this.detailInfo = res.data
         this.gallery = util.getImagePathGroup(this.detailInfo.imagePath)
+        // 最低销售量
         this.number = Number(this.detailInfo.SaleNumber)
       } else {
         this.$wx.showErrorToast(res.msg)
@@ -484,7 +485,6 @@ export default {
     // 获取印捷提点
     // 获取印捷提点运费
     async getYJFreightCalculate() {
-        // console.log(this.detailInfo)
         if(this.detailInfo.IsRemind) {
           let item = this.detailInfo
           var par = {
@@ -560,9 +560,13 @@ export default {
       }
       this.skuId = skuInfo[0].SkuId
       this.Stock = skuInfo[0].Stock
+      // 默认数量和最低销售数量
+      this.saleNumber = skuInfo[0].SaleNumber
+      this.number = skuInfo[0].SaleNumber
       this.detailInfo.Price = skuInfo[0].Price * this.number
       this.getDefalutSelect()
     },
+    // 根据路由信息进来
     getRouteSku () {
       const skuInfo = this.skuInfo
       let skuItem = {}
@@ -573,6 +577,9 @@ export default {
       })
       this.skuId = skuItem.SkuId
       this.Stock = skuItem.Stock
+      // 默认数量和最低销售数量
+      this.number = skuItem.SaleNumber
+      this.saleNumber = skuItem.SaleNumber
       this.detailInfo.Price = skuItem.Price * this.number
       this.getDefalutSelect()
     },
@@ -580,14 +587,23 @@ export default {
     getSkuInfoPirce() {
       const skuInfo = this.skuInfo
       const skuId = this.skuId
-        this.number = Number(this.number)
-        skuInfo.map(item => {
-          if(item.SkuId === skuId) {
-              this.Stock = item.Stock
-              this.detailInfo.Price = util.accMul(item.Price , this.number)
-            
-          }
-        })
+      // 将数量转为纯数字
+      this.number = Number(this.number)
+      //循环skuinfo，获取选中sku的库存和最低销售量
+      skuInfo.map(item => {
+        if(item.SkuId === skuId) {
+            this.Stock = item.Stock
+            if(this.saleNumber != item.SaleNumber) {
+              this.saleNumber = item.SaleNumber
+              this.number = this.saleNumber
+            }
+            if(this.number < this.saleNumber) {
+              this.number = this.saleNumber
+            }
+            this.detailInfo.Price = util.accMul(item.Price , this.number)
+        }
+      })
+
     },
     // 获取默认选项
     getDefalutSelect() {
@@ -835,7 +851,6 @@ export default {
       query.select('#' + this.toView).boundingClientRect()
       query.selectViewport().scrollOffset()
       query.exec(function(res){
-        console.log(res[0].top)
         wx.pageScrollTo({
           scrollTop: 0,
           duration: 300
@@ -859,9 +874,6 @@ export default {
   },
   watch: {
     number (e , b) {
-      if(Number(e) < Number(this.detailInfo.SaleNumber)) {
-        this.number = Number(this.detailInfo.SaleNumber)
-      }
       this.getSkuInfoPirce()
     },
     proSearchParam (a , b ) {

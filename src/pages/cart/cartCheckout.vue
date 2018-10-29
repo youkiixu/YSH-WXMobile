@@ -275,7 +275,6 @@ export default {
     async getYJFreightCalculate(index) {
         let item = this.goodList[index]
         if(item.IsRemind && item.Remindtype != 0) {
-            console.log(index , item.Remindtype)
             var par = {
                 UserId: this.userInfo.Id,//用户Id
                 UserAddress: this.address.RegionFullName,//地址全称
@@ -283,6 +282,7 @@ export default {
                 Yjtype: item.Remindtype,//配送类型
                 Price: item.totalAmount//商品价格
             }
+            this.$wx.showLoading()
             const res = await api.getYJFreightCalculate(par)
             if(res.success) {
                 this.goodList[index].ReMind = res.data.ReMind
@@ -290,6 +290,7 @@ export default {
                 this.goodList[index].RemindPrice = res.data.RemindPrice
                 this.renderUI()
             }
+            this.$wx.hideLoading()
         }
         
     },

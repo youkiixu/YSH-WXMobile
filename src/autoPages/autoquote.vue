@@ -4,7 +4,7 @@
       <img class="ad-img" :src="baseUrl + '/Areas/wxMobile/Content/img/ad.png'" alt="">
     </div>
     <view class="catalog" :style="{'height' : '100%'}">
-        <scroll-view class="nav menu-ul" scroll-y="true" scroll-with-animation="true" :scroll-into-view="navId">
+        <scroll-view class="nav menu-ul" scroll-y="true" :scroll-top="navTop" scroll-with-animation="true" :scroll-into-view="navId" >
             <view :class="currentIndex == index ? 'active item menu-item' : 'item menu-item' " v-for="(item, index) of list" :key="index" :id="'nav_' + index"
                  @click="selectMenu(index)">{{item.name}}</view>
         </scroll-view>
@@ -43,11 +43,19 @@ export default {
       navulHeight: 0,
       navItemHeight: 0,
       listHeight: [],
-      baseUrl: ''
+      navTop: 0
     }
   },
   mounted () {
+    this.currentIndex = 0
+    this.navTop = 0
+    this.listHeight = []
     this.getQitem()
+  },
+  computed: {
+    baseUrl () {
+      return this.$wx.baseUrl
+    }
   },
   methods: {
       async getQitem () {
@@ -75,7 +83,7 @@ export default {
           })
 
           this.list = this.diff(itemList , arr)
-          this.getFoodHeight()
+          // this.getFoodHeight()
 
       },
       diff (arr1 , arr2) {
@@ -97,7 +105,6 @@ export default {
             this.listHeight.push(h)
           });
         })
-        
         query.select('.foods-wrapper').boundingClientRect((rect) => {
           this.contentHeight = rect.height
         })
@@ -107,6 +114,7 @@ export default {
         query.select('.menu-item').boundingClientRect((rect) => {
           this.navItemHeight = rect.height
         }).exec()
+        
       },
       queryQuote(item) {
           if(item.IsPriceDisplayPage != 0 && item.ProductId != 0){
@@ -149,10 +157,13 @@ export default {
           this.navId = `nav_0`
         }
       }
+      
+      this.navTop = this.currentIndex * 40
     },
     list () {
+      const _this = this
       setTimeout(() => {
-        this.getFoodHeight()
+        _this.getFoodHeight()
       }, 60);
     }
   },

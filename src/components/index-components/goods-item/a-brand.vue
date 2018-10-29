@@ -47,7 +47,7 @@ export default {
     }
 .a-brand .b .item {
   float: left;
-  width: 30.5%;
+  width: 226rpx;
   height: 226rpx;
   margin-top: 15rpx;
   margin-left: 15rpx;
