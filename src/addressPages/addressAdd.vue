@@ -1,5 +1,5 @@
 <template >
-<view :style="{'height': '100%'}">
+<view class="container">
   <view class="add-address" >
       <view class="add-form">
           <view class="form-item">
@@ -11,8 +11,8 @@
           <view class="form-item">
               <input class="input" :value="address.RegionFullName" disabled="true" @click="chooseRegion" placeholder="省份、城市、区县"/>
           </view>
-          <view class="form-item">
-              <input class="input"  v-model="address.Address" placeholder="详细地址, 如街道、楼盘号等"/>
+          <view class="form-item detailAddress">
+              <textarea class="detailAddress-input"  v-model="address.Address" placeholder="详细地址, 如街道、楼盘号等"/>
           </view>
           <view class="form-default" v-if="address.Id">
             <div class="weui-cell weui-cell_switch">
@@ -322,18 +322,24 @@ page{
     height: 100%;
     background: #f1f1f1;
 }
-.add-address .add-form{
-    
+.container{
+    height: 100%;
+    background: #f1f1f1;
+}
+.add-address{
+  width: 750rpx;
+}
+.add-address .add-form{  
     width: 100%;
     height: auto;
     overflow: hidden;
 }
 
 .add-address .form-item{
-    height: 100rpx;
+    height: 100rpx; 
     background: #fff;
     padding-left: 31.25rpx;
-    border-bottom: 1px solid #d9d9d9;
+    border-bottom: 1px solid #f1f1f1;
     display: flex;
     align-items: center;
     padding-right: 31.25rpx;
@@ -344,6 +350,14 @@ page{
     height: 44rpx;
     line-height: 44rpx;
     overflow: hidden;
+}
+.add-address  .detailAddress{
+  height: auto;
+  padding: 20rpx;
+  box-sizing: border-box;
+}
+.detailAddress .detailAddress-input{
+   line-height: 50rpx; 
 }
 
 .add-address .form-default{

@@ -7,7 +7,7 @@
             <view class="info-item">下单时间：{{orderInfo.OrderDate}}</view>
         </view>
         <view class="address-info">
-            <view class="address-item">收货人：<text class="t">{{orderInfo.ShipTo}} {{orderInfo.CellPhone}}</text></view>
+            <view class="address-item">收货人：<text class="t ShipTo">{{orderInfo.ShipTo}} {{orderInfo.CellPhone}}</text></view>
             <view class="address-item">收货地址：<text class="t">{{orderInfo.RegionFullName + orderInfo.Address}}</text></view>
             <view class="address-item">配送方式：<text class="t">{{orderInfo.RemindtypeStr}}</text></view>
         </view>
@@ -273,7 +273,7 @@ page{
 .info-item{
     height: 40rpx;
     line-height: 40rpx;
-    font-size: 24rpx;
+    font-size: 26rpx;
     color: #666;
 }
 .info-item .t{
@@ -288,12 +288,15 @@ page{
     margin-top: 20rpx;
 }
 .address-info .address-item{
-    font-size: 24rpx;
+    font-size: 26rpx;
     color: #666;
     line-height: 40rpx;
 }
 .address-info .address-item .t{
     color: #282828;
+}
+.address-info .address-item .ShipTo{
+    padding-left: 26rpx;
 }
 .goods-info{
     background-color: #fff;
@@ -309,7 +312,7 @@ page{
 .info-bottom .m{
      line-height: 40rpx;
      color: #666666;
-     font-size: 24rpx;
+     font-size: 26rpx;
 }
 .info-bottom .m .t{
      color: #282828;
@@ -343,18 +346,18 @@ page{
 }
 .goods-info .txt .txt-title{  
     color: #282828;
-    font-size: 24rpx;
+    font-size: 26rpx;
     line-height: 40rpx;
 }
 .goods-info .txt .txt-num{
     color: #666666;
-    font-size: 24rpx;
+    font-size: 26rpx;
     line-height: 40rpx;
 }
 .goods-info .txt .txt-price{
     height: 30rpx;
     color: #666666;
-    font-size: 24rpx;
+    font-size: 26rpx;
     line-height: 40rpx;
     text-align: right;
 }
@@ -363,13 +366,13 @@ page{
 }
 .message-info{
     background-color: #fff;
-    width: 100%;
+    width: 750rpx;
     margin-top: 20rpx;
-    height: 60rpx;
-    line-height: 60rpx;
-    font-size: 24rpx;
+    /* height: 60rpx; */
+    line-height: 40rpx;
+    font-size: 26rpx;
     color: #666;
-    padding: 0 20rpx;
+    padding: 20rpx;
     box-sizing: border-box;
 }
 .message-info .l{
@@ -379,6 +382,7 @@ page{
 .message-info .r{
     width: 88%;
     float: right;
+    color: #282828;
 }
 .price-total{
     background-color: #fff;
@@ -391,7 +395,7 @@ page{
     width: 25%;
     float: left;
     line-height: 40rpx;
-    font-size: 24rpx;
+    font-size: 26rpx;
     color: #666666;
 }
 .price-total .r{
@@ -399,11 +403,11 @@ page{
     float: right;
     line-height: 40rpx;
     text-align: right;
-    font-size: 24rpx;
+    font-size: 26rpx;
     color: #282828;
 }
 .price-total .actual-pay{
-    font-size: 24rpx;
+    font-size: 26rpx;
     color: #666;
     text-align: right;
 }
@@ -425,7 +429,7 @@ page{
 }
 .order-bottom .total{
     width: 48%;
-    font-size: 24rpx;
+    font-size: 26rpx;
     color: #282828;
     float: left;
 }
@@ -453,7 +457,7 @@ button{
   height: 60rpx;
   line-height: 60rpx;
   text-align: center;
-  font-size: 24rpx;
+  font-size: 26rpx;
   color: #666;
   border: 2rpx solid #666;
   margin: 20rpx 0;
@@ -466,7 +470,7 @@ button{
   height: 60rpx;
   line-height: 60rpx;
   text-align: center;
-  font-size: 24rpx;
+  font-size: 26rpx;
   color: #fff;
   background: #009e96;
   float: right;
