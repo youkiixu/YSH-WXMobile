@@ -60,7 +60,7 @@
 					"id": 4,
 					"name": "标准品下单",
 					"pathName": "goodsPages/goods",
-					"query": "data={\"ProductId\":4589,\"ProductName\":\"特价X展架 特价展架 促销展架 画面展示支架\"}&&skuId=4589_0_77_80_0_0_0_1322"
+					"query": "data={\"ProductId\":61,\"ProductName\":\"彩色拼版不干胶 特惠\",\"code\":24}&&proSearchParam=chichun%3D90*54%26xx%3D90%26yy%3D54%26shuliang%3D1000%26kuans%3D1%26cailiao%3D%E7%89%B9%E5%85%89%E4%B8%8D%E5%B9%B2%E8%83%B6%26PM%3D%E5%95%A4%E5%BC%82%E5%9E%8B%26bys1Select%3D%E5%B8%B8%E8%A7%84%E5%BD%A2%26Streament%3D%E8%A6%86%E4%BA%AE%E8%86%9C%26hjg%3D%E7%89%B9%E5%85%89%E6%B0%B4%E8%83%B6%26ysys%3D4%26danshuang%3D1%26"
 				},
 				{
 					"id": -1,

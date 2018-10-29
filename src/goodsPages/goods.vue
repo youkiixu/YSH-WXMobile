@@ -203,10 +203,10 @@
       <view class="l l-collect">
           <img class="icon" src="/static/images/share.png"/>
       </view>
-      <view class="l l-cart">
+      <view class="l l-cart" @click="openCartPage">
           <view class="box">
           <text class="cart-count">{{shoppingCartCount}}</text>
-          <img @click="openCartPage" class="icon" src="/static/images/shopping-car.png"/>
+          <img  class="icon" src="/static/images/shopping-car.png"/>
           </view>
       </view>
       <view class="c" @click="addToCart">加入购物车</view>
@@ -643,9 +643,9 @@ export default {
         title: this.detailInfo.ProductName,
         isDetail : true,
         fid: this.detailInfo.ShopMapId,
-        detailCommon: true
+        detailCommon: true,
+        data: this.proSearchParam.dataStr
       }
-
       this.openAttr = false;
       this.$wx.toBaoJia(par , this)
     },
@@ -1546,7 +1546,7 @@ page{
   color: #fff;
   line-height: 28rpx;
   border-radius: 50%;
-  padding: 2rpx;
+  padding: 4rpx;
 }
 
 .bottom-btn .l.l-cart .icon {

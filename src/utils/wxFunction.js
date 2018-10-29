@@ -104,6 +104,7 @@ function toBaoJia(item , vm) {
     let ProductId = item.ProductId ? item.ProductId : ''
     let detailCommon = item.detailCommon ? item.detailCommon : false
     let fid = item.fid ? item.fid : undefined
+    let data = item.data ? encodeURIComponent(item.data) : undefined
     vm.$router.push({
       path: '/goodsPages/queryquote',
       query: {
@@ -112,7 +113,8 @@ function toBaoJia(item , vm) {
         isDetail: isDetail,
         ProductId: ProductId,
         fid: fid,
-        detailCommon: detailCommon
+        detailCommon: detailCommon,
+        data: data
       }
     })
 }
@@ -169,7 +171,7 @@ function orderStatus(status) {
 function getImagePath(path) {
   return `${path}/1_350.png`
 }
-
+ 
 // const baseUrl = 'http://192.168.0.91:8008/'
 const baseUrl = 'http://www.kiy.cn/'
 
