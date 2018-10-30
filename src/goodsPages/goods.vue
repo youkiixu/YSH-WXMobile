@@ -200,7 +200,7 @@
     </view>
     <!-- tabbar -->
     <view class="bottom-btn" v-if="!loading">
-      <view class="l l-collect">
+      <view class="l l-collect" @click="callPhone">
           <img class="icon" src="/static/images/share.png"/>
       </view>
       <view class="l l-cart" @click="openCartPage">
@@ -329,15 +329,15 @@ export default {
       'shoppingCartCount'
     ])
   },
-  onReady() {
-    this.loading = true
-  },
-  onUnload() {
-    this.loading = true
-  },
-  onLoad () {
-    this.loading = true
-  },
+  // onReady() {
+  //   this.loading = true
+  // },
+  // onUnload() {
+  //   this.loading = true
+  // },
+  // onLoad () {
+  //   this.loading = true
+  // },
   methods: {
     ...mapMutations(['setProSearchParam']),
     ...mapActions(['submitByProductId' , 'SubmitByProductId2' , 'getShoppingCartCount']),
@@ -873,6 +873,9 @@ export default {
         }
       })
       this.gallery = arr
+    },
+    callPhone() {
+      this.$wx.makePhoneCall(this.detailInfo.CompanyPhone)
     }
   },
   watch: {

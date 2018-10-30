@@ -168,6 +168,12 @@ function orderStatus(status) {
   }
 }
 
+function makePhoneCall (number) {
+  wx.makePhoneCall({
+    phoneNumber: number //仅为示例，并非真实的电话号码
+  })
+}
+
 function getImagePath(path) {
   return `${path}/1_350.png`
 }
@@ -189,7 +195,8 @@ const wxFun = {
     orderStatus,
     getImagePath,
     toBaoJia,
-    toDetail
+    toDetail,
+    makePhoneCall
 }
 
 export default wxFun

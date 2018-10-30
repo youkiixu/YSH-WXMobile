@@ -1,6 +1,6 @@
 <template >
  <view class="container">
-    <scroll-view scroll-y class="order-content">
+    <scroll-view scroll-y class="order-content" v-if="!loading">
         <view class="order-info" >
             <view class="info-item">订单状态：<text class="t">{{orderInfo.OrderStatusStr}}</text><text v-if="orderInfo.CloseReason"> ({{orderInfo.CloseReason}})</text></view>
             <view class="info-item">订单编号：{{orderInfo.Id}}</view>
@@ -65,7 +65,7 @@
 
     </scroll-view>
 
-    <view class="order-bottom clear">
+    <view class="order-bottom clear" v-if="!loading">
         <view class="total">
             合计：<text class="icon">￥</text><text class="t">{{orderInfo.ProductTotalAmount + orderInfo.Freight - orderInfo.ReceivedAmount}}</text>
         </view>
@@ -74,7 +74,7 @@
             <button class="confirm" v-if="canPay" @click="payOrder">确认支付</button> 
         </view>
     </view>
-
+    <loadingComponent v-if="loading"></loadingComponent>
 
 </view> 
 
@@ -98,7 +98,8 @@ export default {
       orderInfo: {},
       canCancel: false,
       canPay: false,
-      orderGoods: []
+      orderGoods: [],
+      loading: true
     }
   },
   computed: {
@@ -107,12 +108,9 @@ export default {
         return this.$wx.baseUrl
     } 
   },
-  async mounted () {
-    
-  },
-  
   // 每次打开触发，更新数据
-  async onShow () {
+  async mounted () {
+    this.loading = true
     this.orderInfo = [];
     this.orderGoods = []; 
     this.canCancel = false
@@ -121,7 +119,7 @@ export default {
     await Promise.all([
       this.getUserOrderDetail()
     ])
-    
+    this.loading = false
   },
   methods: {
     // 获取用户订单数据

@@ -4,9 +4,11 @@ import App from '@/App'
 import MpvueRouterPatch from 'mpvue-router-patch'
 import inject from '@/utils/inject'
 import filters from '@/utils/filter'
+import mixins from '@/mixins'
 import '../static/css/weui.css'
 import './css/app.css'
 Vue.config.productionTip = false
+Vue.use(mixins)
 Vue.use(MpvueRouterPatch)
 Vue.use(inject)
 
