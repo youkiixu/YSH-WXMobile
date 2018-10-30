@@ -4,7 +4,7 @@
     <view class="input-box">
       <img class="icon" @click="getSeach" />
       <!-- @input="inputChange" @focus="inputFocus" @confirm="onKeywordConfirm" -->
-      <input name="input" class="keywrod"  v-model="keyword" confirm-type="search" @confirm="onKeywordConfirm"  placeholder="商品搜索" />
+      <input name="input" class="keywrod"  v-model.lazy="keyword" confirm-type="search" @confirm="onKeywordConfirm"  placeholder="商品搜索" />
       <!-- <img class="del" v-if="keyword" @click="clearKeyword" src="http://nos.netease.com/mailpub/hxm/yanxuan-wap/p/20150730/style/img/icon-normal/clearIpt-f71b83e3c2.png"/> -->
     </view>
     <!-- <view class="right" @click="closeSearch">取消</view> -->

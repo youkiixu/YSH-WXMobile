@@ -82,7 +82,7 @@
                         <div class="weui-cell weui-cell_switch" v-if="daifaInfo.IsDaiShouHuoKuan">
                             <div class="weui-cell__bd">代收货款金额</div>
                             <div class="weui-cell__ft">
-                                <input class="weui-input" v-model="daifaInfo.daiShouMoney" type="number" placeholder="请输入代收货款金额" />
+                                <input class="weui-input" v-model.lazy="daifaInfo.daiShouMoney" type="number" placeholder="请输入代收货款金额" />
                             </div>
                         </div>
                         <!-- 快递公司	 -->
@@ -104,7 +104,7 @@
                         <text class="name">买家留言</text>
                     </view>
                     <view class="r message">
-                        <input class="txt" v-model="checkOutOther.orderRemarks" placeholder="点击给商家留言"/>
+                        <input class="txt" v-model.lazy="checkOutOther.orderRemarks" placeholder="点击给商家留言"/>
                     </view>
                 </view>
 
@@ -193,8 +193,8 @@ export default {
             ExpressWeight: 0,
             ExpressFreightLog: 0
         },
-        expressCompany : [  '优速快递' ,  '运通快递'  , '顺丰快递'],
-        expressCompanyId: [    28 , 11 , 7],
+        expressCompany : [  '优速快递' ,  '运通快递'  , '顺丰快递' , '韵达快递'],
+        expressCompanyId: [    28 , 11 , 7 , 34],
         expressCompanyIndex: 0,
         remindInfo: {},
         calculateFreight: {},

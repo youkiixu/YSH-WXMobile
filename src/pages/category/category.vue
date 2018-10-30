@@ -59,7 +59,6 @@ export default {
   data () {
     return {
       navList: [],
-      goodsList: [],
       Id: 0,
       currentCategory: {},
       currentSortType: 'default',
@@ -79,6 +78,9 @@ export default {
       title: ''
     }
   }, 
+  onLoad () {
+    this.goodsList = []
+  },
   async mounted () {
     this.currentSortOrder = 'desc';
     Object.assign(this.$data, this.$options.data())

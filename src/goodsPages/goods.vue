@@ -79,7 +79,7 @@
             </view>
             <view class="b"  v-if="comment.Id">
               <view class="item">
-                <view class="info clear">
+                <view class="info clear"> 
                   <view class="user">
                       <img :src="defalutHead" />
                       <text>{{comment.UserName}}</text>
@@ -185,7 +185,7 @@
             <view class="name">数量</view>
             <view class="selnum">
             <view class="cut" @click="cutNumber">-</view>
-            <input v-model="number" class="number"  type="number" confirm-type="done"/>
+            <input v-model.lazy="number" class="number"  type="number" confirm-type="done"/>
             <view class="add" @click="addNumber">+</view>
             </view>
         </view>
@@ -334,7 +334,9 @@ export default {
   },
   onUnload() {
     this.loading = true
-    
+  },
+  onLoad () {
+    this.loading = true
   },
   methods: {
     ...mapMutations(['setProSearchParam']),
@@ -480,6 +482,7 @@ export default {
           star += '☆'
         }
         this.comment.star = star
+        this.comment.UserName = this.comment.UserName.substr(0, 7) + '****'
       }
     },
     // 获取印捷提点

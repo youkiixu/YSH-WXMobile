@@ -72,6 +72,9 @@ export default {
     //   this.typeId = parseInt(this.$route.query.typeId);
     //   this.valueId = parseInt(this.$route.query.valueId);
     // }
+    this.commentType = 1
+    this.pageNo = 0
+    this.comments = []
     await Promise.all([
       this.getCommentCount(),
       this.getCommentList()

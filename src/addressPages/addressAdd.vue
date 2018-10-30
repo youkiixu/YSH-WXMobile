@@ -3,16 +3,16 @@
   <view class="add-address" >
       <view class="add-form">
           <view class="form-item">
-              <input class="input"  placeholder="姓名" v-model="address.ShipTo" auto-focus/>
+              <input class="input"  placeholder="姓名" v-model.lazy="address.ShipTo" auto-focus/>
           </view>
           <view class="form-item">
-              <input class="input"  v-model="address.Phone" placeholder="手机号码"/>
+              <input class="input"  v-model.lazy="address.Phone" placeholder="手机号码"/>
           </view> 
           <view class="form-item">
               <input class="input" :value="address.RegionFullName" disabled="true" @click="chooseRegion" placeholder="省份、城市、区县"/>
           </view>
           <view class="form-item detailAddress">
-              <textarea class="detailAddress-input"  v-model="address.Address" placeholder="详细地址, 如街道、楼盘号等"/>
+              <textarea class="detailAddress-input"  v-model.lazy="address.Address" placeholder="详细地址, 如街道、楼盘号等"/>
           </view>
           <view class="form-default" v-if="address.Id">
             <div class="weui-cell weui-cell_switch">

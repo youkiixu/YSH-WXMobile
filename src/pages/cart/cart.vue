@@ -38,7 +38,7 @@
                   </view>
                   <view class="selnum" v-if="false">
                     <view class="cut" @click.stop="cutNumber" :data-item-index="index">-</view>
-                    <input v-model="item.Quantity" class="number" disabled="true" type="number" />
+                    <input v-model.lazy="item.Quantity" class="number" disabled="true" type="number" />
                     <view class="add" @click.stop="addNumber" :data-item-index="index">+</view>
                   </view>
                 </view>
