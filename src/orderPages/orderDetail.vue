@@ -8,7 +8,7 @@
         </view>
         <view class="address-info">
             <view class="address-item">收货人：<text class="t ShipTo">{{orderInfo.ShipTo}} {{orderInfo.CellPhone}}</text></view>
-            <view class="address-item">收货地址：<text class="t">{{orderInfo.RegionFullName + orderInfo.Address}}</text></view>
+            <view class="address-item clear"><view class="address-item-l">收货地址：</view><view class="address-item-r"><text class="t">{{orderInfo.RegionFullName + orderInfo.Address}}</text></view></view>
             <view class="address-item">配送方式：<text class="t">{{orderInfo.RemindtypeStr}}</text></view>
         </view>
 
@@ -294,9 +294,21 @@ page{
 }
 .address-info .address-item .t{
     color: #282828;
+    padding-left: 6rpx;
+}
+.address-info .address-item .address-item-l{
+    width: 19%;
+    float: left;
+}
+.address-info .address-item .address-item-r{
+    width: 78%;
+    float: left;
+}
+.address-info .address-item .address-item-r .t{
+    padding-left: 0;
 }
 .address-info .address-item .ShipTo{
-    padding-left: 26rpx;
+    padding-left: 34rpx;
 }
 .goods-info{
     background-color: #fff;
