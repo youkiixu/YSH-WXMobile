@@ -151,9 +151,8 @@ export default {
 
 <style scoped>
 .comments{
-    width: 100%;
+    width: 750rpx;
     height: auto;
-    padding-left:30rpx;
     background: #fff;
     margin: 20rpx 0;
 }
@@ -173,19 +172,17 @@ export default {
 .comments .h .item{
     display: inline-block;
     height: 82rpx;
-    width: 50%;
-    padding: 0 15rpx;
+    flex: 1;
     text-align: center;
 }
 
 .comments .h .item .txt{
     display: inline-block;
     height: 82rpx;
-    padding: 0 10rpx;
     line-height: 82rpx;
     color: #333;
     font-size: 30rpx;
-    width: 170rpx;
+    width: 100%;
 }
 
 .comments .h .item.active .txt{
@@ -194,18 +191,20 @@ export default {
 }
 
 .comments .b{
-    margin-top: 85rpx;
+    margin-top: 90rpx;
     height: auto;
-    width: 720rpx;
+    width: 750rpx;
+    padding: 0 20rpx;
+    box-sizing: border-box;
 }
 
 .comments .b.no-h{
     margin-top: 0;
 }
 
-.comments .item{
+.comments .b .item{
     height: auto;
-    width: 720rpx;
+    width: 710rpx;
     overflow: hidden;
     border-bottom: 1px solid #d9d9d9;
     padding-bottom: 10rpx;
@@ -254,15 +253,14 @@ export default {
 }
 
 .comments .comment{
-    width: 720rpx;
-    padding-right: 30rpx;
+    width: 710rpx;
     line-height: 45.8rpx;
     font-size: 29rpx;
     margin-bottom: 16rpx;
 }
 
 .comments .imgs{
-    width: 720rpx;
+    width: 710rpx;
     /* height: 150rpx; */
     margin-bottom: 25rpx;
 }
@@ -274,7 +272,7 @@ export default {
 }
 
 .comments .spec{
-    width: 720rpx;
+    width: 710rpx;
     height: 25rpx;
     font-size: 24rpx;
     color: #999;

@@ -98,6 +98,7 @@ module.exports = [
     path: 'pages/ucenter/collect',
     name: 'collect',
     config: {
+      enablePullDownRefresh: true,
       navigationBarTitleText: '我的收藏'
     }
   },

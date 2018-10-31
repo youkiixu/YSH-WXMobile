@@ -1266,9 +1266,10 @@ page{
 .proDetail{
   margin-top: 30rpx;
   background-color: white;
-  width: 100%;
-  padding: 0 0rpx 100rpx 0rpx;
+  width: 750rpx;
+  padding: 0 20rpx 120rpx 20rpx;
   box-sizing: border-box;
+  overflow: hidden;
 }
 .proDetail .title{
   height: 75rpx;
@@ -1276,6 +1277,12 @@ page{
   text-align: center;
   font-size: 28rpx;
   color: #555555;
+}
+.proDetail .content image{
+  max-width: 710rpx !important;
+}
+.proDetail .content img{
+  max-width: 710rpx !important;
 }
 .goods-attr {
   width: 750rpx;
