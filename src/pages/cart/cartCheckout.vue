@@ -209,7 +209,8 @@ export default {
     },      
   async mounted () {
     const data = this.cartCheckOutInfo
-    this.goodList = []
+    // 加了全局mixins还原旧数据，废除以下代码
+    // this.goodList = []
     this.set_address(data.Address)
     var _this = this;
     // 遍历购物车信息，加入默认的参数
@@ -241,10 +242,6 @@ export default {
     ...mapMutations(['set_address']),
     // 首次进来
     async init(index) {
-        await Promise.all([
-            // 获取印捷代发快递费用
-            // this.getCalculateFreight(index),
-        ])
         // 获取默认的配送方式
         this.selectWuliu(index , true)
     },
@@ -261,6 +258,7 @@ export default {
                 shuliang: this.goodList[index].IsCustom ? this.goodList[index].ShuLiang : this.goodList[index].Count,//产品数量
                 Price: this.goodList[index].totalAmount//商品价格
             }
+            console.log(item)
             this.$wx.showLoading('正在加载...')
             const res = await api.getCalculateFreight(par)
             this.goodList[index].ExpressFreight = res.data.DiscountFreight

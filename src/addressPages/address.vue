@@ -49,7 +49,7 @@ export default {
       'addressList'
     ])
   },
-  async onShow () {
+  async mounted () {
     await Promise.all([
       this.getAddressList()
     ])

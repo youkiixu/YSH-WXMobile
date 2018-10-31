@@ -107,9 +107,10 @@ export default {
   },
    // 每次打开触发，更新数据
   async mounted () {
-    this.iseditGoodsCollect = false
-    this.collectList = []
-    this.loading = true
+    // 加了全局mixins还原旧数据，废除以下代码
+    // this.iseditGoodsCollect = false
+    // this.collectList = []
+    // this.loading = true
     await Promise.all([
       this.GetFavoriteProductList()
     ])

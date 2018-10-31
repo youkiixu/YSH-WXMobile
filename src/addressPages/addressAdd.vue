@@ -114,20 +114,21 @@ export default {
       loading: true
     }
   },
-  async mounted () {
+  // async mounted () {
     
     
-  },
+  // },
   // 每次打开触发，更新数据
-  onShow () {
-    this.address = {}
-    this.regionProvince = {name: '省'}
-    this.regionCity = {name: '城市'}
-    this.regionArea = {name: '区'}
-    this.regionStreet = {name: '街道'}
-    this.selectRegionId = 0
-    this.regionType = 0 
-    this.openSelectRegion = false
+  mounted () {
+    // 加了全局mixins还原旧数据，废除以下代码
+    // this.address = {}
+    // this.regionProvince = {name: '省'}
+    // this.regionCity = {name: '城市'}
+    // this.regionArea = {name: '区'}
+    // this.regionStreet = {name: '街道'}
+    // this.selectRegionId = 0
+    // this.regionType = 0 
+    // this.openSelectRegion = false
     if(this.$route.query.address && this.$route.query.address != '{}') {
       this.address = JSON.parse(this.$route.query.address)
       console.log(this.address)

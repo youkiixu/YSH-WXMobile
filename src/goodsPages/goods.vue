@@ -342,32 +342,33 @@ export default {
     ...mapMutations(['setProSearchParam']),
     ...mapActions(['submitByProductId' , 'SubmitByProductId2' , 'getShoppingCartCount']),
     async refresh() {
-      // 请空已选的kiuId
-      this.comment = {}
-      this.skuId = ''
-      this.ListPriceInfo = {
-        sprice : 1,
-        paraArr: []
-      }
-      // 2018.10.13:清空前一次的sku信息，防止下一次进来还存留
-      this.selectSku = {
-        Color: 0,
-        Size: 0,
-        Version: 0,
-        Material: 0,
-        Fashion: 0,
-        Grams: 0,
-        Ensemble: 0
-      }
-      this.selectSkuStr = {
-        Color: '',
-        Size: '',
-        Version: '',
-        Material: '',
-        Fashion: '',
-        Grams: '',
-        Ensemble: ''
-      }
+      // // 加了全局mixins，废除以下代码
+      // // 请空已选的kiuId
+      // this.comment = {}
+      // this.skuId = ''
+      // this.ListPriceInfo = {
+      //   sprice : 1,
+      //   paraArr: []
+      // }
+      // // 2018.10.13:清空前一次的sku信息，防止下一次进来还存留
+      // this.selectSku = {
+      //   Color: 0,
+      //   Size: 0,
+      //   Version: 0,
+      //   Material: 0,
+      //   Fashion: 0,
+      //   Grams: 0,
+      //   Ensemble: 0
+      // }
+      // this.selectSkuStr = {
+      //   Color: '',
+      //   Size: '',
+      //   Version: '',
+      //   Material: '',
+      //   Fashion: '',
+      //   Grams: '',
+      //   Ensemble: ''
+      // }
       // this.$wx.showLoading()
       await Promise.all([
         this.getGoodsSkuInfo(),
@@ -909,10 +910,6 @@ export default {
       path: goodsUrl,
       imageUrl: this.baseUrl + this.gallery[0]
     }
-  },
-    // 每次打开触发，更新数据
-  onShow () {
-    this.openAttr = false
   }
 }
 </script>

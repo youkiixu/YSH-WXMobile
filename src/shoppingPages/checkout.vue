@@ -220,10 +220,10 @@ export default {
         }
     },  
   async mounted () {
-    // 获取印捷提点
+    // 加了全局mixins还原旧数据，废除以下代码
+    // this.ParaStr = ''
+    // this.refresh()
     //将默认的地址存到全局那里
-    this.ParaStr = ''
-    this.refresh()
     this.set_address(this.checkOutInfo.Address)
     this.productImg = this.$wx.getImagePath(this.checkOutInfo.products.imagePath)
     await Promise.all([
@@ -288,6 +288,7 @@ export default {
             shuliang: this.checkOutInfo.products.IsCustom ? this.checkOutInfo.ShuLiang : this.checkOutInfo.Count,
             Price: this.checkOutInfo.totalAmount
         }
+        console.log(this.checkOutOther)
         this.$wx.showLoading('正在加载...')
         const res = await api.getCalculateFreight(par)
         if(res.success) {

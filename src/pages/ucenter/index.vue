@@ -95,9 +95,6 @@ export default {
       canIUse: wx.canIUse('button.open-type.getUserInfo')
     }
   },
-  onShow () {
-
-  },
   computed: {
     ...mapState([
       'userInfo'

@@ -39,10 +39,11 @@ export default {
   computed: {
     ...mapState(['userInfo'])
   },
-  async onShow () {
-    this.orderInfo = {}
-    this.expressInfo = {},
-    this.expressTraces = []
+  async mounted () {
+    // 加了全局mixins还原旧数据，废除以下代码
+    // this.orderInfo = {}
+    // this.expressInfo = {},
+    // this.expressTraces = []
     if (this.$route.query.data) {
       this.orderInfo = JSON.parse(this.$route.query.data)
     }

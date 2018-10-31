@@ -78,12 +78,12 @@ export default {
       title: ''
     }
   }, 
-  onLoad () {
-    this.goodsList = []
-  },
+  // onLoad () {
+  //   this.goodsList = []
+  // },
   async mounted () {
-    this.currentSortOrder = 'desc';
-    Object.assign(this.$data, this.$options.data())
+    // 加了全局mixins还原旧数据，废除以下代码
+    // this.currentSortOrder = 'desc';
     if (this.$route.query.cid) {
       if(this.$route.query.categoryChild) {
         this.navList = JSON.parse(this.$route.query.categoryChild)

@@ -92,13 +92,13 @@ export default {
       loading: true
     }
   },
-  // 每次打开触发，更新数据
   async mounted () {
-    this.cartGoods = []
-    this.pageNo = 1
-    this.checkedAllStatus = false
-    this.isEditCart = false
-    this.loading = true
+    // 加了全局mixins还原旧数据，废除以下代码
+    // this.cartGoods = []
+    // this.pageNo = 1
+    // this.checkedAllStatus = false
+    // this.isEditCart = false
+    // this.loading = true
     await Promise.all([
       this.getCartList()
     ])

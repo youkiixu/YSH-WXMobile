@@ -47,9 +47,10 @@ export default {
     }
   },
   mounted () {
-    this.currentIndex = 0
-    this.navTop = 0
-    this.listHeight = []
+    // 加了全局mixins还原旧数据，废除以下代码
+    // this.currentIndex = 0
+    // this.navTop = 0
+    // this.listHeight = []
     this.getQitem()
   },
   computed: {

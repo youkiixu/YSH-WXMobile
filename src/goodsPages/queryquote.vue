@@ -27,7 +27,8 @@ export default {
                 _this.$router.back()
             })
         } 
-        this.quoteUrl = ''
+        // 加了全局mixins还原旧数据，废除以下代码
+        // this.quoteUrl = ''
         if (this.$route.query.pid) {
             this.quoteUrl = 'https://www.kiy.cn//m-mobile/autobaojia/index?pid=' + this.$route.query.pid + '&&fid=' + this.$route.query.fid + '&&param=' + this.$route.query.data
             this.qitemCode = this.$route.query.pid

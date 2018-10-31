@@ -35,7 +35,7 @@ export default {
       actualPrice: ''
     }
   },
-  async onShow () {
+  async mounted () {
     if (this.$route.query.id && this.$route.query.productInfo) {
       this.orderId = this.$route.query.id;
       this.actualPrice = this.$route.query.productInfo;
