@@ -5,7 +5,8 @@
     "backgroundTextStyle": "dark",
     "navigationBarBackgroundColor": "#fff",
     "navigationBarTitleText": "印生活",
-    "navigationBarTextStyle": "black"
+    "navigationBarTextStyle": "black",
+    "enablePullDownRefresh" : false
   },
   "tabBar": {
     "backgroundColor": "#fafafa",

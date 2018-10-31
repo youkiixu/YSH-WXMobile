@@ -26,7 +26,6 @@ module.exports = [
     path: 'pages/ucenter/index',
     name: 'ucenter',
     config: {
-      enablePullDownRefresh: true,
       navigationBarTitleText: '个人中心'
     }
   },
@@ -44,6 +43,7 @@ module.exports = [
     subPackage: true,
     name: 'comment',
     config: {
+      enablePullDownRefresh: true,
       navigationBarTitleText: '商品评论'
     }
   },
@@ -59,6 +59,7 @@ module.exports = [
     path: 'pages/search/search',
     name: 'search',
     config: {
+      enablePullDownRefresh: true,
       navigationBarTitleText: '搜索'
     }
   },
@@ -75,6 +76,7 @@ module.exports = [
     subPackage: true,
     name: 'order',
     config: {
+      enablePullDownRefresh: true,
       navigationBarTitleText: '我的订单'
     }
   },
@@ -107,6 +109,7 @@ module.exports = [
     subPackage: true,
     name: 'address',
     config: {
+      enablePullDownRefresh: true,
       navigationBarTitleText: '地址管理'
     }
   },
@@ -145,6 +148,7 @@ module.exports = [
     subPackage: true,
     name: 'address',
     config: {
+      enablePullDownRefresh: true,
       navigationBarTitleText: '地址管理'
     }
   },
@@ -185,6 +189,7 @@ module.exports = [
     subPackage: true,
     name: 'quoteList',
     config: {
+      enablePullDownRefresh: true,
       navigationBarTitleText: '厂家报价'
     }
   }

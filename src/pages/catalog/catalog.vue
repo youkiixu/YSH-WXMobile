@@ -69,7 +69,7 @@ export default {
   methods: {
     ...mapActions([
       // 'getIndexData',
-      'getCategoryList'
+      'getCategoryList' 
     ]),
     // 获取SASS分类星系
     async getSassCateGory() {
@@ -84,6 +84,7 @@ export default {
     switchCateLog(index) {
 
         this.currentCategory = this.navList[index]
+        console.log(this.currentCategory)
         this.getCategoryList(this.currentCategory.SubCategories)
         this.loading = false
       }

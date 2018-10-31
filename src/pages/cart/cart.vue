@@ -217,6 +217,7 @@ export default {
     addNumber (event) {
       let itemIndex = event.target.dataset.itemIndex;
       let cartItem = this.cartGoods[itemIndex];
+      console.log(cartItem)
       const stock = cartItem.Stock
       let number = cartItem.Quantity + 1;
       if(number <= stock) {
@@ -441,6 +442,7 @@ page{
   z-index: 1000;
   padding: 0 20rpx;
   box-sizing: border-box;
+  box-shadow: 0 2rpx 10rpx rgba(0,0,0,0.2);
 }
 .cart-address .posi-img{
   width: 30rpx;
@@ -620,7 +622,7 @@ page{
 }
 
 .cart-view .item.edit .attr{
-    text-align: right;
+    text-align: left;
     background: url(http://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/arrow-right1-e9828c5b35.png) right center no-repeat;
     padding-right: 25rpx;
     background-size: 12rpx 20rpx;
@@ -743,7 +745,7 @@ page{
     background: #fff;
     display: flex;
     border-bottom: 3rpx solid #e8e8e8;
-    box-shadow: 1px 1px 3px 3px #e8e8e8;
+    box-shadow: 2rpx 0rpx 10rpx rgba(0,0,0,0.2);
 }
 
 .cart-bottom .checkbox{

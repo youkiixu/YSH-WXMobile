@@ -285,6 +285,7 @@ export default {
     top: 91rpx;
     z-index: 1000;
     background: #fff;
+    box-shadow: 0 2rpx 10rpx rgba(0,0,0,.2);
 }
 
 .sort-box{
@@ -447,7 +448,7 @@ export default {
   text-align: center;
   line-height: 120rpx;
   border-radius: 50%;
-  box-shadow: 0px 0px 2px 2px #f1f1f1;
+  box-shadow: 0px 0px 10rpx rgba(0,0,0,0.2);
   position: fixed;
   bottom: 55rpx;
   right: 20rpx;
