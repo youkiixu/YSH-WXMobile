@@ -60,7 +60,7 @@
 					"id": 4,
 					"name": "标准品下单",
 					"pathName": "goodsPages/goods",
-					"query": "data={\"ProductId\":146,\"ProductName\":\"不干胶材料\"}&&skuId=146_0_70_0_566_0_0_0"
+					"query": "data={\"ProductId\":4589,\"ProductName\":\"特价X展架 特价展架 促销展架 画面展示支架\"}&&skuId=4589_0_70_80_0_0_0_1322"
 				},
 				{
 					"id": -1,

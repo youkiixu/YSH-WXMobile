@@ -45,18 +45,14 @@
           </view>
           <!-- 已选参数 -->
           <view class="section-nav section-attr" @click="switchAttrPop">
-              <view class="t">
+            <view class="t">
               <!-- 非标品参数 -->
-              <view  v-if="detailInfo.IsCustom">
-                <text class="td"  >
-                  <text v-for="(item , index) in ListPriceInfo.paraArr" :key="index">{{item.paraStr}}</text>
-                </text>
+              <view class="td-content" v-if="detailInfo.IsCustom">
+                <text class="td"  ><text v-for="(item , index) in ListPriceInfo.paraArr" :key="index">{{item.paraStr}}</text></text>
               </view>
               <!-- 标准品参数 -->
-              <view v-else>
-                <text class="td">
-                  规格:{{selectSkuStr.Color}} {{selectSkuStr.Size}} {{selectSkuStr.Version}} {{selectSkuStr.Material}} {{selectSkuStr.Fashion}} {{selectSkuStr.Grams}} {{selectSkuStr.Ensemble}}
-                </text>
+              <view class="td-content" v-if="!detailInfo.IsCustom">
+                <text class="td">规格:{{selectSkuStr.Color}} {{selectSkuStr.Size}} {{selectSkuStr.Version}} {{selectSkuStr.Material}} {{selectSkuStr.Fashion}} {{selectSkuStr.Grams}} {{selectSkuStr.Ensemble}}</text>
               </view>
             </view>
             <img class="i" src="/static/images/address_right.png" background-size="cover"/>
@@ -184,33 +180,33 @@
         <view class="number-item" v-if="!detailInfo.IsCustom">
             <view class="name">数量</view>
             <view class="selnum">
-            <view class="cut" @click="cutNumber">-</view>
+            <view class="cut" @click="cutNumber" hover-class>-</view>
             <input v-model.lazy="number" class="number"  type="number" confirm-type="done"/>
-            <view class="add" @click="addNumber">+</view>
+            <view class="add" @click="addNumber" hover-class>+</view>
             </view>
         </view>
       </scroll-view>
       <view class="car-btn clear" v-if="!SubmitByProductType">
-          <view class="car-add" @click="addToCart">加入购物车</view>
-          <view class="car-buy" @click="SubmitByProduct">立即购买</view>
+          <view class="car-add" @click="addToCart" hover-class>加入购物车</view>
+          <view class="car-buy" @click="SubmitByProduct" hover-class>立即购买</view>
       </view>
       <view class="car-btn clear" v-if="SubmitByProductType">
-          <view class="car-buy" style="width:100%;" @click="SubmitByProduct">立即购买</view>
+          <view class="car-buy" style="width:100%;" @click="SubmitByProduct" hover-class>立即购买</view>
       </view>
     </view>
     <!-- tabbar -->
     <view class="bottom-btn" v-if="!loading">
-      <view class="l l-collect" @click="callPhone">
+      <view class="l l-collect" @click="callPhone" hover-class>
           <img class="icon" src="/static/images/share.png"/>
       </view>
-      <view class="l l-cart" @click="openCartPage">
+      <view class="l l-cart" @click="openCartPage" hover-class>
           <view class="box">
           <text class="cart-count">{{shoppingCartCount}}</text>
           <img  class="icon" src="/static/images/shopping-car.png"/>
           </view>
       </view>
-      <view class="c" @click="addToCart">加入购物车</view>
-      <view class="r" @click="SubmitByProduct" >立即购买</view>
+      <view class="c" @click="addToCart" hover-class>加入购物车</view>
+      <view class="r" @click="SubmitByProduct" hover-class>立即购买</view>
     </view>
     <loadingComponent v-if="loading"></loadingComponent>
 </view>
@@ -274,6 +270,7 @@ export default {
         Ensemble: ''
       },
       skuId: '',
+      skuPrice: 0,
       strYjtype: '请选择配送方式',
       Yjtype: 0,
       YjUse: 0,
@@ -527,11 +524,21 @@ export default {
     setSkuId() {
       var skuStr = this.id + ''
       const selectSku = this.selectSku
+      console.log(selectSku)
       for(var key in selectSku) {
         skuStr += `_${selectSku[key]}`
       }
-      this.skuId = skuStr
-      this.getSkuPrice()
+      // this.skuId = skuStr
+      // this.getSkuPrice()
+      const skuInfo = this.skuInfo
+      // 1031性能调优
+      let skuItem = {}
+      skuInfo.map(item => {
+        if(item.SkuId == skuStr) {
+          skuItem = item
+        }
+      })
+      this.setSkuInfo(skuItem)
     },
     // 获取sku的价格
     getSkuPrice() {
@@ -562,13 +569,7 @@ export default {
           return 0; 
         })
       }
-      this.skuId = skuInfo[0].SkuId
-      this.Stock = skuInfo[0].Stock
-      // 默认数量和最低销售数量
-      this.saleNumber = skuInfo[0].SaleNumber
-      this.number = skuInfo[0].SaleNumber
-      this.detailInfo.Price = skuInfo[0].Price * this.number
-      this.getDefalutSelect()
+      this.setSkuInfo(skuInfo[0])
     },
     // 根据路由信息进来
     getRouteSku () {
@@ -579,11 +580,17 @@ export default {
           skuItem = item
         }
       })
+      this.setSkuInfo(skuItem)
+    },
+    // 设置skuid , SaleNumber , number , detailInfo.Price
+    setSkuInfo (skuItem) {
       this.skuId = skuItem.SkuId
       this.Stock = skuItem.Stock
       // 默认数量和最低销售数量
-      this.number = skuItem.SaleNumber
-      this.saleNumber = skuItem.SaleNumber
+      this.number = skuItem.SaleNumber != 0 ? skuItem.SaleNumber : 1
+      this.saleNumber = skuItem.SaleNumber != 0 ? skuItem.SaleNumber : 1
+      // 1031性能调优
+      this.skuPrice = skuItem.Price 
       this.detailInfo.Price = skuItem.Price * this.number
       this.getDefalutSelect()
     },
@@ -593,20 +600,25 @@ export default {
       const skuId = this.skuId
       // 将数量转为纯数字
       this.number = Number(this.number)
-      //循环skuinfo，获取选中sku的库存和最低销售量
-      skuInfo.map(item => {
-        if(item.SkuId === skuId) {
-            this.Stock = item.Stock
-            if(this.saleNumber != item.SaleNumber) {
-              this.saleNumber = item.SaleNumber
-              this.number = this.saleNumber
-            }
-            if(this.number < this.saleNumber) {
-              this.number = this.saleNumber
-            }
-            this.detailInfo.Price = util.accMul(item.Price , this.number)
-        }
-      })
+      // 1031性能优化
+      if(this.number < this.saleNumber) {
+        this.number = this.saleNumber
+      }
+      this.detailInfo.Price = util.accMul(this.skuPrice , this.number)
+      // 1031性能优化
+      // skuInfo.map(item => {
+      //   if(item.SkuId === skuId) {
+      //       this.Stock = item.Stock
+      //       if(this.saleNumber != item.SaleNumber) {
+      //         this.saleNumber = item.SaleNumber
+      //         this.number = this.saleNumber
+      //       }
+      //       if(this.number < this.saleNumber) {
+      //         this.number = this.saleNumber
+      //       }
+      //       this.detailInfo.Price = util.accMul(item.Price , this.number)
+      //   }
+      // })
 
     },
     // 获取默认选项
@@ -922,7 +934,7 @@ page{
 .src{
   height: 100vh;
 }
-.outside{
+.outside{ 
   /* margin-top: 65rpx; */
 }
 .scroll-lock{
@@ -1090,6 +1102,7 @@ page{
   width: 600rpx;
   color: #282828;
   /* padding-left: 25rpx; */
+  height: 100rpx;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -1163,7 +1176,8 @@ page{
 .address-nav .t .td{
   color: #282828;
   padding-left: 25rpx;
-  box-sizing: border-box;
+  box-sizing: border-box
+  
 }
 
 .address-nav .i {
@@ -1797,5 +1811,8 @@ page{
 .original-price {
   text-decoration: line-through;
     color: #999;
+}
+.td-content {
+  height: 100rpx;
 }
 </style>

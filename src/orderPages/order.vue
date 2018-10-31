@@ -194,6 +194,7 @@ page{
     width: 750rpx;
     background: #fff;
     z-index: 999;
+    box-shadow: 0 2rpx 10rpx rgba(0,0,0,0.2);
 }
 .order-head .select {
     color: #009e96;

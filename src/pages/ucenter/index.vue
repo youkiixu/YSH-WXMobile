@@ -169,6 +169,10 @@ export default {
     },
     noEvent () {
       this.$wx.showErrorToast('暂未开放!')
+    },
+    onPullDownRefresh: function() {
+      // this.refresh()
+      wx.stopPullDownRefresh()
     }
 
   }
