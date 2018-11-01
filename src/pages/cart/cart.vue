@@ -537,7 +537,7 @@ export default {
     //catchtouchmove阻止弹窗后滚动穿透
      stopPageScroll(){
     return
-    }
+    },
 
   },
   watch: {
