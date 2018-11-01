@@ -1,5 +1,6 @@
 <template >
-<view class="container">
+<view>
+  <view class="container">
   <view class="no-cart" v-if="cartGoods.length <= 0 && !loading">
     <view class="c">
       <img src="http://nos.netease.com/mailpub/hxm/yanxuan-wap/p/20150730/style/img/icon-normal/noCart-a8fe3f12e5.png" />
@@ -57,35 +58,36 @@
   </view>
 
       <!-- 模态浮层 -->
-    <view class="attr-pop-box" v-if="openAttr"  @click="closeAttr">
-
+    <view class="attr-pop-box" v-if="openAttr"  @click="closeAttr" catchtouchmove="stopPageScroll">
+      <view class="attr-pop"  v-if="openAttr">
+        <selectComponent
+          v-if="openAttr"
+          :baseUrl="baseUrl"
+          :detailInfo="edit.detailInfo"
+          :ListPriceInfo="edit.ListPriceInfo"
+          :selectSkuStr="edit.selectSkuStr"
+          :selectSku="edit.selectSku"
+          :strYjtype="edit.strYjtype"
+          :SubmitByProductType="edit.SubmitByProductType"
+          :number="edit.number"
+          :Stock="edit.Stock"
+          btnText="确认"
+          @closeAttr="closeAttr"
+          @toBaojia="toBaojia"
+          @clickSkuValue="clickSkuValue"
+          @addNumber="addNumber"
+          @cutNumber="cutNumber"
+          @addToCart="addToCart"
+          @SubmitByProduct="upDateCart"
+          @numberChange="numberChange"
+        >
+        </selectComponent>
     </view>
-    <view class="attr-pop"  v-if="openAttr">
-      <selectComponent
-        v-if="openAttr"
-        :baseUrl="baseUrl"
-        :detailInfo="edit.detailInfo"
-        :ListPriceInfo="edit.ListPriceInfo"
-        :selectSkuStr="edit.selectSkuStr"
-        :selectSku="edit.selectSku"
-        :strYjtype="edit.strYjtype"
-        :SubmitByProductType="edit.SubmitByProductType"
-        :number="edit.number"
-        :Stock="edit.Stock"
-        btnText="确认"
-        @closeAttr="closeAttr"
-        @toBaojia="toBaojia"
-        @clickSkuValue="clickSkuValue"
-        @addNumber="addNumber"
-        @cutNumber="cutNumber"
-        @addToCart="addToCart"
-        @SubmitByProduct="upDateCart"
-        @numberChange="numberChange"
-      >
-      </selectComponent>
     </view>
-
+    
 </view>
+</view>
+
 </template>
 
 <script>
@@ -170,10 +172,10 @@ export default {
     }
   },
   async mounted () {
-    // await Promise.all([
-    //   this.getCartList()
-    // ])
-    // this.loading = false
+    await Promise.all([
+      this.getCartList()
+    ])
+    this.loading = false
     
   },
   computed: {
@@ -531,6 +533,10 @@ export default {
         check = true
       }
       return check
+    },
+    //catchtouchmove阻止弹窗后滚动穿透
+     stopPageScroll(){
+    return
     }
 
   },
