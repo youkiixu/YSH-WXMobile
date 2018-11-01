@@ -254,9 +254,10 @@ export default {
                 fahuoCity: this.goodList[index].ShopAddress,//商店地址
                 recieveCity: this.address.RegionFullName,//地址全称
                 shuliang: this.goodList[index].IsCustom ? this.goodList[index].ShuLiang : this.goodList[index].Count,//产品数量
-                Price: this.goodList[index].totalAmount//商品价格
+                Price: this.goodList[index].totalAmount,//商品价格
+                CategoryPath: this.goodList[index].CategoryPath,//分类路径
+                skuId: this.goodList[index].Id
             }
-            console.log(item)
             this.$wx.showLoading('正在加载...')
             const res = await api.getCalculateFreight(par)
             this.goodList[index].ExpressFreight = res.data.DiscountFreight

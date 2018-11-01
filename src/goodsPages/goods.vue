@@ -103,31 +103,32 @@
       </scroll-view>
     </view>
     <!-- 模态浮层 -->
-    <view class="attr-pop-box" :hidden="!openAttr"  @click="closeAttr">
-    </view>
-    <view class="attr-pop"  :hidden="!openAttr" catchtouchmove="stopPageScroll">
-      <selectComponent
-        :baseUrl="baseUrl"
-        :detailInfo="detailInfo"
-        :ListPriceInfo="ListPriceInfo"
-        :selectSkuStr="selectSkuStr"
-        :selectSku="selectSku"
-        :strYjtype="strYjtype"
-        :SubmitByProductType="SubmitByProductType"
-        :number="number"
-        :Stock="Stock"
-        btnText="立即购买"
-        @closeAttr="closeAttr"
-        @toBaojia="toBaojia"
-        @clickSkuValue="clickSkuValue"
-        @addNumber="addNumber"
-        @cutNumber="cutNumber"
-        @addToCart="addToCart"
-        @SubmitByProduct="SubmitByProduct"
-        @selectWuliu="selectWuliu"
-        @numberChange="numberChange"
-      >
-      </selectComponent>
+    <view class="attr-pop-box" v-if="openAttr"  @click="closeAttr" catchtouchmove="stopPageScroll">
+        <view class="attr-pop"  v-if="openAttr" @click.stop="closeAttr('no')">
+          <selectComponent
+            v-if="openAttr"
+            :baseUrl="baseUrl"
+            :detailInfo="detailInfo"
+            :ListPriceInfo="ListPriceInfo"
+            :selectSkuStr="selectSkuStr"
+            :selectSku="selectSku"
+            :strYjtype="strYjtype"
+            :SubmitByProductType="SubmitByProductType"
+            :number="number"
+            :Stock="Stock"
+            btnText="立即购买"
+            @closeAttr="closeAttr"
+            @toBaojia="toBaojia"
+            @clickSkuValue="clickSkuValue"
+            @addNumber="addNumber"
+            @cutNumber="cutNumber"
+            @addToCart="addToCart"
+            @SubmitByProduct="SubmitByProduct"
+            @selectWuliu="selectWuliu"
+            @numberChange="numberChange"
+          >
+          </selectComponent>
+       </view>
     </view>
     <!-- tabbar -->
     <view class="bottom-btn" v-if="!loading">
@@ -565,8 +566,10 @@ export default {
       this.$wx.toBaoJia(par , this)
     },
     // 关闭规格弹窗
-    closeAttr () {
-      this.openAttr = false;
+    closeAttr (e) {
+      if(e != 'no') {
+        this.openAttr = false;
+      }
     },
     // 购物车的五角星，添加或是取消收藏
     async addCannelCollect () {
@@ -1189,7 +1192,7 @@ page{
   margin-top: 30rpx;
   background-color: white;
   width: 750rpx;
-  padding: 0 20rpx 120rpx 20rpx;
+  padding: 0 0 120rpx 0;
   box-sizing: border-box;
   overflow: hidden;
 }
@@ -1199,12 +1202,6 @@ page{
   text-align: center;
   font-size: 28rpx;
   color: #555555;
-}
-.proDetail .content image{
-  max-width: 710rpx !important;
-}
-.proDetail .content img{
-  max-width: 710rpx !important;
 }
 .goods-attr {
   width: 750rpx;

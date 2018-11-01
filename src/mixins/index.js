@@ -39,7 +39,7 @@ MyPlugin.install = function (Vue) {
         // 退出页面，删除数据
         delete pageDatas[this.$pageId()]
         this.$needReloadPageData = true
-        console.log(pageDatas);
+        // console.log(pageDatas);
       }
     },
 
@@ -48,7 +48,7 @@ MyPlugin.install = function (Vue) {
         // 将要隐藏时，备份数据
         pageDatas[this.$pageId()] = this.stashPageData()
 
-        console.log(pageDatas);
+        // console.log(pageDatas);
 
       }
     },

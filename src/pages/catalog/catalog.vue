@@ -31,6 +31,7 @@
 
 <script>
 import api from '@/utils/api'
+import wx from 'wx'
 import { formatCatelog } from '@/utils/format'
 import { mapState, mapActions } from 'vuex'
 import searchBar from '@/components/indexSearchBar'

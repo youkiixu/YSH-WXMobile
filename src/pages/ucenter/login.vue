@@ -54,6 +54,7 @@
 <script>
 import api from '@/utils/api'
 import util from '@/utils/util'
+import wx from 'wx'
 import { mapActions } from 'vuex'
 export default {
     name: 'login',

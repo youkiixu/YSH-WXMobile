@@ -2,6 +2,7 @@
 import { mapActions } from 'vuex'
 import util from '@/utils/util'
 import api from '@/utils/api'
+import wx from 'wx'
 export default {
   mpType: 'app',
   async mounted () {

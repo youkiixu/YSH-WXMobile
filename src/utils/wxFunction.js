@@ -1,3 +1,5 @@
+import wx from 'wx'
+
 function showSuccessToast(msg) {
   wx.showToast({
     title: msg ? msg : '操作成功'
