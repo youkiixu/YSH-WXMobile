@@ -51,7 +51,7 @@
      
     <view class="cart-bottom" v-if="cartGoods.length != 0 && !loading">
       <view :class="checkedAllStatus ? 'checked checkbox' : 'checkbox'" @click="checkedAll">全选</view>
-      <view class="total">总金额：<text class="total-price" v-if="allPrice != undefined">{{'￥'+ allPrice}}</text></view>
+      <view class="total" ><text v-if="!isEditCart">总金额：</text><text class="total-price" v-if="allPrice != undefined && !isEditCart">{{'￥'+ allPrice}}</text></view>
       <view class="checkout" @click="checkoutOrder" v-if="!isEditCart">去结算</view>
       <view class="delete" @click="deleteCart" v-if="isEditCart">删除</view>
     </view>
@@ -1007,7 +1007,7 @@ page{
     text-align: center;
     line-height: 88rpx;
     font-size: 28rpx;
-    background: #009e96;
+    background: #b4282d;
     color: #fff;
 }
 .attr-pop-box {

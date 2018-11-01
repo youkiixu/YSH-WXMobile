@@ -103,31 +103,32 @@
       </scroll-view>
     </view>
     <!-- 模态浮层 -->
-    <view class="attr-pop-box" :hidden="!openAttr"  @click="closeAttr" catchtouchmove="stopPageScroll">
-        <view class="attr-pop"  :hidden="!openAttr" @click.stop="closeAttr('no')">
-          <selectComponent
-            :baseUrl="baseUrl"
-            :detailInfo="detailInfo"
-            :ListPriceInfo="ListPriceInfo"
-            :selectSkuStr="selectSkuStr"
-            :selectSku="selectSku"
-            :strYjtype="strYjtype"
-            :SubmitByProductType="SubmitByProductType"
-            :number="number"
-            :Stock="Stock"
-            btnText="立即购买"
-            @closeAttr="closeAttr"
-            @toBaojia="toBaojia"
-            @clickSkuValue="clickSkuValue"
-            @addNumber="addNumber"
-            @cutNumber="cutNumber"
-            @addToCart="addToCart"
-            @SubmitByProduct="SubmitByProduct"
-            @selectWuliu="selectWuliu"
-            @numberChange="numberChange"
-          >
-          </selectComponent>
-       </view>
+    <view class="attr-pop-box" v-if="openAttr"  @click="closeAttr" >
+
+    </view>
+    <view class="attr-pop"  v-if="openAttr" @click.stop="closeAttr('no')">
+      <selectComponent
+        :baseUrl="baseUrl"
+        :detailInfo="detailInfo"
+        :ListPriceInfo="ListPriceInfo"
+        :selectSkuStr="selectSkuStr"
+        :selectSku="selectSku"
+        :strYjtype="strYjtype"
+        :SubmitByProductType="SubmitByProductType"
+        :number="number"
+        :Stock="Stock"
+        btnText="立即购买"
+        @closeAttr="closeAttr"
+        @toBaojia="toBaojia"
+        @clickSkuValue="clickSkuValue"
+        @addNumber="addNumber"
+        @cutNumber="cutNumber"
+        @addToCart="addToCart"
+        @SubmitByProduct="SubmitByProduct"
+        @selectWuliu="selectWuliu"
+        @numberChange="numberChange"
+      >
+      </selectComponent>
     </view>
     
     <!-- tabbar -->
@@ -566,7 +567,7 @@ export default {
       this.$wx.toBaoJia(par , this)
     },
     // 关闭规格弹窗
-    closeAttr () {
+    closeAttr (e) {
       if(e != 'no') {
         this.openAttr = false;
       }
@@ -1185,7 +1186,7 @@ page{
   margin-top: 30rpx;
   background-color: white;
   width: 750rpx;
-  padding: 0 20rpx 120rpx 20rpx;
+  padding: 0 0 120rpx 0;
   box-sizing: border-box;
   overflow: hidden;
 }
@@ -1195,12 +1196,6 @@ page{
   text-align: center;
   font-size: 28rpx;
   color: #555555;
-}
-.proDetail .content image{
-  max-width: 710rpx !important;
-}
-.proDetail .content img{
-  max-width: 710rpx !important;
 }
 .goods-attr {
   width: 750rpx;
