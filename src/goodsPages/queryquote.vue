@@ -4,6 +4,7 @@
 
 <script>
 import {mapActions} from 'vuex'
+import wx from 'wx'
 export default {
     data () {
         return {

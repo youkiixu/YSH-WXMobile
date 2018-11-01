@@ -223,9 +223,6 @@ export default {
     //将默认的地址存到全局那里
     this.set_address(this.checkOutInfo.Address)
     this.productImg = this.$wx.getImagePath(this.checkOutInfo.products.imagePath)
-    await Promise.all([
-        this.getCalculateFreight()
-    ])
     this.selectWuliu()
 
     try {
@@ -283,9 +280,10 @@ export default {
             fahuoCity: this.checkOutInfo.ShopAddress,
             recieveCity: this.address.RegionFullName,
             shuliang: this.checkOutInfo.products.IsCustom ? this.checkOutInfo.ShuLiang : this.checkOutInfo.Count,
-            Price: this.checkOutInfo.totalAmount
+            Price: this.checkOutInfo.totalAmount,
+            skuId: this.checkOutInfo.products.Id,
+            CategoryPath: this.checkOutInfo.products.CategoryPath
         }
-        console.log(this.checkOutOther)
         this.$wx.showLoading('正在加载...')
         const res = await api.getCalculateFreight(par)
         if(res.success) {

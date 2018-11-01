@@ -50,6 +50,7 @@
 
 <script>
 import kiyButton from '@/components/kiyButton'
+import wx from 'wx'
 import { mapState , mapActions } from 'vuex';
 import util from '@/utils/util'
 import api from '@/utils/api'

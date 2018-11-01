@@ -162,7 +162,7 @@ export default {
       },
       pageNo: 1,
       pageSize: 15,
-      loading: false,
+      loading: true,
       openAttr: false,
       edit : {
 
@@ -520,7 +520,7 @@ export default {
         this.refresh()
         this.$wx.showSuccessToast('修改成功')
       } else {
-        this.$wx.showErrorToast('修改失败')
+        this.$wx.showErrorToast(res.msg)
       }
     },
     // 检查库存
