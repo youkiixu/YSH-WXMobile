@@ -1,5 +1,5 @@
 <template >
-<view :class=" openAttr ? 'scroll' : 'scroll-lock' " >
+<view>
     <!-- 主体容器 -->
     <view class="container" v-if="!loading">
       <!-- 头部导航 -->
@@ -103,33 +103,33 @@
       </scroll-view>
     </view>
     <!-- 模态浮层 -->
-    <view class="attr-pop-box" :hidden="!openAttr"  @click="closeAttr">
-
+    <view class="attr-pop-box" :hidden="!openAttr"  @click="closeAttr" catchtouchmove="stopPageScroll">
+        <view class="attr-pop"  :hidden="!openAttr">
+          <selectComponent
+            :baseUrl="baseUrl"
+            :detailInfo="detailInfo"
+            :ListPriceInfo="ListPriceInfo"
+            :selectSkuStr="selectSkuStr"
+            :selectSku="selectSku"
+            :strYjtype="strYjtype"
+            :SubmitByProductType="SubmitByProductType"
+            :number="number"
+            :Stock="Stock"
+            btnText="立即购买"
+            @closeAttr="closeAttr"
+            @toBaojia="toBaojia"
+            @clickSkuValue="clickSkuValue"
+            @addNumber="addNumber"
+            @cutNumber="cutNumber"
+            @addToCart="addToCart"
+            @SubmitByProduct="SubmitByProduct"
+            @selectWuliu="selectWuliu"
+            @numberChange="numberChange"
+          >
+          </selectComponent>
+       </view>
     </view>
-    <view class="attr-pop"  :hidden="!openAttr">
-      <selectComponent
-        :baseUrl="baseUrl"
-        :detailInfo="detailInfo"
-        :ListPriceInfo="ListPriceInfo"
-        :selectSkuStr="selectSkuStr"
-        :selectSku="selectSku"
-        :strYjtype="strYjtype"
-        :SubmitByProductType="SubmitByProductType"
-        :number="number"
-        :Stock="Stock"
-        btnText="立即购买"
-        @closeAttr="closeAttr"
-        @toBaojia="toBaojia"
-        @clickSkuValue="clickSkuValue"
-        @addNumber="addNumber"
-        @cutNumber="cutNumber"
-        @addToCart="addToCart"
-        @SubmitByProduct="SubmitByProduct"
-        @selectWuliu="selectWuliu"
-        @numberChange="numberChange"
-      >
-      </selectComponent>
-    </view>
+    
     <!-- tabbar -->
     <view class="bottom-btn" v-if="!loading">
       <view class="l l-collect" @click="callPhone" hover-class>
@@ -598,6 +598,7 @@ export default {
          let data = JSON.parse(res.data)   
          this.collectStatus = data;
     },
+   
     
     // 跳转到购物车页面
     openCartPage () {
@@ -785,6 +786,10 @@ export default {
             title: text
         })
     },
+    //catchtouchmove阻止弹窗后滚动穿透
+     stopPageScroll(){
+    return
+    },
     imgError (e) {
       const arr = []
       this.gallery.map(item => {
@@ -841,33 +846,6 @@ page{
 .src{
   height: 100vh;
 }
-/* .src{
-  height: 100%;
-  overflow: hidden;
-}
-.src-lock{
-  height: 100%;
-  overflow-y: auto;
-} */
-.outside{ 
-  /* margin-top: 65rpx; */
-}
-/* .scroll-lock{
-  height: 100%;
-  overflow-y: hidden;
-}
-.scroll{
-  overflow-y: auto;
-} */
-.scroll{
-  height: 100%;
-  overflow: hidden;
-}
- .scroll-lock{
-  height: 100%;
-  overflow-y: auto;
-} 
-
 .container {
   background-color: #f1f1f1;
   margin-bottom: 100rpx;
