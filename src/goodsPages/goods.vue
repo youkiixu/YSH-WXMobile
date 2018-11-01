@@ -1,5 +1,5 @@
 <template >
-<view class=" openAttr ? 'scroll' : 'scroll-lock' " >
+<view :class=" openAttr ? 'scroll' : 'scroll-lock' " >
     <!-- 主体容器 -->
     <view class="container" v-if="!loading">
       <!-- 头部导航 -->
@@ -20,7 +20,7 @@
         </view>
       </view> -->
 
-      <scroll-view  scroll-y="true" scroll-with-animation="true" class="src">
+      <scroll-view :scroll-into-view="toView" scroll-y="true" scroll-with-animation="true" class="src">
         <view class="outside" id="goodshead">
           <!-- 图片轮播 -->
           <swiper class="goodsimgs" indicator-dots="true" autoplay="true" interval="3000" duration="1000">
@@ -837,20 +837,37 @@ export default {
 
 page{
   height: 100%;
-}
+} 
 .src{
   height: 100vh;
 }
+/* .src{
+  height: 100%;
+  overflow: hidden;
+}
+.src-lock{
+  height: 100%;
+  overflow-y: auto;
+} */
 .outside{ 
   /* margin-top: 65rpx; */
 }
-.scroll-lock{
+/* .scroll-lock{
   height: 100%;
   overflow-y: hidden;
 }
 .scroll{
   overflow-y: auto;
+} */
+.scroll{
+  height: 100%;
+  overflow: hidden;
 }
+ .scroll-lock{
+  height: 100%;
+  overflow-y: auto;
+} 
+
 .container {
   background-color: #f1f1f1;
   margin-bottom: 100rpx;
@@ -1187,9 +1204,10 @@ page{
 .proDetail{
   margin-top: 30rpx;
   background-color: white;
-  width: 100%;
-  padding: 0 0rpx 100rpx 0rpx;
+  width: 750rpx;
+  padding: 0 20rpx 120rpx 20rpx;
   box-sizing: border-box;
+  overflow: hidden;
 }
 .proDetail .title{
   height: 75rpx;
@@ -1197,6 +1215,12 @@ page{
   text-align: center;
   font-size: 28rpx;
   color: #555555;
+}
+.proDetail .content image{
+  max-width: 710rpx !important;
+}
+.proDetail .content img{
+  max-width: 710rpx !important;
 }
 .goods-attr {
   width: 750rpx;
