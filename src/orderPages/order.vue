@@ -71,8 +71,6 @@ export default {
       }
   },
   async mounted () {
-      // 加了全局mixins还原旧数据，废除以下代码
-    // this.orderList = []
     if(this.$route.query.orderStatus) {
         // 获取订单状态
         this.orderStatus = this.OrderOperateStatus[this.$route.query.orderStatus]

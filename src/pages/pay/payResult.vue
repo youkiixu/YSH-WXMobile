@@ -39,8 +39,6 @@ export default {
     }
   },
   async mounted () {
-    // 加了全局mixins还原旧数据，废除以下代码
-    // this.show = false
     if (this.$route.query.status) {
       this.status = this.$route.query.status;
     }

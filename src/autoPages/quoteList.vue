@@ -74,9 +74,6 @@ export default {
         }
     },
     mounted () {
-        // 加了全局mixins还原旧数据，废除以下代码
-        // this.currentSortType = 'default';
-        // this.currentSortOrder = 'desc';
         this.quoteList = JSON.parse(this.proSearchRst.data)
         // this.refresh()
     },

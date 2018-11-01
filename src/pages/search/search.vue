@@ -80,11 +80,6 @@ export default {
     }
   },
   async mounted () {
-    // 加了全局mixins还原旧数据，废除以下代码
-    // this.goodsList = []
-    // this.keyword = ''
-    // this.searchStatus = false
-    // this.currentSortOrder = 'desc';
     if(this.$route.query.keyword) {
       this.keyword = this.$route.query.keyword
       this.loading = true

@@ -220,9 +220,6 @@ export default {
         }
     },  
   async mounted () {
-    // 加了全局mixins还原旧数据，废除以下代码
-    // this.ParaStr = ''
-    // this.refresh()
     //将默认的地址存到全局那里
     this.set_address(this.checkOutInfo.Address)
     this.productImg = this.$wx.getImagePath(this.checkOutInfo.products.imagePath)

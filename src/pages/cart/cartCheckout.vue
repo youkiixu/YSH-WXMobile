@@ -209,8 +209,6 @@ export default {
     },      
   async mounted () {
     const data = this.cartCheckOutInfo
-    // 加了全局mixins还原旧数据，废除以下代码
-    // this.goodList = []
     this.set_address(data.Address)
     var _this = this;
     // 遍历购物车信息，加入默认的参数
