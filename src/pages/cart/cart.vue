@@ -170,10 +170,10 @@ export default {
     }
   },
   async mounted () {
-    // await Promise.all([
-    //   this.getCartList()
-    // ])
-    // this.loading = false
+    await Promise.all([
+      this.getCartList()
+    ])
+    this.loading = false
     
   },
   computed: {
