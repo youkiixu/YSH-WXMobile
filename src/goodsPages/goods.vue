@@ -20,7 +20,7 @@
         </view>
       </view> -->
 
-      <scroll-view :scroll-into-view="toView" scroll-y="true" scroll-with-animation="true" class="src">
+      <scroll-view :scroll-into-view="toView" scroll-y="true" scroll-with-animation="true" class="container-scroll">
         <view class="outside" id="goodshead">
           <!-- 图片轮播 -->
           <swiper class="goodsimgs" indicator-dots="true" autoplay="true" interval="3000" duration="1000">
@@ -843,8 +843,8 @@ export default {
 page{
   height: 100%;
 } 
-.src{
-  height: 100vh;
+.container-scroll{
+  height: 100%;
 }
 .scroll{
   height: 100%;
