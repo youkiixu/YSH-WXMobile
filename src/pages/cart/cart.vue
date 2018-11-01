@@ -59,7 +59,7 @@
 
       <!-- 模态浮层 -->
     <view class="attr-pop-box" v-if="openAttr"  @click="closeAttr" catchtouchmove="stopPageScroll">
-      <view class="attr-pop"  v-if="openAttr">
+      <view class="attr-pop"  v-if="openAttr" @click.stop="closeAttr('no')">
         <selectComponent
           v-if="openAttr"
           :baseUrl="baseUrl"
@@ -82,7 +82,7 @@
           @numberChange="numberChange"
         >
         </selectComponent>
-    </view>
+      </view>
     </view>
     
 </view>
@@ -371,8 +371,10 @@ export default {
 
     },
     // 关闭规格弹窗
-    closeAttr () {
-      this.openAttr = false;
+    closeAttr (e) {
+      if(e != 'no') {
+        this.openAttr = false;
+      }
     },
     // 获取商品SKu详情
     async getGoodsSkuInfo () {
@@ -535,8 +537,8 @@ export default {
       return check
     },
     //catchtouchmove阻止弹窗后滚动穿透
-     stopPageScroll(){
-    return
+    stopPageScroll(){
+      return
     }
 
   },

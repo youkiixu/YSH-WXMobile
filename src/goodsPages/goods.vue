@@ -104,7 +104,7 @@
     </view>
     <!-- 模态浮层 -->
     <view class="attr-pop-box" :hidden="!openAttr"  @click="closeAttr" catchtouchmove="stopPageScroll">
-        <view class="attr-pop"  :hidden="!openAttr">
+        <view class="attr-pop"  :hidden="!openAttr" @click.stop="closeAttr('no')">
           <selectComponent
             :baseUrl="baseUrl"
             :detailInfo="detailInfo"
@@ -567,7 +567,9 @@ export default {
     },
     // 关闭规格弹窗
     closeAttr () {
-      this.openAttr = false;
+      if(e != 'no') {
+        this.openAttr = false;
+      }
     },
     // 购物车的五角星，添加或是取消收藏
     async addCannelCollect () {
