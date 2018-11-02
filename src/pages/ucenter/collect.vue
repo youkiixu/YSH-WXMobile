@@ -36,7 +36,7 @@
                 </view>
                 <view class="b">
                   <view class="price">
-                    <text class="icon">￥</text>{{item.MinSalePrice}}
+                    <text class="icon"></text>{{item.IsCustom ? '定制报价' : '￥' + item.MinSalePrice}}
                   </view>                
                 </view>
               </view>
