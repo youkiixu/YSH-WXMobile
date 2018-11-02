@@ -29,7 +29,7 @@
                   <text class="num">{{item.IsCustom ? '非标品' : 'x' + item.Quantity}}</text>
                 </view>
                 <view class="attr" v-if="item.IsCustom">已选：{{ item.ParaStr }}</view>
-                <view class="attr attr-select" v-else @click.stop="openSelect(item)">已选：{{item.Color}} {{item.Size}} {{item.Version}} {{item.Material}} {{item.Fashion}} {{item.Grams}} {{item.Ensemble}}<span class="select-span">></span></view>
+                <view :class="isEditCart ? 'attr attr-select' : 'attr'" v-else @click.stop="openSelect(item)">已选：{{item.Color}} {{item.Size}} {{item.Version}} {{item.Material}} {{item.Fashion}} {{item.Grams}} {{item.Ensemble}}<span v-if="isEditCart" class="select-span">></span></view>
                 <view class="b">
                   <view class="price">
                     <text class="icon">￥</text>{{item.IsCustom ? item.fbpPrice : item.bpTotal }}
@@ -197,7 +197,7 @@ export default {
             num = util.addNum(num , toTal)
           }
       })
-      return Number(num.toString().match(/^\d+(?:\.\d{0,2})?/))
+      return Number(num.toFixed(2))
     }
   },
   methods: {
