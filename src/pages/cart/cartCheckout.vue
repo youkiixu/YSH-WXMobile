@@ -80,7 +80,7 @@
                                 <div class="weui-cell weui-cell_switch" v-if="item.IsDaiShouHuoKuan">
                                     <div class="weui-cell__bd">代收货款金额</div>
                                     <div class="weui-cell__ft">
-                                        <input class="weui-input" v-model.lazy="item.daiShouMoney" type="number" placeholder="请输入代收货款金额" />
+                                        <input class="weui-input" v-model="item.daiShouMoney" type="number" placeholder="请输入代收货款金额" />
                                     </div>
                                 </div>
                                 <!-- 快递公司	 -->
@@ -101,7 +101,7 @@
                                 <text class="name">买家留言</text>
                             </view>
                             <view class="r message">
-                                <input class="txt" v-model.lazy="item.orderRemarks" placeholder="点击给商家留言"/>
+                                <input class="txt" v-model="item.orderRemarks" placeholder="点击给商家留言"/>
                             </view>
                         </view>
                         <view class="box-bottom">
