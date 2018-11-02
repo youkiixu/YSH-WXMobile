@@ -371,7 +371,7 @@ export default {
 
     },
     // 关闭规格弹窗
-    closeAttr (e) {
+    closeAttr (e) {     
       if(e != 'no') {
         this.openAttr = false;
       }

@@ -20,7 +20,7 @@
         </view>
       </view> -->
 
-      <scroll-view :scroll-into-view="toView" scroll-y="true" scroll-with-animation="true" class="src">
+      <scroll-view :scroll-into-view="toView" scroll-y="true" scroll-with-animation="true" class="container-scroll">
         <view class="outside" id="goodshead">
           <!-- 图片轮播 -->
           <swiper class="goodsimgs" indicator-dots="true" autoplay="true" interval="3000" duration="1000">
@@ -106,6 +106,7 @@
     <view class="attr-pop-box" v-if="openAttr"  @click="closeAttr" catchtouchmove="stopPageScroll">
         <view class="attr-pop"  v-if="openAttr" @click.stop="closeAttr('no')">
           <selectComponent
+            v-if="openAttr"
             :baseUrl="baseUrl"
             :detailInfo="detailInfo"
             :ListPriceInfo="ListPriceInfo"
@@ -129,7 +130,6 @@
           </selectComponent>
        </view>
     </view>
-    
     <!-- tabbar -->
     <view class="bottom-btn" v-if="!loading">
       <view class="l l-collect" @click="callPhone" hover-class>
@@ -600,7 +600,9 @@ export default {
          let data = JSON.parse(res.data)   
          this.collectStatus = data;
     },
-   
+    stopPageScroll(){
+    return
+    },
     
     // 跳转到购物车页面
     openCartPage () {
@@ -788,10 +790,6 @@ export default {
             title: text
         })
     },
-    //catchtouchmove阻止弹窗后滚动穿透
-     stopPageScroll(){
-    return
-    },
     imgError (e) {
       const arr = []
       this.gallery.map(item => {
@@ -845,9 +843,18 @@ export default {
 page{
   height: 100%;
 } 
-.src{
+.container-scroll{
   height: 100%;
 }
+.scroll{
+  height: 100%;
+  overflow: hidden;
+}
+ .scroll-lock{
+  height: 100%;
+  overflow-y: auto;
+} 
+
 .container {
   background-color: #f1f1f1;
   margin-bottom: 100rpx;
