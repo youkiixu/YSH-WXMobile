@@ -1022,7 +1022,6 @@ page{
 
 .attr-pop {
   width: 100%;
-  height: auto;
   max-height: 780rpx;
   padding: 31.25rpx 0  0 50.25rpx;
   background: #fff;
@@ -1030,6 +1029,7 @@ page{
   z-index: 9;
   bottom: 100rpx;
 }
+
 .attr-select {
   position: relative;
   border: 1rpx solid #e5e5e5;

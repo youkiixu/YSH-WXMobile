@@ -103,32 +103,31 @@
       </scroll-view>
     </view>
     <!-- 模态浮层 -->
-    <view class="attr-pop-box" v-if="openAttr"  @click="closeAttr" >
-
-    </view>
-    <view class="attr-pop"  v-if="openAttr" @click.stop="closeAttr('no')">
-      <selectComponent
-        :baseUrl="baseUrl"
-        :detailInfo="detailInfo"
-        :ListPriceInfo="ListPriceInfo"
-        :selectSkuStr="selectSkuStr"
-        :selectSku="selectSku"
-        :strYjtype="strYjtype"
-        :SubmitByProductType="SubmitByProductType"
-        :number="number"
-        :Stock="Stock"
-        btnText="立即购买"
-        @closeAttr="closeAttr"
-        @toBaojia="toBaojia"
-        @clickSkuValue="clickSkuValue"
-        @addNumber="addNumber"
-        @cutNumber="cutNumber"
-        @addToCart="addToCart"
-        @SubmitByProduct="SubmitByProduct"
-        @selectWuliu="selectWuliu"
-        @numberChange="numberChange"
-      >
-      </selectComponent>
+    <view class="attr-pop-box" v-if="openAttr"  @click="closeAttr" catchtouchmove="stopPageScroll">
+        <view class="attr-pop"  v-if="openAttr" @click.stop="closeAttr('no')">
+          <selectComponent
+            :baseUrl="baseUrl"
+            :detailInfo="detailInfo"
+            :ListPriceInfo="ListPriceInfo"
+            :selectSkuStr="selectSkuStr"
+            :selectSku="selectSku"
+            :strYjtype="strYjtype"
+            :SubmitByProductType="SubmitByProductType"
+            :number="number"
+            :Stock="Stock"
+            btnText="立即购买"
+            @closeAttr="closeAttr"
+            @toBaojia="toBaojia"
+            @clickSkuValue="clickSkuValue"
+            @addNumber="addNumber"
+            @cutNumber="cutNumber"
+            @addToCart="addToCart"
+            @SubmitByProduct="SubmitByProduct"
+            @selectWuliu="selectWuliu"
+            @numberChange="numberChange"
+          >
+          </selectComponent>
+       </view>
     </view>
     
     <!-- tabbar -->
@@ -847,7 +846,7 @@ page{
   height: 100%;
 } 
 .src{
-  height: 100vh;
+  height: 100%;
 }
 .container {
   background-color: #f1f1f1;
@@ -1517,7 +1516,6 @@ page{
 
 .attr-pop {
   width: 100%;
-  height: auto;
   max-height: 780rpx;
   padding: 31.25rpx 31.25rpx;
   background: #fff;
@@ -1525,6 +1523,7 @@ page{
   z-index: 9;
   bottom: 100rpx;
 }
+
 .original-price {
   text-decoration: line-through;
     color: #999;
