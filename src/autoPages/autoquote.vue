@@ -1,7 +1,7 @@
 <template >
 <view class="container">
     <div class="ad">
-      <img class="ad-img" :src="baseUrl + '/Areas/wxMobile/Content/img/ad.png'" alt="">
+      <img class="ad-img" src="http://www.kiy.cn/Areas/wxMobile/Content/img/ad.png" />
     </div>
     <view class="catalog" :style="{'height' : '100%'}">
         <scroll-view class="nav menu-ul" scroll-y="true" :scroll-top="navTop" scroll-with-animation="true" :scroll-into-view="navId" >
@@ -47,10 +47,6 @@ export default {
     }
   },
   mounted () {
-    // 加了全局mixins还原旧数据，废除以下代码
-    // this.currentIndex = 0
-    // this.navTop = 0
-    // this.listHeight = []
     this.getQitem()
   },
   computed: {

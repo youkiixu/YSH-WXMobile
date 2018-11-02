@@ -50,6 +50,7 @@
 
 <script>
 import kiyButton from '@/components/kiyButton'
+import wx from 'wx'
 import { mapState , mapActions } from 'vuex';
 import util from '@/utils/util'
 import api from '@/utils/api'
@@ -74,9 +75,6 @@ export default {
         }
     },
     mounted () {
-        // 加了全局mixins还原旧数据，废除以下代码
-        // this.currentSortType = 'default';
-        // this.currentSortOrder = 'desc';
         this.quoteList = JSON.parse(this.proSearchRst.data)
         // this.refresh()
     },

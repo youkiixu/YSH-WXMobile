@@ -1,5 +1,5 @@
 <template >
-<view class=" openAttr ? 'scroll' : 'scroll-lock' " >
+<view>
     <!-- 主体容器 -->
     <view class="container" v-if="!loading">
       <!-- 头部导航 -->
@@ -20,7 +20,7 @@
         </view>
       </view> -->
 
-      <scroll-view  scroll-y="true" scroll-with-animation="true" class="src">
+      <scroll-view :scroll-into-view="toView" scroll-y="true" scroll-with-animation="true" class="container-scroll">
         <view class="outside" id="goodshead">
           <!-- 图片轮播 -->
           <swiper class="goodsimgs" indicator-dots="true" autoplay="true" interval="3000" duration="1000">
@@ -103,96 +103,32 @@
       </scroll-view>
     </view>
     <!-- 模态浮层 -->
-    <view class="attr-pop-box" :hidden="!openAttr"  @click="closeAttr">
-
-    </view>
-    <view class="attr-pop"  :hidden="!openAttr">
-      <view class="close" @click="closeAttr">
-        <img class="icon" src="/static/images/icon_close.png"/>
-      </view>
-      <view class="img-info clear">
-        <img class="img" :src="baseUrl + detailInfo.imagePath + '/1_350.png'"/>
-        <view class="info">
-          <view class="c">
-            <view class="p" v-if="!detailInfo.IsCustom"><text class="p-icon">￥</text>{{detailInfo.Price}}</view>
-            <view class="p" v-else><text class="p-icon">￥</text>{{ListPriceInfo.sprice + detailInfo.RemindPrice}}</view>
-            <view class="s" v-if="!detailInfo.IsCustom">库存：{{Stock}}</view>
-            <view class="a" v-if="!detailInfo.IsCustom">已选：<text>{{selectSkuStr.Color}} {{selectSkuStr.Size}} {{selectSkuStr.Version}} {{selectSkuStr.Material}} {{selectSkuStr.Fashion}} {{selectSkuStr.Grams}} {{selectSkuStr.Ensemble}}</text></view>
-            <view class="a" v-if="detailInfo.IsCustom"><text v-for="(item , index) in ListPriceInfo.paraArr" :key="index">{{item.paraStr}}</text></view>
-          </view>
-      </view>
-      </view>
-      <scroll-view scroll-y class="spec-con">
-        <view class="spec-item" v-if="detailInfo.IsCustom">
-            <view class="name">点击选择参数</view>
-            <view class="values"  v-for="(item , index) in ListPriceInfo.paraArr" :key="index">
-              <view class="selected value" @click="toBaojia">{{item.paraStr}}</view>
-            </view>
-        </view>
-        <view class="spec-item" v-if="detailInfo.Color.length != 0">
-            <view class="name">选择颜色</view>
-            <view class="values">
-            <view :class="item.SkuId == selectSku.Color ? 'selected value' : 'value'" @click="clickSkuValue('Color' , item.SkuId , item.Value)" v-for="(item, index) of detailInfo.Color" :key="index" :data-value-id="item.SkuId" :data-index="index" >{{item.Value}}</view>
-            </view>
-        </view>
-        <view class="spec-item"  v-if="detailInfo.Size.length != 0">
-            <view class="name">选择尺寸</view>
-            <view class="values">
-            <view :class="item.SkuId == selectSku.Size ? 'selected value' : 'value'" @click="clickSkuValue('Size' , item.SkuId , item.Value)" v-for="(item, index) of detailInfo.Size" :key="item.SkuId" :data-value-id="item.SkuId" :data-index="index" :data-name-id="item.SkuId">{{item.Value}}</view>
-            </view>
-        </view>
-        <view class="spec-item"  v-if="detailInfo.Version.length != 0">
-            <view class="name">选择规格</view>
-            <view class="values">
-            <view :class="item.SkuId == selectSku.Version? 'selected value' : 'value'" @click="clickSkuValue('Version' , item.SkuId , item.Value)" v-for="(item, index) of detailInfo.Version" :key="item.SkuId" :data-value-id="item.SkuId" :data-index="index" :data-name-id="item.SkuId">{{item.Value}}</view>
-            </view>
-        </view>
-        <view class="spec-item"  v-if="detailInfo.Material.length != 0">
-            <view class="name">选择材料</view>
-            <view class="values">
-            <view :class="item.SkuId == selectSku.Material ? 'selected value' : 'value'" @click="clickSkuValue('Material' , item.SkuId , item.Value)" v-for="(item, index) of detailInfo.Material" :key="item.SkuId" :data-value-id="item.SkuId" :data-index="index" :data-name-id="item.SkuId">{{item.Value}}</view>
-            </view>
-        </view>
-        <view class="spec-item"  v-if="detailInfo.Fashion.length != 0">
-            <view class="name">选择款式</view>
-            <view class="values">
-            <view :class="item.SkuId == selectSku.Fashion ? 'selected value' : 'value'" @click="clickSkuValue('Fashion' , item.SkuId , item.Value)" v-for="(item, index) of detailInfo.Fashion" :key="item.SkuId" :data-value-id="item.SkuId" :data-index="index" :data-name-id="item.SkuId">{{item.Value}}</view>
-            </view>
-        </view>
-        <view class="spec-item"  v-if="detailInfo.Grams.length != 0">
-            <view class="name">选择克重</view>
-            <view class="values">
-            <view :class="item.SkuId == selectSku.Grams ? 'selected value' : 'value'" @click="clickSkuValue('Grams' , item.SkuId , item.Value)" v-for="(item, index) of detailInfo.Grams" :key="item.SkuId" :data-value-id="item.SkuId" :data-index="index" :data-name-id="item.SkuId">{{item.Value}}</view>
-            </view>
-        </view>
-        <view class="spec-item"  v-if="detailInfo.Ensemble.length != 0">
-            <view class="name">选择套餐</view>
-            <view class="values">
-            <view :class="item.SkuId == selectSku.Ensemble ? 'selected value' : 'value'" @click="clickSkuValue('Ensemble' , item.SkuId , item.Value)" v-for="(item, index) of detailInfo.Ensemble" :key="item.SkuId" :data-value-id="item.SkuId" :data-index="index" :data-name-id="item.SkuId">{{item.Value}}</view>
-            </view>
-        </view>
-        <view class="spec-item" >
-            <view class="name">点击选择物流方式</view>
-            <view class="values">
-              <view class="selected value" @click="selectWuliu">{{strYjtype}}<span>></span></view>
-            </view>
-        </view>
-        <view class="number-item" v-if="!detailInfo.IsCustom">
-            <view class="name">数量</view>
-            <view class="selnum">
-            <view class="cut" @click="cutNumber" hover-class>-</view>
-            <input v-model.lazy="number" class="number"  type="number" confirm-type="done"/>
-            <view class="add" @click="addNumber" hover-class>+</view>
-            </view>
-        </view>
-      </scroll-view>
-      <view class="car-btn clear" v-if="!SubmitByProductType">
-          <view class="car-add" @click="addToCart" hover-class>加入购物车</view>
-          <view class="car-buy" @click="SubmitByProduct" hover-class>立即购买</view>
-      </view>
-      <view class="car-btn clear" v-if="SubmitByProductType">
-          <view class="car-buy" style="width:100%;" @click="SubmitByProduct" hover-class>立即购买</view>
-      </view>
+    <view class="attr-pop-box" v-if="openAttr"  @click="closeAttr" catchtouchmove="stopPageScroll">
+        <view class="attr-pop"  v-if="openAttr" @click.stop="closeAttr('no')">
+          <selectComponent
+            v-if="openAttr"
+            :baseUrl="baseUrl"
+            :detailInfo="detailInfo"
+            :ListPriceInfo="ListPriceInfo"
+            :selectSkuStr="selectSkuStr"
+            :selectSku="selectSku"
+            :strYjtype="strYjtype"
+            :SubmitByProductType="SubmitByProductType"
+            :number="number"
+            :Stock="Stock"
+            btnText="立即购买"
+            @closeAttr="closeAttr"
+            @toBaojia="toBaojia"
+            @clickSkuValue="clickSkuValue"
+            @addNumber="addNumber"
+            @cutNumber="cutNumber"
+            @addToCart="addToCart"
+            @SubmitByProduct="SubmitByProduct"
+            @selectWuliu="selectWuliu"
+            @numberChange="numberChange"
+          >
+          </selectComponent>
+       </view>
     </view>
     <!-- tabbar -->
     <view class="bottom-btn" v-if="!loading">
@@ -219,13 +155,15 @@ import wxParse from 'mpvue-wxparse'
 import express from '@/utils/express'
 import util from '@/utils/util'
 import loadingComponent from '@/components/loadingComponent'
+import selectComponent from '@/components/selectComponent'
 import { mapState, mapActions ,mapMutations } from 'vuex'
 
 
 export default {
   components: {
     wxParse,
-    loadingComponent
+    loadingComponent,
+    selectComponent
   },
   data () {
     return {
@@ -253,7 +191,7 @@ export default {
       skuInfo: [],
       selectSku: {
         Color: 0,
-        Size: 0,
+        Size: 0, 
         Version: 0,
         Material: 0,
         Fashion: 0,
@@ -273,7 +211,7 @@ export default {
       skuPrice: 0,
       strYjtype: '请选择配送方式',
       Yjtype: 0,
-      YjUse: 0,
+      YjUse: 0, 
       Stock: 0,
       SubmitByProductType: false,
       comment: {},
@@ -339,34 +277,7 @@ export default {
     ...mapMutations(['setProSearchParam']),
     ...mapActions(['submitByProductId' , 'SubmitByProductId2' , 'getShoppingCartCount']),
     async refresh() {
-      // // 加了全局mixins，废除以下代码
-      // // 请空已选的kiuId
-      // this.comment = {}
-      // this.skuId = ''
-      // this.ListPriceInfo = {
-      //   sprice : 1,
-      //   paraArr: []
-      // }
-      // // 2018.10.13:清空前一次的sku信息，防止下一次进来还存留
-      // this.selectSku = {
-      //   Color: 0,
-      //   Size: 0,
-      //   Version: 0,
-      //   Material: 0,
-      //   Fashion: 0,
-      //   Grams: 0,
-      //   Ensemble: 0
-      // }
-      // this.selectSkuStr = {
-      //   Color: '',
-      //   Size: '',
-      //   Version: '',
-      //   Material: '',
-      //   Fashion: '',
-      //   Grams: '',
-      //   Ensemble: ''
-      // }
-      // this.$wx.showLoading()
+      // 已经来获取数据
       await Promise.all([
         this.getGoodsSkuInfo(),
         this.getGoodsDetail()
@@ -375,7 +286,6 @@ export default {
       this.getComment()
       this.IsCollection()
       this.getShoppingCartCount()
-      // this.$wx.hideLoading()
       this.setTitle(this.detailInfo.ProductName)
       // 默认选中配送方式，必须在报价之前选中默认的报价
       this.selectWuliu()
@@ -463,8 +373,8 @@ export default {
         this.RequestUrl = res.RequestUrl
         this.detailInfo = res.data
         this.gallery = util.getImagePathGroup(this.detailInfo.imagePath)
-        // 最低销售量
-        this.number = Number(this.detailInfo.SaleNumber)
+        // // 最低销售量
+        // this.number = Number(this.detailInfo.SaleNumber)
       } else {
         this.$wx.showErrorToast(res.msg)
       }
@@ -599,27 +509,14 @@ export default {
       const skuInfo = this.skuInfo
       const skuId = this.skuId
       // 将数量转为纯数字
-      this.number = Number(this.number)
+      if(typeof this.number != 'number') {
+        this.number = Number(this.number)
+      }
       // 1031性能优化
       if(this.number < this.saleNumber) {
         this.number = this.saleNumber
       }
       this.detailInfo.Price = util.accMul(this.skuPrice , this.number)
-      // 1031性能优化
-      // skuInfo.map(item => {
-      //   if(item.SkuId === skuId) {
-      //       this.Stock = item.Stock
-      //       if(this.saleNumber != item.SaleNumber) {
-      //         this.saleNumber = item.SaleNumber
-      //         this.number = this.saleNumber
-      //       }
-      //       if(this.number < this.saleNumber) {
-      //         this.number = this.saleNumber
-      //       }
-      //       this.detailInfo.Price = util.accMul(item.Price , this.number)
-      //   }
-      // })
-
     },
     // 获取默认选项
     getDefalutSelect() {
@@ -666,8 +563,10 @@ export default {
       this.$wx.toBaoJia(par , this)
     },
     // 关闭规格弹窗
-    closeAttr () {
-      this.openAttr = false;
+    closeAttr (e) {
+      if(e != 'no') {
+        this.openAttr = false;
+      }
     },
     // 购物车的五角星，添加或是取消收藏
     async addCannelCollect () {
@@ -697,6 +596,9 @@ export default {
          const res = await api.IsCollection({ ProductId: this.id , openId: openId }) 
          let data = JSON.parse(res.data)   
          this.collectStatus = data;
+    },
+    stopPageScroll(){
+    return
     },
     
     // 跳转到购物车页面
@@ -855,10 +757,17 @@ export default {
     // 减少数量
     cutNumber () {
       this.number = this.number - 1 
+      this.getSkuInfoPirce()
     },
     // 增加数量
     addNumber () {
       this.number = this.number + 1;
+      this.getSkuInfoPirce()
+    },
+    // 数量变化
+    numberChange (number) {
+      this.number = number != '' ? Number(number) : this.number
+      this.getSkuInfoPirce()
     },
     // 滚动到某位置
     toNav: function(e) {
@@ -889,12 +798,12 @@ export default {
     },
     callPhone() {
       this.$wx.makePhoneCall(this.detailInfo.CompanyPhone)
-    }
+    },
   },
   watch: {
-    number (e , b) {
-      this.getSkuInfoPirce()
-    },
+    // number (e , b) {
+    //   this.getSkuInfoPirce()
+    // },
     proSearchParam (a , b ) {
       if(this.detailInfo.IsCustom) {
         this.getOpenQuote()
@@ -930,20 +839,19 @@ export default {
 
 page{
   height: 100%;
-}
-.src{
-  height: 100vh;
-}
-.outside{ 
-  /* margin-top: 65rpx; */
-}
-.scroll-lock{
+} 
+.container-scroll{
   height: 100%;
-  overflow-y: hidden;
 }
 .scroll{
-  overflow-y: auto;
+  height: 100%;
+  overflow: hidden;
 }
+ .scroll-lock{
+  height: 100%;
+  overflow-y: auto;
+} 
+
 .container {
   background-color: #f1f1f1;
   margin-bottom: 100rpx;
@@ -1281,7 +1189,7 @@ page{
   margin-top: 30rpx;
   background-color: white;
   width: 750rpx;
-  padding: 0 0rpx 120rpx 0rpx;
+  padding: 0 0 120rpx 0;
   box-sizing: border-box;
   overflow: hidden;
 }
@@ -1292,7 +1200,6 @@ page{
   font-size: 28rpx;
   color: #555555;
 }
-
 .goods-attr {
   width: 750rpx;
   height: auto;
@@ -1609,207 +1516,18 @@ page{
   background: rgba(0, 0, 0, .5);
   z-index: 8;
   bottom: 0;
-  /* display: none; */
 }
 
 .attr-pop {
   width: 100%;
-  height: auto;
   max-height: 780rpx;
-  padding: 31.25rpx;
+  padding: 31.25rpx 31.25rpx;
   background: #fff;
   position: fixed;
   z-index: 9;
   bottom: 100rpx;
 }
 
-.attr-pop .close {
-  position: absolute;
-  width: 100rpx;
-  height: 100rpx;
-  right: 80rpx;
-  overflow: hidden;
-  top: 31.25rpx;
-  z-index: 30;
-  text-align:right;
-}
-
-.attr-pop .close .icon {
-  width: 48rpx;
-  height: 48rpx;
-}
-
-.attr-pop .img-info {
-  width: 687.5rpx;
-  padding-bottom: 25rpx;
-  position: relative; 
-  border-bottom: 1px solid #ececec;
-}
-
-.attr-pop .img {
-  float: left;
-  height: 175rpx;
-  width: 175rpx;
-  background: #f4f4f4;
-  margin-right: 31.25rpx;
-  position: absolute;
-  z-index: 100;
-  top: -50rpx;  
-  border-radius: 20rpx;
-}
-.attr-pop .info {
-  float: right;
-  width: 470rpx;
-  overflow: hidden;
-  /* display: flex; */
-  align-items: center;
-}
-.attr-pop .p {
-  font-size: 38rpx;
-  color: #dc2121;
-  height: 32rpx;
-  line-height: 32rpx;
-  margin-bottom: 10rpx;
-}
-.attr-pop .p-icon{
-  font-size: 30rpx;
-}
-.attr-pop .s{
-  font-size: 20rpx;
-  color: #555555;
-  height: 40rpx;
-  line-height: 40rpx;
-}
-.attr-pop .a {
-  font-size: 24rpx;
-  color: #333;
-  line-height: 35rpx;
-  min-height: 70rpx;
-}
-
-.spec-con {
-  width: 100%;
-  height:500rpx;
-  overflow: hidden;
-}
-.spec-con .spec-item{
-   padding: 20rpx 10rpx;
-   border-bottom: 2rpx solid #ececec;
-}
-.spec-con .name {
-  /* height: 32rpx; */
-  margin-bottom: 22rpx;
-  font-size: 34rpx;
-  color: #555;
-}
-
-.spec-con .values {
-  height: auto;
-  font-size: 0;
-  margin-top: 10rpx;
-}
-
-.spec-con .value {
-  display: inline-block;
-  min-height: 55rpx;
-  line-height: 55rpx;
-  text-align: center;
-  margin-right: 24rpx;
-  margin-bottom: 24rpx;
-  padding: 0 26rpx;
-  box-sizing: border-box;
-  background-color: #f4f4f4;
-  font-size: 24rpx;
-  color: #242424;
-  border-radius: 10rpx;
-}
-
-.spec-con .value.disable {
-  border: 2rpx solid #ccc;
-  color: #ccc;
-}
-
-.spec-con .value.selected {
-  background-color:#009e96; 
-  color: white;
-}
-.spec-con .number-item{
-   height: 100rpx;
-   padding: 0 10rpx;
-   line-height: 100rpx;
-   border-bottom: 2rpx solid #ececec;
-}
-.number-item .name{
-  font-size: 34rpx;
-  color: #555;
-  float: left;
-}
-.number-item .selnum {
-  float: right;
-  margin-top: 10rpx;
-  margin-right: 50rpx;
-  height: 55rpx;
-  display: flex;
-  font-size: 29rpx;
-}
-
-.number-item .cut {
-  width: 80rpx;
-  height: 80rpx;
-  text-align: center;
-  line-height: 80rpx;
-  background-color: #f4f4f4;
-  border-radius: 5rpx;
-  font-size: 40rpx;
-}
-
-.number-item .number {
-  width: 90rpx;
-  height: 80rpx;
-  text-align: center;
-  line-height: 80rpx;
-  float: left;
-  margin-left: 3rpx;
-  background-color: #f4f4f4;
-  border-radius: 5rpx;
-  font-size: 28rpx;
-}
-
-.number-item .add {
-  width: 80rpx;
-  height: 80rpx;
-  text-align: center;
-  line-height: 80rpx;
-  margin-left: 3rpx;
-  background-color: #f4f4f4;
-  border-radius: 5rpx;
-  font-size: 40rpx;
-}
-
-.car-btn{
-  height: 100rpx;
-  width: 100%;
-  line-height: 100rpx;
-  color: white;
-  font-size: 28rpx;
-  position:fixed;
-  left: 0;
-  bottom: 0;
-  z-index: 15;
-}
-.car-btn .car-add{
-  float: left;
-  width: 50%;
-  text-align: center;
-  color: #009e96;
-  background-color: #e3fffe;
-}
-.car-btn .car-buy{
-  width: 50%;
-  float: left;
-  text-align: center;
-  background-color: #009e96;
-}
 .original-price {
   text-decoration: line-through;
     color: #999;

@@ -12,6 +12,7 @@
 
 <script>
 // import api from '@/utils/api'
+import wx from 'wx'
 import { mapState, mapActions } from 'vuex'
 import searchBar from '@/components/indexSearchBar'
 import indexComponent from '@/components/index-components/indexComponent'

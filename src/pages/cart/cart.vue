@@ -1,5 +1,6 @@
 <template >
-<view class="container">
+<view>
+  <view class="container">
   <view class="no-cart" v-if="cartGoods.length <= 0 && !loading">
     <view class="c">
       <img src="http://nos.netease.com/mailpub/hxm/yanxuan-wap/p/20150730/style/img/icon-normal/noCart-a8fe3f12e5.png" />
@@ -10,9 +11,6 @@
 
   <view class="cart-view"  >
     <view class="cart-address clear" v-if="cartGoods.length != 0 && !loading">
-      <!-- <view class="posi-img">
-        <img src="/static/images/icon_cart_position.png" background-size="cover"/>
-      </view> -->
        <view class="from">此购物车价格仅供参考</view>
        <view class="to">请以下单的价格为标准</view>
        <view class="edit" @click="editCart">{{!isEditCart ? '编辑商品' : '完成'}}</view>       
@@ -31,7 +29,7 @@
                   <text class="num">{{item.IsCustom ? '非标品' : 'x' + item.Quantity}}</text>
                 </view>
                 <view class="attr" v-if="item.IsCustom">已选：{{ item.ParaStr }}</view>
-                <view class="attr" v-else>已选：{{item.Color}} {{item.Size}} {{item.Version}} {{item.Material}} {{item.Fashion}} {{item.Grams}} {{item.Ensemble}}</view>
+                <view class="attr attr-select" v-else @click.stop="openSelect(item)">已选：{{item.Color}} {{item.Size}} {{item.Version}} {{item.Material}} {{item.Fashion}} {{item.Grams}} {{item.Ensemble}}<span class="select-span">></span></view>
                 <view class="b">
                   <view class="price">
                     <text class="icon">￥</text>{{item.IsCustom ? item.fbpPrice : item.bpTotal }}
@@ -50,16 +48,46 @@
     </view>
     <loadingComponent v-if="loading"></loadingComponent>
 
-    
+     
     <view class="cart-bottom" v-if="cartGoods.length != 0 && !loading">
       <view :class="checkedAllStatus ? 'checked checkbox' : 'checkbox'" @click="checkedAll">全选</view>
-      <view class="total">总金额：<text class="total-price" v-if="allPrice != undefined">{{'￥'+ allPrice}}</text></view>
+      <view class="total" ><text v-if="!isEditCart">总金额：</text><text class="total-price" v-if="allPrice != undefined && !isEditCart">{{'￥'+ allPrice}}</text></view>
       <view class="checkout" @click="checkoutOrder" v-if="!isEditCart">去结算</view>
       <view class="delete" @click="deleteCart" v-if="isEditCart">删除</view>
     </view>
   </view>
 
+      <!-- 模态浮层 -->
+    <view class="attr-pop-box" v-if="openAttr"  @click="closeAttr" catchtouchmove="stopPageScroll">
+      <view class="attr-pop"  v-if="openAttr" @click.stop="closeAttr('no')">
+        <selectComponent
+          v-if="openAttr"
+          :baseUrl="baseUrl"
+          :detailInfo="edit.detailInfo"
+          :ListPriceInfo="edit.ListPriceInfo"
+          :selectSkuStr="edit.selectSkuStr"
+          :selectSku="edit.selectSku"
+          :strYjtype="edit.strYjtype"
+          :SubmitByProductType="edit.SubmitByProductType"
+          :number="edit.number"
+          :Stock="edit.Stock"
+          btnText="确认"
+          @closeAttr="closeAttr"
+          @toBaojia="toBaojia"
+          @clickSkuValue="clickSkuValue"
+          @addNumber="addNumber"
+          @cutNumber="cutNumber"
+          @addToCart="addToCart"
+          @SubmitByProduct="upDateCart"
+          @numberChange="numberChange"
+        >
+        </selectComponent>
+      </view>
+    </view>
+    
 </view>
+</view>
+
 </template>
 
 <script>
@@ -67,11 +95,58 @@ import api from '@/utils/api'
 import wx from 'wx'
 import util from '@/utils/util'
 import loadingComponent from '@/components/loadingComponent'
+import selectComponent from '@/components/selectComponent'
 import { mapState , mapActions } from 'vuex'
+function newEditInfo() {
+  const editInfo = {
+        detailInfo: {
+          Material: [],
+          Size: [],
+          Version: [],
+          Color: [],
+          Grams: [],
+          Fashion: [],
+          Ensemble: []
+        },
+        ListPriceInfo :{
+          sprice : 1,
+          paraArr: []
+        },
+        selectSkuStr: {
+          Color: '',
+          Size: '',
+          Version: '',
+          Material: '',
+          Fashion: '',
+          Grams: '',
+          Ensemble: ''
+        },
+        selectSku: {
+          Color: 0,
+          Size: 0, 
+          Version: 0,
+          Material: 0,
+          Fashion: 0,
+          Grams: 0,
+          Ensemble: 0
+        },
+        strYjtype : '',
+        SubmitByProductType: true,
+        number: 0,
+        Stock: 0,
+        skuId: '',
+        skuPrice: 0,
+        saleNumber: 0,
+        cartId: 0,
+        id: 0
+      }
+    return editInfo
+}
 
 export default {
   components: {
-    loadingComponent
+    loadingComponent,
+    selectComponent
   },
   data () {
     return {
@@ -89,16 +164,14 @@ export default {
       },
       pageNo: 1,
       pageSize: 15,
-      loading: true
+      loading: true,
+      openAttr: false,
+      edit : {
+
+      }
     }
   },
   async mounted () {
-    // 加了全局mixins还原旧数据，废除以下代码
-    // this.cartGoods = []
-    // this.pageNo = 1
-    // this.checkedAllStatus = false
-    // this.isEditCart = false
-    // this.loading = true
     await Promise.all([
       this.getCartList()
     ])
@@ -200,32 +273,6 @@ export default {
         this.isEditCart = !this.isEditCart;
       }
     },
-    // 减少数量
-    cutNumber (event) {
-      let itemIndex = event.target.dataset.itemIndex;
-      let cartItem = this.cartGoods[itemIndex];
-      const saleNumber =  cartItem.SaleNumber;//最低销售量
-      let number = cartItem.Quantity - 1
-      if(number < saleNumber) {
-        this.$wx.showErrorToast('不能低于最低销售量')
-        number = saleNumber
-      }
-      cartItem.number = number;
-      this.cartGoods[itemIndex].Quantity = number;
-    },
-    // 增加数量
-    addNumber (event) {
-      let itemIndex = event.target.dataset.itemIndex;
-      let cartItem = this.cartGoods[itemIndex];
-      console.log(cartItem)
-      const stock = cartItem.Stock
-      let number = cartItem.Quantity + 1;
-      if(number <= stock) {
-        this.cartGoods[itemIndex].Quantity = number;
-      } else {
-        this.$wx.showErrorToast('超出库存')
-      }
-    },
     // 点击“下单”，跳转到下单页
     checkoutOrder () {
       // 获取已选择的商品
@@ -287,6 +334,7 @@ export default {
       this.pageNo = 1
       this.cartGoods = []
       this.checkedAllStatus = false
+      this.isEditCart = false
       this.loading = true
       await Promise.all([
         this.getCartList()
@@ -303,7 +351,196 @@ export default {
             skuId: item.SkuId
           })
       this.$router.push(goodsUrl)
+    },
+    async openSelect (item) {
+      this.edit = newEditInfo()
+      this.edit.cartId = item.Id
+      this.edit.productId = item.ProductId
+      this.$wx.showLoading('正在加载商品')
+      await Promise.all([
+        this.getGoodsSkuInfo(),
+        this.getGoodsDetail(),
+      ]);
+      this.getRouteSku(item.SkuId)
+      // 设置当前购物车里商品的数量,获取价格
+      this.edit.number = item.Quantity
+      this.getSkuPrice()
+      this.$wx.hideLoading()
+
+      this.openAttr = true
+
+    },
+    // 关闭规格弹窗
+    closeAttr (e) {     
+      if(e != 'no') {
+        this.openAttr = false;
+      }
+    },
+    // 获取商品SKu详情
+    async getGoodsSkuInfo () {
+      var par = {
+        ProductId : this.edit.productId
+      }
+      const res = await api.getGetSKUInfo(par)
+      if(res.success) {
+        this.edit.skuInfo = res.data
+      }
+    },
+    // 获取商品详情
+    async getGoodsDetail () {
+      const openId = wx.getStorageSync('openId')
+      var par = {
+        ProductId : this.edit.productId,
+      }
+      if(openId) {
+        par = Object.assign(par ,{openId : openId})
+      }
+      const res = await api.getGoodsDetail(par)
+      if(res.success){
+        this.edit.detailInfo = res.data
+      } else {
+        this.$wx.showErrorToast(res.msg)
+      }
+    },
+    // 根据路由信息进来
+    getRouteSku (skuId) {
+      const skuInfo = this.edit.skuInfo
+      let skuItem = {}
+      skuInfo.map(item => {
+        if(item.SkuId == skuId) {
+          skuItem = item
+        }
+      })
+      this.setSkuInfo(skuItem)
+    },
+    // 设置skuid , SaleNumber , number , detailInfo.Price
+    setSkuInfo (skuItem) {
+      this.edit.skuId = skuItem.SkuId
+      this.edit.Stock = skuItem.Stock
+      // 默认数量和最低销售数量
+      this.edit.number = skuItem.SaleNumber != 0 ? skuItem.SaleNumber : 1
+      this.edit.saleNumber = skuItem.SaleNumber != 0 ? skuItem.SaleNumber : 1
+      // 1031性能调优
+      this.edit.skuPrice = skuItem.Price 
+      this.edit.detailInfo.Price = skuItem.Price * this.edit.number
+      this.getDefalutSelect()
+    },
+    getSkuPrice() {
+      this.getSkuInfoPirce()
+    },
+    // 选择skuInfo的价格
+    getSkuInfoPirce() {
+      const skuInfo = this.edit.skuInfo
+      const skuId = this.edit.skuId
+      // 将数量转为纯数字
+      this.edit.number = Number(this.edit.number)
+      // 1031性能优化
+      if(this.edit.number < this.edit.saleNumber) {
+        this.edit.number = this.edit.saleNumber
+      }
+      this.edit.detailInfo.Price = util.accMul(this.edit.skuPrice , this.edit.number)
+    },
+    // 规格弹窗中，每个规则项的点击事件
+    clickSkuValue (skuName , skuId , skuValue) {
+      this.edit.selectSku[skuName] = skuId
+      this.edit.selectSkuStr[skuName] = skuValue
+      this.setSkuId()
+    },
+    setSkuId () {
+      var skuStr = this.edit.productId + ''
+      const selectSku = this.edit.selectSku
+      for(var key in selectSku) {
+        skuStr += `_${selectSku[key]}`
+      }
+      const skuInfo = this.edit.skuInfo
+      // 1031性能调优
+      let skuItem = {}
+      skuInfo.map(item => {
+        if(item.SkuId == skuStr) {
+          skuItem = item
+        }
+      })
+      this.setSkuInfo(skuItem)
+    },
+    // 获取默认选项
+    getDefalutSelect() {
+      const skuId = this.edit.skuId
+      const skuIdArr = skuId.split('_')
+      const selectSkuStr = this.edit.selectSkuStr
+      const detailInfo = this.edit.detailInfo
+      this.edit.selectSku.Color = Number(skuIdArr[1])
+      this.edit.selectSku.Size = Number(skuIdArr[2])
+      this.edit.selectSku.Version = Number(skuIdArr[3])
+      this.edit.selectSku.Material = Number(skuIdArr[4])
+      this.edit.selectSku.Fashion = Number(skuIdArr[5])
+      this.edit.selectSku.Grams = Number(skuIdArr[6])
+      this.edit.selectSku.Ensemble = Number(skuIdArr[7])
+      //文字
+      for(var key in selectSkuStr) {
+        if(detailInfo[key].length != 0) {
+          detailInfo[key].map(item => {
+            if(item.SkuId === this.edit.selectSku[key]) {
+              this.edit.selectSkuStr[key] = item.Value
+            }
+          })
+        }
+      }
+    },
+    // 减少数量
+    cutNumber () {
+      this.edit.number = this.edit.number - 1 
+      this.getSkuInfoPirce()
+    },
+    // 增加数量
+    addNumber () {
+      this.edit.number = this.edit.number + 1;
+      this.getSkuInfoPirce()
+    },
+    // 数量变化
+    numberChange (number) {
+      this.edit.number = number != '' ? Number(number) : this.edit.number
+      this.getSkuInfoPirce()
+    },
+    // 更新购物车
+    async upDateCart () {
+      const openId = wx.getStorageSync('openId')
+      var par = {
+        Id: this.edit.cartId,
+        openId: openId,
+        productId: this.edit.productId,
+        isCustom: this.edit.detailInfo.IsCustom,//标准品
+        skuId: this.edit.skuId,
+        quantity: this.edit.number,
+        price: this.edit.detailInfo.Price,
+        rowState: 'M'
+      }
+      // 标准品检查库存
+      if(this.checkStock()) return
+      this.$wx.showLoading('正在修改')
+      const res = await api.modifyShoppingCart(par)
+      this.$wx.hideLoading()
+      if(res.success) {
+        this.closeAttr()
+        this.refresh()
+        this.$wx.showSuccessToast('修改成功')
+      } else {
+        this.$wx.showErrorToast(res.msg)
+      }
+    },
+    // 检查库存
+    checkStock() {
+      let check = false
+      if(this.edit.number > this.edit.Stock) {
+        this.$wx.showErrorToast('超出库存') 
+        check = true
+      }
+      return check
+    },
+    //catchtouchmove阻止弹窗后滚动穿透
+    stopPageScroll(){
+      return
     }
+
   },
   watch: {
     cartGoods (oldval , newval) {
@@ -439,7 +676,7 @@ page{
   position: fixed;
   left: 0;
   top: 0;
-  z-index: 1000;
+  z-index: 5;
   padding: 0 20rpx;
   box-sizing: border-box;
   box-shadow: 0 2rpx 10rpx rgba(0,0,0,0.2);
@@ -563,6 +800,7 @@ page{
 .cart-view .item .name{
     float: left;
     line-height: 30rpx;
+    max-height: 60rpx;
     font-size: 24rpx;
     color: #282828;
     width: 350rpx;
@@ -582,7 +820,7 @@ page{
 
 .cart-view .item .attr{
     width: 400rpx;
-    /* height: 55rpx;  */
+    max-height: 72rpx; 
     margin-top: 10rpx;
     margin-bottom: 15rpx;
     line-height: 25rpx;
@@ -621,40 +859,8 @@ page{
     color: #333;
 }
 
-.cart-view .item.edit .attr{
-    text-align: left;
-    background: url(http://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/arrow-right1-e9828c5b35.png) right center no-repeat;
-    padding-right: 25rpx;
-    background-size: 12rpx 20rpx;
-    margin-bottom: 24rpx;
-    height: 39rpx;
-    line-height: 39rpx;
-    font-size: 24rpx;
-    color: #999;
-    overflow: hidden;
-}
-
-.cart-view .item.edit .b{
-    display: flex;
-    height: 52rpx;
-    overflow: hidden;
-}
-
-.cart-view .item.edit .price{
-    line-height: 52rpx;
-    height: 52rpx;
-    flex: 1;
-}
-
 .cart-view .item .selnum{
     display: none;
-}
-
-.cart-view .item.edit .selnum{
-    width: 235rpx;
-    height: 48rpx;
-    border: 1rpx solid #ccc;
-    display: flex;
 }
 
 .selnum .cut{
@@ -801,7 +1007,41 @@ page{
     text-align: center;
     line-height: 88rpx;
     font-size: 28rpx;
-    background: #009e96;
+    background: #b4282d;
     color: #fff;
+}
+.attr-pop-box {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  background: rgba(0, 0, 0, .5);
+  z-index: 8;
+  bottom: 0;
+  
+}
+
+.attr-pop {
+  width: 100%;
+  max-height: 780rpx;
+  padding: 31.25rpx 0  0 50.25rpx;
+  background: #fff;
+  position: fixed;
+  z-index: 9;
+  bottom: 100rpx;
+}
+
+.attr-select {
+  position: relative;
+  border: 1rpx solid #e5e5e5;
+  padding: 10rpx 30rpx 10rpx 10rpx;
+  border-radius: 4rpx;
+  /* box-shadow: 0 0 2rpx rgba(0,0,0,0.05); */
+}
+.select-span {
+  position: absolute;
+  right: 5rpx;
+  top: 50%;
+  font-size: 30rpx;
+  transform: translateY(-50%) rotate(90deg) scaleX(.5);
 }
 </style>

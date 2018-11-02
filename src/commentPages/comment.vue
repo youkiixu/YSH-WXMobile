@@ -38,9 +38,7 @@
 
 <script>
 import api from '@/utils/api';
-// import util from '@/utils/util';
-// import wx from 'wx';
-// import getCurrentPages from 'wxFunction';
+import wx from 'wx';
 
 export default {
   data () {
@@ -68,14 +66,6 @@ export default {
     }
   },
   async mounted () {
-    // if (this.$route.query.typeId && this.$route.query.valueId) {
-    //   this.typeId = parseInt(this.$route.query.typeId);
-    //   this.valueId = parseInt(this.$route.query.valueId);
-    // }
-    // 加了全局mixins还原旧数据，废除以下代码
-    // this.commentType = 1
-    // this.pageNo = 0
-    // this.comments = []
     await Promise.all([
       this.getCommentCount(),
       this.getCommentList()
