@@ -6,7 +6,7 @@ let ApiKiyUrl = 'https://www.kiy.cn/'
 
 const api = {
   //获取sass首页
-  getSassIndex: (paramObj) => request.post('/Wxmobile/JsonAjax/Hi_Ajax_GetTemplateByID?client=t1', paramObj, {
+  getSassIndex: (paramObj) => request.post('/Wxmobile/JsonAjax/Hi_Ajax_GetTemplateByID?client=t6', paramObj, {
     baseURL: ApiKiyUrl
   }),
   getOpenId: (paramObj) => request.post('/Wxmobile/Share/GetSmallUserOpenId', paramObj, {
