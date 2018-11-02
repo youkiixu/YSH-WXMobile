@@ -197,7 +197,7 @@ export default {
             num = util.addNum(num , toTal)
           }
       })
-      return Number(num.toString().match(/^\d+(?:\.\d{0,2})?/))
+      return Number(num.toFixed(2))
     }
   },
   methods: {
