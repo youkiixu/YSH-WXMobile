@@ -369,12 +369,12 @@ export default {
       // this.$wx.showLoading()
       await Promise.all([
         this.getGoodsSkuInfo(),
-        this.getGoodsDetail(),
-        this.getGoodsDesc(),
-        this.getComment(),
-        this.IsCollection(),
-        this.getShoppingCartCount()
+        this.getGoodsDetail()
       ]);
+      this.getGoodsDesc()
+      this.getComment()
+      this.IsCollection()
+      this.getShoppingCartCount()
       // this.$wx.hideLoading()
       this.setTitle(this.detailInfo.ProductName)
       // 默认选中配送方式，必须在报价之前选中默认的报价
@@ -1281,7 +1281,7 @@ page{
   margin-top: 30rpx;
   background-color: white;
   width: 750rpx;
-  padding: 0 20rpx 120rpx 20rpx;
+  padding: 0 0rpx 120rpx 0rpx;
   box-sizing: border-box;
   overflow: hidden;
 }
@@ -1292,12 +1292,7 @@ page{
   font-size: 28rpx;
   color: #555555;
 }
-.proDetail .content image{
-  max-width: 710rpx !important;
-}
-.proDetail .content img{
-  max-width: 710rpx !important;
-}
+
 .goods-attr {
   width: 750rpx;
   height: auto;
