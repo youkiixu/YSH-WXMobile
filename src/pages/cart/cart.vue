@@ -353,6 +353,9 @@ export default {
       this.$router.push(goodsUrl)
     },
     async openSelect (item) {
+      if(!this.isEditCart) {
+        return
+      }
       this.edit = newEditInfo()
       this.edit.cartId = item.Id
       this.edit.productId = item.ProductId
