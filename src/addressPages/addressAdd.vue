@@ -254,6 +254,7 @@ export default {
     },
     // 点击底部“保存按钮”保存地址
     async saveAddress () {
+      
       const _this = this
       const openId = wx.getStorageSync('openId')
       let address = this.address;
@@ -273,7 +274,7 @@ export default {
         this.$wx.showErrorToast('请输入详细地址');
         return false;
       }
-      
+      console.log('address.Address：',address.Address)
       var par = {
         UserId: this.userInfo.Id,
         ShipTo: address.ShipTo,
@@ -350,6 +351,7 @@ page{
 }
 .detailAddress .detailAddress-input{
    line-height: 50rpx; 
+   width: 100%;
 }
 
 .add-address .form-default{
