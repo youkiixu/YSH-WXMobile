@@ -85,6 +85,7 @@ import api from '@/utils/api'
 import wx from 'wx'
 import loadingComponent from '@/components/loadingComponent'
 
+
 export default {
    components: {
     loadingComponent

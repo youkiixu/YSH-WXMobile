@@ -33,6 +33,7 @@
 
   <view :class="[navList.length != 0 ? 'search-result' : 'search-result-nopadding']">
       <sortGoods :goodsList="goodsList" v-if="goodsList && !loading"></sortGoods>
+      <loadingMore v-if="more"></loadingMore>
       <searchResultEmpty v-if="!goodsList.length && !loading"></searchResultEmpty>
       <loadingComponent v-if="loading"></loadingComponent>
   </view>
@@ -49,12 +50,14 @@ import util from '@/utils/util'
 import sortGoods from '@/components/sortGoods'
 import searchResultEmpty from '@/components/searchResultEmpty'
 import loadingComponent from '@/components/loadingComponent'
+import loadingMore from '@/components/loadingMore'
 
 export default {
   components: {
     sortGoods,
     searchResultEmpty,
-    loadingComponent
+    loadingComponent,
+    loadingMore
   },
   data () {
     return {
@@ -75,7 +78,8 @@ export default {
       size: 20, // 默认10000尽量大，查到所有符合的数据
       orderKey: 1,
       loading: true,
-      title: ''
+      title: '',
+      more: false
     }
   }, 
   // onLoad () {
@@ -223,9 +227,13 @@ export default {
     },
 
   //小程序原生上拉加载
-  onReachBottom () {
+  async onReachBottom () {
     this.page++
-    this.searchGoods()
+    this.more = true
+    await Promise.all([
+      this.searchGoods()
+    ])
+    this.more = false
   },
   // 小程序原生下拉刷新
   onPullDownRefresh: function() {

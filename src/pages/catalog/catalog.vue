@@ -11,12 +11,12 @@
                 :data-index="index" @click="switchCateLog(index)">{{item.Name}}</view>
         </scroll-view>
         <scroll-view class="cate" scroll-y="true"  :style="{'height' : '100%'}">
-            <view class="cate_item" v-for="( categoryChild , index1 ) of categoryList" :key="index1">
+            <view class="cate_item" v-for="( categoryChild , index1 ) of categoryList" :key="index1" v-if="!loading2">
               <view class="hd">
                   <text class="txt">{{categoryChild.Name}}分类</text>
               </view>
               <view class="bd">
-                  <view @click="$router.push({ path: '/pages/category/category', query: { cid : item.Id ,categoryChild: JSON.stringify(categoryChild.SubCategories) } })"  :class="(index2+1) % 3 == 0 ? 'last item' : 'item'" v-for="(item, index2) of categoryChild.SubCategories"
+                  <view @click="toPage(item.Id , categoryChild.SubCategories)"  :class="(index2+1) % 3 == 0 ? 'last item' : 'item'" v-for="(item, index2) of categoryChild.SubCategories"
                       :key="item.Id">
                       <img class="icon" :src="item.Image ?  baseUrl + item.Image : 'http://www.kiy.cn/Areas/wxMobile/Content/img/defalutimg.png'"/>
                       <text class="txt">{{item.Name}}</text>
@@ -32,8 +32,6 @@
 <script>
 import api from '@/utils/api'
 import wx from 'wx'
-import { formatCatelog } from '@/utils/format'
-import { mapState, mapActions } from 'vuex'
 import searchBar from '@/components/indexSearchBar'
 import loadingComponent from '@/components/loadingComponent'
 
@@ -50,7 +48,9 @@ export default {
       scrollTop: 0,
       goodsCount: 0,
       scrollHeight: 0,
-      loading: true
+      loading: true,
+      categoryList: [],
+      loading2: false
     }
   },
   async mounted () {
@@ -59,35 +59,36 @@ export default {
     ])
   },
   computed: {
-    ...mapState([
-      'categoryList'
-    ]),
     baseUrl() {
         return this.$wx.baseUrl
     }
     
   },
   methods: {
-    ...mapActions([
-      // 'getIndexData',
-      'getCategoryList' 
-    ]),
-    // 获取SASS分类星系
-    async getSassCateGory() {
-      const res = await api.getSassCategory({});
-      if(res.success) {
-        // const catelogData = formatCatelog(res.data)
-        this.navList = res.data
-        this.switchCateLog(0)
-      }
-    }, 
-    // 选择不同分分类
-    switchCateLog(index) {
-
-        this.currentCategory = this.navList[index]
-        console.log(this.currentCategory)
-        this.getCategoryList(this.currentCategory.SubCategories)
-        this.loading = false
+      // 获取SASS分类星系
+      async getSassCateGory() {
+        const res = await api.getSassCategory({});
+        if(res.success) {
+          this.navList = res.data
+          this.switchCateLog(0)
+        }
+      }, 
+      // 选择不同分分类
+      switchCateLog(index) {
+          this.currentCategory = this.navList[index]
+          this.categoryList = this.currentCategory.SubCategories
+          this.loading = false
+      },
+      toPage(id , SubCategories) {
+        this.$router.push(
+          { 
+            path: '/pages/category/category', 
+            query: { 
+              cid : id ,
+              categoryChild: JSON.stringify(SubCategories) 
+            } 
+          }
+        )
       }
     },
     // 小程序原生下拉刷新
@@ -100,7 +101,7 @@ export default {
       return {
         title: '印生活商城',
         desc: '印生活',
-        path: '/pages/index/index'
+        path: '/pages/catalog/catalog'
       }
     }
   }

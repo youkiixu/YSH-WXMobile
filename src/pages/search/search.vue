@@ -33,6 +33,7 @@
 
   <view class="search-result" v-if="searchStatus && goodsList.length">
     <sortGoods :goodsList = goodsList></sortGoods>
+    <loadingMore v-if="more"></loadingMore>
   </view> 
   
 
@@ -50,6 +51,7 @@ import sortGoods from '@/components/sortGoods'
 import searchBar from '@/components/indexSearchBar'
 import searchResultEmpty from '@/components/searchResultEmpty'
 import loadingComponent from '@/components/loadingComponent'
+import loadingMore from '@/components/loadingMore'
 import util from '@/utils/util'
 
 export default {
@@ -57,7 +59,8 @@ export default {
     sortGoods,
     searchBar,
     searchResultEmpty,
-    loadingComponent
+    loadingComponent,
+    loadingMore
   },
   data () {
     return {
@@ -75,7 +78,8 @@ export default {
       orderKey: 1,    
       scrollTop: 0,
       floorstatus: false,
-      loading: false
+      loading: false,
+      more: false
       
     }
   },
@@ -200,9 +204,13 @@ export default {
       }   
     },
   // 小程序原生上拉加载
-  onReachBottom () {
+  async onReachBottom () {
     this.page++
-    this.getGoodsList()
+    this.more = true
+    await Promise.all([
+      this.getGoodsList()
+    ])
+    this.more = false
   },
   // 小程序原生下拉刷新
   onPullDownRefresh: function() {
@@ -280,7 +288,7 @@ export default {
     top: 91rpx;
     z-index: 1000;
     background: #fff;
-    box-shadow: 0 2rpx 10rpx rgba(0,0,0,.2);
+    /* box-shadow: 0 2rpx 10rpx rgba(0,0,0,.2); */
 }
 
 .sort-box{

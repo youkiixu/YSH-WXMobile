@@ -35,6 +35,7 @@
                 </view>
             </view>
         </view>
+        <loadingMore v-if="more"></loadingMore>
         <searchResultEmpty v-if="!orderList.length && !loading" text="该分类下没有订单信息"></searchResultEmpty>
         <loadingComponent v-if="loading"></loadingComponent>
     </view>
@@ -47,11 +48,13 @@ import wx from 'wx'
 import orderInfoStatus from '@/utils/orderInfoStatus'
 import loadingComponent from '@/components/loadingComponent'
 import searchResultEmpty from '@/components/searchResultEmpty'
+import loadingMore from '@/components/loadingMore'
 
 export default {
     components: {
         loadingComponent,
-        searchResultEmpty
+        searchResultEmpty,
+        loadingMore
     },
   data () {
     return {
@@ -59,7 +62,8 @@ export default {
       pageNo: 1,
       pageSize: 15,
       orderStatus: false,
-      loading: true
+      loading: true,
+      more: false
     }
   },
   computed: {
@@ -77,16 +81,18 @@ export default {
     } else {
         this.orderStatus = false
     }
+    this.loading = true
     await Promise.all([
       this.getUserOrderList()
     ])
+    this.loading = false
   },
   methods: {
     // 获取用户订单数据
     async getUserOrderList () {
         const openId = wx.getStorageSync('openId')
         // this.$wx.showLoading()
-        this.loading = true
+        
 
         const res = await api.getUserOrderList({ openId: openId , pageNo: this.pageNo , pageSize: this.pageSize , orderStatus: this.orderStatus })               
         // this.$wx.hideLoading()
@@ -98,7 +104,6 @@ export default {
                 arr.push(item)
             })
             this.orderList = this.orderList.concat(arr)
-            this.loading = false
         } else {
             // 没有登陆请登录
             this.$wx.toLogin()
@@ -106,16 +111,19 @@ export default {
         
     },
     // 选择状态
-    selectStatus (status) {
+    async selectStatus (status) {
         if(status) {
             this.orderStatus = status
         } else {
             this.orderStatus = false
         }
-        console.log(this.orderStatus)
+        this.loading = true
         this.orderList = []
         this.pageNo = 1
-        this.getUserOrderList()
+        await Promise.all([
+            this.getUserOrderList()
+        ])
+        this.loading = false
     },
     // 查看物流
     checkExpress (item) {
@@ -139,9 +147,13 @@ export default {
     }
   },
   // 小程序原生上拉加载
-  onReachBottom () {
+  async onReachBottom () {
     this.pageNo++
-    this.getUserOrderList()
+    this.more = true
+    await Promise.all([
+        this.getUserOrderList()
+    ])
+    this.more = false
   },
   // 小程序原生下拉刷新
   onPullDownRefresh: function() {

@@ -43,6 +43,7 @@
               </view>
             </view>
           </view>
+          <loadingMore v-if="more"></loadingMore>
         </view>
       </view>
     </view>
@@ -95,6 +96,7 @@ import api from '@/utils/api'
 import wx from 'wx'
 import util from '@/utils/util'
 import loadingComponent from '@/components/loadingComponent'
+import loadingMore from '@/components/loadingMore'
 import selectComponent from '@/components/selectComponent'
 import { mapState , mapActions } from 'vuex'
 function newEditInfo() {
@@ -168,7 +170,8 @@ export default {
       openAttr: false,
       edit : {
 
-      }
+      },
+      more: false
     }
   },
   async mounted () {
@@ -571,9 +574,13 @@ export default {
     }
   },
     // 小程序原生上拉加载
-  onReachBottom () {
+  async onReachBottom () {
     this.pageNo++
-    this.getCartList()
+    this.more = true
+    await Promise.all([
+      this.getCartList()
+    ])
+    this.more = false
   },
   // 小程序原生下拉刷新
   onPullDownRefresh: function() {

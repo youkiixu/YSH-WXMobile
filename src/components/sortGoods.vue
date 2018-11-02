@@ -5,7 +5,7 @@
             <view class="b"> 
                   <view v-for="item of goodsList" :key="item.ProductId" :class="(index + 1) % 2 === 0 ? 'item-b item' : 'item'"
                    @click="toDetail(item)" >
-                    <img class="img" :src="baseUrl + item.imagePath + '/1_350.png'" mode="scaleToFill" />
+                    <img class="img" :src="baseUrl + item.imagePath + '/1_350.png'" mode="scaleToFill" lazy-load/>
                     <view class="b-txt">                                         
                       <view class="name">{{item.ProductName}}</view>
                        <view class="ShopName">{{item.ShopName}}</view>
