@@ -4,7 +4,7 @@
         <img class="icon" src="/static/images/icon_close.png"/>
       </view>
       <view class="img-info clear">
-        <img class="img" :src="baseUrl + detailInfo.imagePath + '/1_350.png'"/>
+        <img class="img" :src="baseUrl + detailInfo.imagePath + '/1_350.png'" @click="previewImage(baseUrl + detailInfo.imagePath + '/1_350.png')"/>
         <view class="info">
           <view class="c">
             <view class="p" v-if="!detailInfo.IsCustom"><text class="p-icon">￥</text>{{detailInfo.Price}}</view>
@@ -17,7 +17,7 @@
       </view>
       <scroll-view scroll-y class="spec-con">
         <view class="spec-item" v-if="detailInfo.IsCustom">
-            <view class="name">点击选择参数</view>
+            <view class="name">点击这里选择参数重新报价</view>
             <view class="values"  v-for="(item , index) in ListPriceInfo.paraArr" :key="index">
               <view class="selected value" @click="toBaojia">{{item.paraStr}}</view>
             </view>
@@ -80,11 +80,15 @@
         </view>
       </scroll-view>
       <view class="car-btn clear" v-if="!SubmitByProductType">
-          <view class="car-add" @click="addToCart" hover-class>加入购物车</view>
-          <view class="car-buy" @click="SubmitByProduct" hover-class>立即购买</view>
+          <view class="car-add"  v-if="detailInfo.IsNotNeedFile" @click="addToCart" hover-class>加入购物车</view>
+          <view class="car-buy"  v-if="detailInfo.IsNotNeedFile" @click="SubmitByProduct" hover-class>立即购买</view>
+          <!-- IsNotNeedFile 预计将用这个需不需要上传文件字段判断是否可以下单或加入购物车-->
+          <view class="car-buy disabled" v-if="!detailInfo.IsNotNeedFile" style="width:100%;" @click="disabledClick">下单需要上传文件，请到电脑端操作</view>
       </view>
       <view class="car-btn clear" v-if="SubmitByProductType">
-          <view class="car-buy" style="width:100%;" @click="SubmitByProduct" hover-class>{{btnText}}</view>
+          <view class="car-buy" v-if="detailInfo.IsNotNeedFile" style="width:100%;" @click="SubmitByProduct" hover-class>{{btnText}}</view>
+          <!-- IsNotNeedFile 预计将用这个需不需要上传文件字段判断是否可以下单或加入购物车-->
+          <view class="car-buy disabled" v-if="!detailInfo.IsNotNeedFile" style="width:100%;" @click="disabledClick">下单需要上传文件，请到电脑端操作</view>
       </view>
     </view>   
 </template>
@@ -186,6 +190,18 @@ export default {
         },
         numberChange(e) {
             this.$emit('numberChange' , e.mp.detail.value)
+        },
+        disabledClick () {
+            this.$wx.showModal({
+                content: '此商品需要下单需要上传文件，小程序暂时仅提供报价功能，下单请移步PC电脑端操作.',
+                showCancel: false
+            })
+        },
+        previewImage (url) {
+            this.$wx.previewImage({
+                current: url,
+                urls: [url]
+            })
         }
     }
 }
@@ -379,6 +395,10 @@ export default {
   float: left;
   text-align: center;
   background-color: #009e96;
+}
+.car-btn  .disabled {
+    background-color: #777;
+    color: #f7f7f7;
 }
 </style>
 

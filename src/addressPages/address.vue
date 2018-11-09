@@ -15,7 +15,7 @@
               </view>
               <view class="info-txt">
                 <text class="default" v-if="item.IsDefault">平台默认</text>
-                <!-- <text class="default" v-if="item.IsYJDefault">印捷默认</text> -->
+                <text class="default" v-if="item.IsYJDefault">印捷默认</text>
                 <text>{{item.Province +' '+  item.City +' '+ item.Area +' '+ item.Street +' '+ item.Address }}</text>
               </view>
               <view class="info-edit" @click.stop="deleteAddress" :data-address-id="item.Id">删除</view>
@@ -94,7 +94,11 @@ export default {
       })
       return false;
     }
-  }
+  },
+  // 小程序原生上拉加载
+  async onReachBottom () {
+      this.getAddressList()
+  },
 }
 </script>
 

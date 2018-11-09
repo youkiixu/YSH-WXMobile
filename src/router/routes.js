@@ -192,5 +192,32 @@ module.exports = [
       enablePullDownRefresh: true,
       navigationBarTitleText: '厂家报价'
     }
-  }
+  },
+  {
+    path: 'wxchat/sellerChat',
+    subPackage: true,
+    name: 'sellerChat',
+    config: {
+      enablePullDownRefresh: false,
+      navigationBarTitleText: '与客户聊天'
+    }
+  },
+  {
+    path: 'wxchat/customerChat',
+    subPackage: true,
+    name: 'customerChat',
+    config: {
+      enablePullDownRefresh: false,
+      navigationBarTitleText: '与商家聊天'
+    }
+  },
+    {
+      path: 'wxchat/bindSeller',
+      subPackage: true,
+      name: 'bindSeller',
+      config: {
+        enablePullDownRefresh: false,
+        navigationBarTitleText: '成为客服'
+      }
+    }
 ]

@@ -185,6 +185,14 @@ const api = {
   getShoppingCartCount: (paramObj) => request.post('/Wxmobile/ShoppingCart/GetShoppingCartCount', paramObj, {
     baseURL: ApiKiyUrl
   }),
+  // 绑定商家客服
+  addCustomerService: (paramObj) => request.post('/Wxmobile/CustomerService/Add', paramObj, {
+    baseURL: ApiKiyUrl
+  }),
+  // 获取店铺客服
+  getCustomerService: (paramObj) => request.post('/Wxmobile/CustomerService/GetCustomerService', paramObj, {
+    baseURL: ApiKiyUrl
+  })
 }
 
 export default api

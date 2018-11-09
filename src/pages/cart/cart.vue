@@ -189,6 +189,7 @@ export default {
     baseUrl () {
       return this.$wx.baseUrl
     },
+    // 统计选中的总价
     allPrice () {
       var num = 0
       this.cartGoods.map(function (v) {
@@ -357,6 +358,7 @@ export default {
     },
     async openSelect (item) {
       if(!this.isEditCart) {
+        this.toDetail(item)
         return
       }
       this.edit = newEditInfo()

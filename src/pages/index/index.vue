@@ -51,8 +51,11 @@ export default {
     ])
   },
   // 小程序原生下拉刷新
-  onPullDownRefresh: function() {
-    this.getSassIndex()
+  async onPullDownRefresh () {
+    await Promise.all([
+      this.getSassIndex()
+    ])
+    this.loading = false
     wx.stopPullDownRefresh()
   },
   // 原生的分享功能

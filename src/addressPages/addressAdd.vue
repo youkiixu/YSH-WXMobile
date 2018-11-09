@@ -350,6 +350,7 @@ page{
   box-sizing: border-box;
 }
 .detailAddress .detailAddress-input{
+  height: 100rpx;
    line-height: 50rpx; 
    width: 100%;
 }

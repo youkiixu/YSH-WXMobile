@@ -37,7 +37,7 @@
                                 <div class="bottom-right p">货期{{item.DeliveryTime}}</div>
                             </div>
                             <div class="btn-group">
-                                <kiyButton  text="去下单" @onClick="toCheckOut(item)"></kiyButton>
+                                <!-- <kiyButton  text="去下单" @onClick="toCheckOut(item)"></kiyButton> -->
                                 <!-- <kiyButton :solid="true" text="加入购物车" @onClick="toCart(item)"></kiyButton> -->
                             </div>
                         </div>
@@ -332,7 +332,7 @@ page{
     font-size: 28rpx;
 }
 .bottom {
-    /* margin-top: 55rpx; */
+    margin-top: 55rpx;
     height: 60rpx;
     color: #949494;
 }

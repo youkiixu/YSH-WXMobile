@@ -113,13 +113,16 @@ export default {
     ]),
     // 点击登陆
     goLogin (isLogin) {
+      
       var _this = this;
       if(isLogin === true) {
-        // 点击头像进入
+        // 点击头像进入 
         this.$router.push({
             path: 'login' 
           })
       } else {
+        console.log(isLogin)
+        console.log(isLogin.mp.detail.rawData)
         _this.$wx.showLoading()
         user.loginByWeixin().then(res => {
           _this.$wx.hideLoading()

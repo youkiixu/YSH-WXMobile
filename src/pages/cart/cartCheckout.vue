@@ -382,7 +382,8 @@ export default {
         // 如果是印捷配送，不能修改3
         if(isYj) {
             this.$wx.showModal({
-                content: '有一项产品选择了印捷配送，不能更改地址。'
+                content: '有一项产品选择了印捷配送，不能更改地址。',
+                showCancel: false
             })
             return
         }

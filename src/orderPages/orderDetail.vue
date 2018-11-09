@@ -210,6 +210,7 @@ export default {
         const _this = this;
         this.$wx.showModal({
             content: `确认取消订单号为${this.OrderId}的订单?`,
+            showCancel: true
         }).then(res => {
             _this.setOrderClose()
         })

@@ -161,7 +161,7 @@ export default {
       const _this = this
       setTimeout(() => {
         _this.getFoodHeight()
-      }, 60);
+      }, 1);
     }
   },
 

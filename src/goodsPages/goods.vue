@@ -25,7 +25,7 @@
           <!-- 图片轮播 -->
           <swiper class="goodsimgs" indicator-dots="true" autoplay="true" interval="3000" duration="1000">
               <swiper-item v-for="(item, index) of gallery" :key="item.id" :data-index="index">
-                <img :src="baseUrl + item" background-size="cover" @error="imgError(item)"/>
+                <img :src="baseUrl + item" background-size="cover" mode="aspectFit" @error="imgError(item)" @click="previewImage(item)"/>
               </swiper-item>
           </swiper>
           <!-- 商品信息 -->
@@ -132,7 +132,7 @@
     </view>
     <!-- tabbar -->
     <view class="bottom-btn" v-if="!loading">
-      <view class="l l-collect" @click="callPhone" hover-class>
+      <view class="l l-collect" @click="toChat" hover-class>
           <img class="icon" src="/static/images/share.png"/>
       </view>
       <view class="l l-cart" @click="openCartPage" hover-class>
@@ -229,20 +229,20 @@ export default {
   },
   mounted () {
     if (this.$route.query.data) {
-          const data = JSON.parse(this.$route.query.data);
-          if(data.ProductName) {
-            this.setTitle(data.ProductName)
-          }
-          this.id = data.ProductId
-          // 非标报价id , 标准品为0
-          this.code = data.code ? data.code : 0
-          if(this.$route.query.proSearchParam) {
-            var param = {
-              dataStr: util.decode(this.$route.query.proSearchParam)
-            }
-            this.setProSearchParam(param)
-          }
+      const data = JSON.parse(this.$route.query.data);
+      if(data.ProductName) {
+        this.setTitle(data.ProductName)
       }
+      this.id = data.ProductId
+      // 非标报价id , 标准品为0
+      this.code = data.code ? data.code : 0
+      if(this.$route.query.proSearchParam) {
+        var param = {
+          dataStr: util.decode(this.$route.query.proSearchParam)
+        }
+        this.setProSearchParam(param)
+      }
+    }
     this.refresh()
   },
   computed: {
@@ -333,7 +333,7 @@ export default {
         this.ListPriceInfo.sprice = res.SumPrice
         this.ListPriceInfo.paraArr = ListPriceInfo.logJson
         this.ListPriceInfo.OriginalPrice = res.OriginalPrice
-        this.ListPriceInfo.Data =ListPriceInfo
+        this.ListPriceInfo.Data = ListPriceInfo
         this.ListPriceInfo.res = res
       } else {
         this.ListPriceInfo.sprice = 0
@@ -504,7 +504,7 @@ export default {
       this.saleNumber = skuItem.SaleNumber != 0 ? skuItem.SaleNumber : 1
       // 1031性能调优
       this.skuPrice = skuItem.Price 
-      this.detailInfo.Price = skuItem.Price * this.number
+      this.detailInfo.Price = util.accMul(skuItem.Price , this.number)
       this.getDefalutSelect()
     },
     // 选择skuInfo的价格
@@ -673,7 +673,7 @@ export default {
         this.openAttr = !this.openAttr;
       } else {
         
-        const openId = wx.getStorageSync('openId')
+        const openId = wx.getStorageSync('openId') 
         var par = {
           openId: openId,
           productId: this.id,
@@ -802,6 +802,59 @@ export default {
     callPhone() {
       this.$wx.makePhoneCall(this.detailInfo.CompanyPhone)
     },
+    previewImage (url) {
+      var urls = []
+      this.gallery.map(item => {
+        urls.push(this.baseUrl + item)
+      })
+      this.$wx.previewImage({
+        current: this.baseUrl + url,
+        urls: urls
+      })
+    },
+    async toChat() {
+      this.$wx.showLoading('正在加载客服')
+      const res = await api.getCustomerService({ShopId: this.detailInfo.ShopId})
+      this.$wx.hideLoading()
+      if(!res.success) {
+        this.$wx.showErrorToast(res.msg)
+        return
+      }
+      const selectSkuStr = this.selectSkuStr
+      let price = 0
+      let str = ''
+      if(this.detailInfo.IsCustom) {
+        price = this.ListPriceInfo.sprice + this.detailInfo.RemindPrice
+        this.ListPriceInfo.paraArr.map(item => {
+          str += `${item.paraStr} +`
+        })
+      } else {
+        price = this.skuPrice
+        for (const key in selectSkuStr) {
+          if(selectSkuStr[key] != '') {
+            str += `${selectSkuStr[key]} +`
+          }
+        }
+      }
+      const data = {
+          productId: this.detailInfo.ProductId,
+          productName : this.detailInfo.ProductName,
+          isCustom: this.detailInfo.IsCustom,
+          price: price,
+          number: this.number,
+          shopName: this.detailInfo.ShopName,
+          skuName: util.delLastStr(str , '+'),
+          imgUrl: this.baseUrl + this.gallery[0]
+        }
+      console.log(JSON.stringify(data))
+      this.$router.push({
+        path: '../wxchat/customerChat',
+        query: {
+          data: JSON.stringify(data),
+          customer: res.data
+        }
+      })
+    }
   },
   watch: {
     // number (e , b) {

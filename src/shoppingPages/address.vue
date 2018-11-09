@@ -11,7 +11,8 @@
                 <img src="/static/images/location.png" background-size="cover"/>
               </view>
               <view class="info-txt">
-                <text class="default" v-if="item.IsDefault">默认</text>
+                <text class="default" v-if="item.IsDefault">平台默认</text>
+                <text class="default" v-if="item.IsYJDefault">印捷默认</text>
                 <text>{{item.RegionFullName}} {{item.Address}}</text>
               </view>
               <view class="info-edit" @click.stop="addressAddOrUpdate" :data-address-id="item.Id">编辑</view>
