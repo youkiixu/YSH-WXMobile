@@ -1,24 +1,24 @@
 <template>
-    <view class="container">
-        <view class="sort">
-            <view class="sort-box">
-                <view :class=" currentSortType == 'default' ? 'active item' : 'item'"  @click="openSortFilter" id="defaultSort">
+    <div class="container">
+        <div class="sort">
+            <div class="sort-box">
+                <div :class=" currentSortType == 'default' ? 'active item' : 'item'"  @click="openSortFilter" id="defaultSort">
                     <text class="txt">综合</text>
-                </view>
-                <view :class="['item', 'by-sales by-sort', { active: currentSortType == 'sales', asc: currentSortOrder == 'asc', desc: currentSortOrder !== 'asc' }]"
+                </div>
+                <div :class="['item', 'by-sales by-sort', { active: currentSortType == 'sales', asc: currentSortOrder == 'asc', desc: currentSortOrder !== 'asc' }]"
                     @click="openSortFilter" id="salesSort">
                     <text class="txt">销量</text>
-                </view>
-                <view :class="['item', 'by-price by-sort', { active: currentSortType == 'price', asc: currentSortOrder == 'asc', desc: currentSortOrder !== 'asc' }]"
+                </div>
+                <div :class="['item', 'by-price by-sort', { active: currentSortType == 'price', asc: currentSortOrder == 'asc', desc: currentSortOrder !== 'asc' }]"
                     @click="openSortFilter" id="priceSort">
                     <text class="txt">价格</text>
-                </view>
-                <view :class="['item', 'by-comment by-sort', { active: currentSortType == 'comment', asc: currentSortOrder == 'asc', desc: currentSortOrder !== 'asc' }]"
+                </div>
+                <div :class="['item', 'by-comment by-sort', { active: currentSortType == 'comment', asc: currentSortOrder == 'asc', desc: currentSortOrder !== 'asc' }]"
                     @click="openSortFilter" id="commentSort">
                     <text class="txt">评论</text>
-                </view>
-            </view>
-        </view>
+                </div>
+            </div>
+        </div>
         <div class="list-content">
             <div class="list-item" v-for="(item , index) in quoteList" :key="index" >
                 <div class="list-item-box">
@@ -45,7 +45,7 @@
                 </div>
             </div>
         </div>
-    </view>
+    </div>
 </template>
 
 <script>

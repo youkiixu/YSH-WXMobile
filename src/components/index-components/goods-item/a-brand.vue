@@ -1,14 +1,14 @@
 <template>
-  <view class="nav a-section a-brand">
-    <view class="b clear">
-      <view class="item item-1" v-for="item of content.goodslist" :key="item.item_id">
-        <view @click="toDetail(item)">
+  <div class="nav a-section a-brand">
+    <div class="b clear">
+      <div class="item item-1" v-for="item of content.goodslist" :key="item.item_id">
+        <div @click="toDetail(item)">
               <text class="name">{{item.title}}</text>
               <img class="img" :src="baseUrl+ item.pic" mode="aspectFill" background-size="cover" />
-        </view>
-      </view>
-    </view>
-  </view>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 <script>
 export default {

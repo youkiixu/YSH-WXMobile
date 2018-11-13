@@ -1,25 +1,25 @@
 <template >
-<view class="comments">
-  <view class="b">
-    <view class="item" v-for="(item, index) of comments" :key="item.id" :data-index="index">
-      <view class="info">
-        <view class="user">
+<div class="comments">
+  <div class="b">
+    <div class="item" v-for="(item, index) of comments" :key="item.id" :data-index="index">
+      <div class="info">
+        <div class="user">
           <img :src="item.user_info.avatar"/>
           <text>{{item.user_info.nickname}}</text>
-        </view>
-        <view class="time">{{item.add_time}}</view>
-      </view>
-      <view class="comment">{{item.content}}</view>
-      <view class="imgs" v-if="item.pic_list.length">
+        </div>
+        <div class="time">{{item.add_time}}</div>
+      </div>
+      <div class="comment">{{item.content}}</div>
+      <div class="imgs" v-if="item.pic_list.length">
         <img class="img" v-for="(iitem, iindex) of item.pic_list" :key="iitem.id" :data-index="iindex" :src="iitem.pic_url"/>
-      </view>
-      <view class="customer-service" v-if="item.commentReplyVO">
+      </div>
+      <div class="customer-service" v-if="item.commentReplyVO">
         <text class="u">小选回复：</text>
         <text class="c">{{item.commentReplyVO.replyContent}}</text>
-      </view>
-    </view>
-  </view>
-</view>
+      </div>
+    </div>
+  </div>
+</div>
 </template>
 
 <script>

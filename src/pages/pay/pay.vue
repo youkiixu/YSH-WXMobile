@@ -1,27 +1,27 @@
 <template >
-<view class="container">
-    <view class="total">
-      <view class="label">订单金额</view>
-      <view class="txt">{{actualPrice}}元</view>
-    </view>
-    <view class="pay-list">
-        <view class="h">请选择支付方式</view>
-        <view class="b">
-            <!-- <view class="item">
-                <view class="checkbox"></view>
-                <view class="icon-alipay"></view>
-                <view class="name">支付宝</view>
-            </view> -->
-            <view class="item">
-                <view class="checkbox checked"></view>
-                <image src="/static/images/wxpay.png" class="icon"/>
-                <view class="name">微信支付</view>
-            </view>
-        </view>
-    </view>
-    <view class="tips">小程序只支持微信支付，如需其它支付方式，请在网页版支付</view>
-    <view class="pay-btn" @click="startPay">确定</view>
-</view>
+<div class="container">
+    <div class="total">
+      <div class="label">订单金额</div>
+      <div class="txt">{{actualPrice}}元</div>
+    </div>
+    <div class="pay-list">
+        <div class="h">请选择支付方式</div>
+        <div class="b">
+            <!-- <div class="item">
+                <div class="checkbox"></div>
+                <div class="icon-alipay"></div>
+                <div class="name">支付宝</div>
+            </div> -->
+            <div class="item">
+                <div class="checkbox checked"></div>
+                <img src="/static/images/wxpay.png" class="icon"/>
+                <div class="name">微信支付</div>
+            </div>
+        </div>
+    </div>
+    <div class="tips">小程序只支持微信支付，如需其它支付方式，请在网页版支付</div>
+    <div class="pay-btn" @click="startPay">确定</div>
+</div>
 </template>
 
 <script>

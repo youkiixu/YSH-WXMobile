@@ -1,59 +1,59 @@
 <template>
-    <view>
+    <div>
         <!-- 选择客服页面 -->
-        <view class="select-content" v-if="isSelect">
+        <div class="select-content" v-if="isSelect">
             <div class="select-customer" v-for="(item , index) in customers" :key="index" @click="selectCustomer(item)">
                 <img class="imgs" src="http://kiy.cn/Areas/Wxmobile/Content/img/online-service.png" />
                 <text class="name">{{item.Name}}</text>
                 <text class="name type">{{item.Type == 1 ? '售前客服' : '售后客服'}}</text>
             </div>
-        </view>
+        </div>
         <!-- 聊天页面 -->
-        <view class="chat" :style="{'height' : height + 'px'}" v-if="!isSelect">
+        <div class="chat" :style="{'height' : height + 'px'}" v-if="!isSelect">
             <scroll-view scroll-y='true' :scroll-top="chatValHeight"  class="chat-content" :style="{'height': chatHeight + 'px'}" @scrolltoupper="scrolltoupper">
-                <view v-for="(item , index) in wxchatLists" :key="index">
+                <div v-for="(item , index) in wxchatLists" :key="index">
                     <!-- ↑ wx:for="{{wxchatLists}}" wx:key="{{index}}" -->
-                    <view class="chat-content-list-time">{{item.msg_type != 'product' ? item.dataTime : productInfo.productName}}</view>
-                    <view :class="item.type === 1 ? 'chat-content-list right' : 'chat-content-list'" >
-                        <image class="chat-content-list-avatar "  :src="item.userImgSrc"></image>
-                        <view class="chat-content-list-content " @longtap="delMsg" :data-index="index">
+                    <div class="chat-content-list-time">{{item.msg_type != 'product' ? item.dataTime : productInfo.productName}}</div>
+                    <div :class="item.type === 1 ? 'chat-content-list right' : 'chat-content-list'" >
+                        <img class="chat-content-list-avatar "  :src="item.userImgSrc" />
+                        <div class="chat-content-list-content " @longtap="delMsg" :data-index="index">
                             <!--  文字信息模板  ↓ hidden="{{!(item.msg_type === 'text')}}" -->
-                            <view class="chat-content-list-msg"  :hidden="!(item.msg_type === 'text')"> 
+                            <div class="chat-content-list-msg"  :hidden="!(item.msg_type === 'text')"> 
                                 <text selectable='true'>{{item.textMessage}}</text>
-                                <view class='over-read-tip '></view>
-                            </view>
+                                <div class='over-read-tip '></div>
+                            </div>
 
                             <!--  语音信息模板  ↓   hidden="{{!(item.msg_type === 'voice')}}" -->
-                            <view class="chat-content-list-voice"  @click='playRecord' :hidden="!(item.msg_type === 'voice')" >
+                            <!-- <div class="chat-content-list-voice"  @click='playRecord' :hidden="!(item.msg_type === 'voice')" >
                                 <text class=''>{{item.voiceTime}}s</text> 
-                                <image class='chat-voice-img' src='../static/images/chat-voice-img@3x.png'></image>
-                                <view class='over-read-tip '></view>
-                            </view>
+                                <img class='chat-voice-img' src='../static/images/chat-voice-image@3x.png' />
+                                <div class='over-read-tip '></div>
+                            </div> -->
 
                             <!--  图片信息模板  ↓   -->
-                            <view class="chat-content-list-img"  :hidden="!(item.msg_type === 'img')" >
-                                <image :src="item.sendImgSrc" mode="aspectFill"  @click='seeBigImg'  :data-index="index"></image>
-                                <!-- <view class='chat-content-list-msg-del' data-index="{{index}}" bindtap="delMsg">X</view> -->
-                                <view class='over-read-tip '></view>
-                            </view>
-                        </view>
+                            <div class="chat-content-list-img"  :hidden="!(item.msg_type === 'img')" >
+                                <img :src="item.sendImgSrc" mode="aspectFill"  @click='seeBigImg'  :data-index="index" />
+                                <!-- <div class='chat-content-list-msg-del' data-index="{{index}}" bindtap="delMsg">X</div> -->
+                                <div class='over-read-tip '></div>
+                            </div>
+                        </div>
                         <!-- 产品模板 -->
-                        <view class="img-info clear" v-if="item.msg_type === 'product'">
+                        <div class="img-info clear" v-if="item.msg_type === 'product'">
                             <img class="img" :src="productInfo.imgUrl" />
-                            <view class="info">
-                                <view class="c">
-                                    <view class="p" ><text class="p-icon">￥</text>{{productInfo.price}}</view>
-                                    <view class="s" v-if="!productInfo.isCustom">数量：{{productInfo.number}}</view>
-                                    <view class="a">已选：<text>{{productInfo.skuName}}</text></view>
-                                </view> 
-                            </view>
-                        </view>
-                    </view>
-                </view>
+                            <div class="info">
+                                <div class="c">
+                                    <div class="p" ><text class="p-icon">￥</text>{{productInfo.price}}</div>
+                                    <div class="s" v-if="!productInfo.isCustom">数量：{{productInfo.number}}</div>
+                                    <div class="a">已选：<text>{{productInfo.skuName}}</text></div>
+                                </div> 
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </scroll-view>
             <chatInput @onSend="onSend"></chatInput>
-        </view>
-    </view>
+        </div>
+    </div>
 </template>
 <script>
 import utils from '@/utils/util'
@@ -116,7 +116,7 @@ export default {
         onSend (text) {
             const _this = this
             var temp = {
-                userImgSrc: '../static/images//chat/extra/close_chat.png',
+                userImgSrc: '../static/images/chat/extra/close_chat.png',
                 textMessage: text,
                 dataTime: utils.formatTime(new Date()),
                 msg_type: 'text',

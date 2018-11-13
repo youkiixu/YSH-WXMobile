@@ -1,21 +1,21 @@
 <template>
-  <view class="good-grid">
-    <view class="b clear">
+  <div class="good-grid">
+    <div class="b clear">
       <block v-for="item of content.goodslist" :key="item.item_id" :data-id="index">
-        <view class="item">
-          <view  @click="toDetail(item)" class="a">
+        <div class="item">
+          <div  @click="toDetail(item)" class="a">
             <img class="img" :src="baseUrl+ item.pic" background-size="cover" />
-            <view class="txt">
+            <div class="txt">
               <text class="name">{{item.title}}</text>
               <!-- <text class="desc"></text> -->
               <text class="price">￥{{item.price}}</text>             
-            </view>
+            </div>
             
-          </view>
-        </view>
+          </div>
+        </div>
       </block>
-    </view>
-  </view>
+    </div>
+  </div>
 </template>
 <script>
 export default {

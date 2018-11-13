@@ -1,40 +1,40 @@
 <template >
-<view class="comments">
-    <view class="h">
-        <view :class="commentType == 1 ? 'active item' : 'item'" @click="switchTab(1)">
-            <view class="txt">好评({{goodComment}})</view>
-        </view>
-        <view :class="commentType == 2 ? 'active item' : 'item'" @click="switchTab(2)">
-            <view class="txt">中评({{comment}})</view>
-        </view>
-        <view :class="commentType == 3 ? 'active item' : 'item'" @click="switchTab(3)">
-            <view class="txt">差评({{badComment}})</view>
-        </view>
-        <view :class="commentType == 4 ? 'active item' : 'item'" @click="switchTab(4)">
-            <view class="txt">有图({{hasPicCount}})</view>
-        </view>
-    </view>
-  <view class="b">
-    <view class="item" v-for="(item, index) in comments" :key="item.id" :data-index="index">
-      <view class="info">
-        <view class="user">
+<div class="comments">
+    <div class="h">
+        <div :class="commentType == 1 ? 'active item' : 'item'" @click="switchTab(1)">
+            <div class="txt">好评({{goodComment}})</div>
+        </div>
+        <div :class="commentType == 2 ? 'active item' : 'item'" @click="switchTab(2)">
+            <div class="txt">中评({{comment}})</div>
+        </div>
+        <div :class="commentType == 3 ? 'active item' : 'item'" @click="switchTab(3)">
+            <div class="txt">差评({{badComment}})</div>
+        </div>
+        <div :class="commentType == 4 ? 'active item' : 'item'" @click="switchTab(4)">
+            <div class="txt">有图({{hasPicCount}})</div>
+        </div>
+    </div>
+  <div class="b">
+    <div class="item" v-for="(item, index) in comments" :key="item.id" :data-index="index">
+      <div class="info">
+        <div class="user">
           <img :src="item.defalutHead"/>
           <text>{{item.strName}}</text>
-        </view>
-        <view class="time">{{item.FinishDate}}</view>
-      </view>
-      <view class="comment">{{item.ReviewContent}}</view>
-      <view class="imgs" v-if="item.Images">
-        <image class="img" v-for="(iitem, iindex) in item.AppendImages" :key="iindex" :src="iitem"  @click="previewImage(item.AppendImages , iindex)"/>
-      </view>
-      <view class="customer-service" v-if="item.ReplyContent != '暂无回复'">
+        </div>
+        <div class="time">{{item.FinishDate}}</div>
+      </div>
+      <div class="comment">{{item.ReviewContent}}</div>
+      <div class="imgs" v-if="item.Images">
+        <img class="img" v-for="(iitem, iindex) in item.AppendImages" :key="iindex" :src="iitem"  @click="previewImage(item.AppendImages , iindex)"/>
+      </div>
+      <div class="customer-service" v-if="item.ReplyContent != '暂无回复'">
         <text class="u">卖家回复：</text>
         <text class="c">{{item.ReplyContent}}</text>
-      </view>
-    </view>
+      </div>
+    </div>
     <loadingMore v-if="more"></loadingMore>
-  </view>
-</view>
+  </div>
+</div>
 </template>
 
 <script>

@@ -1,26 +1,26 @@
 <template >
-<view class="container">
-  <view class="pay-result" v-if="show">
-    <view class="success" v-if="status == true">
-      <view class="msg">{{isShopping ? '下单成功' : '付款成功'}}</view>
-      <view class="btns">
+<div class="container">
+  <div class="pay-result" v-if="show">
+    <div class="success" v-if="status == true">
+      <div class="msg">{{isShopping ? '下单成功' : '付款成功'}}</div>
+      <div class="btns">
         <navigator class="btn" url="../../orderPages/order" open-type="redirect">查看订单</navigator>
         <navigator class="btn" url="../index/index" open-type="switchTab">继续逛</navigator>
-      </view>
-    </view>
-    <view class="error" v-if="status != true">
-      <view class="msg">付款失败</view>
-      <view class="tips">
-        <view class="p">请在在个人订单内完成付款</view>
-        <!-- <view class="p">否则订单将会被系统取消</view> -->
-      </view>
-      <view class="btns">
+      </div>
+    </div>
+    <div class="error" v-if="status != true">
+      <div class="msg">付款失败</div>
+      <div class="tips">
+        <div class="p">请在在个人订单内完成付款</div>
+        <!-- <div class="p">否则订单将会被系统取消</div> -->
+      </div>
+      <div class="btns">
         <navigator class="btn" url="../../orderPages/order" open-type="redirect">查看订单</navigator>
         <navigator class="btn" url="../index/index" open-type="switchTab">继续逛</navigator>
-      </view>
-    </view>
-  </view>
-</view>
+      </div>
+    </div>
+  </div>
+</div>
 </template>
 
 <script>

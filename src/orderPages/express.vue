@@ -1,27 +1,27 @@
 <template >
-<view class="container">
-  <view class='express-header'>
-    <view class="left">
-      <view class="txt">订单编号：{{orderInfo.Id}}</view>
-      <view class="txt">物流单号：{{expressInfo.oid}}</view>
-      <view class="txt">物流公司：{{orderInfo.Remindtype != 0 ? '印捷物流' : '商家直邮'}}</view>
-      <view class="txt">配送状态：{{expressInfo.strStatus}}</view>
-    </view>
-    <view class='right' v-if="expressInfo.isFinish === 1">
-      <view class='update-btn' @click="updateExpress">更新物流</view>
-    </view>
-  </view>
-  <view class='express-body'>
-    <view class='current-icon'></view>
-    <view :class="'express-item item-' + index" v-for="(item, index) of expressTraces" :key="index">
-      <view class='left'></view>
-      <view class='right'>
-        <view class="info">{{item.Remark}}</view>
-        <view class="time">{{item.strOper}}</view>
-      </view>
-    </view>
-  </view>
-</view>
+<div class="container">
+  <div class='express-header'>
+    <div class="left">
+      <div class="txt">订单编号：{{orderInfo.Id}}</div>
+      <div class="txt">物流单号：{{expressInfo.oid}}</div>
+      <div class="txt">物流公司：{{orderInfo.Remindtype != 0 ? '印捷物流' : '商家直邮'}}</div>
+      <div class="txt">配送状态：{{expressInfo.strStatus}}</div>
+    </div>
+    <div class='right' v-if="expressInfo.isFinish === 1">
+      <div class='update-btn' @click="updateExpress">更新物流</div>
+    </div>
+  </div>
+  <div class='express-body'>
+    <div class='current-icon'></div>
+    <div :class="'express-item item-' + index" v-for="(item, index) of expressTraces" :key="index">
+      <div class='left'></div>
+      <div class='right'>
+        <div class="info">{{item.Remark}}</div>
+        <div class="time">{{item.strOper}}</div>
+      </div>
+    </div>
+  </div>
+</div>
 </template>
 
 <script>

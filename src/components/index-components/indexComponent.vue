@@ -1,11 +1,11 @@
 <template>
-    <view class="component">
+    <div class="component">
         <indexTitle v-if="item.type === 2" :content="item.content"></indexTitle>
         <indexNaV v-if="item.type === 8" :content="item.content" @onClick="navEvent"></indexNaV>
         <indexGoods v-if="item.type === 4" :content="item.content" @onClick="toDetail"></indexGoods>
         <indexAd v-if="item.type === 9" :content="item.content" @onClick="ADEvent" @onBrandClick="onBrandClick"></indexAd>
         <indexLine v-if="item.type === 11" :content="item.content"></indexLine>
-    </view>
+    </div>
 </template>
 
 <script>

@@ -1,10 +1,10 @@
 <template>
-    <view class="m-menu">
-        <view  class="item" v-for="item of content.dataset" :key="item.id" @click="toDetail(item)">
+    <div class="m-menu">
+        <div  class="item" v-for="item of content.dataset" :key="item.id" @click="toDetail(item)">
             <img :src="baseUrl+ item.pic" background-size="cover" />
             <text>{{item.showtitle}}</text>
-        </view>
-    </view>
+        </div>
+    </div>
 </template>
 
 <script>

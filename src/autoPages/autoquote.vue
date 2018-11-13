@@ -1,31 +1,31 @@
 <template >
-<view class="container">
+<div class="container">
     <div class="ad">
       <img class="ad-img" src="http://www.kiy.cn/Areas/wxMobile/Content/img/ad.png" />
     </div>
-    <view class="catalog" :style="{'height' : '100%'}">
+    <div class="catalog" :style="{'height' : '100%'}">
         <scroll-view class="nav menu-ul" scroll-y="true" :scroll-top="navTop" scroll-with-animation="true" :scroll-into-view="navId" >
-            <view :class="currentIndex == index ? 'active item menu-item' : 'item menu-item' " v-for="(item, index) of list" :key="index" :id="'nav_' + index"
-                 @click="selectMenu(index)">{{item.name}}</view>
+            <div :class="currentIndex == index ? 'active item menu-item' : 'item menu-item' " v-for="(item, index) of list" :key="index" :id="'nav_' + index"
+                 @click="selectMenu(index)">{{item.name}}</div>
         </scroll-view>
         <scroll-view class="cate foods-wrapper" scroll-y="true"  :scroll-into-view="contentId" scroll-with-animation="true" @scroll="onScroll">
-            <view class="food-list-hook" v-for="( listItem , index1 ) of list" :key="index1" :id="'con_'+index1">
-              <view class="hd">
+            <div class="food-list-hook" v-for="( listItem , index1 ) of list" :key="index1" :id="'con_'+index1">
+              <div class="hd">
                   <!-- <text class="line"></text> -->
                   <text class="txt">{{listItem.name}}分类</text>
                   <!-- <text class="line"></text> -->
-              </view>
-              <view class="bd">
-                  <view @click="queryQuote(item)" :class="(index2+1) % 3 == 0 ? 'last item' : 'item'" v-for="(item, index2) of listItem.itemList"
+              </div>
+              <div class="bd">
+                  <div @click="queryQuote(item)" :class="(index2+1) % 3 == 0 ? 'last item' : 'item'" v-for="(item, index2) of listItem.itemList"
                       :key="item.Code">
                       <img class="icon" :src="item.Images ?  baseUrl+ item.Images : 'http://www.kiy.cn/Areas/wxMobile/Content/img/defalutimg.png'"/>
                       <text class="txt">{{item.qName}}</text>
-                  </view>
-              </view>
-            </view>
+                  </div>
+              </div>
+            </div>
         </scroll-view>
-    </view>
-</view>
+    </div>
+</div>
 </template> 
 <script>
 import api from '@/utils/api'

@@ -1,27 +1,27 @@
 <template>
-<view>
+<div>
   <scroll-view scroll-y="true" scroll-top="scrollTop" enable-back-to-top="true" :style="{'height': '100%'}" >
-        <view class="cate-item">           
-            <view class="b"> 
-                  <view v-for="item of goodsList" :key="item.ProductId" :class="(index + 1) % 2 === 0 ? 'item-b item' : 'item'"
+        <div class="cate-item">           
+            <div class="b"> 
+                  <div v-for="item of goodsList" :key="item.ProductId" :class="(index + 1) % 2 === 0 ? 'item-b item' : 'item'"
                    @click="toDetail(item)" >
                     <img class="img" :src="baseUrl + item.imagePath + '/1_350.png'" mode="scaleToFill" lazy-load/>
-                    <view class="b-txt">                                         
-                      <view class="name">{{item.ProductName}}</view>
-                       <view class="ShopName">{{item.ShopName}}</view>
-                       <view class="b-bottom clear">
-                          <view class="price">
+                    <div class="b-txt">                                         
+                      <div class="name">{{item.ProductName}}</div>
+                       <div class="ShopName">{{item.ShopName}}</div>
+                       <div class="b-bottom clear">
+                          <div class="price">
                            <text class="icon"></text>{{item.IsCustom ? '定制报价' : '￥' + item.MinSalePrice}}
-                          </view> 
-                          <view class="dealNum">成交 {{item.SaleCounts}} 笔</view> 
-                       </view>
-                    </view>
-                </view>
-            </view>
-        </view>
+                          </div> 
+                          <div class="dealNum">成交 {{item.SaleCounts}} 笔</div> 
+                       </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </scroll-view>
 
-</view>
+</div>
 </template>
 
 <script>

@@ -1,66 +1,66 @@
 <template >
-<view>
-  <view class="container">
-  <view class="no-cart" v-if="cartGoods.length <= 0 && !loading">
-    <view class="c">
+<div>
+  <div class="container">
+  <div class="no-cart" v-if="cartGoods.length <= 0 && !loading">
+    <div class="c">
       <img src="http://nos.netease.com/mailpub/hxm/yanxuan-wap/p/20150730/style/img/icon-normal/noCart-a8fe3f12e5.png" />
       <text>购物车空空如也,快去逛逛吧</text>
-    </view>
-  </view>
+    </div>
+  </div>
 
 
-  <view class="cart-view"  >
-    <view class="cart-address clear" v-if="cartGoods.length != 0 && !loading">
-       <view class="from">此购物车价格仅供参考</view>
-       <view class="to">请以下单的价格为标准</view>
-       <view class="edit" @click="editCart">{{!isEditCart ? '编辑商品' : '完成'}}</view>       
-    </view>
+  <div class="cart-view"  >
+    <div class="cart-address clear" v-if="cartGoods.length != 0 && !loading">
+       <div class="from">此购物车价格仅供参考</div>
+       <div class="to">请以下单的价格为标准</div>
+       <div class="edit" @click="editCart">{{!isEditCart ? '编辑商品' : '完成'}}</div>       
+    </div>
 
-     <view class="list" v-if="cartGoods.length != 0 && !loading">
-      <view class="group-item">
-        <view class="goods">
-          <view :class="isEditCart ? 'edit item' : 'item'" v-for="(item, index) of cartGoods" :key="item.Id" @click="checkedItem(index)">
-            <view :class="item.checked == true ? 'checked checkbox' : 'checkbox'"  :data-item-index="index"></view>
-            <view class="cart-goods" @click.stop="toDetail(item)">
+     <div class="list" v-if="cartGoods.length != 0 && !loading">
+      <div class="group-item">
+        <div class="goods">
+          <div :class="isEditCart ? 'edit item' : 'item'" v-for="(item, index) of cartGoods" :key="item.Id" @click="checkedItem(index)">
+            <div :class="item.checked == true ? 'checked checkbox' : 'checkbox'"  :data-item-index="index"></div>
+            <div class="cart-goods" @click.stop="toDetail(item)">
               <img class="img" :src="baseUrl + item.ImagePath + '/1_350.png'"/>
-              <view class="info">
-                <view class="t">
+              <div class="info">
+                <div class="t">
                   <text class="name">{{item.ProductName}}</text>
                   <text class="num">{{item.IsCustom ? '非标品' : 'x' + item.Quantity}}</text>
-                </view>
-                <view class="attr" v-if="item.IsCustom">已选：{{ item.ParaStr }}</view>
-                <view class="attr attr-select" v-else @click.stop="openSelect(item)">{{item.SaleNumber&&item.Stock ? '已选：' + item.Color + item.Size + item.Version + item.Material + item.Fashion + item.Grams + item.Ensemble : '原商品已更换参数,不能下单,请重新选择参数'}}<span class="select-span">></span></view>
-                <view class="b">
-                  <view class="price">
+                </div>
+                <div class="attr" v-if="item.IsCustom">已选：{{ item.ParaStr }}</div>
+                <div class="attr attr-select" v-else @click.stop="openSelect(item)">{{item.SaleNumber&&item.Stock ? '已选：' + item.Color + item.Size + item.Version + item.Material + item.Fashion + item.Grams + item.Ensemble : '原商品已更换参数,不能下单,请重新选择参数'}}<text class="select-span">></text></div>
+                <div class="b">
+                  <div class="price">
                     <text class="icon">￥</text>{{item.SaleNumber&&item.Stock ? item.IsCustom ? item.fbpPrice : item.bpTotal : '已下架' }}
-                  </view>
-                  <view class="selnum" v-if="false">
-                    <view class="cut" @click.stop="cutNumber" :data-item-index="index">-</view>
+                  </div>
+                  <div class="selnum" v-if="false">
+                    <div class="cut" @click.stop="cutNumber" :data-item-index="index">-</div>
                     <input v-model.lazy="item.Quantity" class="number" disabled="true" type="number" />
-                    <view class="add" @click.stop="addNumber" :data-item-index="index">+</view>
-                  </view>
-                </view>
-              </view>
-            </view>
-          </view>
+                    <div class="add" @click.stop="addNumber" :data-item-index="index">+</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
           <loadingMore v-if="more"></loadingMore>
-        </view>
-      </view>
-    </view>
+        </div>
+      </div>
+    </div>
     <loadingComponent v-if="loading"></loadingComponent>
 
      
-    <view class="cart-bottom" v-if="cartGoods.length != 0 && !loading">
-      <view :class="checkedAllStatus ? 'checked checkbox' : 'checkbox'" @click="checkedAll">全选</view>
-      <view class="total" ><text v-if="!isEditCart">总金额：</text><text class="total-price" v-if="allPrice != undefined && !isEditCart">{{'￥'+ allPrice}}</text></view>
-      <view class="checkout" @click="checkoutOrder" v-if="!isEditCart">去结算</view>
-      <view class="delete" @click="deleteCart" v-if="isEditCart">删除</view>
-    </view>
-  </view>
+    <div class="cart-bottom" v-if="cartGoods.length != 0 && !loading">
+      <div :class="checkedAllStatus ? 'checked checkbox' : 'checkbox'" @click="checkedAll">全选</div>
+      <div class="total" ><text v-if="!isEditCart">总金额：</text><text class="total-price" v-if="allPrice != undefined && !isEditCart">{{'￥'+ allPrice}}</text></div>
+      <div class="checkout" @click="checkoutOrder" v-if="!isEditCart">去结算</div>
+      <div class="delete" @click="deleteCart" v-if="isEditCart">删除</div>
+    </div>
+  </div>
 
       <!-- 模态浮层 -->
-    <view class="attr-pop-box" v-if="openAttr"  @click="closeAttr" catchtouchmove="stopPageScroll">
-      <view class="attr-pop"  v-if="openAttr" @click.stop="closeAttr('no')">
+    <div class="attr-pop-box" v-if="openAttr"  @click="closeAttr" catchtouchmove="stopPageScroll">
+      <div class="attr-pop"  v-if="openAttr" @click.stop="closeAttr('no')">
         <selectComponent
           v-if="openAttr"
           :baseUrl="baseUrl"
@@ -83,11 +83,11 @@
           @numberChange="numberChange"
         >
         </selectComponent>
-      </view>
-    </view>
+      </div>
+    </div>
     
-</view>
-</view>
+</div>
+</div>
 
 </template>
 

@@ -1,22 +1,22 @@
 <template >
-<view class="container">
-    <view class="brand-list" >
+<div class="container">
+    <div class="brand-list" >
         <navigator
             :url="'../brand/brandDetail?id=' + item.id"
             class="item" v-for="(item, index) of brandList" :key="index">
-            <view class="img-bg">
+            <div class="img-bg">
                 <img :src="item.app_list_pic_url" background-size="cover"/>
-            </view>
-            <view class="txt-box">
-                <view class="line">
+            </div>
+            <div class="txt-box">
+                <div class="line">
                     <text class="name" >{{item.name}}</text>
                     <text class="s">|</text>
                     <text class="price">{{item.floor_price}}元起</text>
-                </view>
-            </view>
+                </div>
+            </div>
         </navigator >
-    </view>
-</view>
+    </div>
+</div>
 </template>
 
 <script>

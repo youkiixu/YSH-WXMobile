@@ -1,27 +1,27 @@
 <template >
-<view>
+<div>
     <!-- 主体容器 -->
-    <view class="container" v-if="!loading">
+    <div class="container" v-if="!loading">
       <!-- 头部导航 -->
-      <!-- <view class="goodshead">
-        <view class="head-classify">
-          <view class="classify-item produ" @click="toNav" data-id="goodshead">
+      <!-- <div class="goodshead">
+        <div class="head-classify">
+          <div class="classify-item produ" @click="toNav" data-id="goodshead">
             <img v-if="toView == 'goodshead'" src="/static/images/posi.png"/>
             商品
-          </view>
-          <view class="classify-item com" @click="toNav" data-id="comments">
+          </div>
+          <div class="classify-item com" @click="toNav" data-id="comments">
             <img v-if="toView == 'comments'" src="/static/images/posi.png"/>
             评论
-          </view>
-          <view class="classify-item detail"  @click="toNav" data-id="proDetail">
+          </div>
+          <div class="classify-item detail"  @click="toNav" data-id="proDetail">
             <img v-if="toView == 'proDetail'" src="/static/images/posi.png"/>
             详情
-          </view>
-        </view>
-      </view> -->
+          </div>
+        </div>
+      </div> -->
 
       <scroll-view :scroll-into-view="toView" scroll-y="true" scroll-with-animation="true" class="container-scroll">
-        <view class="outside" id="goodshead">
+        <div class="outside" id="goodshead">
           <!-- 图片轮播 -->
           <swiper class="goodsimgs" indicator-dots="true" autoplay="true" interval="3000" duration="1000">
               <swiper-item v-for="(item, index) of gallery" :key="item.id" :data-index="index">
@@ -29,82 +29,82 @@
               </swiper-item>
           </swiper>
           <!-- 商品信息 -->
-          <view class="goods-info">
-              <view class="c clear">
+          <div class="goods-info">
+              <div class="c clear">
                 <!-- 标准品价格 -->
-                <view class="c-price" v-if="!detailInfo.IsCustom"><text class="price-icon" >￥</text>{{detailInfo.Price}}</view>
+                <div class="c-price" v-if="!detailInfo.IsCustom"><text class="price-icon" >￥</text>{{detailInfo.Price}}</div>
                 <!-- 非标品价格 -->
-                <view class="c-price"  v-else><text class="price-icon" >￥</text>{{ListPriceInfo.sprice + detailInfo.RemindPrice}} <text class="original-price" v-if="ListPriceInfo.sprice != ListPriceInfo.OriginalPrice">{{ListPriceInfo.OriginalPrice}}</text></view>
-                <view :class="collectStatus ? 'c-collect collected' : 'c-collect'"  @click="addCannelCollect">           
-                </view>
-              </view>
-              <view class="con-text">
-                <view class="desc">{{detailInfo.ProductName}}</view>
-                <view class="notes">{{detailInfo.ShortDescription}}</view>
-              </view>       
-          </view>
+                <div class="c-price"  v-else><text class="price-icon" >￥</text>{{ListPriceInfo.sprice + detailInfo.RemindPrice}} <text class="original-price" v-if="ListPriceInfo.sprice != ListPriceInfo.OriginalPrice">{{ListPriceInfo.OriginalPrice}}</text></div>
+                <div :class="collectStatus ? 'c-collect collected' : 'c-collect'"  @click="addCannelCollect">           
+                </div>
+              </div>
+              <div class="con-text">
+                <div class="desc">{{detailInfo.ProductName}}</div>
+                <div class="notes">{{detailInfo.ShortDescription}}</div>
+              </div>       
+          </div>
           <!-- 已选参数 -->
-          <view class="section-nav section-attr" @click="switchAttrPop">
-            <view class="t">
+          <div class="section-nav section-attr" @click="switchAttrPop">
+            <div class="t">
               <!-- 非标品参数 -->
-              <view class="td-content" v-if="detailInfo.IsCustom">
+              <div class="td-content" v-if="detailInfo.IsCustom">
                 <text class="td"  ><text v-for="(item , index) in ListPriceInfo.paraArr" :key="index">{{item.paraStr}}</text></text>
-              </view>
+              </div>
               <!-- 标准品参数 -->
-              <view class="td-content" v-if="!detailInfo.IsCustom">
+              <div class="td-content" v-if="!detailInfo.IsCustom">
                 <text class="td">规格:{{selectSkuStr.Color}} {{selectSkuStr.Size}} {{selectSkuStr.Version}} {{selectSkuStr.Material}} {{selectSkuStr.Fashion}} {{selectSkuStr.Grams}} {{selectSkuStr.Ensemble}}</text>
-              </view>
-            </view>
+              </div>
+            </div>
             <img class="i" src="/static/images/address_right.png" background-size="cover"/>
-            <view class="clear"></view>
-          </view>
+            <div class="clear"></div>
+          </div>
           <!-- 商家地址 -->
-          <view class="address-nav address-attr clear">
-              <view class="t">{{detailInfo.ShopName}} : <text class="td">{{detailInfo.ShopAddress}}</text></view>
+          <div class="address-nav address-attr clear">
+              <div class="t">{{detailInfo.ShopName}} : <text class="td">{{detailInfo.ShopAddress}}</text></div>
               <!-- <img class="i" src="/static/images/address_right.png" background-size="cover"/> -->
-              <view class="clear"></view>
-          </view>
+              <div class="clear"></div>
+          </div>
           <!-- 商品评论 -->
-          <view class="comments" id="comments" >
-            <view class="h clear">
+          <div class="comments" id="comments" >
+            <div class="h clear">
               <navigator :url="'../commentPages/comment?valueId=' + id + '&typeId=0'">
                   <text class="t">评价</text>
                   <text class="i">查看全部评价</text>
-                  <!-- <view class="clear"></view> -->
+                  <!-- <div class="clear"></div> -->
               </navigator>
-            </view>
-            <view class="b"  v-if="comment.Id">
-              <view class="item">
-                <view class="info clear"> 
-                  <view class="user">
+            </div>
+            <div class="b"  v-if="comment.Id">
+              <div class="item">
+                <div class="info clear"> 
+                  <div class="user">
                       <img :src="defalutHead" />
                       <text>{{comment.UserName}}</text>
-                  </view>
-                  <view class="star">{{comment.star}}</view>
-                </view>
-                <view class="content">
+                  </div>
+                  <div class="star">{{comment.star}}</div>
+                </div>
+                <div class="content">
                   {{comment.ReviewContent}}
-                </view>
-              </view>
+                </div>
+              </div>
               <navigator :url="'../commentPages/comment?valueId=' + id + '&typeId=0'" class="seeall">查看全部评价</navigator>
-            </view>   
-            <view class="b" v-else>
-              <view class="seeall">暂无评价</view>
-            </view>
-          </view> 
+            </div>   
+            <div class="b" v-else>
+              <div class="seeall">暂无评价</div>
+            </div>
+          </div> 
           <!-- 产品描述 -->
-          <view class="proDetail" id="proDetail">
-            <view class="title">商品详情</view>
-            <view class="content">
+          <div class="proDetail" id="proDetail">
+            <div class="title">商品详情</div>
+            <div class="content">
               <wxParse :imageProp="parseUrl" :content="goodDetailHTMLstr"/>
-            </view>
-          </view>  
-        </view> 
+            </div>
+          </div>  
+        </div> 
       </scroll-view>
-    </view>
+    </div>
     <!-- 模态浮层 -->
-    <view class="attr-pop-box" v-if="openAttr"  @click="closeAttr" catchtouchmove="stopPageScroll">
-        <view class="attr-pop"  v-if="openAttr" @click.stop="closeAttr('no')">
+    <div class="attr-pop-box" v-if="openAttr"  @click="closeAttr" catchtouchmove="stopPageScroll">
+        <div class="attr-pop"  v-if="openAttr" @click.stop="closeAttr('no')">
           <selectComponent
             v-if="openAttr"
             :baseUrl="baseUrl"
@@ -128,24 +128,24 @@
             @numberChange="numberChange"
           >
           </selectComponent>
-       </view>
-    </view>
+       </div>
+    </div>
     <!-- tabbar -->
-    <view class="bottom-btn" v-if="!loading">
-      <view class="l l-collect" @click="toChat" hover-class>
+    <div class="bottom-btn" v-if="!loading">
+      <div class="l l-collect" @click="toChat" hover-class>
           <img class="icon" src="/static/images/share.png"/>
-      </view>
-      <view class="l l-cart" @click="openCartPage" hover-class>
-          <view class="box">
+      </div>
+      <div class="l l-cart" @click="openCartPage" hover-class>
+          <div class="box">
           <text class="cart-count">{{shoppingCartCount}}</text>
           <img  class="icon" src="/static/images/shopping-car.png"/>
-          </view>
-      </view>
-      <view class="c" @click="addToCart" hover-class>加入购物车</view>
-      <view class="r" @click="SubmitByProduct" hover-class>立即购买</view>
-    </view>
+          </div>
+      </div>
+      <div class="c" @click="addToCart" hover-class>加入购物车</div>
+      <div class="r" @click="SubmitByProduct" hover-class>立即购买</div>
+    </div>
     <loadingComponent v-if="loading"></loadingComponent>
-</view>
+</div>
 </template>
 
 <script>

@@ -1,15 +1,15 @@
 <template>
-    <view class="input-flex-column">
-        <view class="input-text-voice-super">
+    <div class="input-flex-column">
+        <div class="input-text-voice-super">
             <input v-if="inputObj.inputStatus==='text'"
                    class="chat-input-style"
                    maxlength="500" confirm-type="send" v-model.lazy="textMessage" confirm-hold="true" @confirm="chatInputSendTextMessage" @focus="chatInputBindFocusEvent" @blur="chatInputBindBlurEvent" @input="chatInputGetValueEvent" placeholder='想和TA说点什么呢？' cursor-spacing='20'/>
-            <view hover-class="press-style-opacity">
-                <image class="extra-btn-style"
-                       src="../static/images/chat/extra.png" @click="chatInputExtraClickEvent" />
-            </view>
-        </view>
-    </view>
+            <div hover-class="press-style-opacity">
+                <img class="extra-btn-style"
+                       :src="imgUrl" @click="chatInputExtraClickEvent" />
+            </div>
+        </div>
+    </div>
 </template>
 <script>
 export default {
@@ -18,7 +18,8 @@ export default {
             inputObj: {
                 inputStatus: 'text'
             },
-            textMessage: ''
+            textMessage: '',
+            imgUrl: '../static/images/chat/extra.png'
         }
     },
     methods: {

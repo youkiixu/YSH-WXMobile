@@ -1,11 +1,11 @@
 <template>
-    <view :class="{'nav a-section a-new': content.layout == 5 , 'good-grid': content.layout == 1 , 'nav a-section a-brand': content.layout == 2 , 'nav a-section a-popular': content.layout == 4 ,'nav a-section a-topic': content.layout == 3 ,  }">
+    <div :class="{'nav a-section a-new': content.layout == 5 , 'good-grid': content.layout == 1 , 'nav a-section a-brand': content.layout == 2 , 'nav a-section a-popular': content.layout == 4 ,'nav a-section a-topic': content.layout == 3 ,  }">
          <goodGrid v-if="content.layout == 1" :content="content" @onClick="toDetail"></goodGrid>
          <aBrand v-if="content.layout == 2" :content="content" @onClick="toDetail"></aBrand>
          <aPopular v-if="content.layout == 4" :content="content" @onClick="toDetail"></aPopular>
          <aTopic v-if="content.layout == 3" :content="content" @onClick="toDetail"></aTopic>
          <aNew v-if="content.layout == 5" :content="content" @onClick="toDetail"></aNew>
-    </view>
+    </div>
 </template>
 
 <script>

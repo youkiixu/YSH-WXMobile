@@ -1,47 +1,47 @@
 <template >
-<view class="container">
-  <view class="search-header">
-    <view class="input-box">
+<div class="container">
+  <div class="search-header">
+    <div class="input-box">
       <img class="icon" @click="getSeach" />
       <!-- @input="inputChange" @focus="inputFocus" @confirm="onKeywordConfirm" -->
       <input name="input" class="keywrod"  v-model="keyword" confirm-type="search" @confirm="onKeywordConfirm"  placeholder="商品搜索" />
       <!-- <img class="del" v-if="keyword" @click="clearKeyword" src="http://nos.netease.com/mailpub/hxm/yanxuan-wap/p/20150730/style/img/icon-normal/clearIpt-f71b83e3c2.png"/> -->
-    </view>
-    <!-- <view class="right" @click="closeSearch">取消</view> -->
-  </view>
+    </div>
+    <!-- <div class="right" @click="closeSearch">取消</div> -->
+  </div>
  
 
-  <view class="sort" v-if="searchStatus">
-    <view class="sort-box">
-      <view :class=" currentSortType == 'default' ? 'active item' : 'item'"  @click="openSortFilter" id="defaultSort">
+  <div class="sort" v-if="searchStatus">
+    <div class="sort-box">
+      <div :class=" currentSortType == 'default' ? 'active item' : 'item'"  @click="openSortFilter" id="defaultSort">
         <text class="txt">综合</text>
-      </view>
-      <view :class="['item', 'by-sales by-sort', { active: currentSortType == 'sales', asc: currentSortOrder == 'asc', desc: currentSortOrder !== 'asc' }]"
+      </div>
+      <div :class="['item', 'by-sales by-sort', { active: currentSortType == 'sales', asc: currentSortOrder == 'asc', desc: currentSortOrder !== 'asc' }]"
          @click="openSortFilter" id="salesSort">
         <text class="txt">销量</text>
-      </view>
-      <view :class="['item', 'by-price by-sort', { active: currentSortType == 'price', asc: currentSortOrder == 'asc', desc: currentSortOrder !== 'asc' }]"
+      </div>
+      <div :class="['item', 'by-price by-sort', { active: currentSortType == 'price', asc: currentSortOrder == 'asc', desc: currentSortOrder !== 'asc' }]"
          @click="openSortFilter" id="priceSort">
         <text class="txt">价格</text>
-      </view>
-      <view :class="['item', 'by-comment by-sort', { active: currentSortType == 'comment', asc: currentSortOrder == 'asc', desc: currentSortOrder !== 'asc' }]"
+      </div>
+      <div :class="['item', 'by-comment by-sort', { active: currentSortType == 'comment', asc: currentSortOrder == 'asc', desc: currentSortOrder !== 'asc' }]"
          @click="openSortFilter" id="commentSort">
         <text class="txt">评论</text>
-      </view>
-    </view>
-  </view>
+      </div>
+    </div>
+  </div>
 
-  <view class="search-result" v-if="searchStatus && goodsList.length">
+  <div class="search-result" v-if="searchStatus && goodsList.length">
     <sortGoods :goodsList = goodsList></sortGoods>
     <loadingMore v-if="more"></loadingMore>
-  </view> 
+  </div> 
   
 
   <searchResultEmpty v-if="!goodsList.length && searchStatus && !loading"></searchResultEmpty>
   <loadingComponent v-if="loading"></loadingComponent>
 
-  <view class="scollTop"  @click="toTop" :hidden="!floorstatus">顶部</view> 
-</view>
+  <div class="scollTop"  @click="toTop" :hidden="!floorstatus">顶部</div> 
+</div>
 </template>
 
 <script>

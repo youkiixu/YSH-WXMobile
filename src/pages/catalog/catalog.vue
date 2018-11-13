@@ -1,32 +1,32 @@
 <template >
-<view class="container">
-    <view class="index-searchbar" v-if="categoryList">
+<div class="container">
+    <div class="index-searchbar" v-if="categoryList">
       <searchBar></searchBar>
-    </view>
+    </div>
     
 
-    <view class="catalog" :style="{'height' : '100%'}"  v-if="!loading">
+    <div class="catalog" :style="{'height' : '100%'}"  v-if="!loading">
         <scroll-view class="nav" scroll-y="true"  :style="{'height' : '100%'}">
-            <view :class="currentCategory.Id == item.Id ? 'active item' : 'item'" v-for="(item, index) of navList" :key="item.Id" :data-id="item.Id"
-                :data-index="index" @click="switchCateLog(index)">{{item.Name}}</view>
+            <div :class="currentCategory.Id == item.Id ? 'active item' : 'item'" v-for="(item, index) of navList" :key="item.Id" :data-id="item.Id"
+                :data-index="index" @click="switchCateLog(index)">{{item.Name}}</div>
         </scroll-view>
         <scroll-view class="cate" scroll-y="true"  :style="{'height' : '100%'}">
-            <view class="cate_item" v-for="( categoryChild , index1 ) of categoryList" :key="index1" v-if="!loading2">
-              <view class="hd">
+            <div class="cate_item" v-for="( categoryChild , index1 ) of categoryList" :key="index1" v-if="!loading2">
+              <div class="hd">
                   <text class="txt">{{categoryChild.Name}}分类</text>
-              </view>
-              <view class="bd">
-                  <view @click="toPage(item.Id , categoryChild.SubCategories)"  :class="(index2+1) % 3 == 0 ? 'last item' : 'item'" v-for="(item, index2) of categoryChild.SubCategories"
+              </div>
+              <div class="bd">
+                  <div @click="toPage(item.Id , categoryChild.SubCategories)"  :class="(index2+1) % 3 == 0 ? 'last item' : 'item'" v-for="(item, index2) of categoryChild.SubCategories"
                       :key="item.Id">
                       <img class="icon" :src="item.Image ?  baseUrl + item.Image : 'http://www.kiy.cn/Areas/wxMobile/Content/img/defalutimg.png'"/>
                       <text class="txt">{{item.Name}}</text>
-                  </view>
-              </view>
-            </view>
+                  </div>
+              </div>
+            </div>
         </scroll-view>
-    </view>
+    </div>
     <loadingComponent  v-if="loading"></loadingComponent>
-</view>
+</div>
 </template>
 
 <script>

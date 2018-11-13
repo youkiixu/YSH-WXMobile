@@ -1,19 +1,19 @@
 <template >
-<view class="container">
-  <view class="brand-info">
-    <view class="name">
+<div class="container">
+  <div class="brand-info">
+    <div class="name">
       <img class="img" :src="bannerInfo.img_url" background-size="cover"/>
-      <view class="info-box">
-        <view class="info">
+      <div class="info-box">
+        <div class="info">
           <text class="txt">{{bannerInfo.name}}</text>
           <text class="line"></text>
-        </view>
-      </view>
-    </view>
-  </view>
+        </div>
+      </div>
+    </div>
+  </div>
   <sortGoods :currentSortType = currentSortType :currentSortOrder = currentSortOrder :openSortFilter = openSortFilter :categoryFilter = categoryFilter
   :filterCategory = filterCategory :selectCategory = selectCategory :goodsList = goodsList></sortGoods>
-</view>
+</div>
 </template>
 
 <script>

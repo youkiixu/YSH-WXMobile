@@ -1,19 +1,19 @@
 <template>
-    <view class="nav a-section a-topic">
-      <view class="b">
+    <div class="nav a-section a-topic">
+      <div class="b">
         <scroll-view scroll-x="true" class="list">
-          <view class="item" v-for="item of content.goodslist" :key="item.item_id">
-            <view  @click="toDetail(item)" class="nav">
+          <div class="item" v-for="item of content.goodslist" :key="item.item_id">
+            <div  @click="toDetail(item)" class="nav">
               <img class="img" :src="baseUrl+ item.pic" background-size="cover" />
-              <view class="np">
+              <div class="np">
                 <text class="name">{{item.title}}</text>
                <text class="price">￥{{item.price}}</text>   
-              </view>
-            </view>
-          </view>
+              </div>
+            </div>
+          </div>
         </scroll-view>
-      </view>  
-    </view>
+      </div>  
+    </div>
 </template>
 <script>
 export default {

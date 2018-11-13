@@ -1,19 +1,19 @@
 <template>
     <div class="content">
-        <view class="login">
-            <view class="login_pwd clear">
+        <div class="login">
+            <div class="login_pwd clear">
                 <input class="login_pwdInput" v-model="userName" placeholder="请输入昵称" confirm-type="done">  
                 <picker @change="bindPickerChange" :value="index" :range="serviceTypeStrGroup">      
                     <button class="pwd_btn"  @click="forgetPwd">{{serviceTypeStrGroup[index]}}</button>    
                 </picker>
-            </view>
-            <view  class="login_btn">
+            </div>
+            <div  class="login_btn">
                 <button @click="bind">绑定客服</button>
-            </view>     
-            <view  class="to_register">
+            </div>     
+            <div  class="to_register">
                 <button @click="toIndex">返回首页</button>
-            </view>                   
-        </view>
+            </div>                   
+        </div>
     </div>
 </template>
 

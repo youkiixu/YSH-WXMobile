@@ -1,45 +1,45 @@
 <template >
-<view class="container">
-  <view class="cate-head">
-    <view class="sort">
-      <view class="sort-box">
-        <view :class=" currentSortType == 'default' ? 'active item' : 'item'"  @click="openSortFilter" id="defaultSort">
+<div class="container">
+  <div class="cate-head">
+    <div class="sort">
+      <div class="sort-box">
+        <div :class=" currentSortType == 'default' ? 'active item' : 'item'"  @click="openSortFilter" id="defaultSort">
           <text class="txt">综合</text>
-        </view>
-        <view :class="['item', 'by-sales by-sort', { active: currentSortType == 'sales', asc: currentSortOrder == 'asc', desc: currentSortOrder !== 'asc' }]"
+        </div>
+        <div :class="['item', 'by-sales by-sort', { active: currentSortType == 'sales', asc: currentSortOrder == 'asc', desc: currentSortOrder !== 'asc' }]"
           @click="openSortFilter" id="salesSort">
           <text class="txt">销量</text>
-        </view>
-        <view :class="['item', 'by-price by-sort', { active: currentSortType == 'price', asc: currentSortOrder == 'asc', desc: currentSortOrder !== 'asc' }]"
+        </div>
+        <div :class="['item', 'by-price by-sort', { active: currentSortType == 'price', asc: currentSortOrder == 'asc', desc: currentSortOrder !== 'asc' }]"
           @click="openSortFilter" id="priceSort">
           <text class="txt">价格</text>
-        </view>
-        <view :class="['item', 'by-comment by-sort', { active: currentSortType == 'comment', asc: currentSortOrder == 'asc', desc: currentSortOrder !== 'asc' }]"
+        </div>
+        <div :class="['item', 'by-comment by-sort', { active: currentSortType == 'comment', asc: currentSortOrder == 'asc', desc: currentSortOrder !== 'asc' }]"
           @click="openSortFilter" id="commentSort">
           <text class="txt">评论</text>
-        </view>
-      </view>
-    </view>
+        </div>
+      </div>
+    </div>
 
-    <view class="cate-nav" v-if="navList.length != 0">
-        <view  class="cate-nav-body">
-            <view  v-for="(item , index) of navList" :class="Id == item.Id ? 'active item' : 'item'" :key="item.Id"
+    <div class="cate-nav" v-if="navList.length != 0">
+        <div  class="cate-nav-body">
+            <div  v-for="(item , index) of navList" :class="Id == item.Id ? 'active item' : 'item'" :key="item.Id"
             @click="switchCate" :data-Id="item.Id" :data-index="index">
-                <view class="name">{{item.Name}}</view>
-            </view>
-        </view>
-    </view>    
-  </view>
+                <div class="name">{{item.Name}}</div>
+            </div>
+        </div>
+    </div>    
+  </div>
 
-  <view :class="[navList.length != 0 ? 'search-result' : 'search-result-nopadding']">
+  <div :class="[navList.length != 0 ? 'search-result' : 'search-result-nopadding']">
       <sortGoods :goodsList="goodsList" v-if="goodsList && !loading"></sortGoods>
       <loadingMore v-if="more"></loadingMore>
       <searchResultEmpty v-if="!goodsList.length && !loading"></searchResultEmpty>
       <loadingComponent v-if="loading"></loadingComponent>
-  </view>
+  </div>
 
-  <view class="scollTop"  @click="toTop" :hidden="!floorstatus">顶部</view> 
-</view>
+  <div class="scollTop"  @click="toTop" :hidden="!floorstatus">顶部</div> 
+</div>
 </template>
 
 <script>

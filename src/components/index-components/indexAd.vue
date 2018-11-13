@@ -1,23 +1,23 @@
 <template>
-    <view>
+    <div>
         <swiper v-if="content.showType == 1" :class="{ 'banner ' : content.space == 0 , 'banner2': content.space == 1 }" :indicator-dots="content.space == 0 ? true : false" autoplay="true" interval="3000" duration="1000">
             <swiper-item v-for="item of content.dataset" :key="item.id">
-            <view  @click="onClick(item)">
+            <div  @click="onClick(item)">
                 <img :class="{ 'full' : content.space == 0 , 'nofull': content.space == 1 }" :src="baseUrl+item.pic" mode="scaleToFill" background-size="cover" />
-            </view>
+            </div>
             </swiper-item>
         </swiper>
-        <view class="nav a-section a-brand"  v-if="content.showType == 2">
-            <view class="b clear">
-            <view class="item item-1" v-for="(item , index) of content.dataset" :key="index" @click="onClick(item)">
-                <view>
+        <div class="nav a-section a-brand"  v-if="content.showType == 2">
+            <div class="b clear">
+            <div class="item item-1" v-for="(item , index) of content.dataset" :key="index" @click="onClick(item)">
+                <div>
                     <text class="name" v-if="item.showtitle">{{item.showtitle}}</text>
                     <img class="img" :src="baseUrl+ item.pic" mode="scaleToFill" background-size="cover" />
-                </view>
-            </view>
-            </view>
-        </view>
-    </view>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
 </template>
 
 

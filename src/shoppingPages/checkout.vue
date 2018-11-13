@@ -1,75 +1,75 @@
 <template >
-<view class="container">  
+<div class="container">  
         <scroll-view scroll-y class="order-content">     
 
-            <view class="address-box">
-                <view class="address-item" @click="selectAddress" v-if="address">
-                    <view class="name clear">
+            <div class="address-box">
+                <div class="address-item" @click="selectAddress" v-if="address">
+                    <div class="name clear">
                         <text class="s">收货人：</text>
                         <text class="t">{{address.ShipTo}}</text>
                         <text class="phone">{{address.Phone}}</text>
-                    </view>
-                    <view class="address-info">
-                    <view class="info-icon">
+                    </div>
+                    <div class="address-info">
+                    <div class="info-icon">
                         <img src="/static/images/location.png" background-size="cover"/>
-                    </view>
-                    <view class="info-txt">  
+                    </div>
+                    <div class="info-txt">  
                         <text class="default" v-if="address.IsDefault === 1">默认</text>            
                         <text>{{address.Province +' '+  address.City +' '+ address.Area +' '+ address.Street +' '+ address.Address }}</text>
-                    </view>
-                    <view class="info-go" v-if="checkOutOther.Remindtype != 3">
+                    </div>
+                    <div class="info-go" v-if="checkOutOther.Remindtype != 3">
                         <img src="/static/images/address_right.png"/>
-                    </view>
-                    </view>
-                </view>
+                    </div>
+                    </div>
+                </div>
 
-                <view class="address-item address-empty" @click="addAddress" v-if="!address">
-                    <view class="m">
+                <div class="address-item address-empty" @click="addAddress" v-if="!address">
+                    <div class="m">
                     还没有收货地址，去添加
-                    </view>
-                </view>
-            </view>
-            <view class="line">
+                    </div>
+                </div>
+            </div>
+            <div class="line">
                 <img src="/static/images/icon-order-division.png"/>
-            </view>
+            </div>
 
-            <view class="goods-items">
-                <view class="item" >
-                    <view class="img">
-                        <image :src="baseUrl + productImg"/>
-                    </view>
-                    <view class="info">
-                        <view class="t">
+            <div class="goods-items">
+                <div class="item" >
+                    <div class="img">
+                        <img :src="baseUrl + productImg"/>
+                    </div>
+                    <div class="info">
+                        <div class="t">
                             <text class="name">{{checkOutInfo.products.ProductName}}</text>
                             <text class="number">x{{checkOutInfo.products.IsCustom ? checkOutInfo.ShuLiang : checkOutInfo.Count}}</text>
-                        </view>
+                        </div>
                         
-                        <view class="m" v-if="ParaStr">参数:{{ParaStr}}</view>
-                        <view class="m" v-if="checkOutInfo.products.Color">颜色：{{checkOutInfo.products.Color}}</view>
-                        <view class="m" v-if="checkOutInfo.products.Size">尺寸：{{checkOutInfo.products.Size}}</view>
-                        <view class="m" v-if="checkOutInfo.products.Version">规格：{{checkOutInfo.products.Version}}</view>
-                        <view class="m" v-if="checkOutInfo.products.Material">材料：{{checkOutInfo.products.Material}}</view>
-                        <view class="m" v-if="checkOutInfo.products.Fashion">款式：{{checkOutInfo.products.Fashion}}</view>
-                        <view class="m" v-if="checkOutInfo.products.Grams">克重：{{checkOutInfo.products.Grams}}</view>
-                        <view class="m" v-if="checkOutInfo.products.Ensemble">套餐：{{checkOutInfo.products.Ensemble}}</view>
-                        <!-- <view class="b">￥{{checkOutInfo.products.SalePrice}}</view> -->
-                    </view>
-                </view>
-            </view>
+                        <div class="m" v-if="ParaStr">参数:{{ParaStr}}</div>
+                        <div class="m" v-if="checkOutInfo.products.Color">颜色：{{checkOutInfo.products.Color}}</div>
+                        <div class="m" v-if="checkOutInfo.products.Size">尺寸：{{checkOutInfo.products.Size}}</div>
+                        <div class="m" v-if="checkOutInfo.products.Version">规格：{{checkOutInfo.products.Version}}</div>
+                        <div class="m" v-if="checkOutInfo.products.Material">材料：{{checkOutInfo.products.Material}}</div>
+                        <div class="m" v-if="checkOutInfo.products.Fashion">款式：{{checkOutInfo.products.Fashion}}</div>
+                        <div class="m" v-if="checkOutInfo.products.Grams">克重：{{checkOutInfo.products.Grams}}</div>
+                        <div class="m" v-if="checkOutInfo.products.Ensemble">套餐：{{checkOutInfo.products.Ensemble}}</div>
+                        <!-- <div class="b">￥{{checkOutInfo.products.SalePrice}}</div> -->
+                    </div>
+                </div>
+            </div>
 
             
-            <view class="order-box">
-                <view class="box-top">
+            <div class="order-box">
+                <div class="box-top">
                     
-                <view class="order-item clear"  @click="selectWuliu('Remindtype')">
-                    <view class="l">
+                <div class="order-item clear"  @click="selectWuliu('Remindtype')">
+                    <div class="l">
                         <text class="name">配送方式</text>
-                    </view>
-                    <view class="r distribution y">  
+                    </div>
+                    <div class="r distribution y">  
                         <text class="txt">￥{{daifaInfo.isDaifa ? daifaInfo.ExpressFreight : 0}}</text>          
                         <text class="txt">{{checkOutOther.RemindtypeStr}}</text>
-                    </view>
-                </view>
+                    </div>
+                </div>
                                 <!-- 代发快递 -->
                 <div class="box-content" v-if="checkOutOther.Remindtype == 1">
                     <div class="weui-cells weui-cells_after-title">
@@ -99,56 +99,56 @@
                     </div>
                 </div>
 
-                <view class="order-item clear">
-                    <view class="l">
+                <div class="order-item clear">
+                    <div class="l">
                         <text class="name">买家留言</text>
-                    </view>
-                    <view class="r message">
+                    </div>
+                    <div class="r message">
                         <input class="txt" v-model="checkOutOther.orderRemarks" placeholder="点击给商家留言"/>
-                    </view>
-                </view>
+                    </div>
+                </div>
 
-                <view class="order-item clear">
-                    <view class="l">
+                <div class="order-item clear">
+                    <div class="l">
                         <text class="name">合计</text>
-                    </view>
-                    <view class="r price">            
-                    <view class="txt">￥ {{allToTal}}</view>
-                    <!-- <view class="txt" v-if="!daifaInfo.isDaifa">￥ {{checkOutInfo.IsRemind ? (checkOutInfo.totalAmount + remindInfo.RemindPrice) : checkOutInfo.totalAmount}}</view> -->
-                    </view>
-                </view>
-                </view>
-                <view class="box-bottom">
-                    <view class="price-total">
-                        <view class="product-price clear">
-                            <view class="l">商品金额</view>
-                            <view class="r">￥{{allToTal - (daifaInfo.isDaifa ? daifaInfo.ExpressFreight : 0)}}</view>
-                        </view>
-                        <view class="express-price clear">
-                            <view class="l">运费</view>
-                            <view class="r">+ ￥{{daifaInfo.isDaifa ? daifaInfo.ExpressFreight : 0}}</view>
-                        </view>
-                    </view>
-                </view>
+                    </div>
+                    <div class="r price">            
+                    <div class="txt">￥ {{allToTal}}</div>
+                    <!-- <div class="txt" v-if="!daifaInfo.isDaifa">￥ {{checkOutInfo.IsRemind ? (checkOutInfo.totalAmount + remindInfo.RemindPrice) : checkOutInfo.totalAmount}}</div> -->
+                    </div>
+                </div>
+                </div>
+                <div class="box-bottom">
+                    <div class="price-total">
+                        <div class="product-price clear">
+                            <div class="l">商品金额</div>
+                            <div class="r">￥{{allToTal - (daifaInfo.isDaifa ? daifaInfo.ExpressFreight : 0)}}</div>
+                        </div>
+                        <div class="express-price clear">
+                            <div class="l">运费</div>
+                            <div class="r">+ ￥{{daifaInfo.isDaifa ? daifaInfo.ExpressFreight : 0}}</div>
+                        </div>
+                    </div>
+                </div>
 
             
 
         
-            </view>
+            </div>
         </scroll-view>
 
 
-    <view class="order-total" >
-        <view class="t">
+    <div class="order-total" >
+        <div class="t">
         <!-- 如果是代发，需要加上代发运费 -->
-        <view>合计：￥{{allToTal}}</view>
+        <div>合计：￥{{allToTal}}</div>
         <!-- 如果是印捷配送，直接显示价格 -->
-        <!-- <view v-if="!daifaInfo.isDaifa">合计：￥{{checkOutInfo.IsRemind ? (checkOutInfo.totalAmount + remindInfo.RemindPrice) : checkOutInfo.totalAmount}}</view> -->
-        </view>
+        <!-- <div v-if="!daifaInfo.isDaifa">合计：￥{{checkOutInfo.IsRemind ? (checkOutInfo.totalAmount + remindInfo.RemindPrice) : checkOutInfo.totalAmount}}</div> -->
+        </div>
         
-        <view class="b" @click="submitOrder">确认下单</view>
-    </view>
-</view>
+        <div class="b" @click="submitOrder">确认下单</div>
+    </div>
+</div>
 </template>
 
 <script>

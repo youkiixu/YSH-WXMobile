@@ -1,22 +1,22 @@
 <template >
-<view class="container">
-  <view class="footprint">
-    <view class="day-item" v-for="(item, index) of footprintList" :key="index">
-      <view class="day-hd">{{item[0].add_time}}</view>
-      <view class="day-list">
-        <view class="item" :data-footprint="iitem" @touchstart="touchStart" @touchend="touchEnd" @click="deleteItem"
+<div class="container">
+  <div class="footprint">
+    <div class="day-item" v-for="(item, index) of footprintList" :key="index">
+      <div class="day-hd">{{item[0].add_time}}</div>
+      <div class="day-list">
+        <div class="item" :data-footprint="iitem" @touchstart="touchStart" @touchend="touchEnd" @click="deleteItem"
           v-for="(iitem, iindex) of item" :key="iitem.id" :data-index="iindex">
-          <image class="img" :src="iitem.list_pic_url"/>
-          <view class="info">
-            <view class="name">{{iitem.name}}</view>
-            <view class="subtitle">{{iitem.goods_brief}}</view>
-            <view class="price">￥{{iitem.retail_price}}</view>
-          </view>
-        </view>
-      </view>
-    </view>
-  </view>
-</view>
+          <img class="img" :src="iitem.list_pic_url"/>
+          <div class="info">
+            <div class="name">{{iitem.name}}</div>
+            <div class="subtitle">{{iitem.goods_brief}}</div>
+            <div class="price">￥{{iitem.retail_price}}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 </template>
 
 <script>

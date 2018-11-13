@@ -1,18 +1,18 @@
 <template>
-  <view class="nav a-section a-new">
-    <view class="b clear">
-      <view class="item" v-for="item of content.goodslist" :key="item.item_id">
-        <view  @click="toDetail(item)">
+  <div class="nav a-section a-new">
+    <div class="b clear">
+      <div class="item" v-for="item of content.goodslist" :key="item.item_id">
+        <div  @click="toDetail(item)">
           <img class="img" :src="baseUrl+ item.pic" background-size="cover" />
-          <view class="txt">
+          <div class="txt">
               <text class="name">{{item.title}}</text>
               <!-- <text class="desc"></text> -->
               <text class="price">￥{{item.price}}</text>                        
-            </view>
-        </view>
-      </view>
-    </view>
-  </view>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 <script>
 export default {

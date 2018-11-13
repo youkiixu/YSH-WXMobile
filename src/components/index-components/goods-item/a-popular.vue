@@ -1,20 +1,20 @@
 <template>
-  <view class="nav a-section a-popular">
-    <view class="b">
-      <view class="item" v-for="item of content.goodslist" :key="item.item_id">
-        <view @click="toDetail(item)">
+  <div class="nav a-section a-popular">
+    <div class="b">
+      <div class="item" v-for="item of content.goodslist" :key="item.item_id">
+        <div @click="toDetail(item)">
           <img class="img" :src="baseUrl+ item.pic" background-size="cover" />
-          <view class="right">
-            <view class="text">
+          <div class="right">
+            <div class="text">
               <text class="name">{{item.title}}</text>
               <text class="desc">{{item.original_price}}</text>
               <text class="price">￥{{item.price}}</text>
-            </view>
-          </view>
-        </view>
-      </view>
-    </view>
-  </view>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 <script>
 export default {

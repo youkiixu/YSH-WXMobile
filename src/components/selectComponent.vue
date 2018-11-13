@@ -1,96 +1,96 @@
 <template>
-    <view>
-      <view class="close" @click="closeAttr">
+    <div>
+      <div class="close" @click="closeAttr">
         <img class="icon" src="/static/images/icon_close.png"/>
-      </view>
-      <view class="img-info clear">
+      </div>
+      <div class="img-info clear">
         <img class="img" :src="baseUrl + detailInfo.imagePath + '/1_350.png'" @click="previewImage(baseUrl + detailInfo.imagePath + '/1_350.png')"/>
-        <view class="info">
-          <view class="c">
-            <view class="p" v-if="!detailInfo.IsCustom"><text class="p-icon">￥</text>{{detailInfo.Price}}</view>
-            <view class="p" v-else><text class="p-icon">￥</text>{{ListPriceInfo.sprice + detailInfo.RemindPrice}}</view>
-            <view class="s" v-if="!detailInfo.IsCustom">库存：{{Stock}}</view>
-            <view class="a" v-if="!detailInfo.IsCustom">已选：<text>{{selectSkuStr.Color}} {{selectSkuStr.Size}} {{selectSkuStr.Version}} {{selectSkuStr.Material}} {{selectSkuStr.Fashion}} {{selectSkuStr.Grams}} {{selectSkuStr.Ensemble}}</text></view>
-            <view class="a" v-if="detailInfo.IsCustom"><text v-for="(item , index) in ListPriceInfo.paraArr" :key="index">{{item.paraStr}}</text></view>
-          </view> 
-      </view>
-      </view>
+        <div class="info">
+          <div class="c">
+            <div class="p" v-if="!detailInfo.IsCustom"><text class="p-icon">￥</text>{{detailInfo.Price}}</div>
+            <div class="p" v-else><text class="p-icon">￥</text>{{ListPriceInfo.sprice + detailInfo.RemindPrice}}</div>
+            <div class="s" v-if="!detailInfo.IsCustom">库存：{{Stock}}</div>
+            <div class="a" v-if="!detailInfo.IsCustom">已选：<text>{{selectSkuStr.Color}} {{selectSkuStr.Size}} {{selectSkuStr.Version}} {{selectSkuStr.Material}} {{selectSkuStr.Fashion}} {{selectSkuStr.Grams}} {{selectSkuStr.Ensemble}}</text></div>
+            <div class="a" v-if="detailInfo.IsCustom"><text v-for="(item , index) in ListPriceInfo.paraArr" :key="index">{{item.paraStr}}</text></div>
+          </div> 
+      </div>
+      </div>
       <scroll-view scroll-y class="spec-con">
-        <view class="spec-item" v-if="detailInfo.IsCustom">
-            <view class="name">点击这里选择参数重新报价</view>
-            <view class="values"  v-for="(item , index) in ListPriceInfo.paraArr" :key="index">
-              <view class="selected value" @click="toBaojia">{{item.paraStr}}</view>
-            </view>
-        </view>
-        <view class="spec-item" v-if="detailInfo.Color.length != 0">
-            <view class="name">选择颜色</view>
-            <view class="values">
-            <view :class="item.SkuId == selectSku.Color ? 'selected value' : 'value'" @click="clickSkuValue('Color' , item.SkuId , item.Value)" v-for="(item, index) of detailInfo.Color" :key="index" :data-value-id="item.SkuId" :data-index="index" >{{item.Value}}</view>
-            </view>
-        </view>
-        <view class="spec-item"  v-if="detailInfo.Size.length != 0">
-            <view class="name">选择尺寸</view>
-            <view class="values">
-            <view :class="item.SkuId == selectSku.Size ? 'selected value' : 'value'" @click="clickSkuValue('Size' , item.SkuId , item.Value)" v-for="(item, index) of detailInfo.Size" :key="item.SkuId" :data-value-id="item.SkuId" :data-index="index" :data-name-id="item.SkuId">{{item.Value}}</view>
-            </view>
-        </view>
-        <view class="spec-item"  v-if="detailInfo.Version.length != 0">
-            <view class="name">选择规格</view>
-            <view class="values">
-            <view :class="item.SkuId == selectSku.Version? 'selected value' : 'value'" @click="clickSkuValue('Version' , item.SkuId , item.Value)" v-for="(item, index) of detailInfo.Version" :key="item.SkuId" :data-value-id="item.SkuId" :data-index="index" :data-name-id="item.SkuId">{{item.Value}}</view>
-            </view>
-        </view>
-        <view class="spec-item"  v-if="detailInfo.Material.length != 0">
-            <view class="name">选择材料</view>
-            <view class="values">
-            <view :class="item.SkuId == selectSku.Material ? 'selected value' : 'value'" @click="clickSkuValue('Material' , item.SkuId , item.Value)" v-for="(item, index) of detailInfo.Material" :key="item.SkuId" :data-value-id="item.SkuId" :data-index="index" :data-name-id="item.SkuId">{{item.Value}}</view>
-            </view>
-        </view>
-        <view class="spec-item"  v-if="detailInfo.Fashion.length != 0">
-            <view class="name">选择款式</view>
-            <view class="values">
-            <view :class="item.SkuId == selectSku.Fashion ? 'selected value' : 'value'" @click="clickSkuValue('Fashion' , item.SkuId , item.Value)" v-for="(item, index) of detailInfo.Fashion" :key="item.SkuId" :data-value-id="item.SkuId" :data-index="index" :data-name-id="item.SkuId">{{item.Value}}</view>
-            </view>
-        </view>
-        <view class="spec-item"  v-if="detailInfo.Grams.length != 0">
-            <view class="name">选择克重</view>
-            <view class="values">
-            <view :class="item.SkuId == selectSku.Grams ? 'selected value' : 'value'" @click="clickSkuValue('Grams' , item.SkuId , item.Value)" v-for="(item, index) of detailInfo.Grams" :key="item.SkuId" :data-value-id="item.SkuId" :data-index="index" :data-name-id="item.SkuId">{{item.Value}}</view>
-            </view>
-        </view>
-        <view class="spec-item"  v-if="detailInfo.Ensemble.length != 0">
-            <view class="name">选择套餐</view>
-            <view class="values">
-            <view :class="item.SkuId == selectSku.Ensemble ? 'selected value' : 'value'" @click="clickSkuValue('Ensemble' , item.SkuId , item.Value)" v-for="(item, index) of detailInfo.Ensemble" :key="item.SkuId" :data-value-id="item.SkuId" :data-index="index" :data-name-id="item.SkuId">{{item.Value}}</view>
-            </view>
-        </view>
-        <view class="spec-item" v-if="strYjtype">
-            <view class="name">点击选择物流方式</view>
-            <view class="values">
-              <view class="selected value" @click="selectWuliu">{{strYjtype}}<span>></span></view>
-            </view>
-        </view>
-        <view class="number-item" v-if="!detailInfo.IsCustom">
-            <view class="name">数量</view>
-            <view class="selnum">
-            <view class="cut" @click="cutNumber" hover-class>-</view>
+        <div class="spec-item" v-if="detailInfo.IsCustom">
+            <div class="name">点击这里选择参数重新报价</div>
+            <div class="values"  v-for="(item , index) in ListPriceInfo.paraArr" :key="index">
+              <div class="selected value" @click="toBaojia">{{item.paraStr}}</div>
+            </div>
+        </div>
+        <div class="spec-item" v-if="detailInfo.Color.length != 0">
+            <div class="name">选择颜色</div>
+            <div class="values">
+            <div :class="item.SkuId == selectSku.Color ? 'selected value' : 'value'" @click="clickSkuValue('Color' , item.SkuId , item.Value)" v-for="(item, index) of detailInfo.Color" :key="index" :data-value-id="item.SkuId" :data-index="index" >{{item.Value}}</div>
+            </div>
+        </div>
+        <div class="spec-item"  v-if="detailInfo.Size.length != 0">
+            <div class="name">选择尺寸</div>
+            <div class="values">
+            <div :class="item.SkuId == selectSku.Size ? 'selected value' : 'value'" @click="clickSkuValue('Size' , item.SkuId , item.Value)" v-for="(item, index) of detailInfo.Size" :key="item.SkuId" :data-value-id="item.SkuId" :data-index="index" :data-name-id="item.SkuId">{{item.Value}}</div>
+            </div>
+        </div>
+        <div class="spec-item"  v-if="detailInfo.Version.length != 0">
+            <div class="name">选择规格</div>
+            <div class="values">
+            <div :class="item.SkuId == selectSku.Version? 'selected value' : 'value'" @click="clickSkuValue('Version' , item.SkuId , item.Value)" v-for="(item, index) of detailInfo.Version" :key="item.SkuId" :data-value-id="item.SkuId" :data-index="index" :data-name-id="item.SkuId">{{item.Value}}</div>
+            </div>
+        </div>
+        <div class="spec-item"  v-if="detailInfo.Material.length != 0">
+            <div class="name">选择材料</div>
+            <div class="values">
+            <div :class="item.SkuId == selectSku.Material ? 'selected value' : 'value'" @click="clickSkuValue('Material' , item.SkuId , item.Value)" v-for="(item, index) of detailInfo.Material" :key="item.SkuId" :data-value-id="item.SkuId" :data-index="index" :data-name-id="item.SkuId">{{item.Value}}</div>
+            </div>
+        </div>
+        <div class="spec-item"  v-if="detailInfo.Fashion.length != 0">
+            <div class="name">选择款式</div>
+            <div class="values">
+            <div :class="item.SkuId == selectSku.Fashion ? 'selected value' : 'value'" @click="clickSkuValue('Fashion' , item.SkuId , item.Value)" v-for="(item, index) of detailInfo.Fashion" :key="item.SkuId" :data-value-id="item.SkuId" :data-index="index" :data-name-id="item.SkuId">{{item.Value}}</div>
+            </div>
+        </div>
+        <div class="spec-item"  v-if="detailInfo.Grams.length != 0">
+            <div class="name">选择克重</div>
+            <div class="values">
+            <div :class="item.SkuId == selectSku.Grams ? 'selected value' : 'value'" @click="clickSkuValue('Grams' , item.SkuId , item.Value)" v-for="(item, index) of detailInfo.Grams" :key="item.SkuId" :data-value-id="item.SkuId" :data-index="index" :data-name-id="item.SkuId">{{item.Value}}</div>
+            </div>
+        </div>
+        <div class="spec-item"  v-if="detailInfo.Ensemble.length != 0">
+            <div class="name">选择套餐</div>
+            <div class="values">
+            <div :class="item.SkuId == selectSku.Ensemble ? 'selected value' : 'value'" @click="clickSkuValue('Ensemble' , item.SkuId , item.Value)" v-for="(item, index) of detailInfo.Ensemble" :key="item.SkuId" :data-value-id="item.SkuId" :data-index="index" :data-name-id="item.SkuId">{{item.Value}}</div>
+            </div>
+        </div>
+        <div class="spec-item" v-if="strYjtype">
+            <div class="name">点击选择物流方式</div>
+            <div class="values">
+              <div class="selected value" @click="selectWuliu">{{strYjtype}}<text>></text></div>
+            </div>
+        </div>
+        <div class="number-item" v-if="!detailInfo.IsCustom">
+            <div class="name">数量</div>
+            <div class="selnum">
+            <div class="cut" @click="cutNumber" hover-class>-</div>
             <input v-model.lazy="number" @blur="numberChange" @confirm="numberChange" class="number"  type="number" confirm-type="done"/>
-            <view class="add" @click="addNumber" hover-class>+</view>
-            </view>
-        </view>
+            <div class="add" @click="addNumber" hover-class>+</div>
+            </div>
+        </div>
       </scroll-view>
-      <view class="car-btn clear" v-if="!SubmitByProductType">
-          <view class="car-add"  v-if="detailInfo.IsNotNeedFile" @click="addToCart" hover-class>加入购物车</view>
-          <view class="car-buy"  v-if="detailInfo.IsNotNeedFile" @click="SubmitByProduct" hover-class>立即购买</view>
+      <div class="car-btn clear" v-if="!SubmitByProductType">
+          <div class="car-add"  v-if="detailInfo.IsNotNeedFile" @click="addToCart" hover-class>加入购物车</div>
+          <div class="car-buy"  v-if="detailInfo.IsNotNeedFile" @click="SubmitByProduct" hover-class>立即购买</div>
           <!-- IsNotNeedFile 预计将用这个需不需要上传文件字段判断是否可以下单或加入购物车-->
-          <view class="car-buy disabled" v-if="!detailInfo.IsNotNeedFile" style="width:100%;" @click="disabledClick">下单需要上传文件，请到电脑端操作</view>
-      </view>
-      <view class="car-btn clear" v-if="SubmitByProductType">
-          <view class="car-buy" v-if="detailInfo.IsNotNeedFile" style="width:100%;" @click="SubmitByProduct" hover-class>{{btnText}}</view>
+          <div class="car-buy disabled" v-if="!detailInfo.IsNotNeedFile" style="width:100%;" @click="disabledClick">下单需要上传文件，请到电脑端操作</div>
+      </div>
+      <div class="car-btn clear" v-if="SubmitByProductType">
+          <div class="car-buy" v-if="detailInfo.IsNotNeedFile" style="width:100%;" @click="SubmitByProduct" hover-class>{{btnText}}</div>
           <!-- IsNotNeedFile 预计将用这个需不需要上传文件字段判断是否可以下单或加入购物车-->
-          <view class="car-buy disabled" v-if="!detailInfo.IsNotNeedFile" style="width:100%;" @click="disabledClick">下单需要上传文件，请到电脑端操作</view>
-      </view>
-    </view>   
+          <div class="car-buy disabled" v-if="!detailInfo.IsNotNeedFile" style="width:100%;" @click="disabledClick">下单需要上传文件，请到电脑端操作</div>
+      </div>
+    </div>   
 </template>
 <script>
 export default {

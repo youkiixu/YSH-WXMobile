@@ -1,72 +1,72 @@
 <template >
-<view class="container">  
-        <view class="order-content" v-if="goodList.length != 0">     
-            <view class="address-box">
-                <view class="address-item" @click="selectAddress" v-if="address">
-                    <view class="name clear">
+<div class="container">  
+        <div class="order-content" v-if="goodList.length != 0">     
+            <div class="address-box">
+                <div class="address-item" @click="selectAddress" v-if="address">
+                    <div class="name clear">
                         <text class="s">收货人：</text>
                         <text class="t">{{address.ShipTo}}</text>
                         <text class="phone">{{address.Phone}}</text>
-                    </view>
-                    <view class="address-info">
-                    <view class="info-icon">
+                    </div>
+                    <div class="address-info">
+                    <div class="info-icon">
                         <img src="/static/images/location.png" background-size="cover"/>
-                    </view>
-                    <view class="info-txt">  
+                    </div>
+                    <div class="info-txt">  
                         <text class="default" v-if="address.IsDefault === 1">默认</text>            
                         <text>{{address.Province +' '+  address.City +' '+ address.Area +' '+ address.Street +' '+ address.Address }}</text>
-                    </view>
-                    <view class="info-go" v-if="checkOutOther.Remindtype != 3">
+                    </div>
+                    <div class="info-go" v-if="checkOutOther.Remindtype != 3">
                         <img src="/static/images/address_right.png"/>
-                    </view>
-                    </view>
-                </view>
-                <view class="address-item address-empty" @click="addAddress" v-if="!address">
-                    <view class="m">
+                    </div>
+                    </div>
+                </div>
+                <div class="address-item address-empty" @click="addAddress" v-if="!address">
+                    <div class="m">
                     还没有收货地址，去添加
-                    </view>
-                </view>
-            </view>
-            <view class="line">
+                    </div>
+                </div>
+            </div>
+            <div class="line">
                 <img src="/static/images/icon-order-division.png"/>
-            </view>
+            </div>
             <scroll-view scroll-y :style="{'height': '100%'}">
-                <view class="card" v-for="(item , index) of goodList" :key="index">
-                    <view class="goods-items">
-                        <view class="item" >
-                            <view class="img">
-                                <image :src="baseUrl + item.imagePath + '/1_350.png'"/>
-                            </view>
-                            <view class="info">
-                                <view class="t">
+                <div class="card" v-for="(item , index) of goodList" :key="index">
+                    <div class="goods-items">
+                        <div class="item" >
+                            <div class="img">
+                                <img :src="baseUrl + item.imagePath + '/1_350.png'"/>
+                            </div>
+                            <div class="info">
+                                <div class="t">
                                     <text class="name" v-if="item.ProductName">{{item.ProductName}}</text>
                                     <text class="number">x{{item.IsCustom ? item.ShuLiang : item.Count}}</text>
-                                </view>
+                                </div>
                                 
-                                <view class="m" v-if="item.paraStr">参数:{{item.paraStr}}</view>
-                                <view class="m" v-if="item.Color">颜色：{{item.Color}}</view>
-                                <view class="m" v-if="item.Size">尺寸：{{item.Size}}</view>
-                                <view class="m" v-if="item.Version">规格：{{item.Version}}</view>
-                                <view class="m" v-if="item.Material">材料：{{item.Material}}</view>
-                                <view class="m" v-if="item.Fashion">款式：{{item.Fashion}}</view>
-                                <view class="m" v-if="item.Grams">克重：{{item.Grams}}</view>
-                                <view class="m" v-if="item.Ensemble">套餐：{{item.Ensemble}}</view>
-                                <!-- <view class="b">￥{{checkOutInfo.products.SalePrice}}</view> -->
-                            </view>
-                        </view>
-                    </view>
-                    <view class="order-box" >
-                        <view class="box-top">
+                                <div class="m" v-if="item.paraStr">参数:{{item.paraStr}}</div>
+                                <div class="m" v-if="item.Color">颜色：{{item.Color}}</div>
+                                <div class="m" v-if="item.Size">尺寸：{{item.Size}}</div>
+                                <div class="m" v-if="item.Version">规格：{{item.Version}}</div>
+                                <div class="m" v-if="item.Material">材料：{{item.Material}}</div>
+                                <div class="m" v-if="item.Fashion">款式：{{item.Fashion}}</div>
+                                <div class="m" v-if="item.Grams">克重：{{item.Grams}}</div>
+                                <div class="m" v-if="item.Ensemble">套餐：{{item.Ensemble}}</div>
+                                <!-- <div class="b">￥{{checkOutInfo.products.SalePrice}}</div> -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="order-box" >
+                        <div class="box-top">
                             
-                        <view class="order-item clear"  @click="selectWuliu(index)">
-                            <view class="l">
+                        <div class="order-item clear"  @click="selectWuliu(index)">
+                            <div class="l">
                                 <text class="name">配送方式</text>
-                            </view>
-                            <view class="r distribution y">  
+                            </div>
+                            <div class="r distribution y">  
                                 <text class="txt">￥{{item.isDaifa ? item.ExpressFreight : 0}}</text>          
                                 <text class="txt">{{item.RemindtypeStr}}</text>
-                            </view>
-                        </view>
+                            </div>
+                        </div>
                         <!-- 代发快递 -->
                         <div class="box-content" v-if="item.Remindtype == 1">
                             <!-- <div class="weui-cells__title">代发快递方式</div> -->
@@ -96,53 +96,53 @@
                                 </div>
                             </div>
                         </div>
-                        <view class="order-item clear">
-                            <view class="l">
+                        <div class="order-item clear">
+                            <div class="l">
                                 <text class="name">买家留言</text>
-                            </view>
-                            <view class="r message">
+                            </div>
+                            <div class="r message">
                                 <input class="txt" v-model="item.orderRemarks" placeholder="点击给商家留言"/>
-                            </view>
-                        </view>
-                        <view class="box-bottom">
-                            <view class="price-total">
-                                <view class="product-price clear">
-                                    <view class="l">商品金额</view>
-                                    <view class="r">￥{{item.totalAmount + item.RemindPrice}}</view>
-                                </view>
-                                <view class="express-price clear">
-                                    <view class="l">运费</view>
-                                    <view class="r">+ ￥{{item.isDaifa ? item.ExpressFreight : 0}}</view>
-                                </view>
-                            </view>
-                        </view>
-                        <view class="order-item clear">
-                            <view class="l">
+                            </div>
+                        </div>
+                        <div class="box-bottom">
+                            <div class="price-total">
+                                <div class="product-price clear">
+                                    <div class="l">商品金额</div>
+                                    <div class="r">￥{{item.totalAmount + item.RemindPrice}}</div>
+                                </div>
+                                <div class="express-price clear">
+                                    <div class="l">运费</div>
+                                    <div class="r">+ ￥{{item.isDaifa ? item.ExpressFreight : 0}}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="order-item clear">
+                            <div class="l">
                                 <text class="name">合计</text>
-                            </view>
-                            <view class="r price">            
-                                <view class="txt" v-if="item.isDaifa">￥ {{item.totalAmount + item.RemindPrice + item.ExpressFreight}}</view>
-                                <view class="txt" v-if="!item.isDaifa">￥ {{item.totalAmount + item.RemindPrice}}</view>
-                                </view>
-                            </view>
-                        </view>
-                    </view>
-                    <view class="line">
+                            </div>
+                            <div class="r price">            
+                                <div class="txt" v-if="item.isDaifa">￥ {{item.totalAmount + item.RemindPrice + item.ExpressFreight}}</div>
+                                <div class="txt" v-if="!item.isDaifa">￥ {{item.totalAmount + item.RemindPrice}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="line">
                         <img src="/static/images/icon-order-division.png"/>
-                    </view>
-                </view>
+                    </div>
+                </div>
             </scroll-view>
-        </view>
+        </div>
 
 
-    <view class="order-total">
-        <view class="t">
+    <div class="order-total">
+        <div class="t">
         <!-- 如果是代发，需要加上代发运费 -->
-        <view >合计：￥{{totalAmount }}</view>
-        </view>
-        <view class="b" @click="submitOrder">确认下单</view>
-    </view>
-</view>
+        <div >合计：￥{{totalAmount }}</div>
+        </div>
+        <div class="b" @click="submitOrder">确认下单</div>
+    </div>
+</div>
 </template>
 
 <script>

@@ -1,16 +1,16 @@
 <template >
-<view class="container">
-  <view class="post-comment">
-      <view class="input-box">
+<div class="container">
+  <div class="post-comment">
+      <div class="input-box">
           <textarea class="content" focus="true" @input="bindInpuntValue" maxlength="140" placeholder="留言经过筛选后，对所有人可见" />
           <text class="count">{{140 - content.length}}</text>
-      </view>
-      <view class="btns">
-          <view class="close" @click="onClose">取消</view>
-          <view class="post" @click="onPost">发表</view>
-      </view>
-  </view>
-</view>
+      </div>
+      <div class="btns">
+          <div class="close" @click="onClose">取消</div>
+          <div class="post" @click="onPost">发表</div>
+      </div>
+  </div>
+</div>
 </template>
 
 <script>

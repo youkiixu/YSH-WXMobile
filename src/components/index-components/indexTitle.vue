@@ -1,12 +1,12 @@
 <template>
-    <view class="a-section">
-         <view class="h">
+    <div class="a-section">
+         <div class="h">
                 <text class="txt float-l">{{content.title}}</text>
             <!-- <navigator url="../brand/brand">
                 <text class="txt float-r">{{content.subtitle}}</text>
             </navigator> -->
-        </view>
-    </view>
+        </div>
+    </div>
 </template>
 <script>
 // 标题 2

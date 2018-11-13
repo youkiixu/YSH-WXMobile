@@ -1,68 +1,68 @@
 <template>
-    <view >
+    <div >
         <!-- 选择界面 -->
-        <view class="select-type" v-if="isSelect">
+        <div class="select-type" v-if="isSelect">
             <div class="select-type-content">
                 <img src="http://www.kiy.cn/Areas/Wxmobile/Content/img/logo.png" class="logo" alt="">
                 <button class="btn block" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber">微信手机号快捷登录</button>
                 <button  class="btn" @click="unSelect">彩印通账号密码登录</button>
                 <!-- <button>彩印通账号密码登录</button> -->
             </div>
-        </view>
+        </div>
         <!-- 手机绑定操作 -->
-        <view class="content" v-if="!isSelect">
+        <div class="content" v-if="!isSelect">
             <div class="to-select" @click="toSelect">
                 返回上一步
             </div>
             <!-- 注册 -->
-            <view class="register" v-if="isRegister">
-                <view class="phone clear">
+            <div class="register" v-if="isRegister">
+                <div class="phone clear">
                     <button class="phone_btn">+86</button>
-                    <view class="phone_num">
+                    <div class="phone_num">
                         <input v-model="registerInfo.CellPhone" placeholder="请输入手机号码" number confirm-type="done">
-                    </view>
-                </view>
-                <view class="VerCode clear">
-                    <view class="VerCode_num">
+                    </div>
+                </div>
+                <div class="VerCode clear">
+                    <div class="VerCode_num">
                         <input v-model="registerInfo.Code" placeholder="请输入验证码" confirm-type="done">
-                    </view>
+                    </div>
                     <button class="VerCode_btn"  @click="getCode">获取验证码</button>                
-                </view>
-                <view class="register_pwd">
+                </div>
+                <div class="register_pwd">
                 <input v-model="registerInfo.Password" placeholder="请输入密码" password confirm-type="done">         
-                </view>
-                <view class="register_pwd">
+                </div>
+                <div class="register_pwd">
                 <input v-model="Password2" placeholder="请再次输入密码" password confirm-type="done">         
-                </view>
-                <view  class="register_btn">
+                </div>
+                <div  class="register_btn">
                     <button @click="btnHandler">注册</button>
-                </view>                       
-                <view  class="to_register">
+                </div>                       
+                <div  class="to_register">
                     <button @click="transferText">已有账号</button>
-                </view>  
-            </view>
+                </div>  
+            </div>
 
             <!-- 登录 -->
-            <view class="login" v-if="!isRegister">
-                <view class="login_phone">
+            <div class="login" v-if="!isRegister">
+                <div class="login_phone">
                 <input v-model="userInfo.UserId" placeholder="请输入账号/手机号" confirm-type="done">         
-                </view>
-                <view class="login_pwd clear">
-                    <view class="login_pwdInput">
+                </div>
+                <div class="login_pwd clear">
+                    <div class="login_pwdInput">
                         <input v-model="userInfo.Password" placeholder="请输入密码" password confirm-type="done">
-                    </view>
+                    </div>
                     <!-- <button class="pwd_btn"  @click="forgetPwd">忘记密码</button>                 -->
-                </view>            
-                <view  class="login_btn">
+                </div>            
+                <div  class="login_btn">
                     <button @click="btnHandler">登录</button>
-                </view>   
-                <view  class="to_register">
+                </div>   
+                <div  class="to_register">
                     <button @click="transferText">立即注册</button>
-                </view>                       
-            </view>
-        </view>
+                </div>                       
+            </div>
+        </div>
 
-    </view>
+    </div>
 
 </template>
 <script>
