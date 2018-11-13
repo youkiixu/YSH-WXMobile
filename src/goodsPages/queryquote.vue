@@ -55,7 +55,7 @@ export default {
                 title: this.title,
                 detailCommon: this.detailCommon  == 'true' ? true : false,//是不是从detail页面过来,true不加载detail页,false加载
             }
-            
+             
             this.getProSearchRst(par)
             
         }

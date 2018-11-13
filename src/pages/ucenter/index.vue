@@ -3,11 +3,11 @@
 
   <view class="profile-info clear" >
     <view class="user_info clear" v-if="userInfo.Id">
-      <view class="user_info_img" @click="goLogin(true)">
-        <img :src="userInfo.photo ? baseUrl+userInfo.photo : 'http://www.kiy.cn/Areas/wxMobile/Content/img/userHead.png'" />
+      <view class="user_info_img" >
+        <img :src="userInfo.WXHeadImage ? userInfo.WXHeadImage : userInfo.photo ? baseUrl+userInfo.photo : 'http://www.kiy.cn/Areas/wxMobile/Content/img/userHead.png'" />
       </view>
       <view class="user_info_txt">
-        <view class="info_name">{{userInfo.UserName}}</view>
+        <view class="info_name">{{userInfo.WXNick ? userInfo.WXNick : userInfo.UserName}}</view>
         <view class="info_member">{{userInfo.GradeName}}</view>
       </view>
     </view>
@@ -69,15 +69,19 @@
         <view class="t">我的积分</view>
         <img class="i" src="/static/images/address_right.png" background-size="cover"/>       
   </view>
-   <view class="footprint list clear" @click="noEvent">    
+   <!-- <view class="footprint list clear" @click="noEvent">    
         <view class="t">我的足迹</view>
         <img class="i" src="/static/images/address_right.png" background-size="cover"/>       
-  </view>
+  </view> -->
    
    <view class="service list clear" @click="noEvent">    
         <view class="t">售后客服</view>
         <img class="i" src="/static/images/address_right.png" background-size="cover"/>       
   </view>
+  <button v-if="userInfo.Id" open-type="getUserInfo"  @getuserinfo="switchAccount " class="ShoppingCar list clear">    
+        <view class="t" style="text-align:left;">切换账号</view>
+        <img class="i" src="/static/images/address_right.png" background-size="cover"/>       
+  </button>
 
 </view>
 </template>
@@ -85,7 +89,7 @@
 <script>
 import wx from 'wx';
 import api from '@/utils/api'
-import user from '@/services/user';
+import user from '@/services/user'
 import { mapState, mapActions , mapMutations } from 'vuex'
 var app = getApp();
 
@@ -109,38 +113,45 @@ export default {
     ]),
     ...mapMutations ([
       'setUserInfo',
-      'setUserAddressList'
+      'setUserAddressList',
+      'setWxUserInfo'
     ]),
+    switchAccount (isLogin) {
+      var _this = this;
+      if(isLogin.mp.detail.rawData) {
+        this.setWxUserInfo(JSON.parse(isLogin.mp.detail.rawData))
+      }
+      _this.$wx.showLoading()
+      user.loginByWeixin().then(res => {
+        _this.$wx.hideLoading()
+        _this.$router.push({
+          path: 'login' 
+        })
+      })
+    },
     // 点击登陆
     goLogin (isLogin) {
-      
       var _this = this;
-      if(isLogin === true) {
-        // 点击头像进入 
-        this.$router.push({
-            path: 'login' 
-          })
-      } else {
-        console.log(isLogin)
-        console.log(isLogin.mp.detail.rawData)
-        _this.$wx.showLoading()
-        user.loginByWeixin().then(res => {
-          _this.$wx.hideLoading()
-          _this.sassLogin().then(res => {
-
-          }).catch(err => {
-            this.$router.push({
-              path: 'login'
-            })
-          })
-        }).catch((err) => {
-          _this.$wx.hideLoading()
-        });
+        // 获取微信用户信息
+      if(isLogin.mp.detail.rawData) {
+        this.setWxUserInfo(JSON.parse(isLogin.mp.detail.rawData))
       }
-
+      _this.$wx.showLoading()
+      user.loginByWeixin().then(res => {
+        _this.$wx.hideLoading()
+        _this.sassLogin().then(res => {
+          // 登录成功
+        }).catch(err => {
+          // 如果没有这个账号，则登录失败，跳登陆页
+          _this.$router.push({
+            path: 'login'
+          })
+        })
+      }).catch((err) => {
+        _this.$wx.hideLoading()
+      });
     },
     // 去详情页
-
     toOrderList(orderStatus) {
       this.$router.push({
         path: '/orderPages/order',
@@ -150,7 +161,6 @@ export default {
       })
     },
     // 退出登陆
-
     async logOut () {
       var _this = this;
       wx.showModal({

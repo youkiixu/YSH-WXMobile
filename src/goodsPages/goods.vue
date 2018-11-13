@@ -573,25 +573,25 @@ export default {
     },
     // 购物车的五角星，添加或是取消收藏
     async addCannelCollect () {
-          if (this.collectStatus) {//取消收藏
-                const openId = wx.getStorageSync('openId')
-                const res2 = await api.CancelConcernProducts({ Ids: this.Ids ,ProductIds : this.id,  openId: openId })
-                if (res2.success) {
-                  this.collectStatus = false;
-                this.$wx.showSuccessToast('取消成功')
-              } else {        
-                this.$wx.showErrorToast('取消失败')
-              }                                
-            } else {//添加收藏          
-                  const openId = wx.getStorageSync('openId')
-                  const res1 = await api.AddFavoriteProduct({ ProductId: this.id , openId: openId }) 
-                  if (res1.success) {
-                  this.collectStatus = true;                 
-                  this.$wx.showSuccessToast('收藏成功')
-                  }else {        
-                    this.$wx.showErrorToast('请先登录')
-                   }             
-              } 
+      if (this.collectStatus) {//取消收藏
+            const openId = wx.getStorageSync('openId')
+            const res2 = await api.CancelConcernProducts({ Ids: this.Ids ,ProductIds : this.id,  openId: openId })
+            if (res2.success) {
+              this.collectStatus = false;
+            this.$wx.showSuccessToast('取消成功')
+          } else {        
+            this.$wx.showErrorToast('取消失败')
+          }                                
+        } else {//添加收藏          
+          const openId = wx.getStorageSync('openId')
+          const res1 = await api.AddFavoriteProduct({ ProductId: this.id , openId: openId }) 
+          if (res1.success) {
+            this.collectStatus = true;                 
+            this.$wx.showSuccessToast('收藏成功')
+          }else {        
+            this.$wx.showErrorToast('请先登录')
+          }             
+      } 
     },
    // 判断商品是否已收藏
      async IsCollection () {

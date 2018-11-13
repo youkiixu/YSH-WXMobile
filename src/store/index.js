@@ -24,6 +24,7 @@ function showError(msg) {
 
 const store = new Vuex.Store({
   state: {
+    wxUserInfo: {},//微信用户信息
     sassIndex: [], // 首页数据
     categoryList: [], //选择的分类列表
     userInfo: {},//用户信息
@@ -36,6 +37,9 @@ const store = new Vuex.Store({
     shoppingCartCount: 0
   },
   mutations: {
+    setWxUserInfo(state , res) {
+      state.wxUserInfo = res
+    },
     getSassIndexData (state , res) {
       state.sassIndex = res
     },
@@ -83,6 +87,7 @@ const store = new Vuex.Store({
     },
     // 登陆
     async sassLogin(vm, data = {}) {
+      
       let openId = wx.getStorageSync('openId')
       // openId = '1234567'
       if (openId) {
@@ -92,7 +97,7 @@ const store = new Vuex.Store({
       if (res.success) {
         vm.commit('setUserInfo', JSON.parse(res.data))
       } else {
-        return rejects(false)
+        rejects(res)
       }
       
     },
@@ -188,18 +193,30 @@ const store = new Vuex.Store({
             ProductName: skuInfo.title,
             code: skuInfo.qitemCode,
           }
-          wx.navigateTo({
-            url: `../../goodsPages/goods?data=${JSON.stringify(data)}`
-          })
+          var pages = getCurrentPages() //获取加载的页面
+          var currentPage = pages[pages.length - 2] 
+          var url = currentPage.route //获取webView关闭前的url
+          if (url == 'autoPages/autoquote') {
+            // 临时处理，分包的bug
+            wx.navigateTo({
+              url: `../../../../goodsPages/goods?data=${JSON.stringify(data)}`
+            })
+          } else {
+            // 临时处理，分包的bug
+            wx.navigateTo({
+              url: `../../goodsPages/goods?data=${JSON.stringify(data)}`
+            })
+          }
         }
       } else {
+        // 自助报价进去厂家列表
         loading()
         const res = await api.getProSearchRst(par)
         hideLoading()
         if (res.success) {
           vm.commit('setProSearchRst', res.data)
           wx.navigateTo({
-            url: './quoteList'
+            url: '../../quoteList'
           })
         } else {
           showError(res.msg)

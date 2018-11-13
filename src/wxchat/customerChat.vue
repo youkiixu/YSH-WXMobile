@@ -10,7 +10,7 @@
         </view>
         <!-- 聊天页面 -->
         <view class="chat" :style="{'height' : height + 'px'}" v-if="!isSelect">
-            <scroll-view scroll-y='true' :scroll-top="chatValHeight"  class="chat-content" :style="{'height': chatHeight + 'px'}">
+            <scroll-view scroll-y='true' :scroll-top="chatValHeight"  class="chat-content" :style="{'height': chatHeight + 'px'}" @scrolltoupper="scrolltoupper">
                 <view v-for="(item , index) in wxchatLists" :key="index">
                     <!-- ↑ wx:for="{{wxchatLists}}" wx:key="{{index}}" -->
                     <view class="chat-content-list-time">{{item.msg_type != 'product' ? item.dataTime : productInfo.productName}}</view>
@@ -86,7 +86,6 @@ export default {
         }
     },
     async mounted () {
-        console.log(this.$route.query)
         this.productInfo = JSON.parse(this.$route.query.data)
         this.customers = JSON.parse(this.$route.query.customer)
     },
@@ -165,6 +164,9 @@ export default {
             this.loadProduct()
             this.$wx.hideLoading()
             this.isSelect = false
+        },
+        scrolltoupper (e) {
+            console.log(e)
         }
     }
 }

@@ -1,8 +1,9 @@
 import request from './request'
 
 let ApiKiyUrl = 'https://www.kiy.cn/'
-// const ApiKiyUrl = 'http://localhost:7634/'
+// ApiKiyUrl = 'http://localhost:7634/'
 // ApiKiyUrl = 'http://192.168.0.91:8008/'
+// ApiKiyUrl = 'http://192.168.30.6:6348/'
 
 const api = {
   //获取sass首页
@@ -24,7 +25,6 @@ const api = {
   getSassUserAddress: (paramObj) => request.post('/Wxmobile/UserInfos/GetAddress', paramObj, {
     baseURL: ApiKiyUrl
   }),
-  
   // 修改sass登陆用户地址
   ModifySassUserAddress: (paramObj) => request.post('/Wxmobile/UserInfos/ModifyUserAddress', paramObj, {
     baseURL: ApiKiyUrl
@@ -192,7 +192,11 @@ const api = {
   // 获取店铺客服
   getCustomerService: (paramObj) => request.post('/Wxmobile/CustomerService/GetCustomerService', paramObj, {
     baseURL: ApiKiyUrl
-  })
+  }),
+  // 快捷登录
+  quickLogin: (paramObj) => request.post('/Wxmobile/LoginRegisterTransfer/QuickLogin', paramObj, {
+    baseURL: ApiKiyUrl
+  }),
 }
 
 export default api

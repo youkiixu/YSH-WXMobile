@@ -94,33 +94,40 @@ export default {
         return arr2
       }, 
       getFoodHeight() {
-        var query = wx.createSelectorQuery()
-        let h = 0
-        query.selectAll('.food-list-hook').boundingClientRect((rects) => {
-          rects.forEach(rect => {
-            h += rect.height
-            this.listHeight.push(h)
-          });
-        })
-        query.select('.foods-wrapper').boundingClientRect((rect) => {
-          this.contentHeight = rect.height
-        })
-        query.select('.menu-ul').boundingClientRect((rect) => {
-          this.navulHeight = rect.height
-        })
-        query.select('.menu-item').boundingClientRect((rect) => {
-          this.navItemHeight = rect.height
-        }).exec()
+          var query = wx.createSelectorQuery()
+          let h = 0
+          query.selectAll('.food-list-hook').boundingClientRect((rects) => {
+            rects.forEach(rect => {
+              if(rect) {
+                h += rect.height
+                this.listHeight.push(h)
+              }
+            });
+          })
+          query.select('.foods-wrapper').boundingClientRect((rect) => {
+            if(rect) {
+              this.contentHeight = rect.height
+            }
+          })
+          query.select('.menu-ul').boundingClientRect((rect) => {
+            if(rect) {
+              this.navulHeight = rect.height
+            }
+          })
+          query.select('.menu-item').boundingClientRect((rect) => {
+            if(rect) {
+              this.navItemHeight = rect.height
+            }
+          }).exec()
         
       },
       queryQuote(item) {
+        console.log(item)
           if(item.IsPriceDisplayPage != 0 && item.ProductId != 0){
-            // this.$wx.toDetail({id : item.ProductId , title: item.qName , code : item.Code} , this)
             this.$wx.toBaoJia({ pid: item.Code , title: item.qName , isDetail: true , ProductId: item.ProductId } , this)
           } else {
             this.$wx.toBaoJia({ pid: item.Code , title: item.qName } , this)
           }
-          // this.$router.push({ path: '/pages/auto/queryquote', query: { pid: item.Code , title: item.qName  } })
       },
       selectMenu (index) {
         this.contentId = `con_${index}`
@@ -128,40 +135,49 @@ export default {
         this.currentIndex = index
       },
       onScroll(e) {
-        this.contentId = ''
-        let scrollTop = e.target.scrollTop
-        let length = this.listHeight.length
-        if(scrollTop >= this.listHeight[length - 1] - this.contentHeight) {
-          return
-        } else if(scrollTop > 0 && scrollTop < this.listHeight[0]){
-          this.currentIndex = 0
-        }
-        for (let i = 0; i < length; i++) {
-          if(scrollTop >= this.listHeight[i - 1] && scrollTop < this.listHeight[i]) {
-            this.currentIndex = i
+        try {
+          this.contentId = ''
+          let scrollTop = e.target.scrollTop
+          let length = this.listHeight.length
+          if(scrollTop >= this.listHeight[length - 1] - this.contentHeight) {
+            return
+          } else if(scrollTop > 0 && scrollTop < this.listHeight[0]){
+            this.currentIndex = 0
           }
+          for (let i = 0; i < length; i++) {
+            if(scrollTop >= this.listHeight[i - 1] && scrollTop < this.listHeight[i]) {
+              this.currentIndex = i
+            }
+          }
+        } catch (error) {
+          console.log(error)
         }
+        
       }
   },
   watch: {
     currentIndex () {
-      if(this.contentHeight < this.navulHeight) {
-        let h = this.currentIndex * this.navItemHeight
-        if(h > this.contentHeight) {
-          // 导航滑动
-          this.navId = `nav_${this.currentIndex}`
-        } else {
-          this.navId = `nav_0`
+      try {
+        if(this.contentHeight < this.navulHeight) {
+          let h = this.currentIndex * this.navItemHeight
+          if(h > this.contentHeight) {
+            // 导航滑动
+            this.navId = `nav_${this.currentIndex}`
+          } else {
+            this.navId = `nav_0`
+          }
         }
+        
+        this.navTop = this.currentIndex * 40
+      } catch (error) {
+        console.log(error)
       }
-      
-      this.navTop = this.currentIndex * 40
     },
     list () {
       const _this = this
       setTimeout(() => {
         _this.getFoodHeight()
-      }, 1);
+      }, 20);
     }
   },
 

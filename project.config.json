@@ -36,7 +36,7 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": -1,
+			"current": 4,
 			"list": [
 				{
 					"id": -1,
@@ -66,7 +66,7 @@
 					"id": 4,
 					"name": "标准品下单",
 					"pathName": "goodsPages/goods",
-					"query": "data={\"ProductId\":1515,\"ProductName\":\"彩色信封\",\"code\":19}&&proSearchParam=undefined"
+					"query": "data={\"ProductId\":4911,\"ProductName\":\"普通KT板小边条 KT板卡条 塑料kt展条 KT板收边条 相框小边条\"}&&skuId=4911_1214_1222_0_0_0_0_1328"
 				},
 				{
 					"id": -1,
@@ -187,6 +187,12 @@
 					"name": "跟客服聊天",
 					"pathName": "wxchat/customerChat",
 					"query": "sellerId=oRex35JorwOYDZ5U4EZGj_4UjZ6E&&data={\"productId\":4589,\"productName\":\"特价X展架 特价展架 促销展架 画面展示支架\",\"isCustom\":false,\"price\":4.5,\"number\":20,\"skuName\":\"60*160cm +仅特价X展架 +批发特价（20套起） \",\"imgUrl\":\"http://www.kiy.cn//Storage/Shop/932/Products/4589/1_350.png\"}"
+				},
+				{
+					"id": -1,
+					"name": "登陆页",
+					"pathName": "pages/ucenter/login",
+					"query": ""
 				}
 			]
 		}

@@ -25,7 +25,7 @@ const ZITI = {
 function selectExpress(info) {
   var arr = []
   if(info.openId) {
-    console.log(`isYJPeiSong:${info.isYJPeiSong}`, `YjUse:${info.YjUse}`, `useFreightTempalate:${info.useFreightTempalate}`)
+    // console.log(`isYJPeiSong:${info.isYJPeiSong}`, `YjUse:${info.YjUse}`, `useFreightTempalate:${info.useFreightTempalate}`)
     if (info.isYJPeiSong != false && info.YjUse == 1) {
       arr.push(YJPEISONG.name)
       arr.push(DAIFA.name)

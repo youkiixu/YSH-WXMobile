@@ -8,7 +8,7 @@ MyPlugin.install = function (Vue) {
   }
 
   Vue.prototype.$pageId = function pageId() {
-    return this.$isPage() ? this.$mp.page.__wxWebviewId__ : null
+    return this.$isPage() ? (this.$mp.page.__wxWebviewId__ ? this.$mp.page.__wxWebviewId__ : null) : null
   }
 
   // 注入组件

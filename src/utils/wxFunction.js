@@ -2,13 +2,15 @@ import wx from 'wx'
 
 function showSuccessToast(msg) {
   wx.showToast({
-    title: msg ? msg : '操作成功'
+    title: msg ? msg : '操作成功',
+    mask: true
   })
 }
 
 function showErrorToast(msg) {
   wx.showToast({
     title: msg ? msg : '操作失败',
+    mask: true,
     image: '/static/images/icon_error.png'
   })
 }
