@@ -9,6 +9,7 @@
                  @click="selectMenu(index)">{{item.name}}</div>
         </scroll-view>
         <scroll-view class="cate foods-wrapper" scroll-y="true"  :scroll-into-view="contentId" scroll-with-animation="true" @scroll="onScroll">
+          <form @submit="formSubmit" report-submit="true">
             <div class="food-list-hook" v-for="( listItem , index1 ) of list" :key="index1" :id="'con_'+index1">
               <div class="hd">
                   <!-- <text class="line"></text> -->
@@ -18,11 +19,14 @@
               <div class="bd">
                   <div @click="queryQuote(item)" :class="(index2+1) % 3 == 0 ? 'last item' : 'item'" v-for="(item, index2) of listItem.itemList"
                       :key="item.Code">
-                      <img class="icon" :src="item.Images ?  baseUrl+ item.Images : 'http://www.kiy.cn/Areas/wxMobile/Content/img/defalutimg.png'"/>
-                      <text class="txt">{{item.qName}}</text>
+                      <button  class="form_button"  formType="submit">
+                        <img class="icon" :src="item.Images ?  baseUrl+ item.Images : 'http://www.kiy.cn/Areas/wxMobile/Content/img/defalutimg.png'"/>
+                        <text class="txt">{{item.qName}}</text>
+                      </button>
                   </div>
               </div>
             </div>
+          </form>
         </scroll-view>
     </div>
 </div>
@@ -119,14 +123,18 @@ export default {
               this.navItemHeight = rect.height
             }
           }).exec()
-        
+         
       },
       queryQuote(item) {
-        console.log(item)
           if(item.IsPriceDisplayPage != 0 && item.ProductId != 0){
             this.$wx.toBaoJia({ pid: item.Code , title: item.qName , isDetail: true , ProductId: item.ProductId } , this)
           } else {
-            this.$wx.toBaoJia({ pid: item.Code , title: item.qName } , this)
+            this.$router.push({
+              path: './quoteList',
+              query: {
+                data: JSON.stringify(item)
+              }
+            })
           }
       },
       selectMenu (index) {
@@ -153,6 +161,15 @@ export default {
           console.log(error)
         }
         
+      },
+      async formSubmit(e) {
+        const formId = e.mp.detail.formId
+        const hideOpenId = wx.getStorageSync('hideOpenId')
+        if(formId === 'the formId is a mock one' || !hideOpenId) return
+        await api.saaSSaveFormId({
+            form_id: formId,
+            strOpenId: hideOpenId
+        })
       }
   },
   watch: {
@@ -311,7 +328,10 @@ page {
   width: 127rpx;
   margin-right: 50rpx;
 }
-
+.catalog .bd .item .form_button {
+  height: 216rpx;
+  line-height: 36rpx;
+}
 .catalog .bd .item.last {
   margin-right: 0;
 }
@@ -330,6 +350,7 @@ page {
   color: #666666;
   font-weight: 500;
   height: 72rpx;
+  line-height: 36rpx;
   width: 127rpx;
 }
 .ad {

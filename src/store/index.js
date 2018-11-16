@@ -209,18 +209,18 @@ const store = new Vuex.Store({
           }
         }
       } else {
-        // 自助报价进去厂家列表
-        loading()
-        const res = await api.getProSearchRst(par)
-        hideLoading()
-        if (res.success) {
-          vm.commit('setProSearchRst', res.data)
-          wx.navigateTo({
-            url: '../../quoteList'
-          })
-        } else {
-          showError(res.msg)
-        }
+        // 自助报价进去厂家列表 , 暂时废除
+        // loading()
+        // const res = await api.getProSearchRst(par)
+        // hideLoading()
+        // if (res.success) {
+        //   vm.commit('setProSearchRst', res.data)
+        //   wx.navigateTo({
+        //     url: '../../quoteList'
+        //   })
+        // } else {
+        //   showError(res.msg)
+        // }
       }
     },
     async getShoppingCartCount ({ commit }) {

@@ -107,6 +107,9 @@ export default {
         return this.$wx.baseUrl
     }
   },
+  mounted () {
+    this.getUserShopInfo()
+  },
   methods: {
     ...mapActions([
       'sassLogin'
@@ -116,6 +119,12 @@ export default {
       'setUserAddressList',
       'setWxUserInfo'
     ]),
+    // 根据用户OpenId获取是否有店铺信息
+    async getUserShopInfo () {
+      // const hideOpenId = wx.getStorageSync('hideOpenId')
+      // const res = await api.getUserShopInfo({openId : hideOpenId})
+      // console.log(res)
+    },
     switchAccount (isLogin) {
       var _this = this;
       if(isLogin.mp.detail.rawData) {

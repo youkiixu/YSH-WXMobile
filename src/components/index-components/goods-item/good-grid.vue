@@ -1,19 +1,18 @@
 <template>
-  <div class="good-grid">
+  <div class="good-grid ">
     <div class="b clear">
-      <block v-for="item of content.goodslist" :key="item.item_id" :data-id="index">
-        <div class="item">
-          <div  @click="toDetail(item)" class="a">
-            <img class="img" :src="baseUrl+ item.pic" background-size="cover" />
-            <div class="txt">
-              <text class="name">{{item.title}}</text>
-              <!-- <text class="desc"></text> -->
-              <text class="price">￥{{item.price}}</text>             
-            </div>
-            
+        <form @submit="formSubmit" report-submit="true">
+          <div class="item " v-for="item of content.goodslist" :key="item.item_id" :data-id="index" @click="toDetail(item)">
+            <button  class="a form_button" formType="submit">
+              <img class="img" :src="baseUrl+ item.pic" background-size="cover" />
+              <div class="txt">
+                <text class="name">{{item.title}}</text>
+                <!-- <text class="desc"></text> -->
+                <text class="price">￥{{item.price}}</text>             
+              </div>
+            </button>
           </div>
-        </div>
-      </block>
+        </form>
     </div>
   </div>
 </template>
@@ -31,6 +30,10 @@ export default {
     methods: {
       toDetail(item) {
         this.$emit('onClick' , item);
+      },
+      formSubmit(e) {
+        const formId = e.mp.detail.formId
+        this.$emit('formSubmit' , formId)
       }
     }
 }

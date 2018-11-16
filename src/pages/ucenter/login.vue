@@ -236,12 +236,12 @@ export default {
         unSelect () {
             const _this = this
             _this.isSelect = false
-            _this.register = false
+            _this.isRegister = false
             
         },
         toSelect() {
             this.isSelect = true
-            this.register = false
+            this.isRegister = false
         }
     }
 }

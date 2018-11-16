@@ -1,52 +1,56 @@
 <template>
-    <div class="chat" :style="{'height' : height + 'px'}">
-        <scroll-view scroll-y='true' :scroll-top="chatValHeight"  class="chat-content" :style="{'height': chatHeight + 'px'}">
-            <div v-for="(item , index) in wxchatLists" :key="index">
-                <!-- ↑ wx:for="{{wxchatLists}}" wx:key="{{index}}" -->
-                <div class="chat-content-list-time">{{item.msg_type != 'product' ? item.dataTime : productInfo.productName}}</div>
-                <div :class="item.type === 1 ? 'chat-content-list right' : 'chat-content-list'" >
-                    <img class="chat-content-list-avatar "  :src="item.userImgSrc" />
-                    <div class="chat-content-list-content " @longtap="delMsg" :data-index="index">
-                        <!--  文字信息模板  ↓ hidden="{{!(item.msg_type === 'text')}}" -->
-                        <div class="chat-content-list-msg"  :hidden="!(item.msg_type === 'text')"> 
-                            <text selectable='true'>{{item.textMessage}}</text>
-                            <div class='over-read-tip '></div>
-                        </div>
+    <div>
+        <!-- 选择客服页面 -->
+        <form report-submit="true" v-if="isSelect" @submit="selectCustomer">
+            <div  class="select-content" >
+                <button class="select-customer" v-for="(item , index) in customers" :key="index" formType="submit" :data-id="index" >
+                    <img class="imgs" :src="item.strHeadIcon ? item.strHeadIcon : 'http://kiy.cn/Areas/Wxmobile/Content/img/online-service.png'" />
+                    <text class="name type">{{item.strUserName}}</text>
+                    <text class="name">{{item.strUserText}}</text>
 
-                        <!--  语音信息模板  ↓   hidden="{{!(item.msg_type === 'voice')}}" -->
-                        <!-- <div class="chat-content-list-voice"  @click='playRecord' :hidden="!(item.msg_type === 'voice')" >
-                            <text class=''>{{item.voiceTime}}s</text> 
-                            <img class='chat-voice-img' src='../static/images/chat-voice-img@3x.png' />
-                            <div class='over-read-tip '></div>
-                        </div> -->
+                </button>
+            </div>
+        </form>
+        <!-- 聊天页面 -->
+        <div class="chat" :style="{'height' : height + 'px'}" v-if="!isSelect">
+            <scroll-view scroll-y='true' :scroll-top="chatValHeight"  class="chat-content" :style="{'height': chatHeight + 'px'}" @scrolltoupper="scrolltoupper">
+                <div v-for="(item , index) in wxchatLists" :key="index">
+                    <div class="chat-content-list-time">{{item.msg_type != 'product' ? item.dataTime : productInfo.productName}}</div>
+                    <div :class="item.type ? 'chat-content-list right' : 'chat-content-list'" >
+                        <img class="chat-content-list-avatar "  :src="item.userImgSrc" />
+                        <div class="chat-content-list-content " @longtap="delMsg" :data-index="index">
+                            <!--  文字信息模板  ↓ hidden="{{!(item.msg_type === 'text')}}" -->
+                            <div class="chat-content-list-msg"  :hidden="!(item.msg_type === 'text')"> 
+                                <text selectable='true'>{{item.textMessage}}</text>
+                                <div class='over-read-tip '></div>
+                            </div>
 
-                        <!--  图片信息模板  ↓   -->
-                        <div class="chat-content-list-img"  :hidden="!(item.msg_type === 'img')" >
-                            <img :src="item.sendImgSrc" mode="aspectFill"  @click='seeBigImg'  :data-index="index" />
-                            <!-- <div class='chat-content-list-msg-del' data-index="{{index}}" bindtap="delMsg">X</div> -->
-                            <div class='over-read-tip '></div>
                         </div>
-                    </div>
-                    <!-- 产品模板 -->
-                    <div class="img-info clear" v-if="item.msg_type === 'product'">
-                        <img class="img" :src="productInfo.imgUrl" />
-                        <div class="info">
-                            <div class="c">
-                                <div class="p" ><text class="p-icon">￥</text>{{productInfo.price}}</div>
-                                <div class="s" v-if="!productInfo.isCustom">数量：{{productInfo.number}}</div>
-                                <div class="a">已选：<text>{{productInfo.skuName}}</text></div>
-                            </div> 
+                        <!-- 产品模板 -->
+                        <div class="img-info clear" v-if="item.msg_type === 'product'">
+                            <img class="img" :src="productInfo.imgUrl" />
+                            <div class="info">
+                                <div class="c">
+                                    <div class="p" ><text class="p-icon">￥</text>{{productInfo.price}}</div>
+                                    <div class="s" v-if="!productInfo.isCustom">数量：{{productInfo.number}}</div>
+                                    <div class="a">已选：<text>{{productInfo.skuName}}</text></div>
+                                </div> 
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </scroll-view>
-        <chatInput @onSend="onSend"></chatInput>
+            </scroll-view>
+            <chatInput @onSend="onSend"></chatInput>
+        </div>
     </div>
 </template>
 <script>
 import utils from '@/utils/util'
+import api from '@/utils/api'
 import chatInput from "@/components/chat-input/chatInput";
+import {mapState} from 'vuex'
+
+let TIMER = null;
 
 export default {
     components: {
@@ -63,73 +67,141 @@ export default {
             chatHeight: 0,
             chatValHeight:0,//聊天屏幕高度
             normalDataTime:'',
-            productInfo: {}
+            productInfo: {},
+            customers: [],
+            isSelect: true,
+            sendToId: '',
+            sendToName: '',
+            sendToGroupCode: '',
+            formId: ''
         }
     },
     computed: {
         baseUrl () {
             return this.$wx.baseUrl
-        }
+        },
+        ...mapState([
+            'userInfo'
+        ])
     },
     async mounted () {
-        this.productInfo = JSON.parse(this.$route.query.data)
-        await Promise.all([
-            this.loadHistory(),
-            this.initData()
-        ])
-        
-        // 加载产品信息
-        this.loadProduct()
+        // this.productInfo = JSON.parse(this.$route.query.data)
+        // this.$route.query.customer
+        var par = [{
+            'bCustomer': true,
+            'strGroupCode': "YSH00000007佛山彩印通",
+            'strHeadIcon': "https://wx.qlogo.cn/mmopen/vi_32/6thvH8ibEIN5OXSNCKGwE169o4I29GwNYKQn9cZDgl3iaaNFR6uzksPlkGAmibjicJtbQGI47mxwaAoyib48pLS3mvw/132",
+            'strOpenId': "oRex35JorwOYDZ5U4EZGj_4UjZ6E",
+            'strUserName': "测试",
+            'strUserText': "MinG Yufly",
+        }]
+        par = JSON.stringify(par)
+        this.customers = JSON.parse(par)
     },
     methods: {
         initData: function () {
             let that = this;
-
             let systemInfo = wx.getSystemInfoSync();
-
             that.height = systemInfo.windowHeight
-
             that.chatHeight = systemInfo.windowHeight- 55
-            that.normalDataTime = utils.formatTime(new Date())
-            wx.setNavigationBarTitle({
-                title: that.productInfo.shopName
-            });
-            
+            this.setSaaSTalkOnOffLine('onLine')
         },
-        listenMsg() {
-            
+        async setSaaSTalkOnOffLine (onLineOffLine) {
+            const hideOpenId = wx.getStorageSync('hideOpenId')
+            // 客服
+            let par = {
+                "strType": onLineOffLine,
+                "bCustomer": false,
+                "strOpenId": hideOpenId,
+                "strGroupName": 'YSH00000007佛山彩印通'
+            }
+            const res = await api.setSaaSTalkOnOffLine(par)
         },
-        loadHistory () {
-            var arr = [1,2,3,4]
-            arr.map(item => {
-                this.onSend(1)
+        async listenMsg() {
+            clearInterval(TIMER)
+            const hideOpenId = wx.getStorageSync('hideOpenId')
+            // 如果是第一次聊天，是没有上一次的聊天记录的，读取默认历史消息
+            if(!this.wxchatLists.length) {
+                this.loadHistory()
+                return
+            }
+            const res = await api.saaSTalkRecordList({
+                rule: '>',
+                strFromOpenId: hideOpenId,
+                strToOpenId: this.sendToId,
+                dCreateTime: this.wxchatLists[this.wxchatLists.length - 1].dataTime
             })
+            if(res.success) {
+                res.data.map(item => {
+                    this.renderUI(item)
+                })
+            }
+            this.timeListenMsg()
+            
         },
-        onSend (text) {
+        // 读取历史消息，不传time默认服务器当前事件之前，传time以time时间为准
+        async loadHistory (time) {
+            const hideOpenId = wx.getStorageSync('hideOpenId')
+            const res = await api.saaSTalkRecordList({
+                rule: '<',
+                strFromOpenId: hideOpenId,
+                strToOpenId: this.sendToId,
+                dCreateTime: time? time : undefined
+            })
+            if(res.success) {
+                let arr = []
+                if(time) {
+                    arr = res.data.reverse()
+                } else {
+                    arr = res.data
+                }
+                arr.map(item => {
+                    this.renderUI(item , time)
+                })
+            }
+        },
+        // 发送消息
+        async onSend (text) {
+            const _this = this
+            const hideOpenId = wx.getStorageSync('hideOpenId')
+            var par = {
+                bCustomer: false,
+                page : 'pages/index/index',
+                strContent: text,
+                strFromOpenId: hideOpenId,
+                strFromName: this.userInfo ? (this.userInfo.WXNick ? this.userInfo.WXNick : this.userInfo.UserName) : '客服',
+                strToName: this.sendToName,
+                strToOpenId: this.sendToId,
+                strGroupCode: 'YSH00000007佛山彩印通'
+            }
+            // this.$wx.showLoading('正在发送...')
+            const res = await api.SaaSTalkEachOther(par)
+
+            await Promise.all([
+                this.listenMsg()
+            ])
+            // this.$wx.hideLoading()
+        },
+        // 渲染ui
+        renderUI (item , time) {
             const _this = this
             var temp = {
-                userImgSrc: '../static/images/chat/extra/close_chat.png',
-                textMessage: text,
-                dataTime: utils.formatTime(new Date()),
+                userImgSrc: item.bCustomer ? 'http://kiy.cn/Areas/Wxmobile/Content/img/online-service.png'  : this.sendToHead,
+                textMessage: item.strContent,
+                dataTime: item.dCreateTime,
                 msg_type: 'text',
-                type: 1
+                type: item.bCustomer,
+                item: item
             };
-            this.wxchatLists.push(temp)
-            this.setChatHeight()
-            setTimeout(() => {
-                _this.loadMsg(text)
-            }, 1000);
-        },
-        loadMsg (text) {
-            var temp = {
-                userImgSrc: 'http://kiy.cn/Areas/Wxmobile/Content/img/online-service.png',
-                textMessage: text,
-                dataTime: utils.formatTime(new Date()),
-                msg_type: 'text',
-                type: 2
-            };
-            this.wxchatLists.push(temp)
-            this.setChatHeight()
+            if(time) {
+                const oldWxchatLists = this.wxchatLists
+                let arr = []
+                arr.push(temp)
+                this.wxchatLists = arr.concat(oldWxchatLists)
+            } else {
+                this.wxchatLists.push(temp)
+                this.setChatHeight()
+            }
         },
         loadProduct () {
             var temp = {
@@ -143,11 +215,114 @@ export default {
             const len = this.wxchatLists.length + 1
             const height = len * 87
             this.chatValHeight = this.chatHeight + height
+
+        },
+        // 选中要聊天的人
+        async selectCustomer(item) {
+            const DETAIL = item.mp.detail
+            const sendToUser = this.customers[DETAIL.target.dataset.id]
+            this.sendToId = sendToUser.strOpenId
+            this.sendToHead = sendToUser.strHeadIcon
+            this.sendToName = sendToUser.strUserName
+            this.sendToGroupCode = sendToUser.strGroupCode
+            this.$wx.showLoading('读取聊天记录')
+            await Promise.all([
+                this.initData(),
+                this.loadHistory()
+            ])
+            // 加载产品信息
+            // this.loadProduct()
+            this.$wx.hideLoading()
+            this.isSelect = false
+            // 保存一次formId
+            this.formSubmit(item)
+            // 循环监听消息
+            this.timeListenMsg()
+
+        },
+        async formSubmit(e) {
+            const formId = e.mp.detail.formId
+            const hideOpenId = wx.getStorageSync('hideOpenId')
+            this.$wx.showSuccessToast(formId)
+            if(formId === 'the formId is a mock one' || !hideOpenId) return
+            await api.saaSSaveFormId({
+                form_id: formId,
+                strOpenId: hideOpenId
+            })
+        },
+        // 下拉翻页
+        scrolltoupper (e) {
+            this.loadHistory(this.wxchatLists[0].dataTime)
+        },
+        // 循环读读聊天数据
+        timeListenMsg () {
+            const _this = this
+            TIMER = setInterval(() => {
+                if(!_this.wxchatLists.length) {
+                    _this.listenMsg()
+                } else {
+                    _this.listenMsg(_this.wxchatLists[_this.wxchatLists.length-1].dataTime)
+                }
+            } , 5000)
         }
+    },
+    onUnload () {
+        this.setSaaSTalkOnOffLine('offLine')
+        clearInterval(TIMER)
     }
 }
 </script>
 <style scoped>
+.select-content {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap ;
+    align-content: flex-start;
+}
+.select-content button{
+    border:none;
+    background: #fff;
+    box-sizing:none;
+    padding-right:0;
+}
+.select-customer {
+    padding-top: 25rpx;
+    padding-left: 25rpx;
+    width: 350rpx;
+    height: 150rpx;
+    border-radius: 10rpx;
+    border: 1rpx solid #ecf0f3;
+    /* margin-left: 20rpx; */
+    margin-top: 20rpx;
+    box-shadow: 4rpx 4rpx 10rpx rgba(0,0,0, .2);
+
+}
+.select-customer .imgs {
+    float: left;
+    height: 100rpx;
+    width: 100rpx;
+    background: #f4f4f4;
+    border-radius: 20rpx;
+}
+.select-customer .name {
+    width: 200rpx;
+    float: left;
+    display: block;
+    margin-left: 10rpx;
+    font-size: 28rpx;
+    height: 50rpx;
+    line-height: 50rpx;
+    overflow: hidden;
+    text-align: left;
+}
+.select-customer .type {
+    /* width: 135rpx; */
+    background: #cccccc;
+    border-radius: 50rpx;
+    padding: 10rpx;
+    line-height:30rpx;
+    color: #fafafa;
+}
 page {
     background-color: #fafafa;
 }
@@ -160,7 +335,6 @@ scroll-view{
 .chat{
     display: flex;
     flex-direction: column;
-    
 }
 .chat-content{
     -webkit-overflow-scrolling: touch;

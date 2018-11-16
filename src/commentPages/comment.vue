@@ -110,7 +110,7 @@ export default {
             commentList.push(item)
         })
 
-        this.comments = this.comments.concat(commentList)  
+        this.comments = this.comments.t(commentList)  
 
         this.goodComment = res.goodComment
         this.comment = res.comment

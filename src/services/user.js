@@ -6,14 +6,13 @@ import api from '@/utils/api';
 import util from '@/utils/util';
 /** 
  * 调用微信登录
+ * 如果只要隐藏的OpenId,hide= true
  */
-function loginByWeixin () {
+function loginByWeixin (hide) {
   let code = null;
   return new Promise(function (resolve, reject) {
     return util.login().then((res) => {
       code = res.code;
-      // console.log(res)
-      // return util.getUserInfo(); 
     }).then((userInfo) => {
       const miniProgram = wx.getAccountInfoSync()
       util.request(api.getSmallUserOpenId, {
@@ -26,14 +25,6 @@ function loginByWeixin () {
         } else {
           reject(res);
         }
-        // if (res.errno === 0) {
-        //   // 存储用户信息
-        //   wx.setStorageSync('userInfo', res.data.userInfo);
-        //   wx.setStorageSync('token', res.data.token);
-        //   resolve(res);
-        // } else {
-        //   reject(res);
-        // }
       }).catch((err) => {
         reject(err);
       });
@@ -58,6 +49,7 @@ function checkLogin () {
     }
   });
 }
+
 
 const user = {
   loginByWeixin,

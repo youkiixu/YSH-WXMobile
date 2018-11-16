@@ -3,7 +3,7 @@
         <div class="input-text-voice-super">
             <input v-if="inputObj.inputStatus==='text'"
                    class="chat-input-style"
-                   maxlength="500" confirm-type="send" v-model.lazy="textMessage" confirm-hold="true" @confirm="chatInputSendTextMessage" @focus="chatInputBindFocusEvent" @blur="chatInputBindBlurEvent" @input="chatInputGetValueEvent" placeholder='想和TA说点什么呢？' cursor-spacing='20'/>
+                   maxlength="500" confirm-type="send" v-model="textMessage" confirm-hold="true" @confirm="chatInputSendTextMessage" @focus="chatInputBindFocusEvent" @blur="chatInputBindBlurEvent" @input="chatInputGetValueEvent" placeholder='想和TA说点什么呢？' cursor-spacing='20'/>
             <div hover-class="press-style-opacity">
                 <img class="extra-btn-style"
                        :src="imgUrl" @click="chatInputExtraClickEvent" />

@@ -36,7 +36,7 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 4,
+			"current": 24,
 			"list": [
 				{
 					"id": -1,
@@ -66,7 +66,7 @@
 					"id": 4,
 					"name": "标准品下单",
 					"pathName": "goodsPages/goods",
-					"query": "data={\"ProductId\":4911,\"ProductName\":\"普通KT板小边条 KT板卡条 塑料kt展条 KT板收边条 相框小边条\"}&&skuId=4911_1214_1222_0_0_0_0_1328"
+					"query": "data={'ProductId':61,'ProductName':'彩色拼版不干胶 特惠','code':24}&&proSearchParam=chichun%3D90*54%26xx%3D90%26yy%3D54%26shuliang%3D1000%26kuans%3D1%26cailiao%3D%E7%89%B9%E5%85%89%E4%B8%8D%E5%B9%B2%E8%83%B6%26PM%3D%E5%95%A4%E5%BC%82%E5%9E%8B%26bys1Select%3D%E5%B8%B8%E8%A7%84%E5%BD%A2%26Streament%3D%E8%A6%86%E4%BA%AE%E8%86%9C%26hjg%3D%E7%89%B9%E5%85%89%E6%B0%B4%E8%83%B6%26ysys%3D4%26danshuang%3D1%26"
 				},
 				{
 					"id": -1,
@@ -159,10 +159,10 @@
 					"query": "valueId=61"
 				},
 				{
-					"id": -1,
+					"id": 20,
 					"name": "标准品下单",
 					"pathName": "goodsPages/goods",
-					"query": "data={\"ProductId\":4589,\"ProductName\":\"特价X展架 特价展架 促销展架 画面展示支架\"}"
+					"query": "data={'ProductId':4589,'ProductName':'特价X展架 特价展架 促销展架 画面展示支架',code':'undefined}&&skuId=4589_0_70_80_0_0_0_1326"
 				},
 				{
 					"id": 21,
@@ -186,13 +186,19 @@
 					"id": 24,
 					"name": "跟客服聊天",
 					"pathName": "wxchat/customerChat",
-					"query": "sellerId=oRex35JorwOYDZ5U4EZGj_4UjZ6E&&data={\"productId\":4589,\"productName\":\"特价X展架 特价展架 促销展架 画面展示支架\",\"isCustom\":false,\"price\":4.5,\"number\":20,\"skuName\":\"60*160cm +仅特价X展架 +批发特价（20套起） \",\"imgUrl\":\"http://www.kiy.cn//Storage/Shop/932/Products/4589/1_350.png\"}"
+					"query": "data={\"productId\":4589,\"productName\":\"特价X展架 特价展架 促销展架 画面展示支架\",\"isCustom\":false,\"price\":4.5,\"number\":20,\"skuName\":\"60*160cm +仅特价X展架 +批发特价（20套起） \",\"imgUrl\":\"http://www.kiy.cn//Storage/Shop/932/Products/4589/1_350.png\"}&&customer=[{\"active\":\"onLine\",\"bCustomer\":false,\"dCreate\":\"2018-11-14T00:00:00\",\"dModify\":null,\"onLineTime\":\"2018-11-15T17:54:46.5036396+08:00\",\"strAppid\":\"YSH00000007\",\"strCode\":\"YSH00000007mingyu\",\"strGroupCode\":\"YSH00000007佛山彩印通\",\"strHeadIcon\":\"https://wx.qlogo.cn/mmopen/vi_32/6thvH8ibEIN5OXSNCKGwE169o4I29GwNYKQn9cZDgl3iaaNFR6uzksPlkGAmibjicJtbQGI47mxwaAoyib48pLS3mvw/132\",\"strOpenId\":\"oRex35JorwOYDZ5U4EZGj_4UjZ6E\",\"strUserName\":\"测试\",\"strUserText\":\"MinG Yufly\"}]"
 				},
 				{
 					"id": -1,
 					"name": "登陆页",
 					"pathName": "pages/ucenter/login",
 					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "测试fomr_id",
+					"pathName": "pages/category/category",
+					"query": "Id=886"
 				}
 			]
 		}

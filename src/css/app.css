@@ -42,3 +42,17 @@ page {
   text-align: left;
   font-size: 14px;
 }
+.form_button {
+  background-color: transparent;
+  padding: 0;
+  margin: 0;
+  text-align: left;
+}
+
+.form_button::after {
+  border: 0px;
+}
+.clearfix {
+  overflow: hidden;
+  _zoom: 1;
+}

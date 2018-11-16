@@ -23,7 +23,7 @@
       <scroll-view :scroll-into-view="toView" scroll-y="true" scroll-with-animation="true" class="container-scroll">
         <div class="outside" id="goodshead">
           <!-- 图片轮播 -->
-          <swiper class="goodsimgs" indicator-dots="true" autoplay="true" interval="3000" duration="1000">
+          <swiper class="goodsimgs" indicator-dots="true" autoplay="true" interval="3000" duration="1000" circular>
               <swiper-item v-for="(item, index) of gallery" :key="item.id" :data-index="index">
                 <img :src="baseUrl + item" background-size="cover" mode="aspectFit" @error="imgError(item)" @click="previewImage(item)"/>
               </swiper-item>
@@ -229,7 +229,15 @@ export default {
   },
   mounted () {
     if (this.$route.query.data) {
-      const data = JSON.parse(this.$route.query.data);
+      const a = this.$route.query.data
+      // 解决web端input的value的双引号和单引号的问题，所以分享的路径改为单引号，来到这个页面，将单引号替换成双引号，不然json.parse会报语法错误
+      let b = ''
+      if(a.split("'").length >= 2) {
+        b = a.split("'").join("\""); 
+      } else {
+        b = this.$route.query.data
+      }
+      const data = JSON.parse(b);
       if(data.ProductName) {
         this.setTitle(data.ProductName)
       }
@@ -264,15 +272,6 @@ export default {
       'shoppingCartCount'
     ])
   },
-  // onReady() {
-  //   this.loading = true
-  // },
-  // onUnload() {
-  //   this.loading = true
-  // },
-  // onLoad () {
-  //   this.loading = true
-  // },
   methods: {
     ...mapMutations(['setProSearchParam']),
     ...mapActions(['submitByProductId' , 'SubmitByProductId2' , 'getShoppingCartCount']),
@@ -437,7 +436,6 @@ export default {
     setSkuId() {
       var skuStr = this.id + ''
       const selectSku = this.selectSku
-      console.log(selectSku)
       for(var key in selectSku) {
         skuStr += `_${selectSku[key]}`
       }
@@ -504,7 +502,9 @@ export default {
       this.saleNumber = skuItem.SaleNumber != 0 ? skuItem.SaleNumber : 1
       // 1031性能调优
       this.skuPrice = skuItem.Price 
-      this.detailInfo.Price = util.accMul(skuItem.Price , this.number)
+      // 1114需求单，取消乘以数量
+      // this.detailInfo.Price = util.accMul(skuItem.Price , this.number)
+      this.detailInfo.Price = skuItem.Price
       this.getDefalutSelect()
     },
     // 选择skuInfo的价格
@@ -519,7 +519,8 @@ export default {
       if(this.number < this.saleNumber) {
         this.number = this.saleNumber
       }
-      this.detailInfo.Price = util.accMul(this.skuPrice , this.number)
+      // 1114需求单，取消乘以数量
+      // this.detailInfo.Price = util.accMul(this.skuPrice , this.number)
     },
     // 获取默认选项
     getDefalutSelect() {
@@ -814,7 +815,7 @@ export default {
     },
     async toChat() {
       this.$wx.showLoading('正在加载客服')
-      const res = await api.getCustomerService({ShopId: this.detailInfo.ShopId})
+      const res = await api.gustServiceList({strGroupName: this.detailInfo.ShopName})
       this.$wx.hideLoading()
       if(!res.success) {
         this.$wx.showErrorToast(res.msg)
@@ -840,18 +841,25 @@ export default {
           productId: this.detailInfo.ProductId,
           productName : this.detailInfo.ProductName,
           isCustom: this.detailInfo.IsCustom,
+          shopName: this.detailInfo.shopName,
           price: price,
           number: this.number,
           shopName: this.detailInfo.ShopName,
           skuName: util.delLastStr(str , '+'),
           imgUrl: this.baseUrl + this.gallery[0]
         }
-      console.log(JSON.stringify(data))
+      const customer = []
+      res.data.map(item => {
+        if(item.sign) {
+          delete item.sign
+        }
+        customer.push(item)
+      })
       this.$router.push({
         path: '../wxchat/customerChat',
         query: {
           data: JSON.stringify(data),
-          customer: res.data
+          customer: JSON.stringify(customer)
         }
       })
     }
@@ -875,12 +883,11 @@ export default {
     const goodsUrl = util.getGoodsUrl({
       ProductId: this.detailInfo.ProductId,
       ProductName: this.detailInfo.ProductName,
-      code: this.code != 0 ? this.code : undefined,
+      code: this.code != 0 ? this.code : 0,
       IsCustom: this.detailInfo.IsCustom , 
       dataStr: this.proSearchParam.dataStr,
       skuId: this.skuId
     })
-    console.log(goodsUrl)
     return {
       title: this.detailInfo.ProductName,
       desc: this.detailInfo.ShopName,

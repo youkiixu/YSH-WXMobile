@@ -4,26 +4,31 @@
       <searchBar></searchBar>
     </div>
     
-
     <div class="catalog" :style="{'height' : '100%'}"  v-if="!loading">
-        <scroll-view class="nav" scroll-y="true"  :style="{'height' : '100%'}">
-            <div :class="currentCategory.Id == item.Id ? 'active item' : 'item'" v-for="(item, index) of navList" :key="item.Id" :data-id="item.Id"
-                :data-index="index" @click="switchCateLog(index)">{{item.Name}}</div>
-        </scroll-view>
-        <scroll-view class="cate" scroll-y="true"  :style="{'height' : '100%'}">
-            <div class="cate_item" v-for="( categoryChild , index1 ) of categoryList" :key="index1" v-if="!loading2">
-              <div class="hd">
-                  <text class="txt">{{categoryChild.Name}}分类</text>
-              </div>
-              <div class="bd">
-                  <div @click="toPage(item.Id , categoryChild.SubCategories)"  :class="(index2+1) % 3 == 0 ? 'last item' : 'item'" v-for="(item, index2) of categoryChild.SubCategories"
-                      :key="item.Id">
-                      <img class="icon" :src="item.Image ?  baseUrl + item.Image : 'http://www.kiy.cn/Areas/wxMobile/Content/img/defalutimg.png'"/>
-                      <text class="txt">{{item.Name}}</text>
+        
+          <scroll-view class="nav" scroll-y="true"  :style="{'height' : '100%'}">
+              <div :class="currentCategory.Id == item.Id ? 'active item' : 'item'" v-for="(item, index) of navList" :key="item.Id" :data-id="item.Id"
+                  :data-index="index" @click="switchCateLog(index)">{{item.Name}}</div>
+          </scroll-view>
+          <scroll-view class="cate" scroll-y="true"  :style="{'height' : '100%'}">
+              <form @submit="formSubmit" report-submit="true">
+                <div class="cate_item" v-for="( categoryChild , index1 ) of categoryList" :key="index1" v-if="!loading2">
+                  <div class="hd">
+                      <text class="txt">{{categoryChild.Name}}分类</text>
                   </div>
-              </div>
-            </div>
-        </scroll-view>
+                  <div class="bd">
+                      <div @click="toPage(item.Id , categoryChild.SubCategories)"  :class="(index2+1) % 3 == 0 ? 'last item' : 'item'" v-for="(item, index2) of categoryChild.SubCategories"
+                          :key="item.Id">
+                          <button  class="form_button"  formType="submit">
+                            <img class="icon" :src="item.Image ?  baseUrl + item.Image : 'http://www.kiy.cn/Areas/wxMobile/Content/img/defalutimg.png'"/>
+                            <text class="txt">{{item.Name}}</text>
+                          </button>
+                      </div>
+                  </div>
+                </div>
+              </form>
+          </scroll-view>
+        
     </div>
     <loadingComponent  v-if="loading"></loadingComponent>
 </div>
@@ -89,6 +94,15 @@ export default {
             } 
           }
         )
+      },
+      async formSubmit(e) {
+        const formId = e.mp.detail.formId
+        const hideOpenId = wx.getStorageSync('hideOpenId')
+        if(formId === 'the formId is a mock one' || !hideOpenId) return
+        await api.saaSSaveFormId({
+            form_id: formId,
+            strOpenId: hideOpenId
+        })
       }
     },
     // 小程序原生下拉刷新
@@ -256,6 +270,10 @@ page {
   margin-left: 30rpx;
   margin-top: 20rpx;
 }
+.catalog .bd .item .form_button {
+  height: 210rpx;
+  line-height: 37rpx;
+}
 .catalog .bd .item:nth-child(3n+1){
   margin-left: 0;
 }
@@ -276,7 +294,7 @@ page {
   font-size: 22rpx;
   color: #282828;
   height: 74rpx;
-  line-height: 30rpx;
+  line-height: 37rpx;
   width: 100%;
 }
 
