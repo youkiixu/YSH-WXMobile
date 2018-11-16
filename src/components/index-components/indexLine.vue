@@ -1,7 +1,7 @@
 <template>
-    <view class="line">
+    <div class="line">
 
-    </view>
+    </div>
 </template>
 
 <script>

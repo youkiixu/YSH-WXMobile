@@ -1,72 +1,72 @@
 <template >
-<view class="container">
-  <view class="add-address" >
-      <view class="add-form">
-          <view class="form-item">
+<div class="container">
+  <div class="add-address" >
+      <div class="add-form">
+          <div class="form-item">
               <input class="input"  placeholder="姓名" v-model="address.ShipTo" auto-focus/>
-          </view>
-          <view class="form-item">
+          </div>
+          <div class="form-item">
               <input class="input"  v-model="address.Phone" placeholder="手机号码"/>
-          </view> 
-          <view class="form-item">
+          </div> 
+          <div class="form-item">
               <input class="input" :value="address.RegionFullName" disabled="true" @click="chooseRegion" placeholder="省份、城市、区县"/>
-          </view>
-          <view class="form-item detailAddress">
+          </div>
+          <div class="form-item detailAddress">
               <textarea class="detailAddress-input"  v-model="address.Address" placeholder="详细地址, 如街道、楼盘号等"/>
-          </view>
-          <view class="form-default" v-if="address.Id">
+          </div>
+          <div class="form-default" v-if="address.Id">
             <div class="weui-cell weui-cell_switch">
                 <div class="weui-cell__bd">设为默认地址</div>
                 <div class="weui-cell__ft">
                     <switch :checked="address.IsDefault"  @change="bindIsDefault('IsDefault')"/>
                 </div>
             </div>
-          </view>
-          <!-- <view class="form-default" v-if="address.Id">
+          </div>
+          <!-- <div class="form-default" v-if="address.Id">
             <div class="weui-cell weui-cell_switch">
                 <div class="weui-cell__bd">设为印捷配送默认地址</div>
                 <div class="weui-cell__ft">
                     <switch :checked="address.IsYJDefault"  @change="bindIsDefault('IsYJDefault')"/>
                 </div>
             </div>
-          </view>  -->
-      </view>
-      <view class="btns">
+          </div>  -->
+      </div>
+      <div class="btns">
           <button class="cannel" @click="cancelAddress">取消</button>
           <button class="save" @click="saveAddress">保存</button>
-      </view>
-      <view class="region-select" v-if="openSelectRegion">
-        <view class="hd">
-          <view class="region-selected">
-            <view :class="['item', { selected: regionChina.id === selectRegionId }]" @click="selectRegionType('China' , -1)">
+      </div>
+      <div class="region-select" v-if="openSelectRegion">
+        <div class="hd">
+          <div class="region-selected">
+            <div :class="['item', { selected: regionChina.id === selectRegionId }]" @click="selectRegionType('China' , -1)">
               {{regionChina.name}}
-            </view>
-            <view :class="['item', { selected: regionProvince.id === selectRegionId }]" @click="selectRegionType('Province' , 0)">
+            </div>
+            <div :class="['item', { selected: regionProvince.id === selectRegionId }]" @click="selectRegionType('Province' , 0)">
               {{regionProvince.name}}
-            </view>
-            <view :class="['item', { selected: regionCity.id === selectRegionId }]" @click="selectRegionType('City' , 1)">
+            </div>
+            <div :class="['item', { selected: regionCity.id === selectRegionId }]" @click="selectRegionType('City' , 1)">
               {{regionCity.name}}
-            </view>
-            <view :class="['item', { selected: regionArea.id === selectRegionId }]" @click="selectRegionType('Area' ,2)">
+            </div>
+            <div :class="['item', { selected: regionArea.id === selectRegionId }]" @click="selectRegionType('Area' ,2)">
               {{regionArea.name}}
-            </view>
-            <view :class="['item', { selected: regionStreet.id === selectRegionId }]" @click="selectRegionType('Street' , 3)">
+            </div>
+            <div :class="['item', { selected: regionStreet.id === selectRegionId }]" @click="selectRegionType('Street' , 3)">
               {{regionStreet.name}}
-            </view>
-          </view>
-          <view :class="regionStreet.id != undefined ? 'done' : 'disabled done'" @click="doneSelectRegion">确定</view>
-        </view>
-        <view class="bd">
-          <view class="region-list"  v-if="!loading">
-            <view :class="item.selected ? 'selected item' : 'item'" @click="selectRegion(item)"
-            v-for="(item, index) of regionList" :key="index">{{item.name}}</view>
-          </view>
+            </div>
+          </div>
+          <div :class="regionStreet.id != undefined ? 'done' : 'disabled done'" @click="doneSelectRegion">确定</div>
+        </div>
+        <div class="bd">
+          <div class="region-list"  v-if="!loading">
+            <div :class="item.selected ? 'selected item' : 'item'" @click="selectRegion(item)"
+            v-for="(item, index) of regionList" :key="index">{{item.name}}</div>
+          </div>
           <loadingSpinComponent v-if="loading"></loadingSpinComponent>
-        </view>
-      </view>
-  </view>
-  <view class="bg-mask" @click="cancelSelectRegion" v-if="openSelectRegion"></view>
-</view>
+        </div>
+      </div>
+  </div>
+  <div class="bg-mask" @click="cancelSelectRegion" v-if="openSelectRegion"></div>
+</div>
 </template>
 
 <script>
@@ -254,6 +254,7 @@ export default {
     },
     // 点击底部“保存按钮”保存地址
     async saveAddress () {
+      
       const _this = this
       const openId = wx.getStorageSync('openId')
       let address = this.address;
@@ -273,7 +274,7 @@ export default {
         this.$wx.showErrorToast('请输入详细地址');
         return false;
       }
-      
+      console.log('address.Address：',address.Address)
       var par = {
         UserId: this.userInfo.Id,
         ShipTo: address.ShipTo,
@@ -349,7 +350,9 @@ page{
   box-sizing: border-box;
 }
 .detailAddress .detailAddress-input{
+  height: 100rpx;
    line-height: 50rpx; 
+   width: 100%;
 }
 
 .add-address .form-default{

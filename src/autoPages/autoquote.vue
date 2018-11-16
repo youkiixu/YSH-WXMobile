@@ -1,31 +1,35 @@
 <template >
-<view class="container">
+<div class="container">
     <div class="ad">
       <img class="ad-img" src="http://www.kiy.cn/Areas/wxMobile/Content/img/ad.png" />
     </div>
-    <view class="catalog" :style="{'height' : '100%'}">
+    <div class="catalog" :style="{'height' : '100%'}">
         <scroll-view class="nav menu-ul" scroll-y="true" :scroll-top="navTop" scroll-with-animation="true" :scroll-into-view="navId" >
-            <view :class="currentIndex == index ? 'active item menu-item' : 'item menu-item' " v-for="(item, index) of list" :key="index" :id="'nav_' + index"
-                 @click="selectMenu(index)">{{item.name}}</view>
+            <div :class="currentIndex == index ? 'active item menu-item' : 'item menu-item' " v-for="(item, index) of list" :key="index" :id="'nav_' + index"
+                 @click="selectMenu(index)">{{item.name}}</div>
         </scroll-view>
         <scroll-view class="cate foods-wrapper" scroll-y="true"  :scroll-into-view="contentId" scroll-with-animation="true" @scroll="onScroll">
-            <view class="food-list-hook" v-for="( listItem , index1 ) of list" :key="index1" :id="'con_'+index1">
-              <view class="hd">
+          <form @submit="formSubmit" report-submit="true">
+            <div class="food-list-hook" v-for="( listItem , index1 ) of list" :key="index1" :id="'con_'+index1">
+              <div class="hd">
                   <!-- <text class="line"></text> -->
                   <text class="txt">{{listItem.name}}分类</text>
                   <!-- <text class="line"></text> -->
-              </view>
-              <view class="bd">
-                  <view @click="queryQuote(item)" :class="(index2+1) % 3 == 0 ? 'last item' : 'item'" v-for="(item, index2) of listItem.itemList"
+              </div>
+              <div class="bd">
+                  <div @click="queryQuote(item)" :class="(index2+1) % 3 == 0 ? 'last item' : 'item'" v-for="(item, index2) of listItem.itemList"
                       :key="item.Code">
-                      <img class="icon" :src="item.Images ?  baseUrl+ item.Images : 'http://www.kiy.cn/Areas/wxMobile/Content/img/defalutimg.png'"/>
-                      <text class="txt">{{item.qName}}</text>
-                  </view>
-              </view>
-            </view>
+                      <button  class="form_button"  formType="submit">
+                        <img class="icon" :src="item.Images ?  baseUrl+ item.Images : 'http://www.kiy.cn/Areas/wxMobile/Content/img/defalutimg.png'"/>
+                        <text class="txt">{{item.qName}}</text>
+                      </button>
+                  </div>
+              </div>
+            </div>
+          </form>
         </scroll-view>
-    </view>
-</view>
+    </div>
+</div>
 </template> 
 <script>
 import api from '@/utils/api'
@@ -94,33 +98,44 @@ export default {
         return arr2
       }, 
       getFoodHeight() {
-        var query = wx.createSelectorQuery()
-        let h = 0
-        query.selectAll('.food-list-hook').boundingClientRect((rects) => {
-          rects.forEach(rect => {
-            h += rect.height
-            this.listHeight.push(h)
-          });
-        })
-        query.select('.foods-wrapper').boundingClientRect((rect) => {
-          this.contentHeight = rect.height
-        })
-        query.select('.menu-ul').boundingClientRect((rect) => {
-          this.navulHeight = rect.height
-        })
-        query.select('.menu-item').boundingClientRect((rect) => {
-          this.navItemHeight = rect.height
-        }).exec()
-        
+          var query = wx.createSelectorQuery()
+          let h = 0
+          query.selectAll('.food-list-hook').boundingClientRect((rects) => {
+            rects.forEach(rect => {
+              if(rect) {
+                h += rect.height
+                this.listHeight.push(h)
+              }
+            });
+          })
+          query.select('.foods-wrapper').boundingClientRect((rect) => {
+            if(rect) {
+              this.contentHeight = rect.height
+            }
+          })
+          query.select('.menu-ul').boundingClientRect((rect) => {
+            if(rect) {
+              this.navulHeight = rect.height
+            }
+          })
+          query.select('.menu-item').boundingClientRect((rect) => {
+            if(rect) {
+              this.navItemHeight = rect.height
+            }
+          }).exec()
+         
       },
       queryQuote(item) {
           if(item.IsPriceDisplayPage != 0 && item.ProductId != 0){
-            // this.$wx.toDetail({id : item.ProductId , title: item.qName , code : item.Code} , this)
             this.$wx.toBaoJia({ pid: item.Code , title: item.qName , isDetail: true , ProductId: item.ProductId } , this)
           } else {
-            this.$wx.toBaoJia({ pid: item.Code , title: item.qName } , this)
+            this.$router.push({
+              path: './quoteList',
+              query: {
+                data: JSON.stringify(item)
+              }
+            })
           }
-          // this.$router.push({ path: '/pages/auto/queryquote', query: { pid: item.Code , title: item.qName  } })
       },
       selectMenu (index) {
         this.contentId = `con_${index}`
@@ -128,40 +143,58 @@ export default {
         this.currentIndex = index
       },
       onScroll(e) {
-        this.contentId = ''
-        let scrollTop = e.target.scrollTop
-        let length = this.listHeight.length
-        if(scrollTop >= this.listHeight[length - 1] - this.contentHeight) {
-          return
-        } else if(scrollTop > 0 && scrollTop < this.listHeight[0]){
-          this.currentIndex = 0
-        }
-        for (let i = 0; i < length; i++) {
-          if(scrollTop >= this.listHeight[i - 1] && scrollTop < this.listHeight[i]) {
-            this.currentIndex = i
+        try {
+          this.contentId = ''
+          let scrollTop = e.target.scrollTop
+          let length = this.listHeight.length
+          if(scrollTop >= this.listHeight[length - 1] - this.contentHeight) {
+            return
+          } else if(scrollTop > 0 && scrollTop < this.listHeight[0]){
+            this.currentIndex = 0
           }
+          for (let i = 0; i < length; i++) {
+            if(scrollTop >= this.listHeight[i - 1] && scrollTop < this.listHeight[i]) {
+              this.currentIndex = i
+            }
+          }
+        } catch (error) {
+          console.log(error)
         }
+        
+      },
+      async formSubmit(e) {
+        const formId = e.mp.detail.formId
+        const hideOpenId = wx.getStorageSync('hideOpenId')
+        if(formId === 'the formId is a mock one' || !hideOpenId) return
+        await api.saaSSaveFormId({
+            form_id: formId,
+            strOpenId: hideOpenId
+        })
       }
   },
   watch: {
     currentIndex () {
-      if(this.contentHeight < this.navulHeight) {
-        let h = this.currentIndex * this.navItemHeight
-        if(h > this.contentHeight) {
-          // 导航滑动
-          this.navId = `nav_${this.currentIndex}`
-        } else {
-          this.navId = `nav_0`
+      try {
+        if(this.contentHeight < this.navulHeight) {
+          let h = this.currentIndex * this.navItemHeight
+          if(h > this.contentHeight) {
+            // 导航滑动
+            this.navId = `nav_${this.currentIndex}`
+          } else {
+            this.navId = `nav_0`
+          }
         }
+        
+        this.navTop = this.currentIndex * 40
+      } catch (error) {
+        console.log(error)
       }
-      
-      this.navTop = this.currentIndex * 40
     },
     list () {
       const _this = this
       setTimeout(() => {
         _this.getFoodHeight()
-      }, 60);
+      }, 20);
     }
   },
 
@@ -295,7 +328,10 @@ page {
   width: 127rpx;
   margin-right: 50rpx;
 }
-
+.catalog .bd .item .form_button {
+  height: 216rpx;
+  line-height: 36rpx;
+}
 .catalog .bd .item.last {
   margin-right: 0;
 }
@@ -314,6 +350,7 @@ page {
   color: #666666;
   font-weight: 500;
   height: 72rpx;
+  line-height: 36rpx;
   width: 127rpx;
 }
 .ad {

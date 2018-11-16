@@ -2,13 +2,15 @@ import wx from 'wx'
 
 function showSuccessToast(msg) {
   wx.showToast({
-    title: msg ? msg : '操作成功'
+    title: msg ? msg : '操作成功',
+    mask: true
   })
 }
 
 function showErrorToast(msg) {
   wx.showToast({
     title: msg ? msg : '操作失败',
+    mask: true,
     image: '/static/images/icon_error.png'
   })
 }
@@ -19,18 +21,19 @@ function showLoading(msg) {
     mask: true
   })
 }
- 
+
 function hideLoading(msg) {
   wx.hideLoading()
 }
 
 function showModal(data = {}) {
-  return new Promise((reslove , reject) => {
+  return new Promise((reslove, reject) => {
     wx.showModal({
       title: data.title ? data.title : '提示',
       content: data.content ? data.content : '弹窗内容，告知当前状态、信息和解决方法，描述文字尽量控制在三行内',
       confirmText: data.confirmText ? data.confirmText : '确定',
       cancelText: data.cancelText ? data.cancelText : '取消',
+      showCancel: data.showCancel ? true : false,
       success: function (res) {
         if (res.confirm) {
           reslove()
@@ -42,13 +45,14 @@ function showModal(data = {}) {
   })
 
 }
+
 function showActionSheet(arr) {
   return new Promise((reslove, reject) => {
     wx.showActionSheet({
-        itemList: arr,
-        success: function(res) {
-            reslove(res)
-        }
+      itemList: arr,
+      success: function (res) {
+        reslove(res)
+      }
     })
   })
 }
@@ -65,7 +69,7 @@ function formatBoolToInt(object) {
   return object
 }
 
-function toGoodsDetail (item , vm) {
+function toGoodsDetail(item, vm) {
   // 不区分是否非标，全部进入单个商品也
   // 标准品false , vm是this
   if (item.IsCustom) {
@@ -85,13 +89,15 @@ function toGoodsDetail (item , vm) {
   }
 }
 // 去商品详情页
-function toDetail(item , vm) {
+function toDetail(item, vm) {
   let data = {
     ProductId: item.id,
     // ProductName: item.title
   }
-  if(item.code) {
-    data = Object.assign(data , {code: item.code})
+  if (item.code) {
+    data = Object.assign(data, {
+      code: item.code
+    })
   }
   vm.$router.push({
     path: '/goodsPages/goods',
@@ -101,24 +107,24 @@ function toDetail(item , vm) {
   })
 }
 // 去非标报价页
-function toBaoJia(item , vm) {
-    let isDetail = item.isDetail ? true : false
-    let ProductId = item.ProductId ? item.ProductId : ''
-    let detailCommon = item.detailCommon ? item.detailCommon : false
-    let fid = item.fid ? item.fid : undefined
-    let data = item.data ? encodeURIComponent(item.data) : undefined
-    vm.$router.push({
-      path: '/goodsPages/queryquote',
-      query: {
-        pid: item.pid,
-        title: item.title,
-        isDetail: isDetail,
-        ProductId: ProductId,
-        fid: fid,
-        detailCommon: detailCommon,
-        data: data
-      }
-    })
+function toBaoJia(item, vm) {
+  let isDetail = item.isDetail ? true : false
+  let ProductId = item.ProductId ? item.ProductId : ''
+  let detailCommon = item.detailCommon ? item.detailCommon : false
+  let fid = item.fid ? item.fid : undefined
+  let data = item.data ? encodeURIComponent(item.data) : undefined
+  vm.$router.push({
+    path: '/goodsPages/queryquote',
+    query: {
+      pid: item.pid,
+      title: item.title,
+      isDetail: isDetail,
+      ProductId: ProductId,
+      fid: fid,
+      detailCommon: detailCommon,
+      data: data
+    }
+  })
 }
 
 function toLogin(isBack) {
@@ -129,9 +135,9 @@ function toLogin(isBack) {
         url: '/pages/ucenter/login'
       })
     } else {
-        wx.redirectTo({
-          url: '/pages/ucenter/login'
-        })
+      wx.redirectTo({
+        url: '/pages/ucenter/login'
+      })
     }
   }, 1500);
 
@@ -154,23 +160,23 @@ function orderStatus(status) {
     case 5:
       return '已完成'
       break;
-    
+
     case 7:
       return '未评价'
-    break;
+      break;
     case 8:
       return '已审稿'
-    break;
+      break;
     case 0:
       return '待审稿'
-    break;
+      break;
     default:
       return '暂无状态'
       break;
   }
 }
 
-function makePhoneCall (number) {
+function makePhoneCall(number) {
   wx.makePhoneCall({
     phoneNumber: number //仅为示例，并非真实的电话号码
   })
@@ -179,26 +185,34 @@ function makePhoneCall (number) {
 function getImagePath(path) {
   return `${path}/1_350.png`
 }
- 
+
+function previewImage(item) {
+  wx.previewImage({
+    current: item.current, // 当前显示图片的http链接
+    urls: item.urls // 需要预览的图片http链接列表
+  })
+}
+
 // const baseUrl = 'http://192.168.0.91:8008/'
 const baseUrl = 'http://www.kiy.cn/'
 
 const wxFun = {
-    showSuccessToast,
-    showErrorToast,
-    showLoading,
-    hideLoading,
-    showModal,
-    showActionSheet,
-    formatBoolToInt,
-    toGoodsDetail,
-    baseUrl,
-    toLogin,
-    orderStatus,
-    getImagePath,
-    toBaoJia,
-    toDetail,
-    makePhoneCall
+  showSuccessToast,
+  showErrorToast,
+  showLoading,
+  hideLoading,
+  showModal,
+  showActionSheet,
+  formatBoolToInt,
+  toGoodsDetail,
+  baseUrl,
+  toLogin,
+  orderStatus,
+  getImagePath,
+  toBaoJia,
+  toDetail,
+  makePhoneCall,
+  previewImage
 }
 
 export default wxFun

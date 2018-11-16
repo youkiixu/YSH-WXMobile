@@ -41,19 +41,27 @@ export default {
     },
     oldOpenIdLogin() {
       // 判断存的OpenId是否跟当前的微信用户一致 , 
-      const _this = this
-      let code = null; 
+      
       let oldOpenId = wx.getStorageSync('openId')
       if(oldOpenId) {
-        util.login().then((res) => {
+        this.getOpenId(oldOpenId)
+      } else {
+        this.getOpenId()
+      }
+    },
+    getOpenId(oldOpenId) {
+      const _this = this
+      let code = null; 
+      util.login().then((res) => {
           code = res.code;
         }).then((userInfo) => {
           const miniProgram = wx.getAccountInfoSync()
           util.request(api.getSmallUserOpenId, {
-            code: code,
+            code: code, 
             appid: miniProgram.miniProgram.appId
           }, 'POST').then(res => {
             if (res.success) {
+              wx.setStorageSync('hideOpenId', res.openId);
               if(res.openId == oldOpenId) {
                 wx.setStorageSync('openId', res.openId);
                 _this.sassLogin()
@@ -67,7 +75,6 @@ export default {
         }).catch((err) => {
           console.log('获取code失败')
         })
-      }
     }
   }
 }

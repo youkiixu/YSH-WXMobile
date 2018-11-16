@@ -1,9 +1,9 @@
 <template>
-    <view class="search-result-empty" >
+    <div class="search-result-empty" >
         <img class="icon"
              src="http://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/noSearchResult-7572a94f32.png" />
         <text class="text">{{text}}</text>
-    </view>
+    </div>
 </template>
 <script>
 export default {

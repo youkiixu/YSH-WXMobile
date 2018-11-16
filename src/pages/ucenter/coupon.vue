@@ -1,49 +1,49 @@
 <template >
-<view class="container">
-  <view class="coupon-form">
-    <view class="input-box">
+<div class="container">
+  <div class="coupon-form">
+    <div class="input-box">
       <input class="coupon-sn" placeholder="请输入优惠码" />
-      <image class="clear-icon" src="http://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/clear-fb-dd9d604f86.png"/>
-    </view>
+      <img class="clear-icon" src="http://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/clear-fb-dd9d604f86.png"/>
+    </div>
     <button class="add-btn disabled">兑换</button>
-  </view>
-  <view class="help">使用说明</view>
-  <view class="coupon-list">
-    <view class="item">
-      <view class="tag">新人专享</view>
-      <view class="content">
-        <view class="left">
-          <view class="name">限时免单券</view>
-          <view class="time">2017.06.08-2017.06.11</view>
-        </view>
-        <view class="right">
+  </div>
+  <div class="help">使用说明</div>
+  <div class="coupon-list">
+    <div class="item">
+      <div class="tag">新人专享</div>
+      <div class="content">
+        <div class="left">
+          <div class="name">限时免单券</div>
+          <div class="time">2017.06.08-2017.06.11</div>
+        </div>
+        <div class="right">
           <button class="go">去使用</button>
-        </view>
-      </view>
-      <view class="condition">
+        </div>
+      </div>
+      <div class="condition">
         <text class="txt">简约陶瓷马克杯专享；小米用户福利；限时购、三石福利价、礼品卡及详情页标注不可用券特殊商品除外</text>
-        <image src="https://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/couponArrow-71315b4145.png" class="icon"/>
-      </view>
-    </view>
+        <img src="https://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/couponArrow-71315b4145.png" class="icon"/>
+      </div>
+    </div>
 
-     <view class="item">
-      <view class="tag">新人专享</view>
-      <view class="content">
-        <view class="left">
-          <view class="name">限时免单券</view>
-          <view class="time">2017.06.08-2017.06.11</view>
-        </view>
-        <view class="right">
+     <div class="item">
+      <div class="tag">新人专享</div>
+      <div class="content">
+        <div class="left">
+          <div class="name">限时免单券</div>
+          <div class="time">2017.06.08-2017.06.11</div>
+        </div>
+        <div class="right">
           <button class="go">去使用</button>
-        </view>
-      </view>
-      <view class="condition">
+        </div>
+      </div>
+      <div class="condition">
         <text class="txt">简约陶瓷马克杯专享；小米用户福利；限时购、三石福利价、礼品卡及详情页标注不可用券特殊商品除外</text>
-        <image src="https://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/couponArrow-71315b4145.png" class="icon"/>
-      </view>
-    </view>
-  </view>
-</view>
+        <img src="https://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/couponArrow-71315b4145.png" class="icon"/>
+      </div>
+    </div>
+  </div>
+</div>
 </template>
 
 <script>

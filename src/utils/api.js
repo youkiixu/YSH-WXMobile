@@ -1,8 +1,10 @@
 import request from './request'
+import pub from './pub'
 
 let ApiKiyUrl = 'https://www.kiy.cn/'
-// const ApiKiyUrl = 'http://localhost:7634/'
+// ApiKiyUrl = 'http://localhost:7634/'
 // ApiKiyUrl = 'http://192.168.0.91:8008/'
+// ApiKiyUrl = 'http://192.168.30.6:6348/'
 
 const api = {
   //获取sass首页
@@ -24,7 +26,6 @@ const api = {
   getSassUserAddress: (paramObj) => request.post('/Wxmobile/UserInfos/GetAddress', paramObj, {
     baseURL: ApiKiyUrl
   }),
-  
   // 修改sass登陆用户地址
   ModifySassUserAddress: (paramObj) => request.post('/Wxmobile/UserInfos/ModifyUserAddress', paramObj, {
     baseURL: ApiKiyUrl
@@ -183,6 +184,79 @@ const api = {
   }),
   // 获取购物车数量
   getShoppingCartCount: (paramObj) => request.post('/Wxmobile/ShoppingCart/GetShoppingCartCount', paramObj, {
+    baseURL: ApiKiyUrl
+  }),
+  // 绑定商家客服
+  addCustomerService: (paramObj) => request.post('/Wxmobile/CustomerService/Add', paramObj, {
+    baseURL: ApiKiyUrl
+  }),
+  // 获取店铺客服
+  getCustomerService: (paramObj) => request.post('/Wxmobile/CustomerService/GetCustomerService', paramObj, {
+    baseURL: ApiKiyUrl
+  }),
+  // 快捷登录
+  quickLogin: (paramObj) => request.post('/Wxmobile/LoginRegisterTransfer/QuickLogin', paramObj, {
+    baseURL: ApiKiyUrl
+  }),
+  // 根据用户OpenId获取是否有店铺信息
+  getUserShopInfo: (paramObj) => request.post('/Wxmobile/userinfos/GetShopInfo', paramObj, {
+    baseURL: ApiKiyUrl
+  }),
+  // 绑定微信客服
+  bindSaaSWxCusService: (paramObj) => pub.getAjaxData('BindSaaSWxCusService', paramObj, {
+    baseURL: ApiKiyUrl
+  }),
+  // 客户登陆: {
+  //   "key": "setSaaSTalkOnOffLine",
+  //   "strType": "onLine",
+  //   "bCustomer": true,
+  //   "strOpenId": "oRex35EywKDhC1hSspu2_fiyYxus",
+  //   "strGroupCode": "oRex35EywKDhC1hSspu2_fiyYxus",
+  //   "sign": "cejGtqyIv/gNeJ8PQvoMOfQ6TBWYexXS9GhSDM1w2uXGjRAZqDns8Ig/iDCmXtLL4op87zoWKUwGXFelqnmt+cK8ZqhmITRgNlYU6iIH0aSbIM5Ly2y2xa0/QpK9Ypq96y4HmSItAVkwhLUalTK9+nA3/gbR/Ce5g909BSj8uiQ="
+  // }
+  // 客服登陆: {
+  //   "key": "setSaaSTalkOnOffLine",
+  //   "strType": "onLine",
+  //   "strGroupCode": "YSH00000007佛山彩印通",
+  //   "strOpenId": "oRex35EywKDhC1hSspu2_fiyYxus",
+  // }
+  setSaaSTalkOnOffLine: (paramObj) => pub.getAjaxData('setSaaSTalkOnOffLine', paramObj, {
+    baseURL: ApiKiyUrl
+  }),
+  // 自言自语: {
+  //   "bCustomer": true,
+  //   "page": "/index/index?a=b&c=d1231",
+  //   "strContent": "测试",
+  //   "strFromName": "Youki",
+  //   "strFromOpenId": "oRex35EywKDhC1hSspu2_fiyYxus",
+  //   "strToName": "Youki1",
+  //   "strToOpenId": "oRex35EywKDhC1hSspu2_fiyYxus",
+  // }
+  SaaSTalkEachOther: (paramObj) => pub.getAjaxData('SaaSTalkEachOther', paramObj, {
+    baseURL: ApiKiyUrl
+  }),
+  // 保存formId新增时参数 key=SaaSSaveFormId,form_id,strOpenId,bUse(默认未使用),strWxAppid(可空，控制获取默认小程序appid)
+  saaSSaveFormId: (paramObj) => pub.getAjaxData('SaaSSaveFormId', paramObj, {
+    baseURL: ApiKiyUrl
+  }),
+  // 获取可用formId,strOpenId, one (可空，存在值时获取单个formId，不存在值时获取列表)
+  saaSQueryEnableFormId: (paramObj) => pub.getAjaxData('SaaSQueryEnableFormId', paramObj, {
+    baseURL: ApiKiyUrl
+  }),
+  // 聊天记录查询key = SaaSTalkRecordList
+  // rule(获取规则) -- -- -- -- -- -- -- > （大于号, 意思往后查）。 < (默认, 小于号 往上翻)
+  // dCreateTime(聊天时间) -- -- -- -- > (默认当前时间, 格式: yyyy - MM - dd HH: mm: ss.fff))
+  // strFromOpenId: (我)
+  // strToOpenId: 对方
+  saaSTalkRecordList: (paramObj) => pub.getAjaxData('SaaSTalkRecordList', paramObj, {
+    baseURL: ApiKiyUrl
+  }),
+  // 聊天人查询 key = CustServiceList
+  // strGroupName: (组名, eg: 佛山彩印通), strGroupCode(组code, ) strGroupName与strGroupCode二选一， 两者存在取strGroupCode 作为值
+  // strGroupName与strGroupCode 不能同时为空
+  // strOpenId: 用户openid 可空
+  // bCustomer: 是否客户(默认为客服)
+  gustServiceList: (paramObj) => pub.getAjaxData('CustServiceList', paramObj, {
     baseURL: ApiKiyUrl
   }),
 }

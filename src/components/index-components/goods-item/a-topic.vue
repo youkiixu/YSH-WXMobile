@@ -1,19 +1,21 @@
 <template>
-    <view class="nav a-section a-topic">
-      <view class="b">
-        <scroll-view scroll-x="true" class="list">
-          <view class="item" v-for="item of content.goodslist" :key="item.item_id">
-            <view  @click="toDetail(item)" class="nav">
-              <img class="img" :src="baseUrl+ item.pic" background-size="cover" />
-              <view class="np">
-                <text class="name">{{item.title}}</text>
-               <text class="price">￥{{item.price}}</text>   
-              </view>
-            </view>
-          </view>
-        </scroll-view>
-      </view>  
-    </view>
+    <div class="nav a-section a-topic">
+      <div class="b">
+        <form @submit="formSubmit" report-submit="true">
+          <scroll-view scroll-x="true" class="list">
+            <div class="item" v-for="item of content.goodslist" :key="item.item_id"  @click="toDetail(item)">
+              <button  class="nav form_button"  formType="submit">
+                <img class="img" :src="baseUrl+ item.pic" background-size="cover" />
+                <div class="np">
+                  <text class="name">{{item.title}}</text>
+                <text class="price">￥{{item.price}}</text>   
+                </div>
+              </button>
+            </div>
+          </scroll-view>
+        </form>
+      </div>  
+    </div>
 </template>
 <script>
 export default {
@@ -29,6 +31,10 @@ export default {
     methods: {
       toDetail(item) {
         this.$emit('onClick' , item);
+      },
+      formSubmit(e) {
+        const formId = e.mp.detail.formId
+        this.$emit('formSubmit' , formId)
       }
     }
 }

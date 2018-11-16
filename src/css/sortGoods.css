@@ -4,7 +4,17 @@
   height: auto;
   overflow: hidden;
 }
-
+/* .cate-item .b button {
+  padding-left:0;
+  border: none;
+  background: #fff;
+  box-sizing: none;
+  padding-right: 0;
+  text-align: left;
+  line-height:auto;
+  display:inline;
+  font-size:12rpx;
+} */
 .cate-item .h {
   height: 145rpx;
   width: 750rpx;
@@ -16,7 +26,7 @@
 
 .cate-item .h .name {
   display: block;
-  height: 35rpx;
+  height: 20rpx;
   margin-bottom: 18rpx;
   font-size: 30rpx;
   color: #333;
@@ -68,10 +78,14 @@
   height: 140rpx;
   padding: 15rpx 10rpx;
   box-sizing: border-box;
+  display:block;
+
 }
 
 .cate-item .b-txt .name {
   font-size: 24rpx;
+  height: 40rpx;
+  line-height: 40rpx;
   color: #282828;
   overflow: hidden;
   white-space: nowrap;
@@ -80,6 +94,8 @@
 
 .cate-item .b-txt .ShopName {
   width: 100%;
+  height: 36rpx;
+  line-height: 36rpx;
   font-size: 22rpx;
   color: #666666;
   overflow: hidden;
@@ -92,6 +108,7 @@
   font-size: 32rpx;
   color: #dc2121;
   float: left;
+  height: 50rpx;
   line-height: 50rpx;
 }
 
@@ -105,6 +122,8 @@
   color: #999999;
   float: left;
   text-align: right;
+  height: 50rpx;
   line-height: 50rpx;
+  /* line-height: 50rpx; */
 }
 

@@ -1,10 +1,14 @@
 <template>
-    <view class="m-menu">
-        <view  class="item" v-for="item of content.dataset" :key="item.id" @click="toDetail(item)">
-            <img :src="baseUrl+ item.pic" background-size="cover" />
-            <text>{{item.showtitle}}</text>
-        </view>
-    </view>
+    <form @submit="formSubmit" report-submit="true">
+        <div class="m-menu">
+            <div  class="item" v-for="item of content.dataset" :key="item.id" @click="toDetail(item)">
+                <button class="form_button" formType="submit">
+                    <img :src="baseUrl+ item.pic" background-size="cover" />
+                    <text>{{item.showtitle}}</text>
+                </button>
+            </div>
+        </div>
+    </form>
 </template>
 
 <script>
@@ -22,6 +26,10 @@ export default {
     methods: {
         toDetail (item) {
             this.$emit('onClick' , item)
+        },
+        formSubmit(e) {
+            const formId = e.mp.detail.formId
+            this.$emit('formSubmit' , formId);
         }
     }
     

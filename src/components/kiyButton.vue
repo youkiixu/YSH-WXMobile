@@ -1,7 +1,7 @@
 <template>
-    <view :class="solid ? 'btn cancel' : 'btn confirm'" @click="clickEvent">
+    <div :class="solid ? 'btn cancel' : 'btn confirm'" @click="clickEvent">
         {{text}}
-    </view>
+    </div>
 </template>
 <script>
 export default {

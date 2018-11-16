@@ -1,13 +1,13 @@
 <template >
-<view class="container">
-  <view class="index-searchbar" v-if="sassIndex && !loading">
+<div class="container">
+  <div class="index-searchbar" v-if="sassIndex && !loading">
     <searchBar></searchBar>
-  </view>
-  <view v-for="(item , index ) in sassIndex" :key="index" v-if="sassIndex">
+  </div>
+  <div v-for="(item , index ) in sassIndex" :key="index" v-if="sassIndex">
     <indexComponent :item="item"></indexComponent>
-  </view>
+  </div>
   <loadingComponent v-if="loading"></loadingComponent>
-</view>
+</div>
 </template>
 
 <script>
@@ -51,8 +51,11 @@ export default {
     ])
   },
   // 小程序原生下拉刷新
-  onPullDownRefresh: function() {
-    this.getSassIndex()
+  async onPullDownRefresh () {
+    await Promise.all([
+      this.getSassIndex()
+    ])
+    this.loading = false
     wx.stopPullDownRefresh()
   },
   // 原生的分享功能

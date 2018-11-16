@@ -5,49 +5,49 @@
       <wxParse :content="topicDetailHTMLstr" />
     </div>
   </scroll-view>
-  <view class="topic-goods">
-  </view>
+  <div class="topic-goods">
+  </div>
   <scroll-view class="comments">
-    <view class="h">
+    <div class="h">
       <text class="t">精选留言</text>
       <img @click="postComment" class="i" src="http://nos.netease.com/mailpub/hxm/yanxuan-wap/p/20150730/style/img/icon-normal/comment-add-2aca147c3f.png"/>
-    </view>
-     <view class="has-comments" v-if="commentList.length">
-      <view class="b">
-        <view class="item" v-for="item of commentList" :key="item.id">
-          <view class="info">
-            <view class="user">
+    </div>
+     <div class="has-comments" v-if="commentList.length">
+      <div class="b">
+        <div class="item" v-for="item of commentList" :key="item.id">
+          <div class="info">
+            <div class="user">
               <img class="avatar" :src="item.user_info.avatar"/>
               <text class="nickname">{{item.user_info.nickname}}</text>
-            </view>
-            <view class="time">{{item.add_time}}</view>
-          </view>
-          <view class="comment">
+            </div>
+            <div class="time">{{item.add_time}}</div>
+          </div>
+          <div class="comment">
             {{item.content}}
-          </view>
-        </view>
-      </view>
-      <view class="load" v-if="commentCount > 5">
+          </div>
+        </div>
+      </div>
+      <div class="load" v-if="commentCount > 5">
         <navigator :url="'/pages/topic/topicComment?valueId=' + topic.id + '&typeId=1'">查看更多</navigator>
-      </view>
-    </view>
-    <view class="no-comments" v-if="commentList.length <= 0">
-        <view class="b" @click="postComment">
+      </div>
+    </div>
+    <div class="no-comments" v-if="commentList.length <= 0">
+        <div class="b" @click="postComment">
             <img class="icon" src="http://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/no-comment-560f87660a.png"/>
             <text class="txt">期待您的留言</text>
-        </view>
-    </view>
+        </div>
+    </div>
   </scroll-view>
   <scroll-view class="rec-box">
-    <view class="h">
+    <div class="h">
       <text class="txt">专题推荐</text>
-    </view>
-    <view class="b">
+    </div>
+    <div class="b">
       <navigator class="item" v-for="item of topicList" :key="item.id" :url="'../topic/topicDetail?id=' + item.id">
         <img class="img" :src="item.scene_pic_url"/>
         <text class="title">{{item.title}}</text>
       </navigator>
-    </view>
+    </div>
   </scroll-view>
 </scroll-view>
 </template>

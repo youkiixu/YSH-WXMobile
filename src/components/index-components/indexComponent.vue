@@ -1,9 +1,9 @@
 <template>
     <view class="component">
         <indexTitle v-if="item.type === 2" :content="item.content"></indexTitle>
-        <indexNaV v-if="item.type === 8" :content="item.content" @onClick="navEvent"></indexNaV>
-        <indexGoods v-if="item.type === 4" :content="item.content" @onClick="toDetail"></indexGoods>
-        <indexAd v-if="item.type === 9" :content="item.content" @onClick="ADEvent" @onBrandClick="onBrandClick"></indexAd>
+        <indexNaV v-if="item.type === 8" :content="item.content" @onClick="navEvent" @formSubmit="formSubmit"></indexNaV>
+        <indexGoods v-if="item.type === 4" :content="item.content" @onClick="toDetail" @formSubmit="formSubmit"></indexGoods>
+        <indexAd v-if="item.type === 9" :content="item.content" @onClick="ADEvent" @onBrandClick="onBrandClick" @formSubmit="formSubmit"></indexAd>
         <indexLine v-if="item.type === 11" :content="item.content"></indexLine>
     </view>
 </template>
@@ -45,7 +45,6 @@ export default {
             }
         },
         ADEvent(item) { 
-            
             const type = item.linkType
             switch (type) {
                 case 1:
@@ -60,8 +59,14 @@ export default {
                     break;
                 case 10:
                     // 类型10是连接
+                    console.log(item)
+                    let url = ''
+                    if(item.link.indexOf('../..') === -1) {
+                        url = "../.."
+                    }
+                    console.log(url)
                     this.$router.push({
-                        path: item.link + `&&title=${item.showtitle}`
+                        path: url + item.link + `&&title=${item.showtitle}`
                     })
                     break;
                 default:
@@ -104,6 +109,14 @@ export default {
                 query: {
                     keyword: keyword
                 }
+            })
+        },
+        async formSubmit(formId) {
+            const hideOpenId = wx.getStorageSync('hideOpenId')
+            if(formId === 'the formId is a mock one' || !hideOpenId) return
+            await api.saaSSaveFormId({
+                form_id: formId,
+                strOpenId: hideOpenId
             })
         }
     }

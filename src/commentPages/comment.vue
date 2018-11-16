@@ -1,141 +1,153 @@
 <template >
-<view class="comments">
-    <view class="h">
-        <view :class="commentType == 1 ? 'active item' : 'item'" @click="switchTab(1)">
-            <view class="txt">好评({{goodComment}})</view>
-        </view>
-        <view :class="commentType == 2 ? 'active item' : 'item'" @click="switchTab(2)">
-            <view class="txt">中评({{comment}})</view>
-        </view>
-        <view :class="commentType == 3 ? 'active item' : 'item'" @click="switchTab(3)">
-            <view class="txt">差评({{badComment}})</view>
-        </view>
-        <view :class="commentType == 4 ? 'active item' : 'item'" @click="switchTab(4)">
-            <view class="txt">有图({{hasPicCount}})</view>
-        </view>
-    </view>
-  <view class="b">
-    <view class="item" v-for="(item, index) in comments" :key="item.id" :data-index="index">
-      <view class="info">
-        <view class="user">
+<div class="comments">
+    <div class="h">
+        <div :class="commentType == 1 ? 'active item' : 'item'" @click="switchTab(1)">
+            <div class="txt">好评({{goodComment}})</div>
+        </div>
+        <div :class="commentType == 2 ? 'active item' : 'item'" @click="switchTab(2)">
+            <div class="txt">中评({{comment}})</div>
+        </div>
+        <div :class="commentType == 3 ? 'active item' : 'item'" @click="switchTab(3)">
+            <div class="txt">差评({{badComment}})</div>
+        </div>
+        <div :class="commentType == 4 ? 'active item' : 'item'" @click="switchTab(4)">
+            <div class="txt">有图({{hasPicCount}})</div>
+        </div>
+    </div>
+  <div class="b">
+    <div class="item" v-for="(item, index) in comments" :key="item.id" :data-index="index">
+      <div class="info">
+        <div class="user">
           <img :src="item.defalutHead"/>
           <text>{{item.strName}}</text>
-        </view>
-        <view class="time">{{item.FinishDate}}</view>
-      </view>
-      <view class="comment">{{item.ReviewContent}}</view>
-      <view class="imgs" v-if="item.Images">
-        <image class="img" v-for="(iitem, iindex) in item.AppendImages" :key="iindex" :src="iitem"  @click="previewImage(item.AppendImages , iindex)"/>
-      </view>
-      <view class="customer-service" v-if="item.ReplyContent != '暂无回复'">
+        </div>
+        <div class="time">{{item.FinishDate}}</div>
+      </div>
+      <div class="comment">{{item.ReviewContent}}</div>
+      <div class="imgs" v-if="item.Images">
+        <img class="img" v-for="(iitem, iindex) in item.AppendImages" :key="iindex" :src="iitem"  @click="previewImage(item.AppendImages , iindex)"/>
+      </div>
+      <div class="customer-service" v-if="item.ReplyContent != '暂无回复'">
         <text class="u">卖家回复：</text>
         <text class="c">{{item.ReplyContent}}</text>
-      </view>
-    </view>
-  </view>
-</view>
+      </div>
+    </div>
+    <loadingMore v-if="more"></loadingMore>
+  </div>
+</div>
 </template>
 
 <script>
 import api from '@/utils/api';
 import wx from 'wx';
+import loadingMore from '@/components/loadingMore'
 
 export default {
-  data () {
-    return {
-      comments: [],
-      allCommentList: [],
-      picCommentList: [],
-      typeId: 0,
-      ProductId: 0,
-      pageNo:0,
-      showType: 0,
-      goodComment: 0,
-      badComment: 0,
-      comment: 0,
-      hasPicCount: 0,
-      allPage: 1,
-      picPage: 1,
-      size: 15,
-      commentType: 1,
-    }
-  },
-  computed: {
-    baseUrl ()   {
-        return this.$wx.baseUrl
-    }
-  },
-  async mounted () {
-    await Promise.all([
-      this.getCommentCount(),
-      this.getCommentList()
-    ]);
-  },
-
-  methods: {
-    // 获得 评论数量
-    async getCommentCount () {
-      this.ProductId = this.$route.query.valueId      
-      const res = await api.getCommentCount({ ProductId: this.ProductId });
-      if (res.success === true) {
-        this.allCount = res.Comments;
-      }
+    components: {
+        loadingMore
+    },
+    data () {
+        return {
+        comments: [],
+        allCommentList: [],
+        picCommentList: [],
+        typeId: 0,
+        ProductId: 0,
+        pageNo:0,
+        showType: 0,
+        goodComment: 0,
+        badComment: 0,
+        comment: 0,
+        hasPicCount: 0,
+        allPage: 1,
+        picPage: 1,
+        size: 15,
+        commentType: 1,
+        more: false
+        }
+    },
+    computed: {
+        baseUrl ()   {
+            return this.$wx.baseUrl
+        }
+    },
+    async mounted () {
+        this.more = true
+        await Promise.all([
+            this.getCommentCount(),
+            this.getCommentList()
+        ]);
+        this.more = false
     },
 
-    // 获得 评论详情
-    async getCommentList () {
-      this.ProductId = this.$route.query.valueId     
-      this.pageNo++
-      const res = await api.getCommentList({ ProductId: this.ProductId , pageNo: this.pageNo  , pageSize: this.size, commentType: this.commentType});      
-      if (res.success) {
-       var commentList = []
-       res.comments.map(item => {
-           if(item.Images) {
-               item.AppendImages = []
-                let images = item.Images.split(',')
-                images.map(str => {
-                    item.AppendImages.push(this.baseUrl + str)
-                })
-           }
-           item.strName = item.UserName.substr(0, 7) + '****'
-           item.defalutHead = `http://www.kiy.cn/Areas/wxMobile/Content/img/detailpage/${Math.floor(Math.random() * 7 + 1)}.png`
-           commentList.push(item)
-       })
+    methods: {
+        // 获得 评论数量
+        async getCommentCount () {
+        this.ProductId = this.$route.query.valueId      
+        const res = await api.getCommentCount({ ProductId: this.ProductId });
+        if (res.success === true) {
+            this.allCount = res.Comments;
+        }
+        },
 
-       this.comments = this.comments.concat(commentList)  
-
-       this.goodComment = res.goodComment
-       this.comment = res.comment
-       this.badComment = res.badComment
-       this.hasPicCount = res.hasImages  
-      }
-    },
-    // “全部”和“有图”切换
-    switchTab (num) {
-      this.commentType = num
-      this.comments = []
-      this.pageNo = 0
-      this.getCommentList();
-    },
-    previewImage (images , index) {
-        wx.previewImage({
-            urls: images,
-            current: images[index]
+        // 获得 评论详情
+        async getCommentList () {
+        this.ProductId = this.$route.query.valueId     
+        this.pageNo++
+        const res = await api.getCommentList({ ProductId: this.ProductId , pageNo: this.pageNo  , pageSize: this.size, commentType: this.commentType});      
+        if (res.success) {
+        var commentList = []
+        res.comments.map(item => {
+            if(item.Images) {
+                item.AppendImages = []
+                    let images = item.Images.split(',')
+                    images.map(str => {
+                        item.AppendImages.push(this.baseUrl + str)
+                    })
+            }
+            item.strName = item.UserName.substr(0, 7) + '****'
+            item.defalutHead = `http://www.kiy.cn/Areas/wxMobile/Content/img/detailpage/${Math.floor(Math.random() * 7 + 1)}.png`
+            commentList.push(item)
         })
+
+        this.comments = this.comments.t(commentList)  
+
+        this.goodComment = res.goodComment
+        this.comment = res.comment
+        this.badComment = res.badComment
+        this.hasPicCount = res.hasImages  
+        }
+        },
+        // “全部”和“有图”切换
+        switchTab (num) {
+        this.commentType = num
+        this.comments = []
+        this.pageNo = 0
+        this.getCommentList();
+        },
+        previewImage (images , index) {
+            wx.previewImage({
+                urls: images,
+                current: images[index]
+            })
+        }
+    },
+        // 小程序原生下拉刷新
+    onPullDownRefresh: function() {
+        this.comments = []
+        this.pageNo = 0
+        this.getCommentCount()
+        this.getCommentList()
+        wx.stopPullDownRefresh()
+    },
+    // 原生的触底加载
+    async onReachBottom () {
+        this.more = true
+        await Promise.all([
+            this.getCommentList()
+        ])
+        this.more = false
     }
-  },
-    // 小程序原生下拉刷新
-  onPullDownRefresh: function() {
-    this.comments = []
-    this.pageNo = 0
-    this.getCommentCount()
-    this.getCommentList()
-    wx.stopPullDownRefresh()
-  },
-  // 原生的触底加载
-  onReachBottom: function () {
-    this.getCommentList();
-  }
 }
 </script>
 

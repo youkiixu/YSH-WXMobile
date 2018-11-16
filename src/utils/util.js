@@ -221,24 +221,26 @@ function deepCopy(params) {
 	function decode(input) {
 	  return decodeURIComponent(input)
   }
-  
+  // /goodsPages/goods?data={"ProductId":4911,"ProductName":"普通KT板小边条 KT板卡条 塑料kt展条 KT板收边条 相框小边条","code":undefined}
+  // /goodsPages/goods?data={"ProductId":4911,"ProductName":"普通KT板小边条 KT板卡条 塑料kt展条 KT板收边条 相框小边条"}&&skuId=4911_1212_1222_0_0_0_0_1328
   //ProductId , ProductName , code , IsCustom ,  dataStr
   function getGoodsUrl(param) {
     // 非标报价id , 标准品为0
     const par = {
       ProductId: param.ProductId,
-      ProductName: param.ProductName,
+      ProductName: param.ProductName ? param.ProductName : '',
       code: param.code
     }
-    let urlPath = '/goodsPages/goods?data=' + JSON.stringify(par)
-    if (param.IsCustom) {
+    // let urlPath = '/goodsPages/goods?data=' + JSON.stringify(par)
+    let urlPath = `/goodsPages/goods?data={'ProductId':${par.ProductId},'ProductName':'${par.ProductName}','code':${par.code}}`
+    if (param.IsCustom) { 
       urlPath += '&&proSearchParam=' + encode(param.dataStr)
     }
     if (!param.IsCustom && param.skuId) {
       urlPath += '&&skuId=' + param.skuId
     }
 
-
+    console.log(urlPath)
     return urlPath
   }
 

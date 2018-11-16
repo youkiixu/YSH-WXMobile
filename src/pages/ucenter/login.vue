@@ -1,68 +1,84 @@
 <template>
-    <view class="content">
-        <!-- 注册 -->
-        <view class="register" v-if="isRegister">
-            <view class="phone clear">
-                <button class="phone_btn">+86</button>
-                <view class="phone_num">
-                    <input v-model="registerInfo.CellPhone" placeholder="请输入手机号码" number confirm-type="done">
-                </view>
-            </view>
-            <view class="VerCode clear">
-                <view class="VerCode_num">
-                     <input v-model="registerInfo.Code" placeholder="请输入验证码" confirm-type="done">
-                </view>
-                <button class="VerCode_btn"  @click="getCode">获取验证码</button>                
-            </view>
-            <view class="register_pwd">
-               <input v-model="registerInfo.Password" placeholder="请输入密码" password confirm-type="done">         
-            </view>
-            <view class="register_pwd">
-               <input v-model="Password2" placeholder="请再次输入密码" password confirm-type="done">         
-            </view>
-            <view  class="register_btn">
-                <button @click="btnHandler">注册</button>
-            </view>                       
-            <view  class="to_register">
-                <button @click="transferText">已有账号</button>
-            </view>  
-        </view>
+    <div >
+        <!-- 选择界面 -->
+        <div class="select-type" v-if="isSelect">
+            <div class="select-type-content">
+                <img src="http://www.kiy.cn/Areas/Wxmobile/Content/img/logo.png" class="logo" alt="">
+                <button class="btn block" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber">微信手机号快捷登录</button>
+                <button  class="btn" @click="unSelect">彩印通账号密码登录</button>
+                <!-- <button>彩印通账号密码登录</button> -->
+            </div>
+        </div>
+        <!-- 手机绑定操作 -->
+        <div class="content" v-if="!isSelect">
+            <div class="to-select" @click="toSelect">
+                返回上一步
+            </div>
+            <!-- 注册 -->
+            <div class="register" v-if="isRegister">
+                <div class="phone clear">
+                    <button class="phone_btn">+86</button>
+                    <div class="phone_num">
+                        <input v-model="registerInfo.CellPhone" placeholder="请输入手机号码" number confirm-type="done">
+                    </div>
+                </div>
+                <div class="VerCode clear">
+                    <div class="VerCode_num">
+                        <input v-model="registerInfo.Code" placeholder="请输入验证码" confirm-type="done">
+                    </div>
+                    <button class="VerCode_btn"  @click="getCode">获取验证码</button>                
+                </div>
+                <div class="register_pwd">
+                <input v-model="registerInfo.Password" placeholder="请输入密码" password confirm-type="done">         
+                </div>
+                <div class="register_pwd">
+                <input v-model="Password2" placeholder="请再次输入密码" password confirm-type="done">         
+                </div>
+                <div  class="register_btn">
+                    <button @click="btnHandler">注册</button>
+                </div>                       
+                <div  class="to_register">
+                    <button @click="transferText">已有账号</button>
+                </div>  
+            </div>
 
-        <!-- 登录 -->
-        <view class="login" v-if="!isRegister">
-            <view class="login_phone">
-               <input v-model="userInfo.UserId" placeholder="请输入账号/手机号" confirm-type="done">         
-            </view>
-            <view class="login_pwd clear">
-                <view class="login_pwdInput">
-                     <input v-model="userInfo.Password" placeholder="请输入密码" password confirm-type="done">
-                </view>
-                <button class="pwd_btn"  @click="forgetPwd">忘记密码</button>                
-            </view>            
-            <view  class="login_btn">
-                <button @click="btnHandler">登录</button>
-            </view>   
-            <view  class="to_register">
-                <button @click="transferText">立即注册</button>
-            </view>                       
-        </view>
+            <!-- 登录 -->
+            <div class="login" v-if="!isRegister">
+                <div class="login_phone">
+                <input v-model="userInfo.UserId" placeholder="请输入账号/手机号" confirm-type="done">         
+                </div>
+                <div class="login_pwd clear">
+                    <div class="login_pwdInput">
+                        <input v-model="userInfo.Password" placeholder="请输入密码" password confirm-type="done">
+                    </div>
+                    <!-- <button class="pwd_btn"  @click="forgetPwd">忘记密码</button>                 -->
+                </div>            
+                <div  class="login_btn">
+                    <button @click="btnHandler">登录</button>
+                </div>   
+                <div  class="to_register">
+                    <button @click="transferText">立即注册</button>
+                </div>                       
+            </div>
+        </div>
 
-
-    </view>
+    </div>
 
 </template>
 <script>
 import api from '@/utils/api'
 import util from '@/utils/util'
+// import user from '@/services/user';
 import wx from 'wx'
-import { mapActions } from 'vuex'
+import { mapState , mapActions } from 'vuex'
 export default {
     name: 'login',
     data () {
         return {
             userInfo: {
                 UserId: '',
-                Password: ''
+                Password: '',
+                loginType: 1
             },
             registerInfo: {
                 CellPhone: '',
@@ -70,16 +86,69 @@ export default {
                 Password: ''
             },
             Password2 : '',
-            isRegister: false
+            isRegister: false,
+            isSelect: true,
+            openId : ''
         }
+    },
+    computed: {
+        ...mapState([
+            'wxUserInfo'
+        ])
+    },
+    mounted () {
+        var _this = this
+        // user.loginByWeixin().then(res => {
+        //     if(res.success) {
+        //         _this.openId = res.openId
+        //     }
+        // })
     },
     methods: { 
         ...mapActions([
             'sassLogin'
         ]),
+        getPhoneNumber (e) {
+            const _this = this
+            if(e.mp.detail.encryptedData) {
+                _this.quickLogin(e.mp.detail)
+            }
+        },
+        async quickLogin(item) {
+            const _this = this
+            const openId = wx.getStorageSync('openId')
+            var par = {
+                encryptedData: item.encryptedData,
+                iv: item.iv,
+                wxHeadImg: this.wxUserInfo.avatarUrl,
+                wxNick: this.wxUserInfo.nickName,
+                loginType: 2 
+            }
+            this.$wx.showLoading('正在登录')
+            _this.sassLogin(par).then(res => {
+                _this.$wx.hideLoading()
+                _this.$wx.showSuccessToast( '登陆成功')
+                setTimeout(() => {
+                    _this.$router.back()
+                }, 1000);
+            }).catch(err => {
+                _this.$wx.hideLoading()
+                _this.$wx.showModal({
+                    title: '登录失败',
+                    content: '该手机号没有绑定账号，请用彩印通账号登录',
+                    showCancel: true
+                }).then(res => {
+                    _this.unSelect()
+                })
+                
+            })
+        },
         login() {
             const _this = this;
-            this.sassLogin(this.userInfo).then(res => {
+            // this.showLoading()
+            this.$wx.showLoading('正在登录')
+            _this.sassLogin(this.userInfo).then(res => {
+                _this.$wx.hideLoading()
                 _this.$wx.showSuccessToast( '登陆成功')
                 setTimeout(() => {
                     _this.$router.back()
@@ -127,7 +196,7 @@ export default {
                 this.$wx.hideLoading()
                 this.$wx.showSuccessToast( res.msg)
             } else {
-                this.$wx.showErrorToast('请正确输入手机号码')
+                this.$wx.showErrorToast('手机号码错误')
             }
         },
         btnHandler () {
@@ -163,14 +232,70 @@ export default {
         },
         forgetPwd() {
             this.$wx.showErrorToast('暂未支持')
+        },
+        unSelect () {
+            const _this = this
+            _this.isSelect = false
+            _this.isRegister = false
+            
+        },
+        toSelect() {
+            this.isSelect = true
+            this.isRegister = false
         }
     }
 }
 </script>
 <style scoped>
+    .to-select {
+        position: absolute;
+        top: 20rpx;
+        left: 20rpx;
+        height: 40rpx;
+        font-size: 30rpx;
+        width: 180rpx;
+        background: #cccccc;
+        border-radius: 50rpx;
+        padding: 10rpx;
+        line-height:40rpx;
+        color: #fafafa;
+        text-align: center;
+    }
+    .select-type {
+        position: relative;
+        height: 100vh;
+        width: 750rpx;
+    }
+    .select-type-content {
+        position: absolute;
+        top: 30%;
+        left: 50%;
+        transform: translate(-50%,-50%);
+        width: 680rpx;
+    }
+    .select-type .logo {
+        display: block;
+        width: 605rpx;
+        height: 325rpx;
+        margin: 0 auto;
+        transform: scale(0.7);
+    }
+    .select-type .btn {
+        width: 680rpx;
+        height: 80rpx; 
+        line-height: 80rpx;
+        color: #009e96;
+        margin-bottom: 30rpx;
+        background: #fff;
+        border: 1rpx solid #009e96;
+    }
+    .select-type .block {
+        color: #fff;
+        background: #009e96;
+    }
     .content {
         width: 750rpx;
-        padding: 30rpx 20rpx;
+        padding: 80rpx 20rpx;
     }
     .clear:after{
     display: block;
@@ -301,7 +426,7 @@ export default {
     }
     .login_pwdInput{
         float: left;
-        width: 570rpx;
+        width: 705rpx;
         height: 80rpx;       
         background-color: #f7f7f7;
         padding: 0 12rpx;

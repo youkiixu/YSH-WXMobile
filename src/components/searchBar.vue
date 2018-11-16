@@ -1,10 +1,10 @@
 <template>
-    <view class="search">
+    <div class="search">
         <navigator url="/pages/search/search" class="input">
             <img class="icon"/>
             <text class="txt">商品搜索</text>
         </navigator>
-    </view>
+    </div>
 </template>
 
 <script>

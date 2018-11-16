@@ -1,14 +1,16 @@
 <template>
-  <view class="nav a-section a-brand">
-    <view class="b clear">
-      <view class="item item-1" v-for="item of content.goodslist" :key="item.item_id">
-        <view @click="toDetail(item)">
-              <text class="name">{{item.title}}</text>
-              <img class="img" :src="baseUrl+ item.pic" mode="aspectFill" background-size="cover" />
-        </view>
-      </view>
-    </view>
-  </view>
+  <div class="nav a-section a-brand">
+    <div class="b clear">
+      <form @submit="formSubmit" report-submit="true">
+        <div class="item item-1" v-for="item of content.goodslist" :key="item.item_id" @click="toDetail(item)">
+          <button  class="form_button"  formType="submit">
+                <text class="name">{{item.title}}</text>
+                <img class="img" :src="baseUrl+ item.pic" mode="aspectFill" background-size="cover" />
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
 </template>
 <script>
 export default {
@@ -24,6 +26,10 @@ export default {
     methods: {
       toDetail(item) {
         this.$emit('onClick' , item);
+      },
+      formSubmit(e) {
+        const formId = e.mp.detail.formId
+        this.$emit('formSubmit' , formId)
       }
     }
 }

@@ -1,43 +1,43 @@
 <template>
-    <view class="container">
-        <view class="sort">
-            <view class="sort-box">
-                <view :class=" currentSortType == 'default' ? 'active item' : 'item'"  @click="openSortFilter" id="defaultSort">
+    <div class="container">
+        <div class="sort">
+            <div class="sort-box">
+                <div :class=" currentSortType == 'default' ? 'active item' : 'item'"  @click="openSortFilter" id="defaultSort">
                     <text class="txt">综合</text>
-                </view>
-                <view :class="['item', 'by-sales by-sort', { active: currentSortType == 'sales', asc: currentSortOrder == 'asc', desc: currentSortOrder !== 'asc' }]"
+                </div>
+                <div :class="['item', 'by-sales by-sort', { active: currentSortType == 'sales', asc: currentSortOrder == 'asc', desc: currentSortOrder !== 'asc' }]"
                     @click="openSortFilter" id="salesSort">
                     <text class="txt">销量</text>
-                </view>
-                <view :class="['item', 'by-price by-sort', { active: currentSortType == 'price', asc: currentSortOrder == 'asc', desc: currentSortOrder !== 'asc' }]"
+                </div>
+                <div :class="['item', 'by-price by-sort', { active: currentSortType == 'price', asc: currentSortOrder == 'asc', desc: currentSortOrder !== 'asc' }]"
                     @click="openSortFilter" id="priceSort">
                     <text class="txt">价格</text>
-                </view>
-                <view :class="['item', 'by-comment by-sort', { active: currentSortType == 'comment', asc: currentSortOrder == 'asc', desc: currentSortOrder !== 'asc' }]"
+                </div>
+                <div :class="['item', 'by-comment by-sort', { active: currentSortType == 'comment', asc: currentSortOrder == 'asc', desc: currentSortOrder !== 'asc' }]"
                     @click="openSortFilter" id="commentSort">
                     <text class="txt">评论</text>
-                </view>
-            </view>
-        </view>
+                </div>
+            </div>
+        </div>
         <div class="list-content">
-            <div class="list-item" v-for="(item , index) in quoteList" :key="index" >
+            <div class="list-item" v-for="(item , index) in quoteList" :key="index" @click="toDetail(item)">
                 <div class="list-item-box">
-                    <img class="list-img" :src="baseUrl + '/Storage/Shop/'+ item.ShopId +'/Products/' + item.ProductId + '/1_350.png'" alt="" @click="toDetail(item)">
+                    <img class="list-img" :src="baseUrl + '/Storage/Shop/'+ item.ShopId +'/Products/' + item.ProductId + '/1_350.png'" alt="" >
                     <div class="list-info">
                         <div class="list-info-content">
-                            <div class="title" @click="toDetail(item)">
+                            <div class="title" >
                                 {{item.ShopName}}
                             </div>
-                            <div class="p price" @click="toDetail(item)">
+                            <div class="p price" >
                                 ￥{{item.Price}}
                             </div>
                             
-                            <div class="bottom" @click="toDetail(item)">
+                            <div class="bottom" >
                                 <div class="bottom-left p">{{item.SaleCounts}}销量 {{item.ProductMark}}好评</div>
                                 <div class="bottom-right p">货期{{item.DeliveryTime}}</div>
                             </div>
                             <div class="btn-group">
-                                <kiyButton  text="去下单" @onClick="toCheckOut(item)"></kiyButton>
+                                <!-- <kiyButton  text="去下单" @onClick="toCheckOut(item)"></kiyButton> -->
                                 <!-- <kiyButton :solid="true" text="加入购物车" @onClick="toCart(item)"></kiyButton> -->
                             </div>
                         </div>
@@ -45,7 +45,10 @@
                 </div>
             </div>
         </div>
-    </view>
+        <form @submit="formSubmit" report-submit="true">
+            <button class="form_button add-address" formType="submit">重新报价</button>
+        </form>
+    </div>
 </template>
 
 <script>
@@ -64,8 +67,8 @@ export default {
             quoteList: [],
             currentSortType: 'default',
             currentSortOrder: 'desc',
-            orderKey: '默认'
-
+            orderKey: '默认',
+            queryData : undefined
         }
     },
     computed: {
@@ -75,64 +78,93 @@ export default {
         }
     },
     mounted () {
-        this.quoteList = JSON.parse(this.proSearchRst.data)
-        // this.refresh()
+        if(this.$route.query.data){
+            this.queryData = JSON.parse(this.$route.query.data)
+            this.toBaojiaPage(true)
+        }
+        // this.quoteList = JSON.parse(this.proSearchRst.data)
     },
     methods: {
         ...mapActions(['SubmitByProductId2']),
+        // 去报价页
+        toBaojiaPage(isFirst) {
+            // isFirst如果是刚进来，是不会把默认参数带过去
+            const item = this.queryData
+            if(item.IsPriceDisplayPage != 0 && item.ProductId != 0){
+                this.$wx.toBaoJia(
+                    { 
+                        pid: item.Code, 
+                        title: item.qName, 
+                        isDetail: true, 
+                        ProductId: item.ProductId
+                    }, 
+                    this
+                )
+            } else {
+                this.$wx.toBaoJia(
+                    { 
+                        pid: item.Code, 
+                        title: item.qName,
+                        data: isFirst ? '' :this.proSearchParam.dataStr
+                    } , 
+                    this
+                )
+            }
+        },
         // 去商品页面
         toDetail(item) {
+            const queryData = this.queryData
             const goodsUrl = util.getGoodsUrl({
                 ProductId: item.ProductId,
-                ProductName: this.proSearchRst.MainSale,
-                code: this.proSearchRst.QItemCode,
+                ProductName: queryData.qName,
+                code: queryData.Code,
                 IsCustom: true, 
-                dataStr: item.QuoteStr
+                dataStr: item.QuoteStr,
             })
             this.$router.push(goodsUrl)
         },
-        toCheckOut(item) {
-            const openId = wx.getStorageSync('openId')
-            var par = {
-                openId: openId,
-                skuIds: item.ProductId + '_0_0_0_0_0_0_0',
-                counts: 1,
-                regionId: this.userInfo.RegionId,
-                YjUse: item.YjUse,
-                price: item.Price,
-                quoteModel: item.QuoteLogInfoId,
-                RemindPrice: item.RemindPrice,
-                GroupJson: item.GroupJson,
-                QuoteStr: item.QuoteStr,
-                LimitTimeBuyId: item.LimitTimeBuyId,
-            }
-            this.SubmitByProductId2(par)
-        },
-        async toCart(item) {
-            const openId = wx.getStorageSync('openId')
-            var par = {
-                openId: openId,
-                productId: item.ProductId,
-                isCustom: true,//非标品
-                skuId: item.ProductId + '_0_0_0_0_0_0_0',
-                quantity: 1,
-                dataStr: item.QuoteStr,
-                quoteJson : item.GroupJson,
-                Price: item.Price,
-                paraStr: item.QuoteStr
-                // Yjtype: this.Yjtype
-                // YjUse: this.YjUse
-            }
+        // toCheckOut(item) {
+        //     const openId = wx.getStorageSync('openId')
+        //     var par = {
+        //         openId: openId,
+        //         skuIds: item.ProductId + '_0_0_0_0_0_0_0',
+        //         counts: 1,
+        //         regionId: this.userInfo.RegionId,
+        //         YjUse: item.YjUse,
+        //         price: item.Price,
+        //         quoteModel: item.QuoteLogInfoId,
+        //         RemindPrice: item.RemindPrice,
+        //         GroupJson: item.GroupJson,
+        //         QuoteStr: item.QuoteStr,
+        //         LimitTimeBuyId: item.LimitTimeBuyId,
+        //     }
+        //     this.SubmitByProductId2(par)
+        // },
+        // async toCart(item) {
+        //     const openId = wx.getStorageSync('openId')
+        //     var par = {
+        //         openId: openId,
+        //         productId: item.ProductId,
+        //         isCustom: true,//非标品
+        //         skuId: item.ProductId + '_0_0_0_0_0_0_0',
+        //         quantity: 1,
+        //         dataStr: item.QuoteStr,
+        //         quoteJson : item.GroupJson,
+        //         Price: item.Price,
+        //         paraStr: item.QuoteStr
+        //         // Yjtype: this.Yjtype
+        //         // YjUse: this.YjUse
+        //     }
             
-            this.$wx.showLoading()
-            const res = await api.modifyShoppingCart(par)
-            this.$wx.hideLoading()
-            if(res.success) {
-                this.$wx.showSuccessToast('加入购物车成功')
-            } else {
-                this.$wx.showErrorToast('加入购物车失败')
-            }
-        },
+        //     this.$wx.showLoading()
+        //     const res = await api.modifyShoppingCart(par)
+        //     this.$wx.hideLoading()
+        //     if(res.success) {
+        //         this.$wx.showSuccessToast('加入购物车成功')
+        //     } else {
+        //         this.$wx.showErrorToast('加入购物车失败')
+        //     }
+        // },
         openSortFilter (event) {
             // this.goodsList = []
             let currentId = event.currentTarget.id;
@@ -178,19 +210,36 @@ export default {
                 this.refresh();
             } 
         },
-        async refresh () {
+        async refresh () { 
+            if(!this.proSearchParam.qitemCode || this.proSearchParam.isDetail) return
             const openId = wx.getStorageSync('openId')
             var par = Object.assign({
                 'openId': openId , 'orderByType' : this.orderKey , 'orderByKey': this.currentSortOrder == 'desc' ? 0 : 1
             }, this.proSearchParam)
-            this.$wx.showLoading()
+            this.quoteList = []
+            this.$wx.showLoading('正在比价...')
             const res = await api.getProSearchRst(par)
-            this.$wx.hideLoading()
             if(res.success) {
                 this.quoteList = JSON.parse(res.data.data)
             } else {
                 this.$wx.showErrorToast('网络出错')
             }
+            this.$wx.hideLoading()
+        },
+        async formSubmit(e) {
+            this.toBaojiaPage()
+            const formId = e.mp.detail.formId
+            const hideOpenId = wx.getStorageSync('hideOpenId')
+            if(formId === 'the formId is a mock one' || !hideOpenId) return
+            await api.saaSSaveFormId({
+                form_id: formId,
+                strOpenId: hideOpenId
+            })
+        }
+    },
+    watch: {
+        proSearchParam () {
+            this.refresh()
         }
     },
     // 小程序原生下拉刷新
@@ -204,6 +253,9 @@ export default {
 page{
   min-height: 100%;
   background-color: #f4f4f4;
+}
+.list-content {
+    margin-bottom: 104rpx;
 }
 .sort{
     position: relative;
@@ -332,7 +384,7 @@ page{
     font-size: 28rpx;
 }
 .bottom {
-    /* margin-top: 55rpx; */
+    margin-top: 55rpx;
     height: 60rpx;
     color: #949494;
 }
@@ -347,6 +399,19 @@ page{
 .btn-group {
     display:flex;
     flex-direction: row-reverse;
+}
+.add-address{
+  height: 104rpx;
+  width: 100%;
+  border-radius: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  text-align: center;
+  line-height: 104rpx;
+  background-color: #009e96;
+  color: #fff;
+  font-size: 30rpx;
 }
 </style>
 

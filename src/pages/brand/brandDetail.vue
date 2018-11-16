@@ -1,21 +1,21 @@
 <template >
-<view class="container">
-    <view class="brand-info">
-        <view class="name">
+<div class="container">
+    <div class="brand-info">
+        <div class="name">
             <img class="img" :src="brand.app_list_pic_url" background-size="cover"/>
-            <view class="info-box">
-                <view class="info">
+            <div class="info-box">
+                <div class="info">
                     <text class="txt">{{brand.name}}</text>
                     <text class="line"></text>
-                </view>
-            </view>
-        </view>
-        <view class="desc">
+                </div>
+            </div>
+        </div>
+        <div class="desc">
             {{brand.simple_desc}}
-        </view>
-    </view>
-    <view class="cate-item">
-        <view class="b">
+        </div>
+    </div>
+    <div class="cate-item">
+        <div class="b">
             <block v-for="(item, index) of goodsList" :key="index">
             <navigator :class="index % 2 == 0 ? 'item-b item' : 'item'" :url="'../goods/goods?id=' + item.id">
                 <img class="img" :src="item.list_pic_url" background-size="cover"/>
@@ -23,9 +23,9 @@
                 <text class="price">￥{{item.retail_price}}</text>
             </navigator>
             </block>
-        </view>
-    </view>
-</view>
+        </div>
+    </div>
+</div>
 </template>
 
 <script>

@@ -1,89 +1,90 @@
 <template >
-<view class="container">
+<div class="container">
 
-<view class="manage-head clear">
-   <view  :class="iseditGoodsCollect ? 'edit management ' : 'management '" @click="editGoodsCollect">管理</view>   
-</view>
+<div class="manage-head clear">
+   <div  :class="iseditGoodsCollect ? 'edit management ' : 'management '" @click="editGoodsCollect">管理</div>   
+</div>
   
-<!-- <view class="collect-head">
-   <view class="sort">  
-      <view :class="isCollectSelect ? 'item' : 'select item'" @click="SelectCollect()">商品收藏</view>  
-      <view :class="isCollectSelect ? 'select item' : 'item'" @click="SelectCollect()">厂家收藏</view>  
-      <view :class="isCollectSelect ? 'select item' : 'item'" @click="SelectCollect()">我的足迹</view>   
-  </view>
-  <view class="classifi">  
-      <view class="inner">全部</view>  
-      <view class="inner">降价</view>  
-      <view class="inner">特卖</view> 
-      <view :class="iseditGoodsCollect ? 'edit inner manage' : 'inner manage'" @click="editGoodsCollect">管理</view>   
-  </view>
-</view> -->
+<!-- <div class="collect-head">
+   <div class="sort">  
+      <div :class="isCollectSelect ? 'item' : 'select item'" @click="SelectCollect()">商品收藏</div>  
+      <div :class="isCollectSelect ? 'select item' : 'item'" @click="SelectCollect()">厂家收藏</div>  
+      <div :class="isCollectSelect ? 'select item' : 'item'" @click="SelectCollect()">我的足迹</div>   
+  </div>
+  <div class="classifi">  
+      <div class="inner">全部</div>  
+      <div class="inner">降价</div>  
+      <div class="inner">特卖</div> 
+      <div :class="iseditGoodsCollect ? 'edit inner manage' : 'inner manage'" @click="editGoodsCollect">管理</div>   
+  </div>
+</div> -->
 
 <!-- 商品收藏 -->
-<view class="goodsCollect" v-if="isgoodsCollect">
-  <view class="goodslist">
-      <view class="group-item">
-        <view class="goods">
-          <view class="item clear"    @touchstart="touchStart" @touchend="touchEnd"
+<div class="goodsCollect" v-if="isgoodsCollect">
+  <div class="goodslist">
+      <div class="group-item">
+        <div class="goods">
+          <div class="item clear"    @touchstart="touchStart" @touchend="touchEnd"
       v-for="(item, index) of collectList" :key="item.Id" :data-index="index">
-      <!-- <view :class="selectGoods.Id == item.Id ? 'checked checkbox' : 'checkbox'"  :data-item-index="index"></view> -->
-            <view :class="item.checked == true ? 'checked checkbox' : 'checkbox'" @click.stop="checkedItem(index)" :data-item-index="index" v-if="iseditGoodsCollect"></view>
-            <view class="cart-goods clear">
+      <!-- <div :class="selectGoods.Id == item.Id ? 'checked checkbox' : 'checkbox'"  :data-item-index="index"></div> -->
+            <div :class="item.checked == true ? 'checked checkbox' : 'checkbox'" @click.stop="checkedItem(index)" :data-item-index="index" v-if="iseditGoodsCollect"></div>
+            <div class="cart-goods clear">
               <img class="img" :src="baseUrl + item.imagePath + '/1_350.png'"/>
-              <view class="info" @click="openGoods(item)">
-                <view class="t">
+              <div class="info" @click="openGoods(item)">
+                <div class="t">
                   <text class="name">{{item.ProductName}}</text>                 
-                </view>
-                <view class="b">
-                  <view class="price">
-                    <text class="icon">￥</text>{{item.MinSalePrice}}
-                  </view>                
-                </view>
-              </view>
-            </view>
-          </view>
-        </view>
-      </view>
-    </view>
+                </div>
+                <div class="b">
+                  <div class="price">
+                    <text class="icon"></text>{{item.IsCustom ? '定制报价' : '￥' + item.MinSalePrice}}
+                  </div>                
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-      <view class="cart-bottom clear" v-if="iseditGoodsCollect">
-      <!-- <view :class="checkedAllStatus ? 'checked checkbox' : 'checkbox'" @click="checkedAll">全选({{cartTotal.checkedGoodsCount}})</view> -->
-      <!-- <view class="delete" @click="deleteCart" v-if="isEditCart">删除</view> -->
-      <view :class="checkedAllStatus ? 'checked checkbox' : 'checkbox'" @click="checkedAll">全选</view>
-      <view class="delete" @click="deleteGoods">删除</view>
+      <div class="cart-bottom clear" v-if="iseditGoodsCollect">
+      <!-- <div :class="checkedAllStatus ? 'checked checkbox' : 'checkbox'" @click="checkedAll">全选({{cartTotal.checkedGoodsCount}})</div> -->
+      <!-- <div class="delete" @click="deleteCart" v-if="isEditCart">删除</div> -->
+      <div :class="checkedAllStatus ? 'checked checkbox' : 'checkbox'" @click="checkedAll">全选</div>
+      <div class="delete" @click="deleteGoods">删除</div>
       
-    </view>
+    </div>
 
 
-</view>
+</div>
  
 
 <!-- 厂家收藏 -->
- <view class="shopCollect" v-if="isshopCollect">
-   <view class="shoplist">
-      <view class="shop-item">
-        <view class="shop">
-          <view class="item clear" @click="openShop"  @touchstart="touchStart" @touchend="touchEnd">
-      <!-- <view :class="selectGoods.Id == item.Id ? 'checked checkbox' : 'checkbox'"  :data-item-index="index"></view> -->
-            <!-- <view class="checkbox"></view> -->
-            <view class="cart-shop clear">
+ <div class="shopCollect" v-if="isshopCollect">
+   <div class="shoplist">
+      <div class="shop-item">
+        <div class="shop">
+          <div class="item clear" @click="openShop"  @touchstart="touchStart" @touchend="touchEnd">
+      <!-- <div :class="selectGoods.Id == item.Id ? 'checked checkbox' : 'checkbox'"  :data-item-index="index"></div> -->
+            <!-- <div class="checkbox"></div> -->
+            <div class="cart-shop clear">
               <img class="img"/>
-              <view class="info">广州市艺彩印务有限公司</view>
-            </view>
-          </view>        
-        </view>
-      </view>
-   </view>
- </view>
+              <div class="info">广州市艺彩印务有限公司</div>
+            </div>
+          </div>        
+        </div>
+      </div>
+   </div>
+ </div>
 
 <loadingComponent v-if="loading"></loadingComponent>
-</view>
+</div>
 </template>
 
 <script>
 import api from '@/utils/api'
 import wx from 'wx'
 import loadingComponent from '@/components/loadingComponent'
+
 
 export default {
    components: {

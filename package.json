@@ -1,7 +1,7 @@
 {
-  "name": "sass-mall",
+  "name": "kiy-mall",
   "version": "0.1.0",
-  "description": "sass商城",
+  "description": "印生活商城",
   "author": "zhengmingyu <zhengmingyu@kiy.com>",
   "private": true,
   "scripts": {

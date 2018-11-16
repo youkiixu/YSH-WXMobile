@@ -1,20 +1,20 @@
 <template >
-<view class="container">
+<div class="container">
     <scroll-view class="topic-list" scroll-y="true" :scroll-top="scrollTop">
         <navigator class="item" v-for="item of topicList" :key="item.id" :url="'../topic/topicDetail?id=' + item.id">
             <img class="img" :src="item.scene_pic_url"/>
-            <view class="info">
+            <div class="info">
                 <text class="title">{{item.title}}</text>
                 <text class="desc">{{item.subtitle}}</text>
                 <text class="price">{{item.price_info}}元起</text>
-            </view>
+            </div>
         </navigator>
-        <view class="page" v-if="showPage">
-            <view :class="page <= 1 ? 'disabled prev' : 'prev'" @click="prevPage">上一页</view>
-            <view :class="(count / size) < page +1 ? 'disabled next' : 'next'" @click="nextPage">下一页</view>
-        </view>
+        <div class="page" v-if="showPage">
+            <div :class="page <= 1 ? 'disabled prev' : 'prev'" @click="prevPage">上一页</div>
+            <div :class="(count / size) < page +1 ? 'disabled next' : 'next'" @click="nextPage">下一页</div>
+        </div>
     </scroll-view>
-</view>
+</div>
 </template>
 
 <script>

@@ -1,38 +1,38 @@
 <template >
-<view class="container">
+<div class="container">
 
-  <view class="profile-info clear" >
-    <view class="user_info clear" v-if="userInfo.Id">
-      <view class="user_info_img" @click="goLogin(true)">
-        <img :src="userInfo.photo ? baseUrl+userInfo.photo : 'http://www.kiy.cn/Areas/wxMobile/Content/img/userHead.png'" />
-      </view>
-      <view class="user_info_txt">
-        <view class="info_name">{{userInfo.UserName}}</view>
-        <view class="info_member">{{userInfo.GradeName}}</view>
-      </view>
-    </view>
+  <div class="profile-info clear" >
+    <div class="user_info clear" v-if="userInfo.Id">
+      <div class="user_info_img" >
+        <img :src="userInfo.WXHeadImage ? userInfo.WXHeadImage : userInfo.photo ? baseUrl+userInfo.photo : 'http://www.kiy.cn/Areas/wxMobile/Content/img/userHead.png'" />
+      </div>
+      <div class="user_info_txt">
+        <div class="info_name">{{userInfo.WXNick ? userInfo.WXNick : userInfo.UserName}}</div>
+        <div class="info_member">{{userInfo.GradeName}}</div>
+      </div>
+    </div>
 
-     <view v-else class="user_info clear">     
-      <view class="user_info_img NotLogged">
+     <div v-else class="user_info clear">     
+      <div class="user_info_img NotLogged">
         <img class="icon" src="/static/images/ic_menu_me_pressed.png"/>
-      </view>
-      <view class="user_info_txt">
+      </div>
+      <div class="user_info_txt">
         <button v-if="canIUse" open-type="getUserInfo"  @getuserinfo="goLogin" class="goLoginBtn" >点击，授权登录~</button>   
-      </view>
-      </view>
+      </div>
+      </div>
 
-    <view class="set" v-if="userInfo.Id" @click="logOut">
+    <div class="set" v-if="userInfo.Id" @click="logOut">
       <img src="/static/images/ic_me_set.png"/>
-    </view>
-  </view>
-  <view class="myOrder">
-      <view class="h clear">
+    </div>
+  </div>
+  <div class="myOrder">
+      <div class="h clear">
           <navigator url="/orderPages/order">
               <text class="t">我的订单</text>
               <text class="i">查看全部订单</text>            
           </navigator>
-      </view>
-      <view class="myOrder_con">
+      </div>
+      <div class="myOrder_con">
         <navigator class="con_item" @click="toOrderList('WaitPay')">
           <img src="/static/images/ic_me_pay.png"/>
           <text class="item_t">待付款</text>
@@ -49,43 +49,47 @@
           <img src="/static/images/ic_me_complete.png"/>
           <text class="item_t">已完成</text>
         </navigator>
-      </view>
+      </div>
 
-  </view>
+  </div>
 
   <navigator url="../cart/cart" open-type="switchTab" class="ShoppingCar list clear">    
-        <view class="t">购物车</view>
+        <div class="t">购物车</div>
         <img class="i" src="/static/images/address_right.png" background-size="cover"/>       
   </navigator>
   <navigator url="../../addressPages/address" class="address list clear">    
-        <view class="t">地址管理</view>
+        <div class="t">地址管理</div>
         <img class="i" src="/static/images/address_right.png" background-size="cover"/>       
   </navigator>
   <navigator url="../ucenter/collect" class="collection list clear">    
-        <view class="t">我的收藏</view>
+        <div class="t">我的收藏</div>
         <img class="i" src="/static/images/address_right.png" background-size="cover"/>       
   </navigator>
-   <view class="integral list clear" @click="noEvent">    
-        <view class="t">我的积分</view>
+   <div class="integral list clear" @click="noEvent">    
+        <div class="t">我的积分</div>
         <img class="i" src="/static/images/address_right.png" background-size="cover"/>       
-  </view>
-   <view class="footprint list clear" @click="noEvent">    
-        <view class="t">我的足迹</view>
+  </div>
+   <!-- <div class="footprint list clear" @click="noEvent">    
+        <div class="t">我的足迹</div>
         <img class="i" src="/static/images/address_right.png" background-size="cover"/>       
-  </view>
+  </div> -->
    
-   <view class="service list clear" @click="noEvent">    
-        <view class="t">售后客服</view>
+   <div class="service list clear" @click="noEvent">    
+        <div class="t">售后客服</div>
         <img class="i" src="/static/images/address_right.png" background-size="cover"/>       
-  </view>
+  </div>
+  <button v-if="userInfo.Id" open-type="getUserInfo"  @getuserinfo="switchAccount " class="ShoppingCar list clear">    
+        <div class="t" style="text-align:left;">切换账号</div>
+        <img class="i" src="/static/images/address_right.png" background-size="cover"/>       
+  </button>
 
-</view>
+</div>
 </template>
 
 <script>
 import wx from 'wx';
 import api from '@/utils/api'
-import user from '@/services/user';
+import user from '@/services/user'
 import { mapState, mapActions , mapMutations } from 'vuex'
 var app = getApp();
 
@@ -103,41 +107,60 @@ export default {
         return this.$wx.baseUrl
     }
   },
+  mounted () {
+    this.getUserShopInfo()
+  },
   methods: {
     ...mapActions([
       'sassLogin'
     ]),
     ...mapMutations ([
       'setUserInfo',
-      'setUserAddressList'
+      'setUserAddressList',
+      'setWxUserInfo'
     ]),
+    // 根据用户OpenId获取是否有店铺信息
+    async getUserShopInfo () {
+      // const hideOpenId = wx.getStorageSync('hideOpenId')
+      // const res = await api.getUserShopInfo({openId : hideOpenId})
+      // console.log(res)
+    },
+    switchAccount (isLogin) {
+      var _this = this;
+      if(isLogin.mp.detail.rawData) {
+        this.setWxUserInfo(JSON.parse(isLogin.mp.detail.rawData))
+      }
+      _this.$wx.showLoading()
+      user.loginByWeixin().then(res => {
+        _this.$wx.hideLoading()
+        _this.$router.push({
+          path: 'login' 
+        })
+      })
+    },
     // 点击登陆
     goLogin (isLogin) {
       var _this = this;
-      if(isLogin === true) {
-        // 点击头像进入
-        this.$router.push({
-            path: 'login' 
-          })
-      } else {
-        _this.$wx.showLoading()
-        user.loginByWeixin().then(res => {
-          _this.$wx.hideLoading()
-          _this.sassLogin().then(res => {
-
-          }).catch(err => {
-            this.$router.push({
-              path: 'login'
-            })
-          })
-        }).catch((err) => {
-          _this.$wx.hideLoading()
-        });
+        // 获取微信用户信息
+      if(isLogin.mp.detail.rawData) {
+        this.setWxUserInfo(JSON.parse(isLogin.mp.detail.rawData))
       }
-
+      _this.$wx.showLoading()
+      user.loginByWeixin().then(res => {
+        _this.$wx.hideLoading()
+        _this.sassLogin().then(res => {
+          // 登录成功
+        }).catch(err => {
+          // 如果没有这个账号，则登录失败，跳登陆页
+          _this.$router.push({
+            path: 'login'
+          })
+        })
+      }).catch((err) => {
+        _this.$wx.hideLoading()
+      });
     },
     // 去详情页
-
     toOrderList(orderStatus) {
       this.$router.push({
         path: '/orderPages/order',
@@ -147,7 +170,6 @@ export default {
       })
     },
     // 退出登陆
-
     async logOut () {
       var _this = this;
       wx.showModal({

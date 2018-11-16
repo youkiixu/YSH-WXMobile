@@ -1,44 +1,45 @@
 <template >
-<view class="container">
-    <view class="order-head">
-        <view :class="orderStatus ? 'head-item' : ' head-item select'" @click="selectStatus()">全部订单</view>
-        <view :class="orderStatus == OrderOperateStatus.WaitPay ? 'head-item select' : 'head-item '" @click="selectStatus(OrderOperateStatus.WaitPay)">待付款</view>
-        <view :class="orderStatus == OrderOperateStatus.WaitDelivery  ? 'head-item select' : 'head-item '" @click="selectStatus(OrderOperateStatus.WaitDelivery)">待发货</view>
-        <view :class="orderStatus == OrderOperateStatus.WaitReceiving  ? 'head-item select' : 'head-item '" @click="selectStatus(OrderOperateStatus.WaitReceiving)">待收货</view>
-        <view :class="orderStatus == OrderOperateStatus.Finish  ? 'head-item select' : 'head-item '" @click="selectStatus(OrderOperateStatus.Finish)">已完成</view>
-    </view>
-    <view class="orders-list" >
-        <view  class="order" v-for="(item, index) in orderList" :key="item.id" :data-index="index">
-            <view class="list-item">
-                <view class="item-h clear">
-                    <view class="number">订单编号：{{item.Id}}</view>
-                    <view class="pending">{{item.orderStatuString}}</view>
-                </view>
+<div class="container">
+    <div class="order-head">
+        <div :class="orderStatus ? 'head-item' : ' head-item select'" @click="selectStatus()">全部订单</div>
+        <div :class="orderStatus == OrderOperateStatus.WaitPay ? 'head-item select' : 'head-item '" @click="selectStatus(OrderOperateStatus.WaitPay)">待付款</div>
+        <div :class="orderStatus == OrderOperateStatus.WaitDelivery  ? 'head-item select' : 'head-item '" @click="selectStatus(OrderOperateStatus.WaitDelivery)">待发货</div>
+        <div :class="orderStatus == OrderOperateStatus.WaitReceiving  ? 'head-item select' : 'head-item '" @click="selectStatus(OrderOperateStatus.WaitReceiving)">待收货</div>
+        <div :class="orderStatus == OrderOperateStatus.Finish  ? 'head-item select' : 'head-item '" @click="selectStatus(OrderOperateStatus.Finish)">已完成</div>
+    </div>
+    <div class="orders-list" >
+        <div  class="order" v-for="(item, index) in orderList" :key="item.id" :data-index="index">
+            <div class="list-item">
+                <div class="item-h clear">
+                    <div class="number">订单编号：{{item.Id}}</div>
+                    <div class="pending">{{item.orderStatuString}}</div>
+                </div>
                 <navigator class="item-info clear" :url="'./orderDetail?Id=' + item.Id">
-                    <view class="img">
-                        <image :src="baseUrl + item.ThumbnailsUrl + '/1_350.png'"/>
-                    </view>
-                    <view class="txt">
-                        <view class="txt-t">
-                            <view class="txt-title">{{item.ProductName}}</view>
-                            <view class="txt-num">共{{item.Quantity}}件商品</view>
-                        </view>
-                        <view class="txt-price">价格：￥<text class="t">{{item.ProductTotalAmount}}</text></view>
-                    </view>
+                    <div class="img">
+                        <img :src="baseUrl + item.ThumbnailsUrl + '/1_350.png'"/>
+                    </div>
+                    <div class="txt">
+                        <div class="txt-t">
+                            <div class="txt-title">{{item.ProductName}}</div>
+                            <div class="txt-num">共{{item.Quantity}}件商品</div>
+                        </div>
+                        <div class="txt-price">价格：￥<text class="t">{{item.ProductTotalAmount}}</text></div>
+                    </div>
                 </navigator>
-                <view class="item-check clear">
-                    <view class="total">合计：<text class="icon">￥</text><text class="t">{{item.ProductTotalAmount + item.Freight}}</text> (运费：{{item.Freight}})</view>
-                    <view class="btn clear">
+                <div class="item-check clear">
+                    <div class="total">合计：<text class="icon">￥</text><text class="t">{{item.ProductTotalAmount + item.Freight}}</text> (运费：{{item.Freight}})</div>
+                    <div class="btn clear">
                         <!-- <button class="cancel" >取消订单</button> -->
                         <button class="confirm" @click="checkExpress(item)">查看物流</button>                 
-                    </view>
-                </view>
-            </view>
-        </view>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <loadingMore v-if="more"></loadingMore>
         <searchResultEmpty v-if="!orderList.length && !loading" text="该分类下没有订单信息"></searchResultEmpty>
         <loadingComponent v-if="loading"></loadingComponent>
-    </view>
-</view>
+    </div>
+</div>
 </template>
 
 <script>
@@ -47,11 +48,13 @@ import wx from 'wx'
 import orderInfoStatus from '@/utils/orderInfoStatus'
 import loadingComponent from '@/components/loadingComponent'
 import searchResultEmpty from '@/components/searchResultEmpty'
+import loadingMore from '@/components/loadingMore'
 
 export default {
     components: {
         loadingComponent,
-        searchResultEmpty
+        searchResultEmpty,
+        loadingMore
     },
   data () {
     return {
@@ -59,7 +62,8 @@ export default {
       pageNo: 1,
       pageSize: 15,
       orderStatus: false,
-      loading: true
+      loading: true,
+      more: false
     }
   },
   computed: {
@@ -77,16 +81,18 @@ export default {
     } else {
         this.orderStatus = false
     }
+    this.loading = true
     await Promise.all([
       this.getUserOrderList()
     ])
+    this.loading = false
   },
   methods: {
     // 获取用户订单数据
     async getUserOrderList () {
         const openId = wx.getStorageSync('openId')
         // this.$wx.showLoading()
-        this.loading = true
+        
 
         const res = await api.getUserOrderList({ openId: openId , pageNo: this.pageNo , pageSize: this.pageSize , orderStatus: this.orderStatus })               
         // this.$wx.hideLoading()
@@ -98,7 +104,6 @@ export default {
                 arr.push(item)
             })
             this.orderList = this.orderList.concat(arr)
-            this.loading = false
         } else {
             // 没有登陆请登录
             this.$wx.toLogin()
@@ -106,16 +111,19 @@ export default {
         
     },
     // 选择状态
-    selectStatus (status) {
+    async selectStatus (status) {
         if(status) {
             this.orderStatus = status
         } else {
             this.orderStatus = false
         }
-        console.log(this.orderStatus)
+        this.loading = true
         this.orderList = []
         this.pageNo = 1
-        this.getUserOrderList()
+        await Promise.all([
+            this.getUserOrderList()
+        ])
+        this.loading = false
     },
     // 查看物流
     checkExpress (item) {
@@ -139,9 +147,13 @@ export default {
     }
   },
   // 小程序原生上拉加载
-  onReachBottom () {
+  async onReachBottom () {
     this.pageNo++
-    this.getUserOrderList()
+    this.more = true
+    await Promise.all([
+        this.getUserOrderList()
+    ])
+    this.more = false
   },
   // 小程序原生下拉刷新
   onPullDownRefresh: function() {

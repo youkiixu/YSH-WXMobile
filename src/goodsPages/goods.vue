@@ -1,110 +1,110 @@
 <template >
-<view>
+<div>
     <!-- 主体容器 -->
-    <view class="container" v-if="!loading">
+    <div class="container" v-if="!loading">
       <!-- 头部导航 -->
-      <!-- <view class="goodshead">
-        <view class="head-classify">
-          <view class="classify-item produ" @click="toNav" data-id="goodshead">
+      <!-- <div class="goodshead">
+        <div class="head-classify">
+          <div class="classify-item produ" @click="toNav" data-id="goodshead">
             <img v-if="toView == 'goodshead'" src="/static/images/posi.png"/>
             商品
-          </view>
-          <view class="classify-item com" @click="toNav" data-id="comments">
+          </div>
+          <div class="classify-item com" @click="toNav" data-id="comments">
             <img v-if="toView == 'comments'" src="/static/images/posi.png"/>
             评论
-          </view>
-          <view class="classify-item detail"  @click="toNav" data-id="proDetail">
+          </div>
+          <div class="classify-item detail"  @click="toNav" data-id="proDetail">
             <img v-if="toView == 'proDetail'" src="/static/images/posi.png"/>
             详情
-          </view>
-        </view>
-      </view> -->
+          </div>
+        </div>
+      </div> -->
 
       <scroll-view :scroll-into-view="toView" scroll-y="true" scroll-with-animation="true" class="container-scroll">
-        <view class="outside" id="goodshead">
+        <div class="outside" id="goodshead">
           <!-- 图片轮播 -->
-          <swiper class="goodsimgs" indicator-dots="true" autoplay="true" interval="3000" duration="1000">
+          <swiper class="goodsimgs" indicator-dots="true" autoplay="true" interval="3000" duration="1000" circular>
               <swiper-item v-for="(item, index) of gallery" :key="item.id" :data-index="index">
-                <img :src="baseUrl + item" background-size="cover" @error="imgError(item)"/>
+                <img :src="baseUrl + item" background-size="cover" mode="aspectFit" @error="imgError(item)" @click="previewImage(item)"/>
               </swiper-item>
           </swiper>
           <!-- 商品信息 -->
-          <view class="goods-info">
-              <view class="c clear">
+          <div class="goods-info">
+              <div class="c clear">
                 <!-- 标准品价格 -->
-                <view class="c-price" v-if="!detailInfo.IsCustom"><text class="price-icon" >￥</text>{{detailInfo.Price}}</view>
+                <div class="c-price" v-if="!detailInfo.IsCustom"><text class="price-icon" >￥</text>{{detailInfo.Price}}</div>
                 <!-- 非标品价格 -->
-                <view class="c-price"  v-else><text class="price-icon" >￥</text>{{ListPriceInfo.sprice + detailInfo.RemindPrice}} <text class="original-price" v-if="ListPriceInfo.sprice != ListPriceInfo.OriginalPrice">{{ListPriceInfo.OriginalPrice}}</text></view>
-                <view :class="collectStatus ? 'c-collect collected' : 'c-collect'"  @click="addCannelCollect">           
-                </view>
-              </view>
-              <view class="con-text">
-                <view class="desc">{{detailInfo.ProductName}}</view>
-                <view class="notes">{{detailInfo.ShortDescription}}</view>
-              </view>       
-          </view>
+                <div class="c-price"  v-else><text class="price-icon" >￥</text>{{ListPriceInfo.sprice + detailInfo.RemindPrice}} <text class="original-price" v-if="ListPriceInfo.sprice != ListPriceInfo.OriginalPrice">{{ListPriceInfo.OriginalPrice}}</text></div>
+                <div :class="collectStatus ? 'c-collect collected' : 'c-collect'"  @click="addCannelCollect">           
+                </div>
+              </div>
+              <div class="con-text">
+                <div class="desc">{{detailInfo.ProductName}}</div>
+                <div class="notes">{{detailInfo.ShortDescription}}</div>
+              </div>       
+          </div>
           <!-- 已选参数 -->
-          <view class="section-nav section-attr" @click="switchAttrPop">
-            <view class="t">
+          <div class="section-nav section-attr" @click="switchAttrPop">
+            <div class="t">
               <!-- 非标品参数 -->
-              <view class="td-content" v-if="detailInfo.IsCustom">
+              <div class="td-content" v-if="detailInfo.IsCustom">
                 <text class="td"  ><text v-for="(item , index) in ListPriceInfo.paraArr" :key="index">{{item.paraStr}}</text></text>
-              </view>
+              </div>
               <!-- 标准品参数 -->
-              <view class="td-content" v-if="!detailInfo.IsCustom">
+              <div class="td-content" v-if="!detailInfo.IsCustom">
                 <text class="td">规格:{{selectSkuStr.Color}} {{selectSkuStr.Size}} {{selectSkuStr.Version}} {{selectSkuStr.Material}} {{selectSkuStr.Fashion}} {{selectSkuStr.Grams}} {{selectSkuStr.Ensemble}}</text>
-              </view>
-            </view>
+              </div>
+            </div>
             <img class="i" src="/static/images/address_right.png" background-size="cover"/>
-            <view class="clear"></view>
-          </view>
+            <div class="clear"></div>
+          </div>
           <!-- 商家地址 -->
-          <view class="address-nav address-attr clear">
-              <view class="t">{{detailInfo.ShopName}} : <text class="td">{{detailInfo.ShopAddress}}</text></view>
+          <div class="address-nav address-attr clear">
+              <div class="t">{{detailInfo.ShopName}} : <text class="td">{{detailInfo.ShopAddress}}</text></div>
               <!-- <img class="i" src="/static/images/address_right.png" background-size="cover"/> -->
-              <view class="clear"></view>
-          </view>
+              <div class="clear"></div>
+          </div>
           <!-- 商品评论 -->
-          <view class="comments" id="comments" >
-            <view class="h clear">
+          <div class="comments" id="comments" >
+            <div class="h clear">
               <navigator :url="'../commentPages/comment?valueId=' + id + '&typeId=0'">
                   <text class="t">评价</text>
                   <text class="i">查看全部评价</text>
-                  <!-- <view class="clear"></view> -->
+                  <!-- <div class="clear"></div> -->
               </navigator>
-            </view>
-            <view class="b"  v-if="comment.Id">
-              <view class="item">
-                <view class="info clear"> 
-                  <view class="user">
+            </div>
+            <div class="b"  v-if="comment.Id">
+              <div class="item">
+                <div class="info clear"> 
+                  <div class="user">
                       <img :src="defalutHead" />
                       <text>{{comment.UserName}}</text>
-                  </view>
-                  <view class="star">{{comment.star}}</view>
-                </view>
-                <view class="content">
+                  </div>
+                  <div class="star">{{comment.star}}</div>
+                </div>
+                <div class="content">
                   {{comment.ReviewContent}}
-                </view>
-              </view>
+                </div>
+              </div>
               <navigator :url="'../commentPages/comment?valueId=' + id + '&typeId=0'" class="seeall">查看全部评价</navigator>
-            </view>   
-            <view class="b" v-else>
-              <view class="seeall">暂无评价</view>
-            </view>
-          </view> 
+            </div>   
+            <div class="b" v-else>
+              <div class="seeall">暂无评价</div>
+            </div>
+          </div> 
           <!-- 产品描述 -->
-          <view class="proDetail" id="proDetail">
-            <view class="title">商品详情</view>
-            <view class="content">
+          <div class="proDetail" id="proDetail">
+            <div class="title">商品详情</div>
+            <div class="content">
               <wxParse :imageProp="parseUrl" :content="goodDetailHTMLstr"/>
-            </view>
-          </view>  
-        </view> 
+            </div>
+          </div>  
+        </div> 
       </scroll-view>
-    </view>
+    </div>
     <!-- 模态浮层 -->
-    <view class="attr-pop-box" v-if="openAttr"  @click="closeAttr" catchtouchmove="stopPageScroll">
-        <view class="attr-pop"  v-if="openAttr" @click.stop="closeAttr('no')">
+    <div class="attr-pop-box" v-if="openAttr"  @click="closeAttr" catchtouchmove="stopPageScroll">
+        <div class="attr-pop"  v-if="openAttr" @click.stop="closeAttr('no')">
           <selectComponent
             v-if="openAttr"
             :baseUrl="baseUrl"
@@ -128,24 +128,24 @@
             @numberChange="numberChange"
           >
           </selectComponent>
-       </view>
-    </view>
+       </div>
+    </div>
     <!-- tabbar -->
-    <view class="bottom-btn" v-if="!loading">
-      <view class="l l-collect" @click="callPhone" hover-class>
+    <div class="bottom-btn" v-if="!loading">
+      <div class="l l-collect" @click="toChat" hover-class>
           <img class="icon" src="/static/images/share.png"/>
-      </view>
-      <view class="l l-cart" @click="openCartPage" hover-class>
-          <view class="box">
+      </div>
+      <div class="l l-cart" @click="openCartPage" hover-class>
+          <div class="box">
           <text class="cart-count">{{shoppingCartCount}}</text>
           <img  class="icon" src="/static/images/shopping-car.png"/>
-          </view>
-      </view>
-      <view class="c" @click="addToCart" hover-class>加入购物车</view>
-      <view class="r" @click="SubmitByProduct" hover-class>立即购买</view>
-    </view>
+          </div>
+      </div>
+      <div class="c" @click="addToCart" hover-class>加入购物车</div>
+      <div class="r" @click="SubmitByProduct" hover-class>立即购买</div>
+    </div>
     <loadingComponent v-if="loading"></loadingComponent>
-</view>
+</div>
 </template>
 
 <script>
@@ -229,20 +229,28 @@ export default {
   },
   mounted () {
     if (this.$route.query.data) {
-          const data = JSON.parse(this.$route.query.data);
-          if(data.ProductName) {
-            this.setTitle(data.ProductName)
-          }
-          this.id = data.ProductId
-          // 非标报价id , 标准品为0
-          this.code = data.code ? data.code : 0
-          if(this.$route.query.proSearchParam) {
-            var param = {
-              dataStr: util.decode(this.$route.query.proSearchParam)
-            }
-            this.setProSearchParam(param)
-          }
+      const a = this.$route.query.data
+      // 解决web端input的value的双引号和单引号的问题，所以分享的路径改为单引号，来到这个页面，将单引号替换成双引号，不然json.parse会报语法错误
+      let b = ''
+      if(a.split("'").length >= 2) {
+        b = a.split("'").join("\""); 
+      } else {
+        b = this.$route.query.data
       }
+      const data = JSON.parse(b);
+      if(data.ProductName) {
+        this.setTitle(data.ProductName)
+      }
+      this.id = data.ProductId
+      // 非标报价id , 标准品为0
+      this.code = data.code ? data.code : 0
+      if(this.$route.query.proSearchParam) {
+        var param = {
+          dataStr: util.decode(this.$route.query.proSearchParam)
+        }
+        this.setProSearchParam(param)
+      }
+    }
     this.refresh()
   },
   computed: {
@@ -264,15 +272,6 @@ export default {
       'shoppingCartCount'
     ])
   },
-  // onReady() {
-  //   this.loading = true
-  // },
-  // onUnload() {
-  //   this.loading = true
-  // },
-  // onLoad () {
-  //   this.loading = true
-  // },
   methods: {
     ...mapMutations(['setProSearchParam']),
     ...mapActions(['submitByProductId' , 'SubmitByProductId2' , 'getShoppingCartCount']),
@@ -330,7 +329,7 @@ export default {
         this.ListPriceInfo.sprice = res.SumPrice
         this.ListPriceInfo.paraArr = ListPriceInfo.logJson
         this.ListPriceInfo.OriginalPrice = res.OriginalPrice
-        this.ListPriceInfo.Data =ListPriceInfo
+        this.ListPriceInfo.Data = ListPriceInfo
         this.ListPriceInfo.res = res
       } else {
         this.ListPriceInfo.sprice = 0
@@ -434,7 +433,6 @@ export default {
     setSkuId() {
       var skuStr = this.id + ''
       const selectSku = this.selectSku
-      console.log(selectSku)
       for(var key in selectSku) {
         skuStr += `_${selectSku[key]}`
       }
@@ -501,7 +499,9 @@ export default {
       this.saleNumber = skuItem.SaleNumber != 0 ? skuItem.SaleNumber : 1
       // 1031性能调优
       this.skuPrice = skuItem.Price 
-      this.detailInfo.Price = skuItem.Price * this.number
+      // 1114需求单，取消乘以数量
+      // this.detailInfo.Price = util.accMul(skuItem.Price , this.number)
+      this.detailInfo.Price = skuItem.Price
       this.getDefalutSelect()
     },
     // 选择skuInfo的价格
@@ -516,7 +516,8 @@ export default {
       if(this.number < this.saleNumber) {
         this.number = this.saleNumber
       }
-      this.detailInfo.Price = util.accMul(this.skuPrice , this.number)
+      // 1114需求单，取消乘以数量
+      // this.detailInfo.Price = util.accMul(this.skuPrice , this.number)
     },
     // 获取默认选项
     getDefalutSelect() {
@@ -570,25 +571,25 @@ export default {
     },
     // 购物车的五角星，添加或是取消收藏
     async addCannelCollect () {
-          if (this.collectStatus) {//取消收藏
-                const openId = wx.getStorageSync('openId')
-                const res2 = await api.CancelConcernProducts({ Ids: this.Ids ,ProductIds : this.id,  openId: openId })
-                if (res2.success) {
-                  this.collectStatus = false;
-                this.$wx.showSuccessToast('取消成功')
-              } else {        
-                this.$wx.showErrorToast('取消失败')
-              }                                
-            } else {//添加收藏          
-                  const openId = wx.getStorageSync('openId')
-                  const res1 = await api.AddFavoriteProduct({ ProductId: this.id , openId: openId }) 
-                  if (res1.success) {
-                  this.collectStatus = true;                 
-                  this.$wx.showSuccessToast('收藏成功')
-                  }else {        
-                    this.$wx.showErrorToast('请先登录')
-                   }             
-              } 
+      if (this.collectStatus) {//取消收藏
+            const openId = wx.getStorageSync('openId')
+            const res2 = await api.CancelConcernProducts({ Ids: this.Ids ,ProductIds : this.id,  openId: openId })
+            if (res2.success) {
+              this.collectStatus = false;
+            this.$wx.showSuccessToast('取消成功')
+          } else {        
+            this.$wx.showErrorToast('取消失败')
+          }                                
+        } else {//添加收藏          
+          const openId = wx.getStorageSync('openId')
+          const res1 = await api.AddFavoriteProduct({ ProductId: this.id , openId: openId }) 
+          if (res1.success) {
+            this.collectStatus = true;                 
+            this.$wx.showSuccessToast('收藏成功')
+          }else {        
+            this.$wx.showErrorToast('请先登录')
+          }             
+      } 
     },
    // 判断商品是否已收藏
      async IsCollection () {
@@ -670,7 +671,7 @@ export default {
         this.openAttr = !this.openAttr;
       } else {
         
-        const openId = wx.getStorageSync('openId')
+        const openId = wx.getStorageSync('openId') 
         var par = {
           openId: openId,
           productId: this.id,
@@ -799,6 +800,69 @@ export default {
     callPhone() {
       this.$wx.makePhoneCall(this.detailInfo.CompanyPhone)
     },
+    previewImage (url) {
+      var urls = []
+      this.gallery.map(item => {
+        urls.push(this.baseUrl + item)
+      })
+      this.$wx.previewImage({
+        current: this.baseUrl + url,
+        urls: urls
+      })
+    },
+    async toChat() {
+      this.$wx.showLoading('正在加载客服')
+      const res = await api.gustServiceList({strGroupName: this.detailInfo.ShopName})
+      this.$wx.hideLoading()
+      // 临时
+      this.$wx.showErrorToast('暂无客服')
+      return
+      if(!res.success) {
+        this.$wx.showErrorToast(res.msg)
+        return
+      }
+      const selectSkuStr = this.selectSkuStr
+      let price = 0
+      let str = ''
+      if(this.detailInfo.IsCustom) {
+        price = this.ListPriceInfo.sprice + this.detailInfo.RemindPrice
+        this.ListPriceInfo.paraArr.map(item => {
+          str += `${item.paraStr} +`
+        })
+      } else {
+        price = this.skuPrice
+        for (const key in selectSkuStr) {
+          if(selectSkuStr[key] != '') {
+            str += `${selectSkuStr[key]} +`
+          }
+        }
+      }
+      const data = {
+          productId: this.detailInfo.ProductId,
+          productName : this.detailInfo.ProductName,
+          isCustom: this.detailInfo.IsCustom,
+          shopName: this.detailInfo.shopName,
+          price: price,
+          number: this.number,
+          shopName: this.detailInfo.ShopName,
+          skuName: util.delLastStr(str , '+'),
+          imgUrl: this.baseUrl + this.gallery[0]
+        }
+      const customer = []
+      res.data.map(item => {
+        if(item.sign) {
+          delete item.sign
+        }
+        customer.push(item)
+      })
+      this.$router.push({
+        path: '../wxchat/customerChat',
+        query: {
+          data: JSON.stringify(data),
+          customer: JSON.stringify(customer)
+        }
+      })
+    }
   },
   watch: {
     // number (e , b) {
@@ -819,12 +883,11 @@ export default {
     const goodsUrl = util.getGoodsUrl({
       ProductId: this.detailInfo.ProductId,
       ProductName: this.detailInfo.ProductName,
-      code: this.code != 0 ? this.code : undefined,
+      code: this.code != 0 ? this.code : 0,
       IsCustom: this.detailInfo.IsCustom , 
       dataStr: this.proSearchParam.dataStr,
       skuId: this.skuId
     })
-    console.log(goodsUrl)
     return {
       title: this.detailInfo.ProductName,
       desc: this.detailInfo.ShopName,

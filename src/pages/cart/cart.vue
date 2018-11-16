@@ -1,65 +1,66 @@
 <template >
-<view>
-  <view class="container">
-  <view class="no-cart" v-if="cartGoods.length <= 0 && !loading">
-    <view class="c">
+<div>
+  <div class="container">
+  <div class="no-cart" v-if="cartGoods.length <= 0 && !loading">
+    <div class="c">
       <img src="http://nos.netease.com/mailpub/hxm/yanxuan-wap/p/20150730/style/img/icon-normal/noCart-a8fe3f12e5.png" />
       <text>购物车空空如也,快去逛逛吧</text>
-    </view>
-  </view>
+    </div>
+  </div>
 
 
-  <view class="cart-view"  >
-    <view class="cart-address clear" v-if="cartGoods.length != 0 && !loading">
-       <view class="from">此购物车价格仅供参考</view>
-       <view class="to">请以下单的价格为标准</view>
-       <view class="edit" @click="editCart">{{!isEditCart ? '编辑商品' : '完成'}}</view>       
-    </view>
+  <div class="cart-view"  >
+    <div class="cart-address clear" v-if="cartGoods.length != 0 && !loading">
+       <div class="from">此购物车价格仅供参考</div>
+       <div class="to">请以下单的价格为标准</div>
+       <div class="edit" @click="editCart">{{!isEditCart ? '编辑商品' : '完成'}}</div>       
+    </div>
 
-     <view class="list" v-if="cartGoods.length != 0 && !loading">
-      <view class="group-item">
-        <view class="goods">
-          <view :class="isEditCart ? 'edit item' : 'item'" v-for="(item, index) of cartGoods" :key="item.Id" @click="checkedItem(index)">
-            <view :class="item.checked == true ? 'checked checkbox' : 'checkbox'"  :data-item-index="index"></view>
-            <view class="cart-goods" @click.stop="toDetail(item)">
+     <div class="list" v-if="cartGoods.length != 0 && !loading">
+      <div class="group-item">
+        <div class="goods">
+          <div :class="isEditCart ? 'edit item' : 'item'" v-for="(item, index) of cartGoods" :key="item.Id" @click="checkedItem(index)">
+            <div :class="item.checked == true ? 'checked checkbox' : 'checkbox'"  :data-item-index="index"></div>
+            <div class="cart-goods" @click.stop="toDetail(item)">
               <img class="img" :src="baseUrl + item.ImagePath + '/1_350.png'"/>
-              <view class="info">
-                <view class="t">
+              <div class="info">
+                <div class="t">
                   <text class="name">{{item.ProductName}}</text>
                   <text class="num">{{item.IsCustom ? '非标品' : 'x' + item.Quantity}}</text>
-                </view>
-                <view class="attr" v-if="item.IsCustom">已选：{{ item.ParaStr }}</view>
-                <view :class="isEditCart ? 'attr attr-select' : 'attr'" v-else @click.stop="openSelect(item)">已选：{{item.Color}} {{item.Size}} {{item.Version}} {{item.Material}} {{item.Fashion}} {{item.Grams}} {{item.Ensemble}}<span v-if="isEditCart" class="select-span">></span></view>
-                <view class="b">
-                  <view class="price">
-                    <text class="icon">￥</text>{{item.IsCustom ? item.fbpPrice : item.bpTotal }}
-                  </view>
-                  <view class="selnum" v-if="false">
-                    <view class="cut" @click.stop="cutNumber" :data-item-index="index">-</view>
+                </div>
+                <div class="attr" v-if="item.IsCustom">已选：{{ item.ParaStr }}</div>
+                <div class="attr attr-select" v-else @click.stop="openSelect(item)">{{item.SaleNumber&&item.Stock ? '已选：' + item.Color + item.Size + item.Version + item.Material + item.Fashion + item.Grams + item.Ensemble : '原商品已更换参数,不能下单,请重新选择参数'}}<text class="select-span">></text></div>
+                <div class="b">
+                  <div class="price">
+                    <text class="icon">￥</text>{{item.SaleNumber&&item.Stock ? item.IsCustom ? item.fbpPrice : item.bpTotal : '已下架' }}
+                  </div>
+                  <div class="selnum" v-if="false">
+                    <div class="cut" @click.stop="cutNumber" :data-item-index="index">-</div>
                     <input v-model.lazy="item.Quantity" class="number" disabled="true" type="number" />
-                    <view class="add" @click.stop="addNumber" :data-item-index="index">+</view>
-                  </view>
-                </view>
-              </view>
-            </view>
-          </view>
-        </view>
-      </view>
-    </view>
+                    <div class="add" @click.stop="addNumber" :data-item-index="index">+</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <loadingMore v-if="more"></loadingMore>
+        </div>
+      </div>
+    </div>
     <loadingComponent v-if="loading"></loadingComponent>
 
      
-    <view class="cart-bottom" v-if="cartGoods.length != 0 && !loading">
-      <view :class="checkedAllStatus ? 'checked checkbox' : 'checkbox'" @click="checkedAll">全选</view>
-      <view class="total" ><text v-if="!isEditCart">总金额：</text><text class="total-price" v-if="allPrice != undefined && !isEditCart">{{'￥'+ allPrice}}</text></view>
-      <view class="checkout" @click="checkoutOrder" v-if="!isEditCart">去结算</view>
-      <view class="delete" @click="deleteCart" v-if="isEditCart">删除</view>
-    </view>
-  </view>
+    <div class="cart-bottom" v-if="cartGoods.length != 0 && !loading">
+      <div :class="checkedAllStatus ? 'checked checkbox' : 'checkbox'" @click="checkedAll">全选</div>
+      <div class="total" ><text v-if="!isEditCart">总金额：</text><text class="total-price" v-if="allPrice != undefined && !isEditCart">{{'￥'+ allPrice}}</text></div>
+      <div class="checkout" @click="checkoutOrder" v-if="!isEditCart">去结算</div>
+      <div class="delete" @click="deleteCart" v-if="isEditCart">删除</div>
+    </div>
+  </div>
 
       <!-- 模态浮层 -->
-    <view class="attr-pop-box" v-if="openAttr"  @click="closeAttr" catchtouchmove="stopPageScroll">
-      <view class="attr-pop"  v-if="openAttr" @click.stop="closeAttr('no')">
+    <div class="attr-pop-box" v-if="openAttr"  @click="closeAttr" catchtouchmove="stopPageScroll">
+      <div class="attr-pop"  v-if="openAttr" @click.stop="closeAttr('no')">
         <selectComponent
           v-if="openAttr"
           :baseUrl="baseUrl"
@@ -82,11 +83,11 @@
           @numberChange="numberChange"
         >
         </selectComponent>
-      </view>
-    </view>
+      </div>
+    </div>
     
-</view>
-</view>
+</div>
+</div>
 
 </template>
 
@@ -95,6 +96,7 @@ import api from '@/utils/api'
 import wx from 'wx'
 import util from '@/utils/util'
 import loadingComponent from '@/components/loadingComponent'
+import loadingMore from '@/components/loadingMore'
 import selectComponent from '@/components/selectComponent'
 import { mapState , mapActions } from 'vuex'
 function newEditInfo() {
@@ -168,7 +170,9 @@ export default {
       openAttr: false,
       edit : {
 
-      }
+      },
+      intByPageIndex: 0,
+      more: false
     }
   },
   async mounted () {
@@ -186,6 +190,7 @@ export default {
     baseUrl () {
       return this.$wx.baseUrl
     },
+    // 统计选中的总价
     allPrice () {
       var num = 0
       this.cartGoods.map(function (v) {
@@ -259,7 +264,10 @@ export default {
     checkedAll () {
       var _this = this
       let tmpCartList = this.cartGoods.map(function (v) {
-          v.checked = !_this.checkedAllStatus;
+          // if(v.Stock && v.SaleNumber) {
+            v.checked = !_this.checkedAllStatus;
+          // }
+          
           return v;
       });
       this.cartGoods = tmpCartList
@@ -278,17 +286,21 @@ export default {
       // 获取已选择的商品
       const openId = wx.getStorageSync('openId')
       let shopCartIds = ''
+      let downGoods = 0;
       this.cartGoods.map(function (element) {
-        if (element.checked) {
-          shopCartIds += `${element.Id},`
+        //11.12添加检查库存和最低销售数量不为Null的检测，判断这个skuId是否还存在
+        if (element.checked && element.Stock && element.SaleNumber) {
+          // 判断库存和当前产品数量
+          if(element.Quantity <= element.Stock) {
+            shopCartIds += `${element.Id},`
+          }
+        }
+        if(!element.Stock && !element.SaleNumber) {
+          downGoods++
         }
       });
       if (shopCartIds == '') {
-        wx.showToast({
-          image: '/static/images/icon_error.png',
-          title: '未选择任何商品',
-          mask: true
-        });
+        this.$wx.showErrorToast('未选择任何商品')
         return false;
       }
       shopCartIds = shopCartIds.substring(0,shopCartIds.length-1)
@@ -343,19 +355,16 @@ export default {
     },
     toDetail(item) {
       const goodsUrl = util.getGoodsUrl({
-            ProductId: item.ProductId,
-            ProductName: item.ProductName,
-            code: item.QitemCode,
-            IsCustom: item.IsCustom , 
-            dataStr: item.DataStr,
-            skuId: item.SkuId
-          })
+        ProductId: item.ProductId,
+        ProductName: item.ProductName,
+        code: item.QitemCode,
+        IsCustom: item.IsCustom , 
+        dataStr: item.DataStr,
+        skuId: item.Stock && item.SaleNumber ? item.SkuId : null //增加库存和最低销售量判断
+      })
       this.$router.push(goodsUrl)
     },
     async openSelect (item) {
-      if(!this.isEditCart) {
-        return
-      }
       this.edit = newEditInfo()
       this.edit.cartId = item.Id
       this.edit.productId = item.ProductId
@@ -364,9 +373,26 @@ export default {
         this.getGoodsSkuInfo(),
         this.getGoodsDetail(),
       ]);
-      this.getRouteSku(item.SkuId)
-      // 设置当前购物车里商品的数量,获取价格
-      this.edit.number = item.Quantity
+      // 如果是已经下架的产品,库存和最低销售数量是null
+      if(this.Stock && this.SaleNumber) {
+        this.getRouteSku(item.SkuId)
+        // 设置当前购物车里商品的数量,获取价格
+        this.edit.number = item.Quantity
+      } else {
+        const skuInfo = this.edit.skuInfo
+        skuInfo.sort(function(a , b){
+          var a1 = a.Price
+          var b1 = b.Price
+          if(a1<b1){  
+            return -1;  
+          }else if(a1>b1){  
+            return 1;  
+          }  
+          return 0; 
+        })
+        this.setSkuInfo(skuInfo[0])
+      }
+      
       this.getSkuPrice()
       this.$wx.hideLoading()
 
@@ -571,9 +597,13 @@ export default {
     }
   },
     // 小程序原生上拉加载
-  onReachBottom () {
+  async onReachBottom () {
     this.pageNo++
-    this.getCartList()
+    this.more = true
+    await Promise.all([
+      this.getCartList()
+    ])
+    this.more = false
   },
   // 小程序原生下拉刷新
   onPullDownRefresh: function() {
@@ -1026,7 +1056,7 @@ page{
 .attr-pop {
   width: 100%;
   max-height: 780rpx;
-  padding: 31.25rpx 0  0 50.25rpx;
+  padding: 31.25rpx 0  0 30.25rpx;
   background: #fff;
   position: fixed;
   z-index: 9;
@@ -1038,6 +1068,7 @@ page{
   border: 1rpx solid #e5e5e5;
   padding: 10rpx 30rpx 10rpx 10rpx;
   border-radius: 4rpx;
+  background: #f1f1f1;
   /* box-shadow: 0 0 2rpx rgba(0,0,0,0.05); */
 }
 .select-span {

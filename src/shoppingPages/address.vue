@@ -1,30 +1,31 @@
 <template >
 
 
-<view class="container">
-   <view class="address-list" v-if="addressList.length">
-        <view class="item" v-for="(item, index) of addressList" :key="item.Id" @click="selectAddress(item)"
+<div class="container">
+   <div class="address-list" v-if="addressList.length">
+        <div class="item" v-for="(item, index) of addressList" :key="item.Id" @click="selectAddress(item)"
           :data-address-id="item.Id" :data-index="index">
-            <view class="name"><text class="t">{{item.ShipTo}}</text><text class="phone">{{item.Phone}}</text></view>
-            <view class="address-info">
-              <view class="info-icon">
+            <div class="name"><text class="t">{{item.ShipTo}}</text><text class="phone">{{item.Phone}}</text></div>
+            <div class="address-info">
+              <div class="info-icon">
                 <img src="/static/images/location.png" background-size="cover"/>
-              </view>
-              <view class="info-txt">
-                <text class="default" v-if="item.IsDefault">默认</text>
+              </div>
+              <div class="info-txt">
+                <text class="default" v-if="item.IsDefault">平台默认</text>
+                <text class="default" v-if="item.IsYJDefault">印捷默认</text>
                 <text>{{item.RegionFullName}} {{item.Address}}</text>
-              </view>
-              <view class="info-edit" @click.stop="addressAddOrUpdate" :data-address-id="item.Id">编辑</view>
-            </view>
-        </view>
-    </view>
-    <view class="empty-view" v-if="addressList.length <= 0">
-      <image class="icon" src="http://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/noAddress-26d570cefa.png"/>
+              </div>
+              <div class="info-edit" @click.stop="addressAddOrUpdate" :data-address-id="item.Id">编辑</div>
+            </div>
+        </div>
+    </div>
+    <div class="empty-view" v-if="addressList.length <= 0">
+      <img class="icon" src="http://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/noAddress-26d570cefa.png"/>
       <text class="text">收货地址在哪里</text>
-    </view>
+    </div>
     
-    <view class="add-address"  @click="addressAddOrUpdate" data-address-id="0">新建</view>
-</view>
+    <div class="add-address"  @click="addressAddOrUpdate" data-address-id="0">新建</div>
+</div>
 </template>
 
 <script>
