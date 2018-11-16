@@ -817,6 +817,9 @@ export default {
       this.$wx.showLoading('正在加载客服')
       const res = await api.gustServiceList({strGroupName: this.detailInfo.ShopName})
       this.$wx.hideLoading()
+      // 临时
+      this.$wx.showErrorToast('暂无客服')
+      return
       if(!res.success) {
         this.$wx.showErrorToast(res.msg)
         return
