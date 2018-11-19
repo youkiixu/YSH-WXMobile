@@ -20,7 +20,7 @@ function loginByWeixin (hide) {
         appid: miniProgram.miniProgram.appId
       }, 'POST').then(res => {
         if (res.success) {
-          wx.setStorageSync('openId', res.openId);
+          // wx.setStorageSync('openId', res.openId);
           resolve(res);
         } else {
           reject(res);

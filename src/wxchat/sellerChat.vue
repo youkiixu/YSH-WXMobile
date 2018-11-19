@@ -5,8 +5,8 @@
             <div  class="select-content" >
                 <button class="select-customer" v-for="(item , index) in customers" :key="index" formType="submit" :data-id="index" >
                     <img class="imgs" :src="item.strHeadIcon ? item.strHeadIcon : 'http://kiy.cn/Areas/Wxmobile/Content/img/online-service.png'" />
-                    <text class="name type">{{item.strUserName}}</text>
-                    <text class="name">{{item.strUserText}}</text>
+                    <text class="name type">{{item.strUserText}}</text>
+                    <text class="name">{{item.strUserName}}</text>
 
                 </button>
             </div>
@@ -45,7 +45,7 @@
     </div>
 </template>
 <script>
-import utils from '@/utils/util'
+import util from '@/utils/util'
 import api from '@/utils/api'
 import chatInput from "@/components/chat-input/chatInput";
 import {mapState} from 'vuex'
@@ -73,7 +73,9 @@ export default {
             sendToId: '',
             sendToName: '',
             sendToGroupCode: '',
-            formId: ''
+            formId: '',
+            isInit: false,
+            canSend: true //是否可以发送
         }
     },
     computed: {
@@ -85,18 +87,13 @@ export default {
         ])
     },
     async mounted () {
-        // this.productInfo = JSON.parse(this.$route.query.data)
-        // this.$route.query.customer
-        var par = [{
-            'bCustomer': true,
-            'strGroupCode': "YSH00000007佛山彩印通",
-            'strHeadIcon': "https://wx.qlogo.cn/mmopen/vi_32/6thvH8ibEIN5OXSNCKGwE169o4I29GwNYKQn9cZDgl3iaaNFR6uzksPlkGAmibjicJtbQGI47mxwaAoyib48pLS3mvw/132",
-            'strOpenId': "oRex35JorwOYDZ5U4EZGj_4UjZ6E",
-            'strUserName': "测试",
-            'strUserText': "MinG Yufly",
-        }]
-        par = JSON.stringify(par)
-        this.customers = JSON.parse(par)
+        if(this.$route.query.data) {
+            this.productInfo = JSON.parse(this.$route.query.data)
+        }
+        if(this.$route.query.customers) {
+            this.customers  = JSON.parse(this.$route.query.customers)
+        }
+
     },
     methods: {
         initData: function () {
@@ -104,7 +101,10 @@ export default {
             let systemInfo = wx.getSystemInfoSync();
             that.height = systemInfo.windowHeight
             that.chatHeight = systemInfo.windowHeight- 55
-            this.setSaaSTalkOnOffLine('onLine')
+            wx.setNavigationBarTitle({
+                title: this.sendToName
+            })
+            this.isInit = true
         },
         async setSaaSTalkOnOffLine (onLineOffLine) {
             const hideOpenId = wx.getStorageSync('hideOpenId')
@@ -113,31 +113,36 @@ export default {
                 "strType": onLineOffLine,
                 "bCustomer": false,
                 "strOpenId": hideOpenId,
-                "strGroupName": 'YSH00000007佛山彩印通'
+                "strGroupName": this.sendToGroupCode
             }
+            // this.$wx.showSuccessToast(onLineOffLine)
             const res = await api.setSaaSTalkOnOffLine(par)
         },
-        async listenMsg() {
-            clearInterval(TIMER)
+        async listenMsg(time) {
+            // clearInterval(TIMER)
+            const _this = this
             const hideOpenId = wx.getStorageSync('hideOpenId')
             // 如果是第一次聊天，是没有上一次的聊天记录的，读取默认历史消息
             if(!this.wxchatLists.length) {
                 this.loadHistory()
                 return
             }
+            if(!this.canSend) return
+            this.canSend = false
             const res = await api.saaSTalkRecordList({
                 rule: '>',
                 strFromOpenId: hideOpenId,
                 strToOpenId: this.sendToId,
-                dCreateTime: this.wxchatLists[this.wxchatLists.length - 1].dataTime
+                dCreateTime: this.wxchatLists[this.wxchatLists.length - 1].dataTime,
+                strGroupCode: this.sendToGroupCode,
+                bCustomer: false
             })
             if(res.success) {
                 res.data.map(item => {
                     this.renderUI(item)
                 })
             }
-            this.timeListenMsg()
-            
+            this.canSend = true
         },
         // 读取历史消息，不传time默认服务器当前事件之前，传time以time时间为准
         async loadHistory (time) {
@@ -146,7 +151,9 @@ export default {
                 rule: '<',
                 strFromOpenId: hideOpenId,
                 strToOpenId: this.sendToId,
-                dCreateTime: time? time : undefined
+                dCreateTime: time? time : undefined,
+                strGroupCode: this.sendToGroupCode,
+                bCustomer: false
             })
             if(res.success) {
                 let arr = []
@@ -166,33 +173,36 @@ export default {
             const hideOpenId = wx.getStorageSync('hideOpenId')
             var par = {
                 bCustomer: false,
-                page : 'pages/index/index',
                 strContent: text,
                 strFromOpenId: hideOpenId,
                 strFromName: this.userInfo ? (this.userInfo.WXNick ? this.userInfo.WXNick : this.userInfo.UserName) : '客服',
                 strToName: this.sendToName,
                 strToOpenId: this.sendToId,
-                strGroupCode: 'YSH00000007佛山彩印通'
+                strGroupCode: this.sendToGroupCode
             }
-            // this.$wx.showLoading('正在发送...')
+            par = Object.assign(par , {
+                page: util.getCustomerChat(par , this)
+            })
             const res = await api.SaaSTalkEachOther(par)
-
+            this.canSend = true
             await Promise.all([
                 this.listenMsg()
             ])
-            // this.$wx.hideLoading()
         },
         // 渲染ui
         renderUI (item , time) {
             const _this = this
+            const hideOpenId = wx.getStorageSync('hideOpenId')
+            // item.strFromOpenId === hideOpenId && item.bCustomer 客户，在左边
             var temp = {
-                userImgSrc: item.bCustomer ? 'http://kiy.cn/Areas/Wxmobile/Content/img/online-service.png'  : this.sendToHead,
+                userImgSrc: this.sendToHead,
                 textMessage: item.strContent,
                 dataTime: item.dCreateTime,
                 msg_type: 'text',
-                type: item.bCustomer,
+                type: item.strFromOpenId === hideOpenId && !item.bCustomer,
                 item: item
             };
+            // type = true 在右边
             if(time) {
                 const oldWxchatLists = this.wxchatLists
                 let arr = []
@@ -228,22 +238,20 @@ export default {
             this.$wx.showLoading('读取聊天记录')
             await Promise.all([
                 this.initData(),
-                this.loadHistory()
+                this.loadHistory(),
+                this.setSaaSTalkOnOffLine('onLine')
             ])
+            this.timeListenMsg()
             // 加载产品信息
-            // this.loadProduct()
+            this.loadProduct()
             this.$wx.hideLoading()
             this.isSelect = false
             // 保存一次formId
             this.formSubmit(item)
-            // 循环监听消息
-            this.timeListenMsg()
-
         },
         async formSubmit(e) {
             const formId = e.mp.detail.formId
             const hideOpenId = wx.getStorageSync('hideOpenId')
-            this.$wx.showSuccessToast(formId)
             if(formId === 'the formId is a mock one' || !hideOpenId) return
             await api.saaSSaveFormId({
                 form_id: formId,
@@ -251,8 +259,12 @@ export default {
             })
         },
         // 下拉翻页
-        scrolltoupper (e) {
-            this.loadHistory(this.wxchatLists[0].dataTime)
+        async scrolltoupper (e) {
+            this.$wx.showLoading('正在加载')
+            await Promise.all([
+                this.loadHistory(this.wxchatLists[0].dataTime)
+            ])
+            this.$wx.hideLoading()
         },
         // 循环读读聊天数据
         timeListenMsg () {
@@ -266,9 +278,26 @@ export default {
             } , 5000)
         }
     },
+    // 页面卸载时触发。如redirectTo或navigateBack到其他页面时。
     onUnload () {
-        this.setSaaSTalkOnOffLine('offLine')
-        clearInterval(TIMER)
+        if(this.isInit) {
+            clearInterval(TIMER)
+            this.setSaaSTalkOnOffLine('offLine')
+        }
+    },
+    // 页面隐藏/切入后台时触发
+    onHide () {
+        if(this.isInit) {
+            clearInterval(TIMER)
+            this.setSaaSTalkOnOffLine('offLine')
+        }
+    },
+    // 页面显示/切入前台时触发。
+    onShow () {
+        if(this.isInit) {
+            this.setSaaSTalkOnOffLine('onLine')
+            this.timeListenMsg()
+        }
     }
 }
 </script>

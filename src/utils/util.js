@@ -260,6 +260,34 @@ function deepCopy(params) {
     return urlPath
   }
 
+  function getCustomerChat (item , that) {
+    // 客服的信息
+    var par = [{
+      bCustomer: false,
+      strGroupCode: item.strGroupCode,
+      strHeadIcon: that.userInfo.WXHeadImage ? that.userInfo.WXHeadImage : that.userInfo.photo ? that.$wx.baseUrl + that.userInfo.photo : 'http://www.kiy.cn/Areas/wxMobile/Content/img/userHead.png',
+      strOpenId: item.strFromOpenId,
+      strUserName: that.userInfo.Id ? (that.userInfo.WXNick ? that.userInfo.WXNick : that.userInfo.UserName) : '匿名游客',
+      strUserText: '客服'
+    }]
+    console.log('客服：', par)
+    let urlPath = 'wxchat/customerChat?sellers=' + JSON.stringify(par)
+    return urlPath
+  }
+  function getSellerChat(item , that) {
+    // 客户的信息
+    var par = [{
+      bCustomer: true,
+      strGroupCode: item.strGroupCode,
+      strHeadIcon: that.userInfo.WXHeadImage ? that.userInfo.WXHeadImage : that.userInfo.photo ? that.$wx.baseUrl + that.userInfo.photo : 'http://www.kiy.cn/Areas/wxMobile/Content/img/userHead.png',
+      strOpenId: item.strFromOpenId,
+      strUserName: that.userInfo.Id ? (that.userInfo.WXNick ? that.userInfo.WXNick : that.userInfo.UserName) : '匿名游客',
+      strUserText: '客户'
+    }]
+    console.log('客户：',par)
+    let urlPath = 'wxchat/sellerChat?customers=' + JSON.stringify(par)
+    return urlPath
+  }
 const util = {
   login,
   getUserInfo,
@@ -275,7 +303,9 @@ const util = {
   getGoodsUrl,
   delLastStr,
   getSearchUrl,
-  getCateGoryUrl
+  getCateGoryUrl,
+  getCustomerChat,
+  getSellerChat
 }
 
 export default util

@@ -571,6 +571,12 @@ export default {
     },
     // 购物车的五角星，添加或是取消收藏
     async addCannelCollect () {
+      const openId = wx.getStorageSync('openId')
+      if(!openId) {
+        this.checkLogin()
+        return
+      }
+
       if (this.collectStatus) {//取消收藏
             const openId = wx.getStorageSync('openId')
             const res2 = await api.CancelConcernProducts({ Ids: this.Ids ,ProductIds : this.id,  openId: openId })
@@ -610,11 +616,18 @@ export default {
     },
     // 立即购买
     SubmitByProduct () {
+      const openId = wx.getStorageSync('openId')
       if (this.openAttr === false) {
         // 打开规格选择弹窗
         this.SubmitByProductType = true
         this.openAttr = !this.openAttr;
       } else {
+          // 判断登录才能下单
+          if(!openId) {
+            this.checkLogin()
+            return
+          }
+
           if(this.detailInfo.IsCustom) {
             this.buyOpenGood()
           } else {
@@ -810,13 +823,25 @@ export default {
         urls: urls
       })
     },
+    //是否登录
+    checkLogin() {
+      this.$wx.showModal({
+        title: '提示',
+        content: '需要下单或加入购物车,请先登录。',
+        showCancel: true
+      }).then(res => {
+        this.$router.push({
+          path: '../pages/ucenter/login' 
+        })
+      })
+    },
     async toChat() {
       this.$wx.showLoading('正在加载客服')
       const res = await api.gustServiceList({strGroupName: this.detailInfo.ShopName})
       this.$wx.hideLoading()
-      // 临时
-      this.$wx.showErrorToast('暂无客服')
-      return
+      // // 临时
+      // this.$wx.showErrorToast('暂无客服')
+      // return
       if(!res.success) {
         this.$wx.showErrorToast(res.msg)
         return
@@ -859,7 +884,7 @@ export default {
         path: '../wxchat/customerChat',
         query: {
           data: JSON.stringify(data),
-          customer: JSON.stringify(customer)
+          sellers: JSON.stringify(customer)
         }
       })
     }

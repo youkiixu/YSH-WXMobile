@@ -30,7 +30,9 @@ export default {
           }, 'POST').then(res => {
             if (res.success) {
                 wx.setStorageSync('openId', res.openId);
-                _this.sassLogin()
+                _this.sassLogin({
+                  openId: res.openId
+                })
             }
           }).catch((err) => {
             console.log('获取openid失败')
@@ -64,7 +66,9 @@ export default {
               wx.setStorageSync('hideOpenId', res.openId);
               if(res.openId == oldOpenId) {
                 wx.setStorageSync('openId', res.openId);
-                _this.sassLogin()
+                _this.sassLogin({
+                  openId: res.openId
+                })
               } else {
                 wx.removeStorageSync('openId')
               }

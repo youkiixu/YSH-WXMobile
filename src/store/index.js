@@ -88,13 +88,14 @@ const store = new Vuex.Store({
     // 登陆
     async sassLogin(vm, data = {}) {
       
-      let openId = wx.getStorageSync('openId')
+      // let openId = wx.getStorageSync('openId')
       // openId = '1234567'
-      if (openId) {
-        data = Object.assign(data ,{ 'OpenId': openId})
-      }
+      // if (openId) {
+      //   data = Object.assign(data ,{ 'OpenId': openId})
+      // }
       const res = await api.sassLogin(data)
       if (res.success) {
+        wx.setStorageSync('openId', data.openId)
         vm.commit('setUserInfo', JSON.parse(res.data))
       } else {
         rejects(res)

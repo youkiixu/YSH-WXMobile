@@ -130,26 +130,28 @@ export default {
       if(isLogin.mp.detail.rawData) {
         this.setWxUserInfo(JSON.parse(isLogin.mp.detail.rawData))
       }
-      _this.$wx.showLoading()
-      user.loginByWeixin().then(res => {
-        _this.$wx.hideLoading()
-        _this.$router.push({
-          path: 'login' 
-        })
+      _this.$router.push({
+        path: 'login' 
       })
     },
     // 点击登陆
     goLogin (isLogin) {
-      var _this = this;
+      var _this = this
+      let openId = ''
         // 获取微信用户信息
       if(isLogin.mp.detail.rawData) {
         this.setWxUserInfo(JSON.parse(isLogin.mp.detail.rawData))
       }
+
       _this.$wx.showLoading()
       user.loginByWeixin().then(res => {
         _this.$wx.hideLoading()
-        _this.sassLogin().then(res => {
-          // 登录成功
+        openId = res.openId
+        _this.sassLogin({
+          openId: openId
+        }).then(res => {
+          // 登录成功,将openId存起来
+          // wx.setStorageSync('openId', openId);
         }).catch(err => {
           // 如果没有这个账号，则登录失败，跳登陆页
           _this.$router.push({

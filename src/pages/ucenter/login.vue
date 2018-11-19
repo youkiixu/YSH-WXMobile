@@ -68,7 +68,7 @@
 <script>
 import api from '@/utils/api'
 import util from '@/utils/util'
-// import user from '@/services/user';
+import user from '@/services/user';
 import wx from 'wx'
 import { mapState , mapActions } from 'vuex'
 export default {
@@ -98,11 +98,14 @@ export default {
     },
     mounted () {
         var _this = this
-        // user.loginByWeixin().then(res => {
-        //     if(res.success) {
-        //         _this.openId = res.openId
-        //     }
-        // })
+        this.$wx.showLoading()
+        user.loginByWeixin().then(res => {
+            _this.$wx.hideLoading()
+            // wx.setStorageSync('openId', res.openId)
+            _this.openId = res.openId
+        }).catch(res => {
+            _this.$wx.hideLoading()
+        })
     },
     methods: { 
         ...mapActions([
@@ -116,13 +119,18 @@ export default {
         },
         async quickLogin(item) {
             const _this = this
-            const openId = wx.getStorageSync('openId')
+            const hideOpenId = wx.getStorageSync('hideOpenId')
             var par = {
                 encryptedData: item.encryptedData,
                 iv: item.iv,
-                wxHeadImg: this.wxUserInfo.avatarUrl,
-                wxNick: this.wxUserInfo.nickName,
+                openId: hideOpenId,
                 loginType: 2 
+            }
+            if(this.wxUserInfo.nickName) {
+                par = Object.assign(par , {
+                    wxHeadImg: this.wxUserInfo.avatarUrl,
+                    wxNick: this.wxUserInfo.nickName
+                })
             }
             this.$wx.showLoading('正在登录')
             _this.sassLogin(par).then(res => {
@@ -147,7 +155,11 @@ export default {
             const _this = this;
             // this.showLoading()
             this.$wx.showLoading('正在登录')
-            _this.sassLogin(this.userInfo).then(res => {
+            const hideOpenId = wx.getStorageSync('hideOpenId')
+            var par = Object.assign(this.userInfo , {
+                openId: hideOpenId
+            })
+            _this.sassLogin(par).then(res => {
                 _this.$wx.hideLoading()
                 _this.$wx.showSuccessToast( '登陆成功')
                 setTimeout(() => {
@@ -171,8 +183,8 @@ export default {
                 this.$wx.showErrorToast('输入密码不一致')
                 return
             }
-            const openId = wx.getStorageSync('openId')
-            _this.registerInfo.OpenId = openId
+            const hideOpenId = wx.getStorageSync('hideOpenId')
+            _this.registerInfo.OpenId = hideOpenId
             this.$wx.showLoading()
             const res = await api.sassRegister(this.registerInfo)
             this.$wx.hideLoading()

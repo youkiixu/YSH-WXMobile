@@ -36,7 +36,7 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 24,
+			"current": 27,
 			"list": [
 				{
 					"id": -1,
@@ -186,7 +186,7 @@
 					"id": 24,
 					"name": "跟客服聊天",
 					"pathName": "wxchat/customerChat",
-					"query": "data={\"productId\":4589,\"productName\":\"特价X展架 特价展架 促销展架 画面展示支架\",\"isCustom\":false,\"price\":4.5,\"number\":20,\"skuName\":\"60*160cm +仅特价X展架 +批发特价（20套起） \",\"imgUrl\":\"http://www.kiy.cn//Storage/Shop/932/Products/4589/1_350.png\"}&&customer=[{\"active\":\"onLine\",\"bCustomer\":false,\"dCreate\":\"2018-11-14T00:00:00\",\"dModify\":null,\"onLineTime\":\"2018-11-15T17:54:46.5036396+08:00\",\"strAppid\":\"YSH00000007\",\"strCode\":\"YSH00000007mingyu\",\"strGroupCode\":\"YSH00000007佛山彩印通\",\"strHeadIcon\":\"https://wx.qlogo.cn/mmopen/vi_32/6thvH8ibEIN5OXSNCKGwE169o4I29GwNYKQn9cZDgl3iaaNFR6uzksPlkGAmibjicJtbQGI47mxwaAoyib48pLS3mvw/132\",\"strOpenId\":\"oRex35JorwOYDZ5U4EZGj_4UjZ6E\",\"strUserName\":\"测试\",\"strUserText\":\"MinG Yufly\"}]"
+					"query": "sellers=[{\"bCustomer\":false,\"strGroupCode\":\"YSH00000007佛山彩印通\",\"strHeadIcon\":\"http://www.kiy.cn/Areas/wxMobile/Content/img/userHead.png\",\"strOpenId\":\"oRex35JorwOYDZ5U4EZGj_4UjZ6E\",\"strUserName\":\"15818054657\",\"strUserText\":\"客服\"}]"
 				},
 				{
 					"id": -1,
@@ -199,6 +199,12 @@
 					"name": "测试fomr_id",
 					"pathName": "pages/category/category",
 					"query": "Id=886"
+				},
+				{
+					"id": 27,
+					"name": "跟客户聊天",
+					"pathName": "wxchat/sellerChat",
+					"query": "customers=[{\"bCustomer\":true,\"strGroupCode\":\"YSH00000007佛山彩印通\",\"strHeadIcon\":\"http://www.kiy.cn/Areas/wxMobile/Content/img/userHead.png\",\"strOpenId\":\"oRex35EywKDhC1hSspu2_fiyYxus\",\"strUserName\":\"匿名游客\",\"strUserText\":\"客户\"}]"
 				}
 			]
 		}
