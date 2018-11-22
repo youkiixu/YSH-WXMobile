@@ -5,13 +5,13 @@ function getAjaxData(strMethod, paramObj, options) {
         let data = Object.assign(paramObj, {
           key: strMethod
         })
-        console.log(JSON.stringify(data))
+        // console.log(JSON.stringify(data))
         wx.request({
-          url: options.baseURL + '/Wxmobile/Data/Mobile', //仅为示例，并非真实的接口地址
+          url: options.baseURL + '/Wxmobile/Data/Mobile', 
           data: data,
           method: 'POST',
           header: {
-            'content-type': 'application/text' // 默认值
+            'content-type': 'application/text' 
           },
           success(res) {
             let par = res.data

@@ -162,7 +162,7 @@
 					"id": 20,
 					"name": "标准品下单",
 					"pathName": "goodsPages/goods",
-					"query": "data={'ProductId':4589,'ProductName':'特价X展架 特价展架 促销展架 画面展示支架',code':'undefined}&&skuId=4589_0_70_80_0_0_0_1326"
+					"query": "data={'ProductId':5062,'ProductName':'特价A4复印纸 晨鸣青松复印纸','code':0}&&skuId=5062_0_1222_0_0_0_1249_1328"
 				},
 				{
 					"id": 21,
@@ -204,7 +204,7 @@
 					"id": 27,
 					"name": "跟客户聊天",
 					"pathName": "wxchat/sellerChat",
-					"query": "customers=[{\"bCustomer\":true,\"strGroupCode\":\"YSH00000007佛山彩印通\",\"strHeadIcon\":\"http://www.kiy.cn/Areas/wxMobile/Content/img/userHead.png\",\"strOpenId\":\"oRex35EywKDhC1hSspu2_fiyYxus\",\"strUserName\":\"匿名游客\",\"strUserText\":\"客户\"}]"
+					"query": "customers=[{\"bCustomer\":true,\"strGroupCode\":\"YSH00000007佛山彩印通\",\"strHeadIcon\":\"http://www.kiy.cn/Areas/wxMobile/Content/img/userHead.png\",\"strOpenId\":\"oRex35JorwOYDZ5U4EZGj_4UjZ6E\",\"strUserName\":\"15818054657\",\"strUserText\":\"客户\"}]"
 				}
 			]
 		}

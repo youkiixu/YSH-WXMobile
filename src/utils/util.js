@@ -270,7 +270,6 @@ function deepCopy(params) {
       strUserName: that.userInfo.Id ? (that.userInfo.WXNick ? that.userInfo.WXNick : that.userInfo.UserName) : '匿名游客',
       strUserText: '客服'
     }]
-    console.log('客服：', par)
     let urlPath = 'wxchat/customerChat?sellers=' + JSON.stringify(par)
     return urlPath
   }
@@ -284,7 +283,6 @@ function deepCopy(params) {
       strUserName: that.userInfo.Id ? (that.userInfo.WXNick ? that.userInfo.WXNick : that.userInfo.UserName) : '匿名游客',
       strUserText: '客户'
     }]
-    console.log('客户：',par)
     let urlPath = 'wxchat/sellerChat?customers=' + JSON.stringify(par)
     return urlPath
   }

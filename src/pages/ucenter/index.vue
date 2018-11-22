@@ -74,8 +74,8 @@
         <img class="i" src="/static/images/address_right.png" background-size="cover"/>       
   </div> -->
    
-   <div class="service list clear" @click="noEvent">    
-        <div class="t">售后客服</div>
+   <div class="service list clear" @click="toSelectChat" v-if="isSeller">    
+        <div class="t">客服聊天记录入口</div>
         <img class="i" src="/static/images/address_right.png" background-size="cover"/>       
   </div>
   <button v-if="userInfo.Id" open-type="getUserInfo"  @getuserinfo="switchAccount " class="ShoppingCar list clear">    
@@ -96,7 +96,9 @@ var app = getApp();
 export default {
   data () {
     return {
-      canIUse: wx.canIUse('button.open-type.getUserInfo')
+      canIUse: wx.canIUse('button.open-type.getUserInfo'),
+      isSeller: false,
+      shopName: ''
     }
   },
   computed: {
@@ -121,9 +123,35 @@ export default {
     ]),
     // 根据用户OpenId获取是否有店铺信息
     async getUserShopInfo () {
-      // const hideOpenId = wx.getStorageSync('hideOpenId')
-      // const res = await api.getUserShopInfo({openId : hideOpenId})
-      // console.log(res)
+      const hideOpenId = wx.getStorageSync('hideOpenId')
+      const res = await api.getUserShopInfo({openId : hideOpenId})
+      if(res.data) {
+        this.isSeller = true
+        this.shopName = res.data.ShopName
+      }
+    },
+    // 客服选择，去到聊天记录页
+    async toSelectChat () {
+      const hideOpenId = wx.getStorageSync('hideOpenId')
+      this.$wx.showLoading('正在加载...')
+      const res = await api.gustServiceList({strGroupCode: hideOpenId})
+      this.$wx.hideLoading()
+      if(res.success) { 
+        const customer = []
+        res.data.map(item => {
+          if(item.sign) {
+            delete item.sign
+          }
+          customer.push(item)
+        })
+        this.$router.push({
+          path: '../../wxchat/selectChat',
+          query: {
+            customers: JSON.stringify(customer),
+            shopName: this.shopName
+          }
+        })
+      }
     },
     switchAccount (isLogin) {
       var _this = this;

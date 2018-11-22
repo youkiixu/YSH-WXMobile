@@ -175,7 +175,7 @@ export default {
             ExpressFreight: '代发快递运费',
             ExpressWeight: '代发快递重量',
             ExpressFreightLog: '代发快递参数',
-            filename: '文件名',
+            filename: '文件名', 
             quoteLogModel: '报价日志id',
             strId: '临时文件名',
             IsRemind: '是否有提点费',
@@ -187,14 +187,15 @@ export default {
             IsDaiShouHuoKuan: false,//是否代收货款
             // isCashOnDelivery: false,//是否代货到付款
             daiShouMoney: 0,//代收金额
-            CarryCompany: '优速快递',//快递公司名字
-            CarryCompanyId: 28,
+            CarryCompany: '韵达快递',//快递公司名字
+            CarryCompanyId: 34,
             ExpressFreight : 0,
             ExpressWeight: 0,
             ExpressFreightLog: 0
         },
-        expressCompany : [  '优速快递' ,  '运通快递'  , '顺丰快递' , '韵达快递'],
-        expressCompanyId: [    28 , 11 , 7 , 34],
+        // '优速快递' , 28
+        expressCompany : [ '运通快递'  , '顺丰快递' , '韵达快递'],
+        expressCompanyId: [  11 , 7 , 34],
         expressCompanyIndex: 0,
         remindInfo: {},
         calculateFreight: {},

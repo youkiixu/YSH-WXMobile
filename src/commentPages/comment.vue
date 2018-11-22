@@ -83,40 +83,42 @@ export default {
     methods: {
         // 获得 评论数量
         async getCommentCount () {
-        this.ProductId = this.$route.query.valueId      
-        const res = await api.getCommentCount({ ProductId: this.ProductId });
-        if (res.success === true) {
-            this.allCount = res.Comments;
-        }
+            this.ProductId = this.$route.query.valueId      
+            const res = await api.getCommentCount({ ProductId: this.ProductId });
+            if (res.success === true) {
+                this.allCount = res.Comments;
+            }
         },
 
         // 获得 评论详情
         async getCommentList () {
-        this.ProductId = this.$route.query.valueId     
-        this.pageNo++
-        const res = await api.getCommentList({ ProductId: this.ProductId , pageNo: this.pageNo  , pageSize: this.size, commentType: this.commentType});      
-        if (res.success) {
-        var commentList = []
-        res.comments.map(item => {
-            if(item.Images) {
-                item.AppendImages = []
-                    let images = item.Images.split(',')
-                    images.map(str => {
-                        item.AppendImages.push(this.baseUrl + str)
-                    })
+            this.ProductId = this.$route.query.valueId     
+            this.pageNo++
+            const res = await api.getCommentList({ ProductId: this.ProductId , pageNo: this.pageNo  , pageSize: this.size, commentType: this.commentType});      
+            if (res.success) {
+                var commentList = []
+                res.comments.map(item => {
+                    if(item.Images) {
+                        item.AppendImages = []
+                            let images = item.Images.split(',')
+                            images.map(str => {
+                                item.AppendImages.push(this.baseUrl + str)
+                            })
+                    }
+                    item.strName = item.UserName.substr(0, 7) + '****'
+                    item.defalutHead = `http://www.kiy.cn/Areas/wxMobile/Content/img/detailpage/${Math.floor(Math.random() * 7 + 1)}.png`
+                    commentList.push(item)
+                })
+
+                this.comments = this.comments.concat(commentList)  
+              
+                
+
+                this.goodComment = res.goodComment
+                this.comment = res.comment
+                this.badComment = res.badComment
+                this.hasPicCount = res.hasImages  
             }
-            item.strName = item.UserName.substr(0, 7) + '****'
-            item.defalutHead = `http://www.kiy.cn/Areas/wxMobile/Content/img/detailpage/${Math.floor(Math.random() * 7 + 1)}.png`
-            commentList.push(item)
-        })
-
-        this.comments = this.comments.t(commentList)  
-
-        this.goodComment = res.goodComment
-        this.comment = res.comment
-        this.badComment = res.badComment
-        this.hasPicCount = res.hasImages  
-        }
         },
         // “全部”和“有图”切换
         switchTab (num) {

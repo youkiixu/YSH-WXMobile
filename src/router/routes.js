@@ -211,13 +211,22 @@ module.exports = [
       navigationBarTitleText: '与商家聊天'
     }
   },
-    {
-      path: 'wxchat/bindSeller',
-      subPackage: true,
-      name: 'bindSeller',
-      config: {
-        enablePullDownRefresh: false,
-        navigationBarTitleText: '成为客服'
-      }
+  {
+    path: 'wxchat/bindSeller',
+    subPackage: true,
+    name: 'bindSeller',
+    config: {
+      enablePullDownRefresh: false,
+      navigationBarTitleText: '成为客服'
     }
+  },
+  {
+    path: 'wxchat/selectChat',
+    subPackage: true,
+    name: 'selectChat',
+    config: {
+      enablePullDownRefresh: false,
+      navigationBarTitleText: '选择人员'
+    }
+  }
 ]

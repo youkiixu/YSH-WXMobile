@@ -167,11 +167,11 @@ export default {
             IsDaiShouHuoKuan: false,//是否代收货款
             // isCashOnDelivery: false,//是否代货到付款
             daiShouMoney: 0,//代收金额
-            CarryCompany: '优速快递',//快递公司名字
-            CarryCompanyId: 28,
+            CarryCompany: '韵达快递',//快递公司名字
+            CarryCompanyId: 34,
             ExpressFreight: 0,
             ExpressWeight: 0,
-            ExpressFreightLog: 0
+            ExpressFreightLog: 0 
 
         },
         // 运费提点
@@ -180,8 +180,9 @@ export default {
             RemindLogId: 0,
             ReMind: 0
         },
-        expressCompany : [ '优速快递'  , '运通快递' ,'顺丰快递' , '韵达快递'],
-        expressCompanyId: [ 28 , 11 , 7 , 34],
+        // '优速快递'，28去掉
+        expressCompany : [ '运通快递' ,'顺丰快递' , '韵达快递'],
+        expressCompanyId: [ 11 , 7 , 34],
         goodList: []
     }
   },

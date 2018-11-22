@@ -278,13 +278,15 @@ export default {
     async refresh() {
       // 已经来获取数据
       await Promise.all([
+        // 获取产品SKU和产品详情
         this.getGoodsSkuInfo(),
         this.getGoodsDetail()
       ]);
-      this.getGoodsDesc()
-      this.getComment()
-      this.IsCollection()
-      this.getShoppingCartCount()
+      this.loading = false
+      this.getGoodsDesc()//获取产品详情
+      this.getComment()//获取产品评论
+      this.IsCollection()//获取是否收藏
+      this.getShoppingCartCount()//获取购物车数量
       this.setTitle(this.detailInfo.ProductName)
       // 默认选中配送方式，必须在报价之前选中默认的报价
       this.selectWuliu()
@@ -301,10 +303,7 @@ export default {
         // 选中默认选项
         this.getSkuPrice()
       }
-      
-      
       // this.toView = 'goodshead'
-      this.loading = false
     },
     // 获取非标的价格
     async getOpenQuote () {
@@ -881,7 +880,7 @@ export default {
         customer.push(item)
       })
       this.$router.push({
-        path: '../wxchat/customerChat',
+        path: '../wxchat/selectChat',
         query: {
           data: JSON.stringify(data),
           sellers: JSON.stringify(customer)

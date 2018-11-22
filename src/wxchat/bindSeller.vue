@@ -47,10 +47,13 @@ export default {
     methods: {
         // 获取店铺的名字
         async getUserShopInfo () {
+            this.$wx.showLoading()
             const res = await api.getUserShopInfo({shopId : this.shopId})
-            if(res.success) {
+            this.$wx.hideLoading()
+            if(res.data) {
                 this.shopName = res.data.ShopName
             }
+            
         },
         bind(e) {
             const _this = this
@@ -61,8 +64,8 @@ export default {
             // }
             let par = {
                 strOpenId: hideOpenId,
-                strGroupName: '佛山彩印通',
-                strUserName: '测试'
+                strGroupName: this.shopName,
+                strUserName: this.userName
             }
             if(e.mp.detail.rawData) {
                 const wxInfo = JSON.parse(e.mp.detail.rawData)
@@ -93,7 +96,6 @@ export default {
         },
         formSubmit(e) {
             const formId = e.mp.detail.formId
-            console.log(formId)
         }
     }
 }
