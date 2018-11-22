@@ -363,7 +363,7 @@ scroll-view {
   width: 687.5rpx;
   padding: 25rpx 0;
   position: relative;
-  border: 1px solid #ececec;
+  border: 1rpx solid #ececec;
   border-radius: 20rpx;
   min-height: 204rpx;
 }

@@ -96,7 +96,6 @@ export default {
         if(this.$route.query.data) {
             this.productInfo = JSON.parse(this.$route.query.data)
         }
-        
         if(this.$route.query.sellers) {
             
             const userList = JSON.parse(this.$route.query.sellers)
@@ -124,13 +123,18 @@ export default {
                 this.setSaaSTalkOnOffLine('onLine')
             ])
             this.timeListenMsg()
-            this.$wx.hideLoading()
             
+            this.$wx.hideLoading()
             wx.setNavigationBarTitle({
                 title: this.sendToName
             })
             this.isSelect = false
             this.isInit = true
+
+            if(this.$route.query.data) {
+                this.loadProduct()
+            }
+
         },
         async setSaaSTalkOnOffLine (onLineOffLine) {
             const hideOpenId = wx.getStorageSync('hideOpenId')
@@ -235,12 +239,12 @@ export default {
                 }
                 // 获取路径
                 par = Object.assign(par , {
-                    page: util.getSellerChat(par , this)
+                    page: util.getSellerChat(par , this , this.$route.query.data)
                 })
             } else {
                 par = sellerPar
                 par = Object.assign(par , {
-                    page: util.getCustomerChat(par , this)
+                    page: util.getCustomerChat(par , this  , this.$route.query.data)
                 })
             }
             
@@ -257,114 +261,7 @@ export default {
                 strToOpenId: par.strToOpenId
             })
         },
-        // // 渲染ui
-        // renderUI (item , time) {
-        //     const _this = this
-        //     const hideOpenId = wx.getStorageSync('hideOpenId')
-        //     let _type = false
-        //     if(item.strFromOpenId != item.strToOpenId) {
-        //         if(item.strFromOpenId === hideOpenId) {
-        //             _type = true
-        //         }     
-        //     } else {
-        //         _type = item.bCustomer
-        //     }
-        //     var temp = {
-        //         userImgSrc: this.sendToHead ? this.sendToHead : 'http://www.kiy.cn/Areas/wxMobile/Content/img/userHead.png',
-        //         textMessage: item.strContent,
-        //         dataTime: item.dCreateTime,
-        //         msg_type: 'text',
-        //         type: _type ,//&& item.bCustomer,
-        //         item: item
-        //     };
-        //     // type = true 在右边
-
-        //     if(time) {
-        //         const oldWxchatLists = this.wxchatLists
-        //         let arr = []
-        //         arr.push(temp)
-        //         this.wxchatLists = arr.concat(oldWxchatLists)
-        //     } else {
-        //         this.wxchatLists.push(temp)
-        //         this.setChatHeight()
-        //     }
-        // },
-        // loadProduct () {
-        //     var temp = {
-        //         msg_type: 'product',
-        //         type: 1
-        //     };
-        //     this.wxchatLists.push(temp)
-        //     this.setChatHeight()
-        // },
-        // setChatHeight(newList) {
-        //     let len = 0
-        //     if(newList) {
-        //         len = newList.length
-        //     } else {
-        //         len = this.wxchatLists.length + 1
-        //     }
-        //     const height = len * 87
-        //     this.chatValHeight = newList ? height :  this.chatHeight + height
-        // },
-        // // 选中客服
-        // selectCustomer(item) {
-        //     const DETAIL = item.mp.detail
-        //     const sendToUser = this.userChatList[DETAIL.target.dataset.id]
-        //     this.initData(sendToUser)
-        //     // 保存一次formId
-        //     this.formSubmit(item)
-        // },
-        // async formSubmit(e) {
-        //     const formId = e.mp.detail.formId
-        //     const hideOpenId = wx.getStorageSync('hideOpenId')
-        //     if(formId === 'the formId is a mock one' || !hideOpenId) return
-        //     await api.saaSSaveFormId({
-        //         form_id: formId,
-        //         strOpenId: hideOpenId
-        //     })
-        // },
-        // // 下拉翻页
-        // async scrolltoupper (e) {
-        //     if(this.isTop || this.isScrolltoupper) return
-        //     this.isScrolltoupper = true
-        //     this.$wx.showLoading('正在加载')
-        //     await Promise.all([
-        //         this.loadHistory(this.wxchatLists[0].dataTime)
-        //     ])
-        //     this.$wx.hideLoading()
-        //     this.isScrolltoupper = false
-        // },
-        // // 循环读读聊天数据
-        // timeListenMsg () {
-        //     const _this = this
-        //     TIMER = setInterval(() => {
-        //         if(!_this.wxchatLists.length) {
-        //             _this.listenMsg()
-        //         } else {
-        //             _this.listenMsg(_this.wxchatLists[_this.wxchatLists.length-1].dataTime)
-        //         }
-        //     } , 5000)
-        // }
-    },
-    // onUnload () {
-    //     if(this.isInit) {
-    //         this.setSaaSTalkOnOffLine('offLine')
-    //         clearInterval(TIMER)
-    //     }
-    // },
-    // onHide () {
-    //     if(this.isInit) {
-    //         this.setSaaSTalkOnOffLine('offLine')
-    //         clearInterval(TIMER)
-    //     }
-    // },
-    // onShow () {
-    //     if(this.isInit) {
-    //         this.setSaaSTalkOnOffLine('onLine')
-    //         this.timeListenMsg()
-    //     }
-    // }
+    }
 }
 </script>
 <style scoped>

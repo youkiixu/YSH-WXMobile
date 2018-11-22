@@ -37,9 +37,11 @@ export default {
       }
     },
     loadProduct() {
+      if(!this.wxchatLists.length) return
       var temp = {
         msg_type: 'product',
-        type: 1
+        type: 1,
+        dataTime : this.wxchatLists[this.wxchatLists.length - 1].dataTime
       };
       this.wxchatLists.push(temp)
       this.setChatHeight()

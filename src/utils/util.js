@@ -260,7 +260,7 @@ function deepCopy(params) {
     return urlPath
   }
 
-  function getCustomerChat (item , that) {
+  function getCustomerChat (item , that , productInfo) {
     // 客服的信息
     var par = [{
       bCustomer: false,
@@ -270,10 +270,10 @@ function deepCopy(params) {
       strUserName: that.userInfo.Id ? (that.userInfo.WXNick ? that.userInfo.WXNick : that.userInfo.UserName) : '匿名游客',
       strUserText: '客服'
     }]
-    let urlPath = 'wxchat/customerChat?sellers=' + JSON.stringify(par)
+    let urlPath = 'wxchat/customerChat?sellers=' + JSON.stringify(par) + '&&data=' + productInfo
     return urlPath
   }
-  function getSellerChat(item , that) {
+  function getSellerChat(item, that, productInfo) {
     // 客户的信息
     var par = [{
       bCustomer: true,
@@ -283,7 +283,7 @@ function deepCopy(params) {
       strUserName: that.userInfo.Id ? (that.userInfo.WXNick ? that.userInfo.WXNick : that.userInfo.UserName) : '匿名游客',
       strUserText: '客户'
     }]
-    let urlPath = 'wxchat/sellerChat?customers=' + JSON.stringify(par)
+    let urlPath = 'wxchat/sellerChat?customers=' + JSON.stringify(par) + '&&data=' + productInfo
     return urlPath
   }
 const util = {
