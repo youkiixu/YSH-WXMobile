@@ -42,6 +42,10 @@
             </scroll-view>
             <chatInput @onSend="onSend"></chatInput>
         </div>
+      <!-- 返回首页 -->
+        <navigator url="../pages/index/index" open-type="switchTab">    
+            <div class="GoIndex">首页</div>   
+        </navigator>
     </div>
 </template>
 <script>
@@ -250,6 +254,7 @@ export default {
                 strToOpenId: this.sendToId
             })
         },
+
     },
 }
 </script>
