@@ -260,7 +260,7 @@ function deepCopy(params) {
     return urlPath
   }
 
-  function getCustomerChat (item , that , productInfo) {
+  function getCustomerChat (item , that , productInfo , replace) {
     // 客服的信息
     var par = [{
       bCustomer: false,
@@ -270,6 +270,11 @@ function deepCopy(params) {
       strUserName: that.userInfo.Id ? (that.userInfo.WXNick ? that.userInfo.WXNick : that.userInfo.UserName) : '匿名游客',
       strUserText: '客服'
     }]
+    if(replace === 'replace') {
+      par[0].strUserName = that.sendToName
+      par[0].strHeadIcon = that.strHeadIcon
+    }
+
     let urlPath = 'wxchat/customerChat?sellers=' + JSON.stringify(par) + '&&data=' + productInfo
     return urlPath
   }

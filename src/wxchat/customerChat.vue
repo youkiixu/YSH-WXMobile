@@ -249,7 +249,7 @@ export default {
             } else {
                 par = sellerPar
                 par = Object.assign(par , {
-                    page: util.getCustomerChat(par , this  , this.$route.query.data)
+                    page: util.getCustomerChat(par , this  , this.$route.query.data , 'replace')
                 })
             }
             
