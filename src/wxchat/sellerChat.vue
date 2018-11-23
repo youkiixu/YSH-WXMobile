@@ -131,8 +131,8 @@ export default {
             }
             this.$wx.showLoading('读取聊天记录')
             await Promise.all([
-                this.loadHistory(),
-                this.setSaaSTalkOnOffLine('onLine')
+                this.setSaaSTalkOnOffLine('onLine'),
+                this.loadHistory()
             ])
             this.timeListenMsg()
             this.$wx.hideLoading()

@@ -56,3 +56,20 @@ page {
   overflow: hidden;
   _zoom: 1;
 }
+.GoIndex{
+  width: 86rpx;
+  height: 86rpx;
+  color: #585c63;
+  font-size: 20rpx;
+  text-align: center;
+  line-height: 120rpx;
+  border-radius: 50%;
+  box-shadow: 0px 0px 10rpx rgba(0,0,0,0.2);
+  position: fixed;
+  bottom: 150rpx;
+  right: 20rpx;
+  z-index: 3;
+  background: url(../../static/images/ic_menu_choice_pressed.png) center 15% no-repeat;
+  background-size: 50rpx; 
+  background-color: #fff;
+}

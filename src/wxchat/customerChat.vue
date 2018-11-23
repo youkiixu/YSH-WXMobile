@@ -45,7 +45,7 @@
         <!-- 返回首页 -->
         <navigator url="../pages/index/index" open-type="switchTab">    
             <div class="GoIndex">首页</div>   
-        </navigator>
+        </navigator> 
        
     </div>
 </template>
@@ -124,8 +124,8 @@ export default {
             this.sendToGroupCode = sendToUser.strGroupCode
             this.$wx.showLoading('读取聊天记录')
             await Promise.all([
-                this.loadHistory(),
-                this.setSaaSTalkOnOffLine('onLine')
+                this.setSaaSTalkOnOffLine('onLine'),
+                this.loadHistory()
             ])
             this.timeListenMsg()
             

@@ -256,9 +256,12 @@ page{
 }
 .list-content {
     margin-bottom: 104rpx;
+    padding-top: 78rpx;
 }
 .sort{
-    position: relative;
+    position: fixed;
+    top: 0;
+    left: 0;
     background: #fff;
     width: 100%;
     height: 78rpx;

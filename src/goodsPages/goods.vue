@@ -144,6 +144,12 @@
       <div class="c" @click="addToCart" hover-class>加入购物车</div>
       <div class="r" @click="SubmitByProduct" hover-class>立即购买</div>
     </div>
+
+    <!-- 返回首页 -->
+    <navigator url="../pages/index/index" open-type="switchTab">    
+        <div class="GoIndex">首页</div>   
+    </navigator> 
+
     <loadingComponent v-if="loading"></loadingComponent>
 </div>
 </template>
