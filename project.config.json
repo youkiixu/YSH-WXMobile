@@ -36,7 +36,7 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 24,
+			"current": 27,
 			"list": [
 				{
 					"id": -1,
@@ -202,8 +202,8 @@
 				},
 				{
 					"id": 27,
-					"name": "跟客户聊天",
-					"pathName": "wxchat/sellerChat",
+					"name": "选择聊天",
+					"pathName": "wxchat/selectChat",
 					"query": "customers=[{\"bCustomer\":true,\"strGroupCode\":\"YSH00000007佛山彩印通\",\"strHeadIcon\":\"[图片]http://www.kiy.cn/Areas/wxMobile/Content/img/userHead.png\",\"strOpenId\":\"oRex35JorwOYDZ5U4EZGj_4UjZ6E\",\"strUserName\":\"15818054657\",\"strUserText\":\"客户\"}]&&data={\"productId\":61,\"productName\":\"彩色拼版不干胶 特惠\",\"isCustom\":true,\"shopName\":\"佛山彩印通\",\"price\":50,\"number\":1,\"skuName\":\"材料:特光不干胶,尺寸:90X54,数量:1000,款数:1,后工:啤异型(常规形),覆亮膜,特光水胶 \",\"imgUrl\":\"[图片]http://www.kiy.cn//Storage/Shop/1/Products/61/1_350.png\"}"
 				}
 			]

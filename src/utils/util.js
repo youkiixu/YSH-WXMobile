@@ -260,37 +260,48 @@ function deepCopy(params) {
     return urlPath
   }
 
-  function getCustomerChat (item , that , productInfo , replace) {
-    // 客服的信息
-    var par = [{
-      bCustomer: false,
-      strGroupCode: item.strGroupCode,
-      strHeadIcon: that.userInfo.WXHeadImage ? that.userInfo.WXHeadImage : that.userInfo.photo ? that.$wx.baseUrl + that.userInfo.photo : 'http://www.kiy.cn/Areas/wxMobile/Content/img/userHead.png',
-      strOpenId: item.strFromOpenId,
-      strUserName: that.userInfo.Id ? (that.userInfo.WXNick ? that.userInfo.WXNick : that.userInfo.UserName) : '匿名游客',
-      strUserText: '客服'
-    }]
-    if(replace === 'replace') {
-      par[0].strUserName = that.sendToName
-      par[0].strHeadIcon = that.strHeadIcon
-    }
+  // function getCustomerChat (item , that , productInfo , replace) {
+  //   // 客服的信息
+  //   var par = [{
+  //     bCustomer: false,
+  //     strGroupCode: item.strGroupCode,
+  //     strHeadIcon: that.userInfo.WXHeadImage ? that.userInfo.WXHeadImage : that.userInfo.photo ? that.$wx.baseUrl + that.userInfo.photo : 'http://www.kiy.cn/Areas/wxMobile/Content/img/userHead.png',
+  //     strOpenId: item.strFromOpenId,
+  //     strUserName: that.userInfo.Id ? (that.userInfo.WXNick ? that.userInfo.WXNick : that.userInfo.UserName) : '匿名游客',
+  //     strUserText: '客服'
+  //   }]
+  //   if(replace === 'replace') {
+  //     par[0].strUserName = that.sendToName
+  //     par[0].strHeadIcon = that.strHeadIcon
+  //   }
 
-    let urlPath = 'wxchat/customerChat?sellers=' + JSON.stringify(par) + '&&data=' + productInfo
-    return urlPath
-  }
-  function getSellerChat(item, that, productInfo) {
-    // 客户的信息
+  //   let urlPath = 'wxchat/customerChat?sellers=' + JSON.stringify(par) + '&&data=' + productInfo
+  //   return urlPath
+  // }
+  // function getSellerChat(item, that, productInfo) {
+  //   // 客户的信息
+  //   var par = [{
+  //     bCustomer: true,
+  //     strGroupCode: item.strGroupCode,
+  //     strHeadIcon: that.userInfo.WXHeadImage ? that.userInfo.WXHeadImage : that.userInfo.photo ? that.$wx.baseUrl + that.userInfo.photo : 'http://www.kiy.cn/Areas/wxMobile/Content/img/userHead.png',
+  //     strOpenId: item.strFromOpenId,
+  //     strUserName: that.userInfo.Id ? (that.userInfo.WXNick ? that.userInfo.WXNick : that.userInfo.UserName) : '匿名游客',
+  //     strUserText: '客户'
+  //   }]
+  //   let urlPath = 'wxchat/sellerChat?customers=' + JSON.stringify(par) + '&&data=' + productInfo
+  //   return urlPath
+  // }
+  // customerChat
+  function getWxChatUrl(item  , productInfo) {
     var par = [{
-      bCustomer: true,
-      strGroupCode: item.strGroupCode,
-      strHeadIcon: that.userInfo.WXHeadImage ? that.userInfo.WXHeadImage : that.userInfo.photo ? that.$wx.baseUrl + that.userInfo.photo : 'http://www.kiy.cn/Areas/wxMobile/Content/img/userHead.png',
-      strOpenId: item.strFromOpenId,
-      strUserName: that.userInfo.Id ? (that.userInfo.WXNick ? that.userInfo.WXNick : that.userInfo.UserName) : '匿名游客',
-      strUserText: '客户'
+      strHeadIcon: item.strHeadIcon,
+      strOpenId: item.strOpenId,
+      strUserName: item.UserName
     }]
-    let urlPath = 'wxchat/sellerChat?customers=' + JSON.stringify(par) + '&&data=' + productInfo
+    let urlPath = 'wxchat/wxChat?userList=' + JSON.stringify(par) + '&&data=' + productInfo
     return urlPath
   }
+
 const util = {
   login,
   getUserInfo,
@@ -307,8 +318,9 @@ const util = {
   delLastStr,
   getSearchUrl,
   getCateGoryUrl,
-  getCustomerChat,
-  getSellerChat
+  // getCustomerChat,
+  // getSellerChat,
+  getWxChatUrl
 }
 
 export default util

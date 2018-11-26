@@ -65,19 +65,20 @@
         <div class="t">我的收藏</div>
         <img class="i" src="/static/images/address_right.png" background-size="cover"/>       
   </navigator>
-   <div class="integral list clear" @click="noEvent">    
-        <div class="t">我的积分</div>
+  <div class="service list clear" @click="toSelectChat">    
+        <div class="t">聊天记录</div>
         <img class="i" src="/static/images/address_right.png" background-size="cover"/>       
   </div>
+   <!-- <div class="integral list clear" @click="noEvent">    
+        <div class="t">我的积分</div>
+        <img class="i" src="/static/images/address_right.png" background-size="cover"/>       
+  </div> -->
    <!-- <div class="footprint list clear" @click="noEvent">    
         <div class="t">我的足迹</div>
         <img class="i" src="/static/images/address_right.png" background-size="cover"/>       
   </div> -->
    
-   <div class="service list clear" @click="toSelectChat" v-if="isSeller">    
-        <div class="t">客服聊天记录入口</div>
-        <img class="i" src="/static/images/address_right.png" background-size="cover"/>       
-  </div>
+   
   <button v-if="userInfo.Id" open-type="getUserInfo"  @getuserinfo="switchAccount " class="ShoppingCar list clear">    
         <div class="t" style="text-align:left;">切换账号</div>
         <img class="i" src="/static/images/address_right.png" background-size="cover"/>       
@@ -97,7 +98,7 @@ export default {
   data () {
     return {
       canIUse: wx.canIUse('button.open-type.getUserInfo'),
-      isSeller: false,
+      isSeller: true,
       shopName: ''
     }
   },
@@ -110,7 +111,7 @@ export default {
     }
   },
   mounted () {
-    this.getUserShopInfo()
+    // this.getUserShopInfo()
   },
   methods: {
     ...mapActions([
@@ -122,33 +123,25 @@ export default {
       'setWxUserInfo'
     ]),
     // 根据用户OpenId获取是否有店铺信息
-    async getUserShopInfo () {
-      const hideOpenId = wx.getStorageSync('hideOpenId')
-      const res = await api.getUserShopInfo({openId : hideOpenId})
-      if(res.data) {
-        this.isSeller = true
-        this.shopName = res.data.ShopName
-      }
-    },
+    // async getUserShopInfo () {
+    //   const hideOpenId = wx.getStorageSync('hideOpenId')
+    //   const res = await api.getUserShopInfo({openId : hideOpenId})
+    //   if(res.data) {
+    //     this.isSeller = true
+    //     this.shopName = res.data.ShopName
+    //   }
+    // },
     // 客服选择，去到聊天记录页
     async toSelectChat () {
       const hideOpenId = wx.getStorageSync('hideOpenId')
       this.$wx.showLoading('正在加载...')
-      const res = await api.gustServiceList({strGroupCode: hideOpenId})
+      const res = await api.getMyFriendList({strFromOpenId: hideOpenId})
       this.$wx.hideLoading()
       if(res.success) { 
-        const customer = []
-        res.data.map(item => {
-          if(item.sign) {
-            delete item.sign
-          }
-          customer.push(item)
-        })
         this.$router.push({
-          path: '../../wxchat/selectChat',
+          path: '../../wxchat/userList',
           query: {
-            customers: JSON.stringify(customer),
-            shopName: this.shopName
+            userList: JSON.stringify(res.data),
           }
         })
       }

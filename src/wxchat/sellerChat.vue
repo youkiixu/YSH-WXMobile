@@ -150,13 +150,21 @@ export default {
         async setSaaSTalkOnOffLine (onLineOffLine) {
             const hideOpenId = wx.getStorageSync('hideOpenId')
             // 客服
+            // let par = {
+            //     "strType": onLineOffLine,
+            //     "bCustomer": false,
+            //     "strOpenId": hideOpenId,
+            //     "strGroupName": this.sendToGroupCode
+            // }
+            // const res = await api.setSaaSTalkOnOffLine(par) 
             let par = {
                 "strType": onLineOffLine,
-                "bCustomer": false,
-                "strOpenId": hideOpenId,
-                "strGroupName": this.sendToGroupCode
+                "strFromHeadIcon": this.userInfo.WXHeadImage ? this.userInfo.WXHeadImage : this.userInfo.photo ? this.baseUrl + this.userInfo.photo : 'http://www.kiy.cn/Areas/wxMobile/Content/img/userHead.png',
+                "strFromOpenId": hideOpenId,
+                "strUserName": this.userInfo.Id ? (this.userInfo.WXNick ? this.userInfo.WXNick : this.userInfo.UserName) : '客户',
+                "strToOpenId": this.sendToId,
             }
-            const res = await api.setSaaSTalkOnOffLine(par)
+            const res = await api.setTalkConnect(par)
         },
         async listenMsg(time) {
             const _this = this

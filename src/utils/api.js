@@ -15,11 +15,11 @@ const api = {
     baseURL: ApiKiyUrl
   }),
   // 获取sass分类
-  getSassCategory: (paramObj) => request.post('/Wxmobile/Category' , paramObj , {
+  getSassCategory: (paramObj) => request.post('/Wxmobile/Category', paramObj, {
     baseURL: ApiKiyUrl
   }),
   // 获取印捷地址
-  getYinJieRegion: (paramObj) => request.get(`/common/RegionAPI/GetRegion?id=${paramObj.id}` , null , {
+  getYinJieRegion: (paramObj) => request.get(`/common/RegionAPI/GetRegion?id=${paramObj.id}`, null, {
     baseURL: ApiKiyUrl
   }),
   // 获取SASS用户地址
@@ -43,11 +43,11 @@ const api = {
     baseURL: ApiKiyUrl
   }),
   // 获取短信验证码
-  verificationCode: (paramObj) => request.post('/Wxmobile/LoginRegisterTransfer/VerificationCode', paramObj , {
+  verificationCode: (paramObj) => request.post('/Wxmobile/LoginRegisterTransfer/VerificationCode', paramObj, {
     baseURL: ApiKiyUrl
   }),
   // SASS搜索
-  search: (paramObj) => request.post('/Wxmobile/Search' , paramObj , {
+  search: (paramObj) => request.post('/Wxmobile/Search', paramObj, {
     baseURL: ApiKiyUrl
   }),
   // 自动报价列表
@@ -55,7 +55,7 @@ const api = {
     baseURL: ApiKiyUrl
   }),
   // 标准品跳转到下单页
-  submitByProductId: (paramObj) => request.get('/Wxmobile/Orders/SubmitByProductId' , paramObj , {
+  submitByProductId: (paramObj) => request.get('/Wxmobile/Orders/SubmitByProductId', paramObj, {
     baseURL: ApiKiyUrl
   }),
   // 非标品跳到下单页面
@@ -63,16 +63,16 @@ const api = {
     baseURL: ApiKiyUrl
   }),
   // 标准品提交订单
-  submitOrderByProductId: (paramObj) => request.post('/Wxmobile/Orders/SubmitOrderByProductId' , paramObj , {
-    baseURL : ApiKiyUrl
+  submitOrderByProductId: (paramObj) => request.post('/Wxmobile/Orders/SubmitOrderByProductId', paramObj, {
+    baseURL: ApiKiyUrl
   }),
   // 非标品提交订单
   submitOrderByProductId2: (paramObj) => request.post('/Wxmobile/Orders/SubmitOrderByProductId2', paramObj, {
     baseURL: ApiKiyUrl
   }),
   // 获取标准品
-  getGetSKUInfo: (paramObj) => request.post('/Wxmobile/Product/GetSKUInfo' , paramObj , {
-    baseURL : ApiKiyUrl
+  getGetSKUInfo: (paramObj) => request.post('/Wxmobile/Product/GetSKUInfo', paramObj, {
+    baseURL: ApiKiyUrl
   }),
   getGoodsDetail: (paramObj) => request.post('/Wxmobile/Product/Detail', paramObj, {
     baseURL: ApiKiyUrl
@@ -150,8 +150,8 @@ const api = {
   setDefaultShippingAddress: (paramObj) => request.post('/Wxmobile/UserInfos/SetDefaultShippingAddress', paramObj, {
     baseURL: ApiKiyUrl
   }),
-   // 添加收藏
-   AddFavoriteProduct: (paramObj) => request.post('/Wxmobile/Collection/AddFavoriteProduct', paramObj, {
+  // 添加收藏
+  AddFavoriteProduct: (paramObj) => request.post('/Wxmobile/Collection/AddFavoriteProduct', paramObj, {
     baseURL: ApiKiyUrl
   }),
   // 判断商品是否已收藏
@@ -257,6 +257,29 @@ const api = {
   // strOpenId: 用户openid 可空
   // bCustomer: 是否客户(默认为客服)
   gustServiceList: (paramObj) => pub.getAjaxData('CustServiceList', paramObj, {
+    baseURL: ApiKiyUrl
+  }),
+  // 获取未读信息接口 {
+  //   "key": "UnReadRecord",
+  //   "strOpenId": "oRex35EywKDhC1hSspu2_fiyYxus",
+  // }
+  getUnReadRecord: (paramObj) => pub.getAjaxData('UnReadRecord', paramObj, {
+    baseURL: ApiKiyUrl
+  }),
+  // 建立聊天对话{
+  //   "key": "setTalkConnect",
+  //   "strFromHeadIcon": null,
+  //   "strFromOpenId": "oRex35EywKDhC1hSspu2_fiyYxus",
+  //   "strToOpenId": "oRex35JorwOYDZ5U4EZGj_4UjZ6E",
+  // }
+  setTalkConnect: (paramObj) => pub.getAjaxData('setTalkConnect', paramObj, {
+    baseURL: ApiKiyUrl
+  }),
+  // 获取好友列表 {
+  //   "key": "getMyFriendList",
+  //   "strFromOpenId": "oRex35EywKDhC1hSspu2_fiyYxus",
+  // }
+  getMyFriendList:(paramObj)  => pub.getAjaxData('getMyFriendList', paramObj, {
     baseURL: ApiKiyUrl
   }),
 }

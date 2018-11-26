@@ -193,24 +193,33 @@ module.exports = [
       navigationBarTitleText: '厂家报价'
     }
   },
-  {
-    path: 'wxchat/sellerChat',
-    subPackage: true,
-    name: 'sellerChat',
-    config: {
-      enablePullDownRefresh: false,
-      navigationBarTitleText: '与客户聊天'
-    }
-  },
-  {
-    path: 'wxchat/customerChat',
-    subPackage: true,
-    name: 'customerChat',
-    config: {
-      enablePullDownRefresh: false,
-      navigationBarTitleText: '与商家聊天'
-    }
-  },
+  // {
+  //   path: 'wxchat/sellerChat',
+  //   subPackage: true,
+  //   name: 'sellerChat',
+  //   config: {
+  //     enablePullDownRefresh: false,
+  //     navigationBarTitleText: '与客户聊天'
+  //   }
+  // },
+  // {
+  //   path: 'wxchat/customerChat',
+  //   subPackage: true,
+  //   name: 'customerChat',
+  //   config: {
+  //     enablePullDownRefresh: false,
+  //     navigationBarTitleText: '与商家聊天'
+  //   }
+  // },
+  // {
+  //   path: 'wxchat/selectChat',
+  //   subPackage: true,
+  //   name: 'selectChat',
+  //   config: {
+  //     enablePullDownRefresh: false,
+  //     navigationBarTitleText: '选择人员'
+  //   }
+  // },
   {
     path: 'wxchat/bindSeller',
     subPackage: true,
@@ -220,13 +229,23 @@ module.exports = [
       navigationBarTitleText: '成为客服'
     }
   },
+  
   {
-    path: 'wxchat/selectChat',
+    path: 'wxchat/wxChat',
     subPackage: true,
-    name: 'selectChat',
+    name: 'wxChat',
     config: {
       enablePullDownRefresh: false,
-      navigationBarTitleText: '选择人员'
+      navigationBarTitleText: '聊天界面'
     }
-  }
+  },
+  {
+    path: 'wxchat/userList',
+    subPackage: true,
+    name: 'userList',
+    config: {
+      enablePullDownRefresh: false,
+      navigationBarTitleText: '人员列表'
+    }
+  },
 ]

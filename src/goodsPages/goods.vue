@@ -878,18 +878,13 @@ export default {
           skuName: util.delLastStr(str , '+'),
           imgUrl: this.baseUrl + this.gallery[0]
         }
-      const customer = []
-      res.data.map(item => {
-        if(item.sign) {
-          delete item.sign
-        }
-        customer.push(item)
-      })
+      
       this.$router.push({
-        path: '../wxchat/selectChat',
+        path: '../wxchat/userList',
         query: {
           data: JSON.stringify(data),
-          sellers: JSON.stringify(customer)
+          userList: JSON.stringify(res.data)
+          // sellers: JSON.stringify(customer)
         }
       })
     }

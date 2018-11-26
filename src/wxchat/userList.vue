@@ -1,27 +1,17 @@
 <template>
-    <!-- <div>
-        <form report-submit="true" @submit="selectCustomer">
-            <div  class="select-content" >
-                <button class="select-customer" v-for="(item , index) in userList" :key="index" formType="submit" :data-id="index" >
-                    <img class="imgs" :src="item.strHeadIcon ? item.strHeadIcon : 'http://kiy.cn/Areas/Wxmobile/Content/img/online-service.png'" />
-                    <text class="name type">{{isSeller ? '客户' : '客服'}}</text>
-                    <text class="name">{{item.strUserName}}</text>
-                </button>
-            </div>
-        </form>
-    </div> -->
     <div class="weui-panel weui-panel_access">
         <form report-submit="true" @submit="selectCustomer">
-            <div class="weui-panel__hd">选择客服(未读消息： <span style="color: red;">{{intTotal}}</span> 条)</div>
+            <div class="weui-panel__hd">人员列表(未读消息： <span style="color: red;">{{intTotal}}</span> 条)</div>
             <div class="weui-panel__bd">
                 <button  class="form_button"  formType="submit" v-for="(item , index) in userList" :key="index" :data-id="index">
                     <navigator url="" class="weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active">
-                        <div class="weui-media-box__hd weui-media-box__hd_in-appmsg">
-                        <image class="weui-media-box__thumb" :src="item.strHeadIcon ? item.strHeadIcon : 'http://kiy.cn/Areas/Wxmobile/Content/img/online-service.png'" />
+                        <div class="weui-media-box__hd weui-media-box__hd_in-appmsg" style="position:relative;">
+                            <image class="weui-media-box__thumb"  :src="item.strHeadIcon ? item.strHeadIcon : 'http://kiy.cn/Areas/Wxmobile/Content/img/online-service.png'" />
+                            <div class="weui-badge" style="position: absolute;top: -.4em;right: -.4em;">{{item.intTotal ? item.intTotal : 0}}</div>
                         </div>
                         <div class="weui-media-box__bd weui-media-box__bd_in-appmsg">
-                        <div class="weui-media-box__title">{{item.strUserName}}</div>
-                        <div class="weui-media-box__desc">{{item.strContent ? item.strContent : '暂无为读消息'}}</div>
+                            <div class="weui-media-box__title">{{item.strUserName}}</div>
+                            <div class="weui-media-box__desc">{{item.strContent ? item.strContent : '暂无未读消息'}}</div>
                         </div>
                     </navigator>
                 </button>
@@ -31,7 +21,8 @@
 </template>
 <script>
 import api from '@/utils/api'
-
+import {mapState} from 'vuex'
+let TIMERS  = null
 
 export default {
     data () {
@@ -40,7 +31,6 @@ export default {
             userList: [],
             isInit: false,
             canSend: true,
-            isSeller: false,
             shopName: '',
             intTotal: 0
         }
@@ -48,24 +38,21 @@ export default {
     computed: {
         baseUrl () {
             return this.$wx.baseUrl
-        }
+        },
+        ...mapState([
+            'userInfo'
+        ])
     },
     async mounted () {
         if(this.$route.query.data) {
             this.productInfo = JSON.parse(this.$route.query.data)
         }
-        if(this.$route.query.sellers) {
-            this.userList = JSON.parse(this.$route.query.sellers)
-            this.isSeller = false
+        if(this.$route.query.userList) {
+            this.userList = JSON.parse(this.$route.query.userList)
+            // this.timeGetUnRead()
+            this.getUnReadRecord()
+            this.setSaaSTalkOnOffLine('onLine')
         }
-        if(this.$route.query.customers) {
-            this.userList = JSON.parse(this.$route.query.customers)
-            this.isSeller = true
-        }
-        if(this.$route.query.shopName) {
-            this.shopName = this.$route.query.shopName
-        }
-        // this.getUnReadRecord()
 
     },
     methods: {
@@ -75,52 +62,53 @@ export default {
             const sendToUser = this.userList[DETAIL.target.dataset.id]
             // 保存一次formId
             this.formSubmit(item)
-
-            // 如果是客户做出选择
-            if(this.$route.query.sellers) {
-                this.$router.push({
-                    path: './customerChat',
-                    query: {
-                        data: this.$route.query.data,
-                        sellers: `[${JSON.stringify(sendToUser)}]`,
-                        single: 'yes'
-                    }
-                })
-            }
-            // 如果是客服做出选择
-            if(this.$route.query.customers) {
-                // 这里还有问题，没有客服自己groupCode
-                this.$router.push({
-                    path: './sellerChat',
-                    query: {
-                        data: this.$route.query.data,
-                        customers: `[${JSON.stringify(sendToUser)}]`,
-                        shopName: this.shopName,
-                        single: 'yes'
-                    }
-                })
-            }
+            this.$router.push({
+                path: './wxChat',
+                query: {
+                    data: this.$route.query.data,
+                    userList: `[${JSON.stringify(sendToUser)}]`,
+                    single: 'yes'
+                }
+            })
         },
-        // getUnReadRecord 获取未读人员列表
         async getUnReadRecord () {
             const hideOpenId = wx.getStorageSync('hideOpenId')
             const res = await api.getUnReadRecord({
                 strOpenId: hideOpenId
             })
-            console.log(res)
             if(res.success) {
                 this.intTotal = res.intTotal
                 if(res.data) {
+                    let num = 0
                     this.userList.map((item , index) => {
+                        this.userList[index].intTotal = 0
                         res.data.map(item2 => {
                             if(item2.strFromOpenId === item.strOpenId) {
+                                this.userList[index].intTotal++
                                 this.userList[index].strContent = item2.strContent
                             }
                         })
                     })
                     
                 }
+            } 
+        },
+        // 建立对话连接
+        async setSaaSTalkOnOffLine (onLineOffLine) {
+            const hideOpenId = wx.getStorageSync('hideOpenId')
+            let par = {
+                "strType": onLineOffLine,
+                "strFromHeadIcon": this.userInfo.WXHeadImage ? this.userInfo.WXHeadImage : this.userInfo.photo ? this.baseUrl + this.userInfo.photo : 'http://www.kiy.cn/Areas/wxMobile/Content/img/userHead.png',
+                "strFromOpenId": hideOpenId,
+                "strUserName": this.userInfo.Id ? (this.userInfo.WXNick ? this.userInfo.WXNick : this.userInfo.UserName) : '匿名用户'
             }
+            const res = await api.setTalkConnect(par)
+        },
+        timeGetUnRead() {
+            const _this = this
+            TIMERS = setInterval(() => {
+                _this.getUnReadRecord()
+            }, 5000);
         },
         async formSubmit(e) {
             const formId = e.mp.detail.formId
@@ -133,15 +121,19 @@ export default {
         },
     },
     onUnload() {
-
+        clearInterval(TIMERS)
+        this.setSaaSTalkOnOffLine('offLine')
     },
     // 页面隐藏/切入后台时触发
     onHide() {
-
+        clearInterval(TIMERS)
+        this.setSaaSTalkOnOffLine('offLine')
     },
     // 页面显示/切入前台时触发。
     onShow() {
-        this.getUnReadRecord()
+        this.setSaaSTalkOnOffLine('onLine')
+        this.userList = JSON.parse(this.$route.query.userList)
+        this.timeGetUnRead()
     }
 }
 </script>
