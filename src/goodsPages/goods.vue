@@ -842,15 +842,15 @@ export default {
     },
     async toChat() {
       this.$wx.showLoading('正在加载客服')
-      const res = await api.gustServiceList({strGroupName: this.detailInfo.ShopName})
+     // const res = await api.gustServiceList({strGroupName: this.detailInfo.ShopName})
       this.$wx.hideLoading()
       // // 临时
       // this.$wx.showErrorToast('暂无客服')
       // return
-      if(!res.success) {
-        this.$wx.showErrorToast(res.msg)
-        return
-      }
+      // if(!res.success) {
+      //   this.$wx.showErrorToast(res.msg)
+      //   return
+      // }
       const selectSkuStr = this.selectSkuStr
       let price = 0
       let str = ''
@@ -883,7 +883,9 @@ export default {
         path: '../wxchat/userList',
         query: {
           data: JSON.stringify(data),
-          userList: JSON.stringify(res.data)
+          strGroupName: this.detailInfo.ShopName,
+
+         // userList: JSON.stringify(res.data)
           // sellers: JSON.stringify(customer)
         }
       })

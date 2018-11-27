@@ -100,7 +100,7 @@ export default {
         if(this.$route.query.userList) {
             const userList = JSON.parse(this.$route.query.userList)
             if(this.$route.query.single === 'yes') {
-                this.initData(userList[0])
+                this.initData(userList)
             } else {
                 this.userChatList = userList
             }

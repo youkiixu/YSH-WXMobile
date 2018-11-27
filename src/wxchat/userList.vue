@@ -44,11 +44,13 @@ export default {
         ])
     },
     async mounted () {
+         
         if(this.$route.query.data) {
             this.productInfo = JSON.parse(this.$route.query.data)
         }
+   
         if(this.$route.query.userList) {
-            this.userList = JSON.parse(this.$route.query.userList)
+            this.userList =  JSON.parse(this.$route.query.userList)
             // this.timeGetUnRead()
             this.getUnReadRecord()
             this.setSaaSTalkOnOffLine('onLine')
@@ -66,7 +68,7 @@ export default {
                 path: './wxChat',
                 query: {
                     data: this.$route.query.data,
-                    userList: `[${JSON.stringify(sendToUser)}]`,
+                    userList: JSON.stringify(sendToUser),
                     single: 'yes'
                 }
             })
@@ -130,10 +132,26 @@ export default {
         this.setSaaSTalkOnOffLine('offLine')
     },
     // 页面显示/切入前台时触发。
-    onShow() {
-        this.setSaaSTalkOnOffLine('onLine')
-        this.userList = JSON.parse(this.$route.query.userList)
-        this.timeGetUnRead()
+     onShow() {  
+        this.setSaaSTalkOnOffLine('onLine')  
+         let par = undefined;
+        if(this.$route.query.strGroupName){ 
+            api.gustServiceList( {strGroupName: this.$route.query.strGroupName}).then((res1)=>{
+                if(res1.data!=undefined){
+                    this.userList = res1.data;
+                } 
+              this.timeGetUnRead()
+         })
+
+        }else{ 
+          api.getMyFriendList({strFromOpenId: this.$route.query.strFromOpenId}).then((res1)=>{
+               if(res1.data!=undefined){
+                    this.userList = res1.data;
+                } 
+              this.timeGetUnRead()
+         })
+        }  
+        //this.userList = JSON.parse(this.$route.query.userList) 
     }
 }
 </script>

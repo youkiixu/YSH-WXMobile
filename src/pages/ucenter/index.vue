@@ -133,18 +133,28 @@ export default {
     // },
     // 客服选择，去到聊天记录页
     async toSelectChat () {
+
       const hideOpenId = wx.getStorageSync('hideOpenId')
-      this.$wx.showLoading('正在加载...')
-      const res = await api.getMyFriendList({strFromOpenId: hideOpenId})
-      this.$wx.hideLoading()
-      if(res.success) { 
-        this.$router.push({
+      
+    
+      this.$router.push({
           path: '../../wxchat/userList',
           query: {
-            userList: JSON.stringify(res.data),
+            //userList:JSON.stringify(res.data),
+            strFromOpenId:hideOpenId,
           }
         })
-      }
+        //this.$wx.showLoading('正在加载...')
+      //const res = await api.getMyFriendList({strFromOpenId: hideOpenId})
+      //this.$wx.hideLoading()
+      // if(res.success) { 
+      //   this.$router.push({
+      //     path: '../../wxchat/userList',
+      //     query: {
+      //       userList:JSON.stringify(res.data),
+      //     }
+      //   })
+      // }
     },
     switchAccount (isLogin) {
       var _this = this;
