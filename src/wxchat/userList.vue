@@ -2,12 +2,13 @@
     <div class="weui-panel weui-panel_access">
         <form report-submit="true" @submit="selectCustomer">
             <div class="weui-panel__hd">人员列表(未读消息： <span style="color: red;">{{intTotal}}</span> 条)</div>
-            <div class="weui-panel__bd">
-                <button  class="form_button"  formType="submit" v-for="(item , index) in userList" :key="index" :data-id="index">
+            <div class="weui-panel__bd" >
+                <button class="form_button"  formType="submit" v-for="(item , index) in userList" :key="index" :data-id="index">
+                    
                     <navigator url="" class="weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active">
                         <div class="weui-media-box__hd weui-media-box__hd_in-appmsg" style="position:relative;">
                             <image class="weui-media-box__thumb"  :src="item.strHeadIcon ? item.strHeadIcon : 'http://kiy.cn/Areas/Wxmobile/Content/img/online-service.png'" />
-                            <div class="weui-badge" style="position: absolute;top: -.4em;right: -.4em;">{{item.intTotal ? item.intTotal : 0}}</div>
+                            <div class="weui-badge" style="position: absolute;top: -.4em;right: -.4em;">{{item.intTotal}}</div>
                         </div>
                         <div class="weui-media-box__bd weui-media-box__bd_in-appmsg">
                             <div class="weui-media-box__title">{{item.strUserName}}</div>
@@ -16,6 +17,7 @@
                     </navigator>
                 </button>
             </div>
+            <div></div>
         </form>
     </div>
 </template>
@@ -49,12 +51,12 @@ export default {
             this.productInfo = JSON.parse(this.$route.query.data)
         }
    
-        if(this.$route.query.userList) {
-            this.userList =  JSON.parse(this.$route.query.userList)
-            // this.timeGetUnRead()
-            this.getUnReadRecord()
-            this.setSaaSTalkOnOffLine('onLine')
-        }
+        // if(this.$route.query.userList) {
+        //     this.userList =  JSON.parse(this.$route.query.userList)
+        //     // this.timeGetUnRead()
+        //     this.getUnReadRecord()
+        //     this.setSaaSTalkOnOffLine('onLine')
+        // }
 
     },
     methods: {
@@ -74,26 +76,56 @@ export default {
             })
         },
         async getUnReadRecord () {
+            if(!this.canSend){
+                return;
+            }
             const hideOpenId = wx.getStorageSync('hideOpenId')
             const res = await api.getUnReadRecord({
                 strOpenId: hideOpenId
             })
-            if(res.success) {
+
+              if(res.success) {
                 this.intTotal = res.intTotal
                 if(res.data) {
                     let num = 0
-                    this.userList.map((item , index) => {
-                        this.userList[index].intTotal = 0
-                        res.data.map(item2 => {
-                            if(item2.strFromOpenId === item.strOpenId) {
-                                this.userList[index].intTotal++
-                                this.userList[index].strContent = item2.strContent
-                            }
-                        })
-                    })
+                    let data=res.data;
+                   // this.userList.map((item , index) => {
+                    //  res.data.map(item2 => { //此出用this 代表 res.data 非本身
                     
+                    for(var index in  this.userList ){   
+                         this.userList[index].intTotal = 0                   
+                        for(var index2 in data){
+                            let item2=data[index2];   
+                            if(item2.strFromOpenId ===   this.userList[index].strOpenId) {   
+                                this.userList[index].strContent = item2.strContent; 
+                                this.userList[index].intTotal+=1; 
+                            }
+                        } 
+
+                    }  
                 }
             } 
+            setTimeout(() => {
+                this.getUnReadRecord();
+            }, 10000); 
+
+
+            // if(res.success) {
+            //     this.intTotal = res.intTotal
+            //     if(res.data) {
+            //         let num = 0
+            //         this.userList.map((item , index) => {
+            //             this.userList[index].intTotal = 0
+            //             res.data.map(item2 => {
+            //                 if(item2.strFromOpenId === item.strOpenId) {
+            //                     this.userList[index].intTotal++
+            //                     this.userList[index].strContent = item2.strContent
+            //                 }
+            //             })
+            //         })
+                    
+            //     }
+            // } 
         },
         // 建立对话连接
         async setSaaSTalkOnOffLine (onLineOffLine) {
@@ -106,12 +138,12 @@ export default {
             }
             const res = await api.setTalkConnect(par)
         },
-        timeGetUnRead() {
-            const _this = this
-            TIMERS = setInterval(() => {
-                _this.getUnReadRecord()
-            }, 5000);
-        },
+        // timeGetUnRead() {
+        //     const _this = this
+        //     TIMERS = setInterval(() => {
+        //         _this.getUnReadRecord()
+        //     }, 5000);
+        // },
         async formSubmit(e) {
             const formId = e.mp.detail.formId
             const hideOpenId = wx.getStorageSync('hideOpenId')
@@ -123,34 +155,49 @@ export default {
         },
     },
     onUnload() {
-        clearInterval(TIMERS)
+        //clearInterval(TIMERS)
         this.setSaaSTalkOnOffLine('offLine')
     },
     // 页面隐藏/切入后台时触发
-    onHide() {
-        clearInterval(TIMERS)
+    onHide() { 
+        this.canSend=false;
+       // clearInterval(TIMERS)
         this.setSaaSTalkOnOffLine('offLine')
     },
     // 页面显示/切入前台时触发。
      onShow() {  
-        this.setSaaSTalkOnOffLine('onLine')  
-         let par = undefined;
-        if(this.$route.query.strGroupName){ 
-            api.gustServiceList( {strGroupName: this.$route.query.strGroupName}).then((res1)=>{
+        this.canSend=true;  
+         this.setSaaSTalkOnOffLine('onLine')  
+        if(this.userList.length!=0){
+             this.getUnReadRecord();
+        }else { 
+            let par = undefined;
+            if(this.$route.query.strGroupName){ 
+                
+                api.gustServiceList( {strGroupName: this.$route.query.strGroupName}).then((res1)=>{
+                    if(res1.data!=undefined){
+                        this.userList = res1.data; 
+                        this.getUnReadRecord();
+                    } 
+                //this.timeGetUnRead()
+            }) 
+            }else{ 
+            api.getMyFriendList({strFromOpenId: this.$route.query.strFromOpenId}).then((res1)=>{
                 if(res1.data!=undefined){
-                    this.userList = res1.data;
-                } 
-              this.timeGetUnRead()
-         })
+                        this.userList = res1.data; 
+                        this.getUnReadRecord();
+                    } 
+                // this.timeGetUnRead()
+            })
 
-        }else{ 
-          api.getMyFriendList({strFromOpenId: this.$route.query.strFromOpenId}).then((res1)=>{
-               if(res1.data!=undefined){
-                    this.userList = res1.data;
-                } 
-              this.timeGetUnRead()
-         })
-        }  
+        }
+         //如果strUserName 为手机号时 类型则会影响未读记录显示      
+        for(var index in  this.userList){
+            var tmp = this.userList[i];
+            tmp.strUserName +=" ";
+        }
+    }
+         
         //this.userList = JSON.parse(this.$route.query.userList) 
     }
 }

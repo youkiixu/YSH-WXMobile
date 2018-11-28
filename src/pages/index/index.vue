@@ -7,6 +7,11 @@
     <indexComponent :item="item"></indexComponent>
   </div>
   <loadingComponent v-if="loading"></loadingComponent>
+
+   <!-- 跳去客服聊天 -->
+   <div class="toChat" @click="toChat" hover-class>
+          <img class="icon" src="http://kiy.cn/Areas/Wxmobile/Content/img/online-service.png"/>
+   </div>
 </div>
 </template>
 
@@ -48,7 +53,26 @@ export default {
     ...mapActions([
       // 'getIndexData',
       'getSassIndex'
-    ])
+    ]),
+    async toChat() {
+      this.$wx.showLoading('正在加载客服')
+     // const res = await api.gustServiceList({strGroupName: this.detailInfo.ShopName})
+      this.$wx.hideLoading()
+      // // 临时
+      // this.$wx.showErrorToast('暂无客服')
+      // return
+      // if(!res.success) {
+      //   this.$wx.showErrorToast(res.msg)
+      //   return
+      // }
+         
+      this.$router.push({
+        path: '../../wxchat/userList',
+        query: {        
+          strGroupName: " ",
+        }
+      })
+    }
   },
   // 小程序原生下拉刷新
   async onPullDownRefresh () {
@@ -83,5 +107,22 @@ export default {
   overflow: hidden;
   padding:10rpx 0;
   height:74rpx;
+}
+.toChat{
+  width: 70rpx;
+  height: 70rpx;
+  color: #585c63;
+  font-size: 20rpx;
+  text-align: center;
+  line-height: 120rpx;
+  border-radius: 50%;
+  position: fixed;
+  bottom: 55rpx;
+  right: 20rpx;
+  z-index: 1000; 
+}
+.toChat img{
+  width: 100%;
+  height: 100%;
 }
 </style>
