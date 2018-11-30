@@ -374,7 +374,7 @@ export default {
         this.getGoodsDetail(),
       ]);
       // 如果是已经下架的产品,库存和最低销售数量是null
-      if(this.Stock && this.SaleNumber) {
+      if(item.Stock && item.SaleNumber) {
         this.getRouteSku(item.SkuId)
         // 设置当前购物车里商品的数量,获取价格
         this.edit.number = item.Quantity

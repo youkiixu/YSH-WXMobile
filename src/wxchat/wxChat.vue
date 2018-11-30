@@ -94,6 +94,7 @@ export default {
         ])
     },
     mounted () {
+        console.log(this.$route.query)
         if(this.$route.query.data) {
             this.productInfo = JSON.parse(this.$route.query.data)
         }
@@ -236,7 +237,7 @@ export default {
                 }
                 // 获取路径
                 par = Object.assign(par , {
-                    page: util.getWxChatUrl({
+                    page: util.getUserListUrl({
                         strHeadIcon: this.userInfo.WXHeadImage ? this.userInfo.WXHeadImage : this.userInfo.photo ? this.baseUrl + this.userInfo.photo : 'http://www.kiy.cn/Areas/wxMobile/Content/img/userHead.png',
                         strOpenId: par.strFromOpenId,
                         strUserName: par.strFromName
@@ -245,10 +246,10 @@ export default {
             } else {
                 par = sellerPar
                 par = Object.assign(par , {
-                    page: util.getWxChatUrl({
+                    page: util.getUserListUrl({
                         strHeadIcon: this.sendToHead,
-                        strOpenId: par.strFromOpenId,
-                        strUserName: par.strFromName
+                        strOpenId: this.sendToId,
+                        strUserName: this.sendToName
                     } , this.$route.query.data)
                 })
             }

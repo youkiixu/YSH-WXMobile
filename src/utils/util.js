@@ -296,9 +296,14 @@ function deepCopy(params) {
     var par = [{
       strHeadIcon: item.strHeadIcon,
       strOpenId: item.strOpenId,
-      strUserName: item.UserName
+      strUserName: item.strUserName
     }]
     let urlPath = 'wxchat/wxChat?userList=' + JSON.stringify(par) + '&&data=' + productInfo
+    return urlPath
+  }
+
+  function getUserListUrl(item  , productInfo) {
+    let urlPath = 'wxchat/userList?data=' + productInfo
     return urlPath
   }
 
@@ -320,7 +325,8 @@ const util = {
   getCateGoryUrl,
   // getCustomerChat,
   // getSellerChat,
-  getWxChatUrl
+  getWxChatUrl,
+  getUserListUrl
 }
 
 export default util

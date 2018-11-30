@@ -7,8 +7,8 @@
                     
                     <navigator url="" class="weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active">
                         <div class="weui-media-box__hd weui-media-box__hd_in-appmsg" style="position:relative;">
-                            <image class="weui-media-box__thumb"  :src="item.strHeadIcon ? item.strHeadIcon : 'http://kiy.cn/Areas/Wxmobile/Content/img/online-service.png'" />
-                            <div class="weui-badge" style="position: absolute;top: -.4em;right: -.4em;">{{item.intTotal}}</div>
+                            <image class="weui-media-box__thumb"  :src="item.strHeadIcon ? item.strHeadIcon : 'http://kiy.cn/Areas/Wxmobile/Content/img/online-service-change.png'" />
+                            <div class="weui-badge" style="position: absolute;top: -.4em;right: -.4em;">{{item.intTotal ? item.intTotal : 0}}</div>
                         </div>
                         <div class="weui-media-box__bd weui-media-box__bd_in-appmsg">
                             <div class="weui-media-box__title">{{item.strUserName}}</div>
@@ -64,6 +64,10 @@ export default {
         async selectCustomer(item) {
             const DETAIL = item.mp.detail
             const sendToUser = this.userList[DETAIL.target.dataset.id]
+            if(sendToUser.strContent) {
+                delete sendToUser.strContent
+                delete sendToUser.intTotal
+            }
             // 保存一次formId
             this.formSubmit(item)
             this.$router.push({
@@ -76,16 +80,17 @@ export default {
             })
         },
         async getUnReadRecord () {
-            if(!this.canSend){
-                return;
-            }
+            // if(!this.canSend){
+            //     return;
+            // }
             const hideOpenId = wx.getStorageSync('hideOpenId')
             const res = await api.getUnReadRecord({
                 strOpenId: hideOpenId
             })
 
               if(res.success) {
-                this.intTotal = res.intTotal
+                // this.intTotal = res.intTotal
+                this.intTotal = 0
                 if(res.data) {
                     let num = 0
                     let data=res.data;
@@ -99,15 +104,16 @@ export default {
                             if(item2.strFromOpenId ===   this.userList[index].strOpenId) {   
                                 this.userList[index].strContent = item2.strContent; 
                                 this.userList[index].intTotal+=1; 
+                                this.intTotal+=1
                             }
                         } 
 
                     }  
                 }
             } 
-            setTimeout(() => {
-                this.getUnReadRecord();
-            }, 10000); 
+            // setTimeout(() => {
+            //     this.getUnReadRecord();
+            // }, 10000); 
 
 
             // if(res.success) {
@@ -138,12 +144,12 @@ export default {
             }
             const res = await api.setTalkConnect(par)
         },
-        // timeGetUnRead() {
-        //     const _this = this
-        //     TIMERS = setInterval(() => {
-        //         _this.getUnReadRecord()
-        //     }, 5000);
-        // },
+        timeGetUnRead() {
+            const _this = this
+            TIMERS = setInterval(() => {
+                _this.getUnReadRecord()
+            }, 10000);
+        },
         async formSubmit(e) {
             const formId = e.mp.detail.formId
             const hideOpenId = wx.getStorageSync('hideOpenId')
@@ -155,48 +161,57 @@ export default {
         },
     },
     onUnload() {
-        //clearInterval(TIMERS)
+        this.canSend = false
+        clearInterval(TIMERS)
         this.setSaaSTalkOnOffLine('offLine')
     },
     // 页面隐藏/切入后台时触发
     onHide() { 
         this.canSend=false;
-       // clearInterval(TIMERS)
+       clearInterval(TIMERS)
         this.setSaaSTalkOnOffLine('offLine')
     },
     // 页面显示/切入前台时触发。
      onShow() {  
         this.canSend=true;  
-         this.setSaaSTalkOnOffLine('onLine')  
+        this.setSaaSTalkOnOffLine('onLine')  
         if(this.userList.length!=0){
              this.getUnReadRecord();
-        }else { 
+             this.timeGetUnRead();
+        } else { 
             let par = undefined;
             if(this.$route.query.strGroupName){ 
-                
                 api.gustServiceList( {strGroupName: this.$route.query.strGroupName}).then((res1)=>{
                     if(res1.data!=undefined){
                         this.userList = res1.data; 
                         this.getUnReadRecord();
-                    } 
+                        this.timeGetUnRead();
+                    } else {
+                        this.$wx.showErrorToast('暂无客服')
+                        setTimeout(() => {
+                            this.$router.back()
+                        }, 1500);
+                    }
                 //this.timeGetUnRead()
-            }) 
-            }else{ 
-            api.getMyFriendList({strFromOpenId: this.$route.query.strFromOpenId}).then((res1)=>{
-                if(res1.data!=undefined){
+                })
+            } else { 
+                const hideOpenId = wx.getStorageSync('hideOpenId')
+                api.getMyFriendList({strFromOpenId: hideOpenId}).then((res1)=>{
+                    if(res1.data!=undefined){
                         this.userList = res1.data; 
                         this.getUnReadRecord();
+                        this.timeGetUnRead();
                     } 
-                // this.timeGetUnRead()
-            })
+                    // this.timeGetUnRead()
+                })
 
+            }
+            //如果strUserName 为手机号时 类型则会影响未读记录显示      
+            for(var index in  this.userList){
+                var tmp = this.userList[i];
+                tmp.strUserName +=" ";
+            }
         }
-         //如果strUserName 为手机号时 类型则会影响未读记录显示      
-        for(var index in  this.userList){
-            var tmp = this.userList[i];
-            tmp.strUserName +=" ";
-        }
-    }
          
         //this.userList = JSON.parse(this.$route.query.userList) 
     }
