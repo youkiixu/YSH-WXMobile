@@ -102,7 +102,7 @@
         </div> 
       </scroll-view>
     </div>
-    <!-- 模态浮层 -->
+    <!-- 模态浮层 --> 
     <div class="attr-pop-box" v-if="openAttr"  @click="closeAttr" catchtouchmove="stopPageScroll">
         <div class="attr-pop"  v-if="openAttr" @click.stop="closeAttr('no')">
           <selectComponent
@@ -324,7 +324,7 @@ export default {
         productId: this.id,//商品id
         RemindType: this.Yjtype //配送类型
       }
-      this.$wx.showLoading( openId ? '正在报价...' : '登录后价格更优')
+      this.$wx.showLoading( openId ? '正在报价...' : '登录后价更优')
       const res = await api.getOpenQuote(par)
       this.$wx.hideLoading()
       this.openQuotSuccess = res.success
@@ -504,9 +504,9 @@ export default {
       this.saleNumber = skuItem.SaleNumber != 0 ? skuItem.SaleNumber : 1
       // 1031性能调优
       this.skuPrice = skuItem.Price 
-      // 1114需求单，取消乘以数量
-      // this.detailInfo.Price = util.accMul(skuItem.Price , this.number)
-      this.detailInfo.Price = skuItem.Price
+      // 1114需求单，取消乘以数量,1211要求改回来
+      this.detailInfo.Price = util.accMul(skuItem.Price , this.number)
+      // this.detailInfo.Price = skuItem.Price
       this.getDefalutSelect()
     },
     // 选择skuInfo的价格
@@ -521,8 +521,8 @@ export default {
       if(this.number < this.saleNumber) {
         this.number = this.saleNumber
       }
-      // 1114需求单，取消乘以数量
-      // this.detailInfo.Price = util.accMul(this.skuPrice , this.number)
+      // 1114需求单，取消乘以数量,1211要求改回来
+      this.detailInfo.Price = util.accMul(this.skuPrice , this.number)
     },
     // 获取默认选项
     getDefalutSelect() {
@@ -663,7 +663,7 @@ export default {
         this.openAttr = false
         this.SubmitByProductId2(par)
       } catch (error) {
-        this.$wx.showErrorToast('非标品下单失败')
+        this.$wx.showErrorToast('下单失败')
       }
         
     },
@@ -726,9 +726,9 @@ export default {
         this.$wx.hideLoading()
         if(res.success) {
           this.getShoppingCartCount()
-          this.$wx.showSuccessToast('加入购物车成功')
+          this.$wx.showSuccessToast('加入成功')
         } else {
-          this.$wx.showErrorToast('加入购物车失败')
+          this.$wx.showErrorToast('加入失败')
         }
       }
     },
@@ -895,6 +895,14 @@ export default {
     // number (e , b) {
     //   this.getSkuInfoPirce()
     // },
+    userInfo () {
+      // 检测用户登陆状态，是否读取新数据
+      console.log('检测用户登陆状态，是否读取新数据:' , util.getCurrentPageUrl())
+      const currentUrl = util.getCurrentPageUrl()
+      if(currentUrl == 'pages/ucenter/login') {
+        this.refresh()
+      }
+    },
     proSearchParam (a , b ) {
       if(this.detailInfo.IsCustom) {
         this.getOpenQuote()

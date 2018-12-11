@@ -8,7 +8,7 @@
       </div>
       <div class="user_info_txt">
         <div class="info_name">{{userInfo.WXNick ? userInfo.WXNick : userInfo.UserName}}</div>
-        <div class="info_member">{{userInfo.GradeName}}</div>
+        <div class="info_member">{{userInfo.GradeName ? userInfo.GradeName : '普通会员'}}</div>
       </div>
     </div>
 

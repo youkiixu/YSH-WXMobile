@@ -300,7 +300,7 @@ export default {
         }
       });
       if (shopCartIds == '') {
-        this.$wx.showErrorToast('未选择任何商品')
+        this.$wx.showErrorToast('未选择商品')
         return false;
       }
       shopCartIds = shopCartIds.substring(0,shopCartIds.length-1)

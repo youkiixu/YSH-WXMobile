@@ -6,7 +6,7 @@
               <input class="input"  placeholder="姓名" v-model="address.ShipTo" auto-focus/>
           </div>
           <div class="form-item">
-              <input class="input"  v-model="address.Phone" placeholder="手机号码"/>
+              <input class="input"  v-model="address.Phone" placeholder="联系电话"/>
           </div> 
           <div class="form-item">
               <input class="input" :value="address.RegionFullName" disabled="true" @click="chooseRegion" placeholder="省份、城市、区县"/>
@@ -263,11 +263,11 @@ export default {
         return false;
       }
       if (address.Phone === '') {
-        this.$wx.showErrorToast('请输入手机号码');
+        this.$wx.showErrorToast('请输入电话');
         return false;
       }
       if (this.regionStreet.id == undefined) {
-        this.$wx.showErrorToast('请完善四级地址');
+        this.$wx.showErrorToast('请完善地址');
         return false;
       }
       if (address.Address === '') {

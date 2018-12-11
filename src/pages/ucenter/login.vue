@@ -180,7 +180,7 @@ export default {
                 return
             }
             if(this.registerInfo.Password != this.Password2) {
-                this.$wx.showErrorToast('输入密码不一致')
+                this.$wx.showErrorToast('密码不一致')
                 return
             }
             const hideOpenId = wx.getStorageSync('hideOpenId')
@@ -208,7 +208,7 @@ export default {
                 this.$wx.hideLoading()
                 this.$wx.showSuccessToast( res.msg)
             } else {
-                this.$wx.showErrorToast('手机号码错误')
+                this.$wx.showErrorToast('手机号错误')
             }
         },
         btnHandler () {

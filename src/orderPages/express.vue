@@ -94,7 +94,7 @@ export default {
       }
     },
     errorEvent () {
-      this.$wx.showErrorToast('暂无物流信息')
+      this.$wx.showErrorToast('无物流信息')
       setTimeout(() => {
         this.$router.back()
       }, 1500);

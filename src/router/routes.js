@@ -248,4 +248,12 @@ module.exports = [
       navigationBarTitleText: '人员列表'
     }
   },
+  {
+    path: 'pages/ucenter/settledIn',
+    name: 'settledIn',
+    config: {
+      enablePullDownRefresh: false,
+      navigationBarTitleText: '申请入驻'
+    }
+  }
 ]
