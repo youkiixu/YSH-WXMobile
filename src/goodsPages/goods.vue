@@ -32,7 +32,7 @@
           <div class="goods-info">
               <div class="c clear">
                 <!-- 标准品价格 -->
-                <div class="c-price" v-if="!detailInfo.IsCustom"><text class="price-icon" >￥</text>{{detailInfo.Price}}</div>
+                <div class="c-price" v-if="!detailInfo.IsCustom"><text class="price-icon" >￥</text>{{ isInit ? defaultPrice : detailInfo.Price}}<text v-if="!isInit" class="number-color">  (数量:{{number}})</text></div>
                 <!-- 非标品价格 -->
                 <div class="c-price"  v-else><text class="price-icon" >￥</text>{{ListPriceInfo.sprice + detailInfo.RemindPrice}} <text class="original-price" v-if="ListPriceInfo.sprice != ListPriceInfo.OriginalPrice">{{ListPriceInfo.OriginalPrice}}</text></div>
                 <div :class="collectStatus ? 'c-collect collected' : 'c-collect'"  @click="addCannelCollect">           
@@ -230,7 +230,9 @@ export default {
       defalutHead: 'http://www.kiy.cn/Areas/wxMobile/Content/img/detailpage/'+ Math.floor(Math.random() * 7 + 1) +'.png',
       loading: true,
       OriginalPrice: 0,
-      allCount: 0
+      allCount: 0,
+      isInit: true,
+      defaultPrice: 0
     }
   },
   mounted () {
@@ -296,6 +298,8 @@ export default {
       this.setTitle(this.detailInfo.ProductName)
       // 默认选中配送方式，必须在报价之前选中默认的报价
       this.selectWuliu()
+      // 1212需求，改成一一进来只显示默认的最低价格，打开弹出窗才显示*数量的价格
+      this.defaultPrice = this.detailInfo.Price
       // this.detailInfo.IsCustom = true
       // true等于非标
 
@@ -551,6 +555,7 @@ export default {
     
     // 打开商品规格选择弹窗
     switchAttrPop () {
+        this.isInit = false
         if (this.openAttr === false) {
           this.SubmitByProductType = false
           this.openAttr = !this.openAttr;
@@ -624,8 +629,7 @@ export default {
       const openId = wx.getStorageSync('openId')
       if (this.openAttr === false) {
         // 打开规格选择弹窗
-        this.SubmitByProductType = true
-        this.openAttr = !this.openAttr;
+        this.switchAttrPop()
       } else {
           // 判断登录才能下单
           if(!openId) {
@@ -685,8 +689,7 @@ export default {
     async addToCart () {
       if (this.openAttr === false) {
         // 打开规格选择弹窗
-        this.SubmitByProductType = false
-        this.openAttr = !this.openAttr;
+        this.switchAttrPop()
       } else {
         
         const openId = wx.getStorageSync('openId') 
@@ -1632,5 +1635,10 @@ page{
 }
 .td-content {
   height: 100rpx;
+}
+.number-color {
+  color: #999;
+  font-size: 28rpx;
+  padding-left: 5rpx;
 }
 </style>
