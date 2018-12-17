@@ -1,5 +1,5 @@
 <script>
-import { mapActions } from 'vuex'
+import { mapActions , mapMutations } from 'vuex'
 import util from '@/utils/util'
 import api from '@/utils/api'
 import wx from 'wx'
@@ -15,6 +15,9 @@ export default {
     ...mapActions([
       // 'getIndexData',
       'sassLogin'
+    ]),
+    ...mapMutations([
+      'setYinXunShopInfo'
     ]),
     newOpenIdlogin () {
       // 直接用新的Openid尝试登录
@@ -63,6 +66,18 @@ export default {
             appid: miniProgram.miniProgram.appId
           }, 'POST').then(res => {
             if (res.success) {
+              if(api.isYinXun) {
+                //如果有shopId就把shopId存储起来，以后每次请求都传这个值
+                if(res.shopId) {
+                  wx.setStorageSync('shopId', res.shopId)
+                }
+                this.setYinXunShopInfo({
+                  shopId: res.shopId,
+                  logo: res.logo,
+                  shopName: res.shopName
+                })
+              }
+              // 设置全局的OpenId,必须用到openId的地方就用这个
               wx.setStorageSync('hideOpenId', res.openId);
               if(res.openId == oldOpenId) {
                 wx.setStorageSync('openId', res.openId);
@@ -74,9 +89,12 @@ export default {
               }
             }
           }).catch((err) => {
+            console.log(err)
             console.log('获取openid失败')
           });
         }).catch((err) => {
+          console.log(err);
+          
           console.log('获取code失败')
         })
     }

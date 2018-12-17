@@ -1,14 +1,13 @@
 import request from './request'
 import pub from './pub'
+import  {ApiKiyUrl , isYinXun}  from './apiUrl'
 
-let ApiKiyUrl = 'https://www.kiy.cn/'
-// ApiKiyUrl = 'http://localhost:7634/'
-// ApiKiyUrl = 'http://192.168.0.91:8008/'
-// ApiKiyUrl = 'http://192.168.30.6:6348/'
 
+const indexData = ApiKiyUrl === 'https://www.kiy.cn/' ? 't6' : 't1'
 const api = {
+  isYinXun : isYinXun,
   //获取sass首页
-  getSassIndex: (paramObj) => request.post('/Wxmobile/JsonAjax/Hi_Ajax_GetTemplateByID?client=t6', paramObj, {
+  getSassIndex: (paramObj) => request.post('/Wxmobile/JsonAjax/Hi_Ajax_GetTemplateByID?client=' + indexData, paramObj, {
     baseURL: ApiKiyUrl
   }),
   getOpenId: (paramObj) => request.post('/Wxmobile/Share/GetSmallUserOpenId', paramObj, {

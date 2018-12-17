@@ -163,9 +163,10 @@ import util from '@/utils/util'
 import loadingComponent from '@/components/loadingComponent'
 import selectComponent from '@/components/selectComponent'
 import { mapState, mapActions ,mapMutations } from 'vuex'
-
+import isYinXun from "@/mixins/isYinXun";
 
 export default {
+  mixins: [isYinXun],
   components: {
     wxParse,
     loadingComponent,
@@ -497,10 +498,13 @@ export default {
     },
     // 设置skuid , SaleNumber , number , detailInfo.Price
     setSkuInfo (skuItem) {
+      console.log(skuItem);
+      
       this.skuId = skuItem.SkuId
       this.Stock = skuItem.Stock
       // 默认数量和最低销售数量
-      this.number = skuItem.SaleNumber != 0 ? skuItem.SaleNumber : 1
+      // 印讯没有saleNumber,默认1
+      this.number = skuItem.SaleNumber == undefined ? 1 :  (skuItem.SaleNumber != 0 ? skuItem.SaleNumber : 1)
       this.saleNumber = skuItem.SaleNumber != 0 ? skuItem.SaleNumber : 1
       // 1031性能调优
       this.skuPrice = skuItem.Price 
@@ -650,7 +654,7 @@ export default {
             openId: openId,
             skuIds: this.detailInfo.ProductId + '_0_0_0_0_0_0_0',
             counts: 1,
-            regionId: this.userInfo.RegionId,
+            regionId: isYinXun ? 0 : this.userInfo.RegionId,
             // YjUse: this.YjUse,//是否印捷配送
             Yjtype: this.Yjtype,
             price: this.ListPriceInfo.res.SumPrice,

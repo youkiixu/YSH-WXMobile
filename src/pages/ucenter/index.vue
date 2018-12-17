@@ -8,7 +8,7 @@
       </div>
       <div class="user_info_txt">
         <div class="info_name">{{userInfo.WXNick ? userInfo.WXNick : userInfo.UserName}}</div>
-        <div class="info_member">{{userInfo.GradeName}}</div>
+        <div class="info_member">{{userInfo.GradeName ? userInfo.GradeName : '大众会员'}}</div>
       </div>
     </div>
 
@@ -191,6 +191,7 @@ export default {
         })
       }).catch((err) => {
         _this.$wx.hideLoading()
+        _this.$wx.showErrorToast('网络异常')
       });
     },
     // 去详情页

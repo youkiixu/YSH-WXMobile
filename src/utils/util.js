@@ -30,6 +30,8 @@ function request(url, data = {}, method = 'GET') {
         // console.log('请求参数，data:', data);
         // console.log('返回参数, res:', res)
         if (res.statusCode === 200) {
+          
+          
           if (res.data.errno === 401) {
             // 需要登录后才可以操作
             let code = null;

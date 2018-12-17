@@ -24,6 +24,7 @@ function showError(msg) {
 
 const store = new Vuex.Store({
   state: {
+    yinXunShopInfo: {},
     wxUserInfo: {},//微信用户信息
     sassIndex: [], // 首页数据
     categoryList: [], //选择的分类列表
@@ -73,6 +74,10 @@ const store = new Vuex.Store({
     // 设置购物车数量
     setShoppingCartCount (state , res) {
       state.shoppingCartCount = res
+    },
+    // 设置印讯店铺信息
+    setYinXunShopInfo(state , res) {
+      state.yinXunShopInfo = res
     }
   },
   actions: {

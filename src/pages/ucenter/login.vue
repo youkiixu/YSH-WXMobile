@@ -3,9 +3,9 @@
         <!-- 选择界面 -->
         <div class="select-type" v-if="isSelect">
             <div class="select-type-content">
-                <img src="http://www.kiy.cn/Areas/Wxmobile/Content/img/logo.png" class="logo" alt="">
-                <button class="btn block" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber">微信手机号快捷登录</button>
-                <button  class="btn" @click="unSelect">彩印通账号密码登录</button>
+                <img :src="isYinXun ? baseUrl + yinXunShopInfo.logo : 'http://www.kiy.cn/Areas/Wxmobile/Content/img/logo.png'" class="logo" alt="">
+                <button class="btn block" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber" v-if="!isYinXun">微信手机号快捷登录</button>
+                <button  class="btn" @click="unSelect">{{isYinXun ? yinXunShopInfo.shopName : '彩印通'}}账号密码登录</button>
                 <!-- <button>彩印通账号密码登录</button> -->
             </div>
         </div>
@@ -70,7 +70,10 @@ import api from '@/utils/api'
 import util from '@/utils/util'
 import user from '@/services/user';
 import wx from 'wx'
-import { mapState , mapActions } from 'vuex'
+import { mapState , mapActions , mapMutations } from 'vuex'
+// import isYinXun from "@/mixins/isYinXun";
+import {isYinXun} from '@/utils/apiUrl'
+
 export default {
     name: 'login',
     data () {
@@ -88,15 +91,22 @@ export default {
             Password2 : '',
             isRegister: false,
             isSelect: true,
-            openId : ''
+            openId : '',
+            isYinXun: false
         }
     },
     computed: {
         ...mapState([
-            'wxUserInfo'
-        ])
+            'wxUserInfo',
+            'yinXunShopInfo'
+        ]),
+        baseUrl() {
+           return this.$wx.baseUrl
+        }
     },
     mounted () {
+        this.isYinXun = isYinXun
+        
         var _this = this
         this.$wx.showLoading()
         user.loginByWeixin().then(res => {
@@ -109,7 +119,11 @@ export default {
     },
     methods: { 
         ...mapActions([
-            'sassLogin'
+            'sassLogin',
+
+        ]),
+        ...mapMutations([
+            'setUserInfo'
         ]),
         getPhoneNumber (e) {
             const _this = this
@@ -190,6 +204,7 @@ export default {
             this.$wx.hideLoading()
             if(res.success) {
                 this.$wx.showSuccessToast(res.msg)
+                this.setUserInfo(res.data)
                 setTimeout(() => {
                     _this.$router.back()
                 }, 1000);

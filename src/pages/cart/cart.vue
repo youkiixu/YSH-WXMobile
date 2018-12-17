@@ -32,7 +32,7 @@
                 <div class="attr attr-select" v-else @click.stop="openSelect(item)">{{item.SaleNumber&&item.Stock ? '已选：' + item.Color + item.Size + item.Version + item.Material + item.Fashion + item.Grams + item.Ensemble : '原商品已更换参数,不能下单,请重新选择参数'}}<text class="select-span">></text></div>
                 <div class="b">
                   <div class="price">
-                    <text class="icon">￥</text>{{item.SaleNumber&&item.Stock ? item.IsCustom ? item.fbpPrice : item.bpTotal : '已下架' }}
+                    <text class="icon">￥</text>{{ item.IsCustom ? (item.SaleNumber&&item.Stock ?  '已下架'  : item.fbpPrice)  : item.bpTotal}}
                   </div>
                   <div class="selnum" v-if="false">
                     <div class="cut" @click.stop="cutNumber" :data-item-index="index">-</div>
@@ -289,11 +289,19 @@ export default {
       let downGoods = 0;
       this.cartGoods.map(function (element) {
         //11.12添加检查库存和最低销售数量不为Null的检测，判断这个skuId是否还存在
-        if (element.checked && element.Stock && element.SaleNumber) {
+        if (element.checked) {
           // 判断库存和当前产品数量
-          if(element.Quantity <= element.Stock) {
+          // 标品
+          if(element.Stock && element.SaleNumber && !element.IsCustom){
+            if(element.Quantity <= element.Stock) {
+              shopCartIds += `${element.Id},`
+            }
+          }
+          // 非标品直接通过
+          if(element.IsCustom) {
             shopCartIds += `${element.Id},`
           }
+          
         }
         if(!element.Stock && !element.SaleNumber) {
           downGoods++

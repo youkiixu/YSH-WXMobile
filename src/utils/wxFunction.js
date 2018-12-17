@@ -1,4 +1,5 @@
 import wx from 'wx'
+import {ApiKiyUrl} from './apiUrl'
 
 function showSuccessToast(msg) {
   wx.showToast({
@@ -194,7 +195,8 @@ function previewImage(item) {
 }
 
 // const baseUrl = 'http://192.168.0.91:8008/'
-const baseUrl = 'http://www.kiy.cn/'
+// const baseUrl = 'http://www.kiy.cn/'
+const baseUrl = ApiKiyUrl
 
 const wxFun = {
   showSuccessToast,

@@ -80,20 +80,23 @@
         </div>
       </scroll-view>
       <div class="car-btn clear" v-if="!SubmitByProductType">
-          <div class="car-add"  v-if="detailInfo.IsNotNeedFile" @click="addToCart" hover-class>加入购物车</div>
-          <div class="car-buy"  v-if="detailInfo.IsNotNeedFile" @click="SubmitByProduct" hover-class>立即购买</div>
+          <div class="car-add"  v-if="isYinXun ? true : detailInfo.IsNotNeedFile" @click="addToCart" hover-class>加入购物车</div>
+          <div class="car-buy"  v-if="isYinXun ? true : detailInfo.IsNotNeedFile" @click="SubmitByProduct" hover-class>立即购买</div>
           <!-- IsNotNeedFile 预计将用这个需不需要上传文件字段判断是否可以下单或加入购物车-->
-          <div class="car-buy disabled" v-if="!detailInfo.IsNotNeedFile" style="width:100%;" @click="disabledClick">下单需要上传文件，请到电脑端操作</div>
+          <div class="car-buy disabled" v-if="isYinXun ? false : !detailInfo.IsNotNeedFile" style="width:100%;" @click="disabledClick">下单需要上传文件，请到电脑端操作</div>
       </div>
       <div class="car-btn clear" v-if="SubmitByProductType">
-          <div class="car-buy" v-if="detailInfo.IsNotNeedFile" style="width:100%;" @click="SubmitByProduct" hover-class>{{btnText}}</div>
+          <div class="car-buy" v-if="isYinXun ? true : detailInfo.IsNotNeedFile" style="width:100%;" @click="SubmitByProduct" hover-class>{{btnText}}</div>
           <!-- IsNotNeedFile 预计将用这个需不需要上传文件字段判断是否可以下单或加入购物车-->
-          <div class="car-buy disabled" v-if="!detailInfo.IsNotNeedFile" style="width:100%;" @click="disabledClick">下单需要上传文件，请到电脑端操作</div>
+          <div class="car-buy disabled" v-if="isYinXun ? false : !detailInfo.IsNotNeedFile" style="width:100%;" @click="disabledClick">下单需要上传文件，请到电脑端操作</div>
       </div>
     </div>   
 </template>
 <script>
+import isYinXun from "@/mixins/isYinXun";
+
 export default {
+    mixins: [isYinXun],
     props: {
         baseUrl: {
             type: String,
