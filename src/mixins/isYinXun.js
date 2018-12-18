@@ -1,4 +1,4 @@
-import {isYinXun} from '@/utils/apiUrl'
+import {isYinXun} from '@/utils/config'
 export default {
     data () {
         return {

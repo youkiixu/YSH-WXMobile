@@ -9,9 +9,12 @@
   <loadingComponent v-if="loading"></loadingComponent>
 
    <!-- 跳去客服聊天 -->
-   <div class="toChat" @click="toChat" hover-class>
-          <img class="icon" src="http://kiy.cn/Areas/Wxmobile/Content/img/online-service.png"/>
+   <div class="toChat" @click="toChat" v-if="!isYinXun">
+      <img class="icon" src="http://kiy.cn/Areas/Wxmobile/Content/img/online-service.png"/>
    </div>
+    <button class="form_button toChat" v-if="isYinXun" open-type="contact">
+      <img class="icon" src="http://kiy.cn/Areas/Wxmobile/Content/img/online-service.png"/>
+  </button>
 </div>
 </template>
 
@@ -22,6 +25,7 @@ import { mapState, mapActions } from 'vuex'
 import searchBar from '@/components/indexSearchBar'
 import indexComponent from '@/components/index-components/indexComponent'
 import loadingComponent from '@/components/loadingComponent'
+import { isYinXun } from '@/utils/config'
 
 export default {
   data () {
@@ -37,7 +41,10 @@ export default {
   computed: {
     ...mapState([
       'sassIndex'
-    ])
+    ]),
+    isYinXun () {
+      return isYinXun
+    }
   },
   async mounted () {
     const res = wx.getAccountInfoSync()
@@ -85,7 +92,7 @@ export default {
   // 原生的分享功能
   onShareAppMessage: function () {
     return {
-      title: '印生活商城',
+      title: '商城',
       desc: '印生活',
       path: '/pages/index/index'
     }

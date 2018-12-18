@@ -67,10 +67,10 @@ export default {
           }, 'POST').then(res => {
             if (res.success) {
               if(api.isYinXun) {
-                //如果有shopId就把shopId存储起来，以后每次请求都传这个值
-                if(res.shopId) {
-                  wx.setStorageSync('shopId', res.shopId)
-                }
+                //如果有shopId就把shopId存储起来，以后每次请求都传这个值,取消了这个必传项
+                // if(res.shopId) {
+                //   wx.setStorageSync('shopId', res.shopId)
+                // }
                 this.setYinXunShopInfo({
                   shopId: res.shopId,
                   logo: res.logo,

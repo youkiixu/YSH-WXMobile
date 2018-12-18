@@ -32,7 +32,7 @@
           <div class="goods-info">
               <div class="c clear">
                 <!-- 标准品价格 -->
-                <div class="c-price" v-if="!detailInfo.IsCustom"><text class="price-icon" >￥</text>{{detailInfo.Price}}</div>
+                <div class="c-price" v-if="!detailInfo.IsCustom"><text class="price-icon" >￥</text>{{ isInit ? defaultPrice : detailInfo.Price}}<text v-if="!isInit" class="number-color">  (数量:{{number}})</text></div>
                 <!-- 非标品价格 -->
                 <div class="c-price"  v-else><text class="price-icon" >￥</text>{{ListPriceInfo.sprice + detailInfo.RemindPrice}} <text class="original-price" v-if="ListPriceInfo.sprice != ListPriceInfo.OriginalPrice">{{ListPriceInfo.OriginalPrice}}</text></div>
                 <div :class="collectStatus ? 'c-collect collected' : 'c-collect'"  @click="addCannelCollect">           
@@ -102,7 +102,7 @@
         </div> 
       </scroll-view>
     </div>
-    <!-- 模态浮层 -->
+    <!-- 模态浮层 --> 
     <div class="attr-pop-box" v-if="openAttr"  @click="closeAttr" catchtouchmove="stopPageScroll">
         <div class="attr-pop"  v-if="openAttr" @click.stop="closeAttr('no')">
           <selectComponent
@@ -132,9 +132,12 @@
     </div>
     <!-- tabbar -->
     <div class="bottom-btn" v-if="!loading">
-      <div class="l l-collect" @click="toChat" hover-class>
+      <div class="l l-collect" @click="toChat" hover-class v-if="!isYinXun">
           <img class="icon" src="/static/images/share.png"/>
       </div>
+      <button class="form_button l l-collect" v-if="isYinXun" open-type="contact">
+        <img class="icon" src="/static/images/share.png"/>
+      </button>
       <div class="l l-cart" @click="openCartPage" hover-class>
           <div class="box">
           <text class="cart-count">{{shoppingCartCount}}</text>
@@ -163,10 +166,10 @@ import util from '@/utils/util'
 import loadingComponent from '@/components/loadingComponent'
 import selectComponent from '@/components/selectComponent'
 import { mapState, mapActions ,mapMutations } from 'vuex'
-import isYinXun from "@/mixins/isYinXun";
+// import isYinXun from "@/mixins/isYinXun";
 
 export default {
-  mixins: [isYinXun],
+  // mixins: [isYinXun],
   components: {
     wxParse,
     loadingComponent,
@@ -231,10 +234,14 @@ export default {
       defalutHead: 'http://www.kiy.cn/Areas/wxMobile/Content/img/detailpage/'+ Math.floor(Math.random() * 7 + 1) +'.png',
       loading: true,
       OriginalPrice: 0,
-      allCount: 0
+      allCount: 0,
+      isInit: true,
+      defaultPrice: 0,
+      isYinXun: false
     }
   },
   mounted () {
+    this.isYinXun = api.isYinXun
     if (this.$route.query.data) {
       const a = this.$route.query.data
       // 解决web端input的value的双引号和单引号的问题，所以分享的路径改为单引号，来到这个页面，将单引号替换成双引号，不然json.parse会报语法错误
@@ -297,6 +304,8 @@ export default {
       this.setTitle(this.detailInfo.ProductName)
       // 默认选中配送方式，必须在报价之前选中默认的报价
       this.selectWuliu()
+      // 1212需求，改成一一进来只显示默认的最低价格，打开弹出窗才显示*数量的价格
+      this.defaultPrice = this.detailInfo.Price
       // this.detailInfo.IsCustom = true
       // true等于非标
 
@@ -325,7 +334,7 @@ export default {
         productId: this.id,//商品id
         RemindType: this.Yjtype //配送类型
       }
-      this.$wx.showLoading( openId ? '正在报价...' : '登录后价格更优')
+      this.$wx.showLoading( openId ? '正在报价...' : '登录后价更优')
       const res = await api.getOpenQuote(par)
       this.$wx.hideLoading()
       this.openQuotSuccess = res.success
@@ -498,19 +507,20 @@ export default {
     },
     // 设置skuid , SaleNumber , number , detailInfo.Price
     setSkuInfo (skuItem) {
-      console.log(skuItem);
-      
       this.skuId = skuItem.SkuId
       this.Stock = skuItem.Stock
       // 默认数量和最低销售数量
       // 印讯没有saleNumber,默认1
-      this.number = skuItem.SaleNumber == undefined ? 1 :  (skuItem.SaleNumber != 0 ? skuItem.SaleNumber : 1)
+      if(skuItem.SaleNumber == undefined) {
+        skuItem.SaleNumber = 1
+      }
+      this.number =  skuItem.SaleNumber != 0 ? skuItem.SaleNumber : 1
       this.saleNumber = skuItem.SaleNumber != 0 ? skuItem.SaleNumber : 1
       // 1031性能调优
       this.skuPrice = skuItem.Price 
-      // 1114需求单，取消乘以数量
-      // this.detailInfo.Price = util.accMul(skuItem.Price , this.number)
-      this.detailInfo.Price = skuItem.Price
+      // 1114需求单，取消乘以数量,1211要求改回来
+      this.detailInfo.Price = util.accMul(skuItem.Price , this.number)
+      // this.detailInfo.Price = skuItem.Price
       this.getDefalutSelect()
     },
     // 选择skuInfo的价格
@@ -525,8 +535,8 @@ export default {
       if(this.number < this.saleNumber) {
         this.number = this.saleNumber
       }
-      // 1114需求单，取消乘以数量
-      // this.detailInfo.Price = util.accMul(this.skuPrice , this.number)
+      // 1114需求单，取消乘以数量,1211要求改回来
+      this.detailInfo.Price = util.accMul(this.skuPrice , this.number)
     },
     // 获取默认选项
     getDefalutSelect() {
@@ -555,6 +565,7 @@ export default {
     
     // 打开商品规格选择弹窗
     switchAttrPop () {
+        this.isInit = false
         if (this.openAttr === false) {
           this.SubmitByProductType = false
           this.openAttr = !this.openAttr;
@@ -628,8 +639,7 @@ export default {
       const openId = wx.getStorageSync('openId')
       if (this.openAttr === false) {
         // 打开规格选择弹窗
-        this.SubmitByProductType = true
-        this.openAttr = !this.openAttr;
+        this.switchAttrPop()
       } else {
           // 判断登录才能下单
           if(!openId) {
@@ -667,7 +677,7 @@ export default {
         this.openAttr = false
         this.SubmitByProductId2(par)
       } catch (error) {
-        this.$wx.showErrorToast('非标品下单失败')
+        this.$wx.showErrorToast('下单失败')
       }
         
     },
@@ -689,8 +699,7 @@ export default {
     async addToCart () {
       if (this.openAttr === false) {
         // 打开规格选择弹窗
-        this.SubmitByProductType = false
-        this.openAttr = !this.openAttr;
+        this.switchAttrPop()
       } else {
         
         const openId = wx.getStorageSync('openId') 
@@ -730,9 +739,9 @@ export default {
         this.$wx.hideLoading()
         if(res.success) {
           this.getShoppingCartCount()
-          this.$wx.showSuccessToast('加入购物车成功')
+          this.$wx.showSuccessToast('加入成功')
         } else {
-          this.$wx.showErrorToast('加入购物车失败')
+          this.$wx.showErrorToast('加入失败')
         }
       }
     },
@@ -899,6 +908,14 @@ export default {
     // number (e , b) {
     //   this.getSkuInfoPirce()
     // },
+    userInfo () {
+      // 检测用户登陆状态，是否读取新数据
+      console.log('检测用户登陆状态，是否读取新数据:' , util.getCurrentPageUrl())
+      const currentUrl = util.getCurrentPageUrl()
+      if(currentUrl == 'pages/ucenter/login') {
+        this.refresh()
+      }
+    },
     proSearchParam (a , b ) {
       if(this.detailInfo.IsCustom) {
         this.getOpenQuote()
@@ -1628,5 +1645,10 @@ page{
 }
 .td-content {
   height: 100rpx;
+}
+.number-color {
+  color: #999;
+  font-size: 28rpx;
+  padding-left: 5rpx;
 }
 </style>

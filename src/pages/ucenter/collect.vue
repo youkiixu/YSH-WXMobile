@@ -268,8 +268,8 @@ export default {
   // 原生的分享功能
   onShareAppMessage: function () {
     return {
-      title: 'sassShop',
-      desc: '印生活',
+      title: '商城',
+      desc: '收藏',
       path: '/pages/ucenter/collect'
     }
   }

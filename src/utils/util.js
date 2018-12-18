@@ -206,6 +206,14 @@ function getImagePathGroup(path) {
   return arr
 }
 
+/*获取当前页url*/
+function getCurrentPageUrl(){
+  var pages = getCurrentPages() //获取加载的页面
+  var currentPage = pages[pages.length-1] //获取当前页面的对象
+  var url = currentPage.route //当前页面url
+  return url
+  }
+
 // 去最后一个字符串
 function delLastStr (str , point) {
   return (str.substring(str.length - 1) == point) ? str.substring(0, str.length - 1) : str;
@@ -328,7 +336,8 @@ const util = {
   // getCustomerChat,
   // getSellerChat,
   getWxChatUrl,
-  getUserListUrl
+  getUserListUrl,
+  getCurrentPageUrl
 }
 
 export default util

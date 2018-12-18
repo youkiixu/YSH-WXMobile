@@ -1,5 +1,5 @@
 import wx from 'wx'
-import {ApiKiyUrl} from './apiUrl'
+import {ApiKiyUrl} from './config'
 
 function showSuccessToast(msg) {
   wx.showToast({

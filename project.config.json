@@ -5,14 +5,15 @@
 	},
 	"setting": {
 		"urlCheck": false,
-		"es6": false,
+		"es6": true,
 		"postcss": true,
 		"minified": true,
-		"newFeature": true
+		"newFeature": true,
+		"autoAudits": false
 	},
 	"compileType": "miniprogram",
 	"libVersion": "2.2.2",
-	"appid": "wxe1c5fe5c72be84e6",
+	"appid": "wx8de4300948e90c94",
 	"projectname": "%E5%8D%B0%E7%94%9F%E6%B4%BB%E5%95%86%E5%9F%8E",
 	"miniprogramRoot": "dist/",
 	"debugOptions": {
@@ -205,6 +206,11 @@
 					"name": "userList",
 					"pathName": "wxchat/userList",
 					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "申请入驻",
+					"pathName": "pages/ucenter/settledIn"
 				}
 			]
 		}

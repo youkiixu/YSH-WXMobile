@@ -1,9 +1,9 @@
 import request from './request'
 import pub from './pub'
-import  {ApiKiyUrl , isYinXun}  from './apiUrl'
+import  {ApiKiyUrl , isYinXun}  from './config'
 
 
-const indexData = ApiKiyUrl === 'https://www.kiy.cn/' ? 't6' : 't1'
+const indexData = isYinXun ? 't1' : 't6'
 const api = {
   isYinXun : isYinXun,
   //获取sass首页

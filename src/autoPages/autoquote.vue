@@ -51,6 +51,10 @@ export default {
     }
   },
   mounted () {
+    // 印讯没有自助报价的功能
+    if(api.isYinXun) {
+      this.$router.back()
+    }
     this.getQitem()
   },
   computed: {
@@ -201,7 +205,7 @@ export default {
   // 原生的分享功能
   onShareAppMessage: function () {
     return {
-      title: '印生活商城',
+      title: '商城',
       desc: '自助报价',
       path: '/autoPages/autoquote'
     }

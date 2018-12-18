@@ -10,15 +10,15 @@ request.interceptors.request.use((request) => {
   // 给所有请求添加自定义header，带上token信息让服务器验证用户登陆
   request.headers['X-sassShop-Token'] = wx.getStorageSync('token');
   // console.log(request.body)
-  const shopId = {
-    shopId : wx.getStorageSync('shopId')
-  }
-  if(request.body) {
+  // const shopId = {
+  //   shopId : wx.getStorageSync('shopId')
+  // }
+  // if(request.body) {
     
-    request.body = Object.assign(request.body , shopId)
-  } else {
-    request.body = shopId
-  }
+  //   request.body = Object.assign(request.body , shopId)
+  // } else {
+  //   request.body = shopId
+  // }
   
 
   // console.log('flyio发请求,request为', request);

@@ -7,7 +7,7 @@
         <img class="img" :src="baseUrl + detailInfo.imagePath + '/1_350.png'" @click="previewImage(baseUrl + detailInfo.imagePath + '/1_350.png')"/>
         <div class="info">
           <div class="c">
-            <div class="p" v-if="!detailInfo.IsCustom"><text class="p-icon">￥</text>{{detailInfo.Price}}</div>
+            <div class="p" v-if="!detailInfo.IsCustom"><text class="p-icon">￥</text>{{detailInfo.Price}}<text class="number-color">  (数量:{{number}})</text></div>
             <div class="p" v-else><text class="p-icon">￥</text>{{ListPriceInfo.sprice + detailInfo.RemindPrice}}</div>
             <div class="s" v-if="!detailInfo.IsCustom">库存：{{Stock}}</div>
             <div class="a" v-if="!detailInfo.IsCustom">已选：<text>{{selectSkuStr.Color}} {{selectSkuStr.Size}} {{selectSkuStr.Version}} {{selectSkuStr.Material}} {{selectSkuStr.Fashion}} {{selectSkuStr.Grams}} {{selectSkuStr.Ensemble}}</text></div>
@@ -402,6 +402,11 @@ export default {
 .car-btn  .disabled {
     background-color: #777;
     color: #f7f7f7;
+}
+.number-color {
+  color: #999;
+  font-size: 28rpx;
+  padding-left: 5rpx;
 }
 </style>
 

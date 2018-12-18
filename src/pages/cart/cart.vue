@@ -29,7 +29,10 @@
                   <text class="num">{{item.IsCustom ? '非标品' : 'x' + item.Quantity}}</text>
                 </div>
                 <div class="attr" v-if="item.IsCustom">已选：{{ item.ParaStr }}</div>
-                <div class="attr attr-select" v-else @click.stop="openSelect(item)">{{item.SaleNumber&&item.Stock ? '已选：' + item.Color + item.Size + item.Version + item.Material + item.Fashion + item.Grams + item.Ensemble : '原商品已更换参数,不能下单,请重新选择参数'}}<text class="select-span">></text></div>
+                <div class="attr attr-select" v-else @click.stop="openSelect(item)">
+                  {{isYinXun ? (item.SaleStatus ? '已选：' + item.Color + item.Size + item.Version + item.Material + item.Fashion + item.Grams + item.Ensemble : '原商品已更换参数,不能下单,请重新选择参数')  : (item.SaleNumber&&item.Stock ? '已选：' + item.Color + item.Size + item.Version + item.Material + item.Fashion + item.Grams + item.Ensemble : '原商品已更换参数,不能下单,请重新选择参数')}}
+                  <text class="select-span">></text>
+                </div>
                 <div class="b">
                   <div class="price">
                     <text class="icon">￥</text>{{ item.IsCustom ? (item.SaleNumber&&item.Stock ?  '已下架'  : item.fbpPrice)  : item.bpTotal}}
@@ -172,10 +175,12 @@ export default {
 
       },
       intByPageIndex: 0,
-      more: false
+      more: false,
+      isYinXun: false
     }
   },
   async mounted () {
+    this.isYinXun = api.isYinXun
     await Promise.all([
       this.getCartList()
     ])
@@ -212,6 +217,7 @@ export default {
     // 请求购物车数据
     async getCartList () {
       const openId = wx.getStorageSync('openId')
+      if(!openId) return
       var par = {
         openId : openId,
         pageNo : this.pageNo,
@@ -288,17 +294,24 @@ export default {
       let shopCartIds = ''
       let downGoods = 0;
       this.cartGoods.map(function (element) {
-        //11.12添加检查库存和最低销售数量不为Null的检测，判断这个skuId是否还存在
+        
         if (element.checked) {
           // 判断库存和当前产品数量
           // 标品
-          if(element.Stock && element.SaleNumber && !element.IsCustom){
-            if(element.Quantity <= element.Stock) {
-              shopCartIds += `${element.Id},`
+          if(!element.IsCustom){
+            // 印生活，//11.12添加检查库存和最低销售数量不为Null的检测，判断这个skuId是否还存在
+            if(element.Stock && element.SaleNumber && !this.isYinXun) {
+              if(element.Quantity <= element.Stock) {
+                shopCartIds += `${element.Id},`
+              }
+            } else {
+              // 印讯直接判断库存和数量
+              if(element.Quantity <= element.Stock) {
+                shopCartIds += `${element.Id},`
+              }
             }
-          }
+          } else if (element.IsCustom) {
           // 非标品直接通过
-          if(element.IsCustom) {
             shopCartIds += `${element.Id},`
           }
           
@@ -308,7 +321,7 @@ export default {
         }
       });
       if (shopCartIds == '') {
-        this.$wx.showErrorToast('未选择任何商品')
+        this.$wx.showErrorToast('未选择商品')
         return false;
       }
       shopCartIds = shopCartIds.substring(0,shopCartIds.length-1)
@@ -381,8 +394,8 @@ export default {
         this.getGoodsSkuInfo(),
         this.getGoodsDetail(),
       ]);
-      // 如果是已经下架的产品,库存和最低销售数量是null
-      if(item.Stock && item.SaleNumber) {
+      // 如果是已经下架的产品,库存和最低销售数量是null,因为印讯没有saleNumber的感念，所以那salestatus作为是否下架的依据
+      if(this.isYinXun ? item.SaleStatus : item.Stock && item.SaleNumber) {
         this.getRouteSku(item.SkuId)
         // 设置当前购物车里商品的数量,获取价格
         this.edit.number = item.Quantity
@@ -398,6 +411,7 @@ export default {
           }  
           return 0; 
         })
+
         this.setSkuInfo(skuInfo[0])
       }
       
@@ -455,6 +469,10 @@ export default {
       this.edit.skuId = skuItem.SkuId
       this.edit.Stock = skuItem.Stock
       // 默认数量和最低销售数量
+      // 印讯没有saleNumber,默认1
+      if(skuItem.SaleNumber == undefined) {
+        skuItem.SaleNumber = 1
+      }
       this.edit.number = skuItem.SaleNumber != 0 ? skuItem.SaleNumber : 1
       this.edit.saleNumber = skuItem.SaleNumber != 0 ? skuItem.SaleNumber : 1
       // 1031性能调优
@@ -621,8 +639,8 @@ export default {
   // 原生的分享功能
   onShareAppMessage: function () {
     return {
-      title: 'sassShop',
-      desc: '印生活',
+      title: '商城',
+      desc: '购物车',
       path: '/pages/cart/cart'
     }
   }

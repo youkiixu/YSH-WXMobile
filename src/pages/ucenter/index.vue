@@ -65,10 +65,16 @@
         <div class="t">我的收藏</div>
         <img class="i" src="/static/images/address_right.png" background-size="cover"/>       
   </navigator>
-  <div class="service list clear" @click="toSelectChat">    
+  <!-- 印生活使用自己开发的客服 -->
+  <div class="service list clear" @click="toSelectChat" v-if="!isYinXun">    
         <div class="t">聊天记录</div>
         <img class="i" src="/static/images/address_right.png" background-size="cover"/>       
   </div>
+  <!-- 印讯使用微信自带的客服 -->
+  <button class="form_button service list clear" v-if="isYinXun" open-type="contact">
+        <div class="t">商家客服</div>
+        <img class="i" src="/static/images/address_right.png" background-size="cover"/>   
+  </button>
    <!-- <div class="integral list clear" @click="noEvent">    
         <div class="t">我的积分</div>
         <img class="i" src="/static/images/address_right.png" background-size="cover"/>       
@@ -92,7 +98,6 @@ import wx from 'wx';
 import api from '@/utils/api'
 import user from '@/services/user'
 import { mapState, mapActions , mapMutations } from 'vuex'
-var app = getApp();
 
 export default {
   data () {
@@ -108,6 +113,9 @@ export default {
     ]),
     baseUrl() {
         return this.$wx.baseUrl
+    },
+    isYinXun() {
+      return api.isYinXun
     }
   },
   mounted () {

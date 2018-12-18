@@ -223,7 +223,7 @@ export default {
     console.log(urlPath)
     return {
       title: this.keyword ? this.keyword : '搜索',
-      desc: '印生活',
+      desc: '商城',
       path: urlPath
     }
   }
