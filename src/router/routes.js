@@ -255,5 +255,21 @@ module.exports = [
       enablePullDownRefresh: false,
       navigationBarTitleText: '申请入驻'
     }
+  },
+  {
+    path: 'walletPages/wallet',
+    subPackage: true,
+    name: 'wallet',
+    config: {
+      navigationBarTitleText: '钱包'
+    }
+  },
+  {
+    path: 'walletPages/deposit',
+    subPackage: true,
+    name: 'deposit',
+    config: {
+      navigationBarTitleText: '充值'
+    }
   }
 ]
