@@ -1,21 +1,23 @@
 <template>
     <div>
         <div class="showMoney">
-            <div class="showMoney_money">￥<text>{{balance}}</text></div>
-            <div class="showMoney_trips">预存余额</div>
+            <div class="showMoney_money">￥<text>{{activityBalance}}</text></div>
+            <div class="showMoney_trips">耗材预存余额</div>
         </div>
         <div class="line"></div>
         <div class="input_region">
             <div class="input_regionTitle">充值金额：</div>
             <div class="input_regionMoney">
-                <input placeholder="请输入充值金额"
+                <input placeholder="请输入充值金额（最低为200元的整数）"
                        type="digit"
                        v-model="chargeAmount" />
             </div>
         </div>
         <div class="input_trips">
             <text>充值提示：</text>
-            <text>1.预存款充值可用于所有商品</text>
+            <text>1.首次充值满200元即送实物礼包，</text>
+            <text>2.本次活动充值预存只能用于支付广告物料直营店的订单，其他店铺订单无法使用；</text>
+            <text>3.活动的预存款不能发起提现。</text>
         </div>
         <div class="pay_bottom">
             <div class="pay_bottomMoney">支付金额：<text>{{chargeAmount ? chargeAmount : 0}}</text></div>
@@ -32,18 +34,21 @@ import { mapState , mapActions } from "vuex";
 export default {
     data() {
         return {
+            amount: 0,
             chargeAmount: ""
         };
     },
     computed: {
-        ...mapState(["userInfo","balance"])
+        ...mapState(["userInfo" , "activityBalance"])
     },
     mounted() {
         this.checkLogin();
+
+        // this.getdata()
     },
     methods: {
         ...mapActions([
-            'getbalance'
+            'getActivityBalance'
         ]),
         async payMoney() {
             const _this = this;
@@ -52,12 +57,20 @@ export default {
             if (this.chargeAmount == "") {
                 this.$wx.showErrorToast("请输入充值金额");
                 return;
-            }
+            } 
+            // else if (this.chargeAmount < 200) {
+            //     this.$wx.showErrorToast("不能低于200");
+            //     return;
+            // }
+
             this.$wx.showLoading();
             const res = await api.shopChargeSubmitYSH({
                 openid: openId,
                 intScanner: this.userInfo.Id,
-                ChargeAmount: this.chargeAmount
+                ChargeAmount: this.chargeAmount,
+                PayOrderType : 11,
+                EventId: 24,
+                PackageId: 26
             });
             this.$wx.hideLoading();
             if (res.success) {
@@ -83,7 +96,7 @@ export default {
         },
         refresh() {
             this.chargeAmount = "";
-            this.getbalance()
+            this.getActivityBalance();
         },
         checkLogin() {
             const openId = wx.getStorageSync("openId");
@@ -146,7 +159,7 @@ page {
     height: 80rpx;
     line-height: 80rpx;
     font-size: 48rpx;
-    color: #009e96;
+    color: #fb9e15;
     text-align: center;
     font-weight: bold;
 }
@@ -222,7 +235,7 @@ page {
 }
 .pay_bottomMoney text {
     font-size: 48rpx;
-    color: #009e96;
+    color: #ff9800;
 }
 .pay_bottomBtn {
     height: 78rpx;
@@ -233,7 +246,7 @@ page {
     font-size: 36rpx;
     margin: 0 auto;
     border-radius: 40rpx;
-    background: #009e96;
+    background: #ff9800;
 }
 </style>
 

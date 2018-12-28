@@ -2,7 +2,7 @@
     <div class="page">
         <div class="main">
             <div class="main-money">
-                <span class="money-size">￥</span>{{balance}}
+                <span class="money-size">￥</span>{{activityBalance}}
             </div>
             <div class="main-text">
                 账户余额
@@ -21,8 +21,7 @@
                 </navigator>
             </div>
         </div>
-        <div class="deposit-btn"
-             @click="toDeposit">充值</div>
+        <div class="deposit-btn" @click="toDeposit">充值</div>
     </div>
 </template>
 
@@ -30,24 +29,26 @@
 <script>
 import api from "@/utils/api";
 import util from "@/utils/util";
-import { mapState, mapActions } from "vuex";
+import { mapState , mapActions } from "vuex";
 export default {
     data() {
         return {};
     },
     computed: {
-        ...mapState(["userInfo", "balance"])
+        ...mapState(["userInfo" , 'activityBalance'])
     },
     mounted() {
-        this.getbalance()
+        this.refresh()
     },
     methods: {
-        ...mapActions(["getbalance"]),
+        ...mapActions([
+            'getActivityBalance'
+        ]),
         toDeposit() {
-            this.$router.push("/walletPages/deposit");
+            this.$router.push('/walletPages/activityDeposit')
         },
-        refresh() {
-            this.getbalance();
+        refresh () {
+            this.getActivityBalance()
         },
         checkLogin() {
             const openId = wx.getStorageSync("openId");
@@ -106,7 +107,7 @@ export default {
 }
 .main-money {
     font-size: 72rpx;
-    color: #009e96;
+    color: #fb9e15;
 }
 .money-size {
     font-size: 48rpx;
@@ -128,12 +129,12 @@ export default {
     left: 25rpx;
     width: 700rpx;
     height: 85rpx;
-    background: #009e96;
+    background: #fb9e15;
     line-height: 85rpx;
     text-align: center;
     color: #fff;
     font-size: 34rpx;
     border-radius: 6rpx;
-    box-shadow: 4rpx 4rpx 16rpx rgba(0, 150, 158, 0.6);
+    box-shadow: 4rpx 4rpx 16rpx rgba(226, 184, 106, 0.6);
 }
 </style>

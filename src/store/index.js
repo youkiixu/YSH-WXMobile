@@ -35,7 +35,9 @@ const store = new Vuex.Store({
     proSearchParam : {},//非标报价的参数
     proSearchRst: {},//非标报价后的厂家价格列表
     cartCheckOutInfo: {}, //购物车下单页面参数
-    shoppingCartCount: 0
+    shoppingCartCount: 0,
+    balance: 0,//账户余额
+    activityBalance: 0 //活动余额
   },
   mutations: {
     setWxUserInfo(state , res) {
@@ -78,6 +80,14 @@ const store = new Vuex.Store({
     // 设置印讯店铺信息
     setYinXunShopInfo(state , res) {
       state.yinXunShopInfo = res
+    },
+    // 设置预存款余额
+    setBalance(state , res) {
+        state.balance = res
+    },
+    //  设置活动余额
+    setActivityBalance (state , res) {
+        state.activityBalance = res
     }
   },
   actions: {
@@ -239,6 +249,35 @@ const store = new Vuex.Store({
           commit('setShoppingCartCount', res.data)
         }
       }
+    },
+    // 获取预存款余额
+    async getbalance (vm) {
+        const userId = vm.state.userInfo.Id
+        if(userId) {
+            const res = await api.capitalBalanceYSH({
+                '@UserId':userId
+            })
+            if(res.success) {
+                vm.commit('setBalance' , res.data[0].Balance)
+            }
+        } else {
+            vm.commit('setBalance' , 0)
+        }
+    },
+    // 获取活动预存款余额
+    async getActivityBalance (vm) {
+        const userId = vm.state.userInfo.Id
+        if(userId) {
+            const res = await api.productCapitalTotal({
+                '@UserId':userId
+            })
+            if(res.success) {
+                vm.commit('setActivityBalance' , res.data[0].Amount)
+            }
+        } else {
+            vm.commit('setActivityBalance' , 0)
+        }
+        //commit('setActivityBalance')
     }
   }
 })

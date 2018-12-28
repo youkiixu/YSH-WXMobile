@@ -1,11 +1,14 @@
 import request from './request'
 import pub from './pub'
-import  {ApiKiyUrl , isYinXun}  from './config'
+import {
+  ApiKiyUrl,
+  isYinXun
+} from './config'
 
 
 const indexData = isYinXun ? 't1' : 't6'
 const api = {
-  isYinXun : isYinXun,
+  isYinXun: isYinXun,
   //获取sass首页
   getSassIndex: (paramObj) => request.post('/Wxmobile/JsonAjax/Hi_Ajax_GetTemplateByID?client=' + indexData, paramObj, {
     baseURL: ApiKiyUrl
@@ -278,9 +281,22 @@ const api = {
   //   "key": "getMyFriendList",
   //   "strFromOpenId": "oRex35EywKDhC1hSspu2_fiyYxus",
   // }
-  getMyFriendList:(paramObj)  => pub.getAjaxData('getMyFriendList', paramObj, {
+  getMyFriendList: (paramObj) => pub.getAjaxData('getMyFriendList', paramObj, {
     baseURL: ApiKiyUrl
   }),
+  //ShopChargeSubmitYSH   
+  shopChargeSubmitYSH: (paramObj) => pub.getAjaxData('ShopChargeSubmitYSH', paramObj, {
+    baseURL: ApiKiyUrl
+  }),
+  //预存款余额
+  capitalBalanceYSH: (paramObj) => pub.getAjaxData('CapitalBalanceYSH' , paramObj , {
+      baseURL : ApiKiyUrl
+  } , true),
+  //活动预存余额
+  productCapitalTotal: (paramObj) => pub.getAjaxData('ProductCapitalTotal' , paramObj , {
+      baseURL: ApiKiyUrl
+  } , true)
+
 }
 
 export default api

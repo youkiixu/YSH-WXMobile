@@ -53,14 +53,21 @@
 
   </div>
 
-  <navigator url="../cart/cart" open-type="switchTab" class="ShoppingCar list clear">    
-        <div class="t">购物车</div>
+  
+  <navigator url="../../walletPages/wallet" class="collection list clear" v-if="!isYinXun">    
+        <div class="t">预存款钱包</div>
         <img class="i" src="/static/images/address_right.png" background-size="cover"/>       
   </navigator>
+  <navigator url="../../walletPages/activityWallet" class="collection list clear" v-if="!isYinXun">    
+        <div class="t">自营耗材预存钱包</div>
+        <img class="i" src="/static/images/address_right.png" background-size="cover"/>       
+  </navigator>
+  
   <navigator url="../../addressPages/address" class="address list clear">    
         <div class="t">地址管理</div>
         <img class="i" src="/static/images/address_right.png" background-size="cover"/>       
   </navigator>
+  
   <navigator url="../ucenter/collect" class="collection list clear">    
         <div class="t">我的收藏</div>
         <img class="i" src="/static/images/address_right.png" background-size="cover"/>       
@@ -75,6 +82,7 @@
         <div class="t">商家客服</div>
         <img class="i" src="/static/images/address_right.png" background-size="cover"/>   
   </button>
+
    <!-- <div class="integral list clear" @click="noEvent">    
         <div class="t">我的积分</div>
         <img class="i" src="/static/images/address_right.png" background-size="cover"/>       
@@ -343,10 +351,11 @@ page{
 .myOrder{
   height: 240rpx;
   width: 100%;
-  margin-top: 20rpx; 
+  margin: 20rpx 0; 
   padding: 0 20rpx;
   box-sizing: border-box;
   background-color: #fff;
+  
 }
 .myOrder .h {
   width: 750rpx;

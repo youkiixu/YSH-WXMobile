@@ -1,5 +1,4 @@
-module.exports = [
-  {
+module.exports = [{
     path: 'pages/index/index',
     name: 'index',
     config: {
@@ -229,7 +228,7 @@ module.exports = [
       navigationBarTitleText: '成为客服'
     }
   },
-  
+
   {
     path: 'wxchat/wxChat',
     subPackage: true,
@@ -261,7 +260,25 @@ module.exports = [
     subPackage: true,
     name: 'wallet',
     config: {
-      navigationBarTitleText: '钱包'
+      navigationBarTitleText: '预存款钱包'
+    }
+  },
+  {
+    path: 'walletPages/activityDeposit',
+    subPackage: true,
+    name: 'activityDeposit',
+    config: {
+      enablePullDownRefresh: true,
+      navigationBarTitleText: '活动充值'
+    }
+  },
+  {
+    path: 'walletPages/detail',
+    subPackage: true,
+    name: 'detail',
+    config: {
+      enablePullDownRefresh: true,
+      navigationBarTitleText: '账单详情'
     }
   },
   {
@@ -269,7 +286,17 @@ module.exports = [
     subPackage: true,
     name: 'deposit',
     config: {
-      navigationBarTitleText: '充值'
+      enablePullDownRefresh: true,
+      navigationBarTitleText: '预存款充值'
+    }
+  },
+  {
+    path: 'walletPages/activityWallet',
+    subPackage: true,
+    name: 'activityWallet',
+    config: {
+      enablePullDownRefresh: true,
+      navigationBarTitleText: '自营耗材预存钱包'
     }
   }
 ]

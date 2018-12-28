@@ -290,6 +290,7 @@ export default {
     // 点击“下单”，跳转到下单页
     checkoutOrder () {
       // 获取已选择的商品
+      const _this = this
       const openId = wx.getStorageSync('openId')
       let shopCartIds = ''
       let downGoods = 0;
@@ -300,7 +301,7 @@ export default {
           // 标品
           if(!element.IsCustom){
             // 印生活，//11.12添加检查库存和最低销售数量不为Null的检测，判断这个skuId是否还存在
-            if(element.Stock && element.SaleNumber && !this.isYinXun) {
+            if(element.Stock && element.SaleNumber && !_this.isYinXun) {
               if(element.Quantity <= element.Stock) {
                 shopCartIds += `${element.Id},`
               }
