@@ -289,14 +289,21 @@ const api = {
     baseURL: ApiKiyUrl
   }),
   //预存款余额
-  capitalBalanceYSH: (paramObj) => pub.getAjaxData('CapitalBalanceYSH' , paramObj , {
-      baseURL : ApiKiyUrl
-  } , true),
+  capitalBalanceYSH: (paramObj) => pub.getAjaxData('CapitalBalanceYSH', paramObj, {
+    baseURL: ApiKiyUrl
+  }, true),
   //活动预存余额
-  productCapitalTotal: (paramObj) => pub.getAjaxData('ProductCapitalTotal' , paramObj , {
-      baseURL: ApiKiyUrl
-  } , true)
-
+  productCapitalTotal: (paramObj) => pub.getAjaxData('ProductCapitalTotal', paramObj, {
+    baseURL: ApiKiyUrl
+  }, true),
+  // 活动列表：参数@Id，@GiveType:(0:返点，1送礼)，@EventStartTime结束时间。 三个参数可空
+  getRechargeEventYSHList: (paramObj) => pub.getAjaxData('RechargeEventYSHList', paramObj, {
+    baseURL: ApiKiyUrl
+  }, true),
+//   BJYS_UserFinancingList
+  getUserFinancingList: (paramObj) => pub.getAjaxData('BJYS_UserFinancingList', paramObj, {
+    baseURL: ApiKiyUrl
+  }, true),
 }
 
 export default api

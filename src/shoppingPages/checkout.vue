@@ -141,7 +141,7 @@
     <div class="order-total" >
         <div class="t">
         <!-- 如果是代发，需要加上代发运费 -->
-        <div>合计：￥{{allToTal}}</div>
+            <div>合计：￥{{allToTal}}</div>
         <!-- 如果是印捷配送，直接显示价格 -->
         <!-- <div v-if="!daifaInfo.isDaifa">合计：￥{{checkOutInfo.IsRemind ? (checkOutInfo.totalAmount + remindInfo.RemindPrice) : checkOutInfo.totalAmount}}</div> -->
         </div>
@@ -456,24 +456,32 @@ export default {
         }
     },
     async submitOrderByProductId (par) {
-        console.log(JSON.stringify(par))
         this.$wx.showLoading()
         const res = await api.submitOrderByProductId(par)
+        console.log(res);
+        
         this.$wx.hideLoading()
         this.submitAfter(res)
         
     },
     async submitOrderByProductId2(par) {
-        console.log(JSON.stringify(par))
         this.$wx.showLoading()
         const res = await api.submitOrderByProductId2(par)
+        console.log(res);
         this.$wx.hideLoading()
         this.submitAfter(res)
     },
-    submitAfter (res) {
+    submitAfter (res) { 
         if(res.success) {
+            // this.$router.replace({
+            //     path: '../pages/pay/payResult?status=1&isShopping=1&Id=' + res.data
+            // })
             this.$router.replace({
-                path: '../pages/pay/payResult?status=1&isShopping=1&Id=' + res.data
+                path: '../pages/pay/pay',
+                query: {
+                    productInfo: this.allToTal,
+                    id: res.data
+                } 
             })
         } else {
             this.$wx.showErrorToast(res.msg)

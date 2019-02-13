@@ -265,14 +265,19 @@ const store = new Vuex.Store({
         }
     },
     // 获取活动预存款余额
-    async getActivityBalance (vm) {
+    async getActivityBalance (vm , param) {
         const userId = vm.state.userInfo.Id
         if(userId) {
             const res = await api.productCapitalTotal({
-                '@UserId':userId
+                '@UserId':userId,
+                '@EventId': param.EventId ? param.EventId : 24
             })
             if(res.success) {
-                vm.commit('setActivityBalance' , res.data[0].Amount)
+                res.data.map(item => {
+                    if(param.EventId === 24 && item.Name == '广告物料预存送好礼') {
+                        vm.commit('setActivityBalance' , item.Amount)
+                    }
+                })
             }
         } else {
             vm.commit('setActivityBalance' , 0)

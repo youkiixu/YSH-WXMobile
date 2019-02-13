@@ -4,7 +4,7 @@ function getAjaxData(strMethod, paramObj, options , issql) {
     return new Promise((reslove , reject) => {
         const miniProgram = wx.getAccountInfoSync()
         let data;
-        console.log(strMethod, paramObj, options , issql)
+        // console.log(strMethod, paramObj, options , issql)
         if(issql) {
             data = Object.assign(paramObj , {
                 strSysMethod: strMethod

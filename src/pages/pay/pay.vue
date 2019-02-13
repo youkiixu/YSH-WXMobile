@@ -7,20 +7,24 @@
     <div class="pay-list">
         <div class="h">请选择支付方式</div>
         <div class="b">
-            <!-- <div class="item">
-                <div class="checkbox"></div>
-                <div class="icon-alipay"></div>
-                <div class="name">支付宝</div>
-            </div> -->
-            <div class="item">
-                <div class="checkbox checked"></div>
+            <div class="item" @click="changeType('wxchat')">
+                <div :class="payType === 'wxchat' ?'checkbox checked' : 'checkbox'"></div>
                 <img src="/static/images/wxpay.png" class="icon"/>
                 <div class="name">微信支付</div>
             </div>
+            <div class="item" @click="changeType('balance')">
+                <div :class="payType === 'balance' ?'checkbox checked' : 'checkbox'"></div>
+                <!-- <div class="icon-alipay"></div> -->
+                <div class="name">预存款支付</div>
+            </div>
         </div>
     </div>
-    <div class="tips">小程序只支持微信支付，如需其它支付方式，请在网页版支付</div>
-    <div class="pay-btn" @click="startPay">确定</div>
+    <div class="btns">
+        <navigator class="btn" url="../../orderPages/order" open-type="redirect">查看订单</navigator>
+        <navigator class="btn" url="../index/index" open-type="switchTab">继续逛</navigator>
+      </div>
+    <!-- <div class="tips">小程序只支持微信支付，如需其它支付方式，请在网页版支付</div> -->
+    <div class="pay-btn" @click="startPay">确定支付</div>
 </div>
 </template>
 
@@ -32,7 +36,8 @@ export default {
   data () {
     return {
       orderId: '',
-      actualPrice: ''
+      actualPrice: '',
+      payType: 'wxchat'
     }
   },
   async mounted () {
@@ -84,6 +89,9 @@ export default {
       } else {
         this.$wx.showErrorToast('发起支付失败')
       }
+    },
+    changeType (type) {
+        this.payType = type
     }
   }
 }
@@ -94,6 +102,24 @@ page{
     min-height: 100%;
     width: 100%;
     background: #f4f4f4;
+}
+
+.btns {
+  margin: 60rpx 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn {
+  text-align: center;
+  height: 80rpx;
+  margin: 0 20rpx;
+  width: 200rpx;
+  line-height: 78rpx;
+  border: 1px solid #868686;
+  color: #000000;
+  border-radius: 5rpx;
 }
 
 .container{

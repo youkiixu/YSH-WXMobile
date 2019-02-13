@@ -317,6 +317,15 @@ function deepCopy(params) {
     return urlPath
   }
 
+  function checkNumber(num) {
+    let isNum = true
+    const reg = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
+    if (!reg.test(num)) {
+        isNum = false
+    } 
+    return isNum
+  }
+
 const util = {
   login,
   getUserInfo,
@@ -337,7 +346,8 @@ const util = {
   // getSellerChat,
   getWxChatUrl,
   getUserListUrl,
-  getCurrentPageUrl
+  getCurrentPageUrl,
+  checkNumber
 }
 
 export default util

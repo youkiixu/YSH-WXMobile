@@ -163,47 +163,57 @@ export default {
     },
     // 点击“去付款”
     async payOrder () {
-      let that = this;
-      const openId = wx.getStorageSync('openId')
-      const miniProgram = wx.getAccountInfoSync()
-      var par = {
-          openId: openId,
-          pappid: miniProgram.miniProgram.appId,
-          orderIds: this.OrderId
-      }
-      this.$wx.showLoading()
-      const res = await api.getSaaSQRCode(par);
-      this.$wx.hideLoading()
-      // console.log('订单详情页去付款,请求结果', res);
+        this.$router.replace({
+            path: '../pages/pay/pay',
+            query: {
+                productInfo: this.orderInfo.ProductTotalAmount + this.orderInfo.Freight - this.orderInfo.ReceivedAmount,
+                id: this.orderInfo.Id
+            } 
+        })
+        
 
-      if (res.success  ) {
-          if(!res.bPay) {
-            const data = JSON.parse(res.data.paySign)
-            // 原生的支付方法
-            wx.requestPayment({
-                'timeStamp': data.timeStamp,
-                'nonceStr': data.nonceStr,
-                'package': data.package,
-                'signType': data.signType,
-                'paySign': data.paySign,
-                'success': function (res) {
-                    wx.redirectTo({
-                        url: '../pages/pay/payResult?status=1&Id=' + that.OrderId
-                    })
-                },
-                'fail': function (res) {
-                    wx.redirectTo({
-                        url: '../pages/pay/payResult?status=0&Id=' + that.OrderId
-                    })
-                }
-            });
-          } else {
-              this.$wx.showErrorToast('此订单已支付')
-          }
 
-      } else {
-        this.$wx.showErrorToast('发起支付失败')
-      }
+    //   let that = this;
+    //   const openId = wx.getStorageSync('openId')
+    //   const miniProgram = wx.getAccountInfoSync()
+    //   var par = {
+    //       openId: openId,
+    //       pappid: miniProgram.miniProgram.appId,
+    //       orderIds: this.OrderId
+    //   }
+    //   this.$wx.showLoading()
+    //   const res = await api.getSaaSQRCode(par);
+    //   this.$wx.hideLoading()
+    //   // console.log('订单详情页去付款,请求结果', res);
+
+    //   if (res.success  ) {
+    //       if(!res.bPay) {
+    //         const data = JSON.parse(res.data.paySign)
+    //         // 原生的支付方法
+    //         wx.requestPayment({
+    //             'timeStamp': data.timeStamp,
+    //             'nonceStr': data.nonceStr,
+    //             'package': data.package,
+    //             'signType': data.signType,
+    //             'paySign': data.paySign,
+    //             'success': function (res) {
+    //                 wx.redirectTo({
+    //                     url: '../pages/pay/payResult?status=1&Id=' + that.OrderId
+    //                 })
+    //             },
+    //             'fail': function (res) {
+    //                 wx.redirectTo({
+    //                     url: '../pages/pay/payResult?status=0&Id=' + that.OrderId
+    //                 })
+    //             }
+    //         });
+    //       } else {
+    //           this.$wx.showErrorToast('此订单已支付')
+    //       }
+
+    //   } else {
+    //     this.$wx.showErrorToast('发起支付失败')
+    //   }
     },
     // 点击取消订单
     cancelOrder () {

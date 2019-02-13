@@ -296,7 +296,7 @@ module.exports = [{
     name: 'activityWallet',
     config: {
       enablePullDownRefresh: true,
-      navigationBarTitleText: '自营耗材预存钱包'
+      navigationBarTitleText: '广告物料预存余额'
     }
   }
 ]

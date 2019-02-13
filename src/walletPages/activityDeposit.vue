@@ -58,10 +58,14 @@ export default {
                 this.$wx.showErrorToast("请输入充值金额");
                 return;
             } 
-            // else if (this.chargeAmount < 200) {
-            //     this.$wx.showErrorToast("不能低于200");
-            //     return;
+            // else if(util.checkNumber(this.chargeAmount)) {
+            //     this.$wx.showErrorToast("请正确输入金额");
+            //     return
             // }
+            else if (this.chargeAmount < 200) {
+                this.$wx.showErrorToast("不能低于200");
+                return;
+            }
 
             this.$wx.showLoading();
             const res = await api.shopChargeSubmitYSH({

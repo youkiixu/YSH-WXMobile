@@ -10,15 +10,14 @@
         </div>
         <div class="main-detail">
             <div class="weui-cells weui-cells_after-title main-detial-item">
-                <navigator url="/walletPages/detail"
-                           class="weui-cell weui-cell_access main-detial-item">
-                    <div class="weui-cell__hd">
+                <div class="weui-cell weui-cell_access main-detial-item" @click="toDetail">
+                    <div class="weui-cell__hd"  > 
                         <image src="/static/images/moneydetail.png"
                                style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>
                     </div>
                     <div class="weui-cell__bd">账户明细</div>
                     <div class="weui-cell__ft weui-cell__ft_in-access"></div>
-                </navigator>
+                </div>
             </div>
         </div>
         <div class="deposit-btn" @click="toDeposit">充值</div>
@@ -48,7 +47,17 @@ export default {
             this.$router.push('/walletPages/activityDeposit')
         },
         refresh () {
-            this.getActivityBalance()
+            this.getActivityBalance({
+                EventId: 24
+            })
+        },
+        toDetail () {
+            this.$router.push({
+                path: '/walletPages/detail',
+                query: { 
+                    EventId : 24 
+                } 
+            })
         },
         checkLogin() {
             const openId = wx.getStorageSync("openId");

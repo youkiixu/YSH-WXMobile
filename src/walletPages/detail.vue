@@ -1,33 +1,75 @@
 <template>
     <div class="page">
-        <div class="list-item clearfix">
+        <div class="list-item clearfix"
+             v-for="(item , index) in list"
+             :key="index">
             <div class="item-left">
-                <div class="item-left-name">退款</div>
-                <div class="item-left-time">2018/12/26 9:01:02</div>
+                <div class="item-left-name">余额：{{item.LastAmount}}</div>
+                <div class="item-left-time">{{item.CreateTime}}</div>
             </div>
-            <div class="item-right">+42.1</div>
-        </div>
-        <div class="list-item clearfix">
-            <div class="item-left">
-                <div class="item-left-name">退款</div>
-                <div class="item-left-time">2018/12/26 9:01:02</div>
-            </div>
-            <div class="item-right">+42.1</div>
-        </div>
-        <div class="list-item clearfix">
-            <div class="item-left">
-                <div class="item-left-name">退款</div>
-                <div class="item-left-time">2018/12/26 9:01:02</div>
-            </div>
-            <div class="item-right">+42.1</div>
+            <div class="item-right">{{item.Amount}}</div>
         </div>
     </div>
 </template>
 
 <script>
+import api from "@/utils/api";
+import { mapState } from "vuex";
 export default {
     data() {
-        return {};
+        return {
+            EventId: undefined,
+            list: [],
+            rowIndex: 0
+        };
+    },
+    computed: {
+        ...mapState(["userInfo"])
+    },
+    beforeMount() {
+        
+    },
+    mounted() {
+        this.refresh();
+    },
+    methods: {
+        async getRechargeEventYSHList() {
+            if (this.$route.query.EventId) {
+                this.EventId = this.$route.query.EventId;
+            } else {
+                this.EventId = undefined;
+            }
+            this.rowIndex++;
+            let par = {
+                "@UserId": this.userInfo.Id,
+                "@rowIndex": this.rowIndex
+            };
+            if (this.EventId) {
+                par = Object.assign(par, {
+                    "@EventId": this.EventId
+                });
+            }
+            this.$wx.showLoading();
+            const res = await api.getUserFinancingList(par);
+            this.$wx.hideLoading();
+            if (res.success) {
+                this.list = this.list.concat(res.data);
+            }
+        },
+        refresh() {
+            this.list = [];
+            this.rowIndex = 0;
+            this.getRechargeEventYSHList();
+        }
+    },
+    // 小程序原生上拉加载
+    async onReachBottom() {
+        this.getRechargeEventYSHList();
+    },
+    // 小程序原生下拉刷新
+    onPullDownRefresh: function() {
+        this.refresh();
+        wx.stopPullDownRefresh();
     }
 };
 </script>

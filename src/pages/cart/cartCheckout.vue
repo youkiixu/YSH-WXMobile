@@ -426,7 +426,7 @@ export default {
                 query: {
                     productInfo: this.totalAmount,
                     id: res.data
-                }
+                } 
             })
         } else {
             this.$wx.showErrorToast(res.msg)
