@@ -4,7 +4,7 @@
   "window": {
     "backgroundTextStyle": "dark",
     "navigationBarBackgroundColor": "#fff",
-    "navigationBarTitleText": "印生活",
+    "navigationBarTitleText": "商城",
     "navigationBarTextStyle": "black",
     "enablePullDownRefresh" : false
   },

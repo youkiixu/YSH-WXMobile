@@ -30,7 +30,7 @@ import { isYinXun } from '@/utils/config'
 export default {
   data () {
     return {
-      loading: true  
+      loading: true
     }
   },
   components: {
@@ -72,10 +72,10 @@ export default {
       //   this.$wx.showErrorToast(res.msg)
       //   return
       // }
-         
+
       this.$router.push({
         path: '../../wxchat/userList',
-        query: {        
+        query: {
           strGroupName: " ",
         }
       })
@@ -93,7 +93,7 @@ export default {
   onShareAppMessage: function () {
     return {
       title: '商城',
-      desc: '印生活',
+      desc: '商城',
       path: '/pages/index/index'
     }
   }
@@ -126,7 +126,7 @@ export default {
   position: fixed;
   bottom: 55rpx;
   right: 20rpx;
-  z-index: 1000; 
+  z-index: 1000;
 }
 .toChat img{
   width: 100%;

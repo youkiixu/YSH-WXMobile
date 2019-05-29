@@ -32,13 +32,13 @@
                 <div class="m" v-if="orderInfo.Material">材料：<text class="t">{{orderInfo.Material}}</text></div>
                 <div class="m" v-if="orderInfo.Fashion">款式：<text class="t">{{orderInfo.Fashion}}</text></div>
                 <div class="m" v-if="orderInfo.Grams">克重：<text class="t">{{orderInfo.Grams}}</text></div>
-                <div class="m" v-if="orderInfo.Ensemble">套餐：<text class="t">{{orderInfo.Ensemble}}</text></div>      
+                <div class="m" v-if="orderInfo.Ensemble">套餐：<text class="t">{{orderInfo.Ensemble}}</text></div>
                 <div class="m" v-if="item.ParaStr" v-for="(item , index) in orderGoods" :key="index" >
                     <text class="t" >{{item.ParaStr}}</text>
-                </div>        
+                </div>
             </div>
         </div>
-    
+
 
         <div class="message-info clear">
             <div class="l">留言:</div>
@@ -71,12 +71,12 @@
         </div>
         <div class="btn">
             <button class="cancel" v-if="canCancel" @click="cancelOrder">取消订单</button>
-            <button class="confirm" v-if="canPay" @click="payOrder">确认支付</button> 
+            <button class="confirm" v-if="canPay && !isYinXun" @click="payOrder">确认支付</button>
         </div>
     </div>
     <loadingComponent v-if="loading"></loadingComponent>
 
-</div> 
+</div>
 
 </template>
 
@@ -88,9 +88,10 @@ import orderInfoStatus from '@/utils/orderInfoStatus'
 import loadingComponent from '@/components/loadingComponent'
 import express from '@/utils/express'
 
+
 export default {
     components: {
-      loadingComponent  
+      loadingComponent
     },
   data () {
     return {
@@ -106,11 +107,14 @@ export default {
     ...mapState(['userInfo']) ,
     baseUrl () {
         return this.$wx.baseUrl
-    } 
+    },
+    isYinXun() {
+      return api.isYinXun;
+    }
   },
   // 每次打开触发，更新数据
   async mounted () {
-    this.OrderId = this.$route.query.Id 
+    this.OrderId = this.$route.query.Id
     await Promise.all([
       this.getUserOrderDetail()
     ])
@@ -126,8 +130,8 @@ export default {
 
         if (res.success === true) {
             const data = JSON.parse(res.data)
-            this.orderInfo = data[0]; 
-            this.orderGoods = data[1].QuoteRecord;   
+            this.orderInfo = data[0];
+            this.orderGoods = data[1].QuoteRecord;
             this.orderInfo.OrderStatusStr = this.$wx.orderStatus(this.orderInfo.OrderStatus)
             this.orderInfo.RemindtypeStr = express.wuliuStr(this.orderInfo.Remindtype)
             // 判断按钮可不可以用
@@ -136,7 +140,7 @@ export default {
             this.$router.back()
         }
     },
-    init () { 
+    init () {
         const m = this.orderInfo
         this.canCancel = false
         this.canPay = false
@@ -147,7 +151,7 @@ export default {
             } else {
                 this.canCancel = true
             }
-        } 
+        }
 
         if(!m.IsCleared && m.OrderStatus != orderInfoStatus.OrderOperateStatus.Close && !m.IsReprint ) {
             this.canPay = true
@@ -158,8 +162,8 @@ export default {
         //         this.canPay = true
         //     }
         // }
-        
-        
+
+
     },
     // 点击“去付款”
     async payOrder () {
@@ -168,9 +172,9 @@ export default {
             query: {
                 productInfo: this.orderInfo.ProductTotalAmount + this.orderInfo.Freight - this.orderInfo.ReceivedAmount,
                 id: this.orderInfo.Id
-            } 
+            }
         })
-        
+
 
 
     //   let that = this;
@@ -323,7 +327,7 @@ page{
 }
 .info-bottom{
     padding-top: 10rpx;
-    box-sizing: border-box;  
+    box-sizing: border-box;
 }
 .info-bottom .m{
      line-height: 40rpx;
@@ -360,7 +364,7 @@ page{
 .goods-info .txt .txt-t{
     height: 130rpx;
 }
-.goods-info .txt .txt-title{  
+.goods-info .txt .txt-title{
     color: #282828;
     font-size: 26rpx;
     line-height: 40rpx;

@@ -4,7 +4,7 @@
       <div class="label">订单金额</div>
       <div class="txt">{{actualPrice}}元</div>
     </div>
-    <div class="pay-list">
+    <div class="pay-list" v-if="!isYinXun">
         <div class="h">请选择支付方式</div>
         <div class="b">
             <div class="item" @click="changeType('wxchat')">
@@ -12,11 +12,10 @@
                 <img src="/static/images/wxpay.png" class="icon"/>
                 <div class="name">微信支付</div>
             </div>
-            <div class="item" @click="changeType('balance')">
+            <!-- <div class="item" @click="changeType('balance')">
                 <div :class="payType === 'balance' ?'checkbox checked' : 'checkbox'"></div>
-                <!-- <div class="icon-alipay"></div> -->
                 <div class="name">预存款支付</div>
-            </div>
+            </div> -->
         </div>
     </div>
     <div class="btns">
@@ -24,7 +23,7 @@
         <navigator class="btn" url="../index/index" open-type="switchTab">继续逛</navigator>
       </div>
     <!-- <div class="tips">小程序只支持微信支付，如需其它支付方式，请在网页版支付</div> -->
-    <div class="pay-btn" @click="startPay">确定支付</div>
+    <div class="pay-btn" @click="startPay" v-if="!isYinXun">确定支付</div>
 </div>
 </template>
 
@@ -38,6 +37,11 @@ export default {
       orderId: '',
       actualPrice: '',
       payType: 'wxchat'
+    }
+  },
+  computed: {
+    isYinXun() {
+      return api.isYinXun;
     }
   },
   async mounted () {

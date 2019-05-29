@@ -28,7 +28,7 @@ export default {
             }).catch(() => {
                 _this.$router.back()
             })
-        } 
+        }
         if (this.$route.query.pid) {
             this.quoteUrl = 'https://www.kiy.cn//m-mobile/autobaojia/index?pid=' + this.$route.query.pid + '&&fid=' + this.$route.query.fid + '&&param=' + this.$route.query.data
             this.qitemCode = this.$route.query.pid
@@ -55,12 +55,12 @@ export default {
                 title: this.title,
                 detailCommon: this.detailCommon  == 'true' ? true : false,//是不是从detail页面过来,true不加载detail页,false加载
             }
-             
+
             this.getProSearchRst(par)
-            
+
         }
     }
-    
+
 }
 </script>
 

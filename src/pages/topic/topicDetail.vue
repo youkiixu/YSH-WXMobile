@@ -119,7 +119,7 @@ export default {
   onShareAppMessage: function () {
     return {
       title: 'sassShop',
-      desc: '印生活',
+      desc: '商城',
       path: '/pages/topic/topicDetail'
     }
   }

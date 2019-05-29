@@ -35,13 +35,13 @@
                 <div class="c-price" v-if="!detailInfo.IsCustom"><text class="price-icon" >￥</text>{{ isInit ? defaultPrice : detailInfo.Price}}<text v-if="!isInit" class="number-color">  (数量:{{number}})</text></div>
                 <!-- 非标品价格 -->
                 <div class="c-price"  v-else><text class="price-icon" >￥</text>{{ListPriceInfo.sprice + detailInfo.RemindPrice}} <text class="original-price" v-if="ListPriceInfo.sprice != ListPriceInfo.OriginalPrice">{{ListPriceInfo.OriginalPrice}}</text></div>
-                <div :class="collectStatus ? 'c-collect collected' : 'c-collect'"  @click="addCannelCollect">           
+                <div :class="collectStatus ? 'c-collect collected' : 'c-collect'"  @click="addCannelCollect">
                 </div>
               </div>
               <div class="con-text">
                 <div class="desc">{{detailInfo.ProductName}}</div>
                 <div class="notes">{{detailInfo.ShortDescription}}</div>
-              </div>       
+              </div>
           </div>
           <!-- 已选参数 -->
           <div class="section-nav section-attr" @click="switchAttrPop">
@@ -75,7 +75,7 @@
             </div>
             <div class="b"  v-if="comment.Id">
               <div class="item">
-                <div class="info clear"> 
+                <div class="info clear">
                   <div class="user">
                       <img :src="defalutHead" />
                       <text>{{comment.UserName}}</text>
@@ -87,22 +87,22 @@
                 </div>
               </div>
               <navigator :url="'../commentPages/comment?valueId=' + id + '&typeId=0'" class="seeall">查看全部评价</navigator>
-            </div>   
+            </div>
             <div class="b" v-else>
               <div class="seeall">暂无评价</div>
             </div>
-          </div> 
+          </div>
           <!-- 产品描述 -->
           <div class="proDetail" id="proDetail">
             <div class="title">商品详情</div>
             <div class="content">
               <wxParse :imageProp="parseUrl" :content="goodDetailHTMLstr"/>
             </div>
-          </div>  
-        </div> 
+          </div>
+        </div>
       </scroll-view>
     </div>
-    <!-- 模态浮层 --> 
+    <!-- 模态浮层 -->
     <div class="attr-pop-box" v-if="openAttr"  @click="closeAttr" catchtouchmove="stopPageScroll">
         <div class="attr-pop"  v-if="openAttr" @click.stop="closeAttr('no')">
           <selectComponent
@@ -149,9 +149,9 @@
     </div>
 
     <!-- 返回首页 -->
-    <navigator url="../pages/index/index" open-type="switchTab">    
-        <div class="GoIndex">首页</div>   
-    </navigator> 
+    <navigator url="../pages/index/index" open-type="switchTab">
+        <div class="GoIndex">首页</div>
+    </navigator>
 
     <loadingComponent v-if="loading"></loadingComponent>
 </div>
@@ -201,7 +201,7 @@ export default {
       skuInfo: [],
       selectSku: {
         Color: 0,
-        Size: 0, 
+        Size: 0,
         Version: 0,
         Material: 0,
         Fashion: 0,
@@ -221,7 +221,7 @@ export default {
       skuPrice: 0,
       strYjtype: '请选择配送方式',
       Yjtype: 0,
-      YjUse: 0, 
+      YjUse: 0,
       Stock: 0,
       SubmitByProductType: false,
       comment: {},
@@ -247,7 +247,7 @@ export default {
       // 解决web端input的value的双引号和单引号的问题，所以分享的路径改为单引号，来到这个页面，将单引号替换成双引号，不然json.parse会报语法错误
       let b = ''
       if(a.split("'").length >= 2) {
-        b = a.split("'").join("\""); 
+        b = a.split("'").join("\"");
       } else {
         b = this.$route.query.data
       }
@@ -428,11 +428,11 @@ export default {
         } else {
           this.detailInfo.RemindPrice = 0
         }
-        
+
     },
     // 获得 评论数量
     async getCommentCount () {
-      this.ProductId = this.$route.query.valueId      
+      this.ProductId = this.$route.query.valueId
       const res = await api.getCommentCount({ ProductId: this.ProductId });
       if (res.success === true) {
         this.allCount = res.Comments;
@@ -517,7 +517,7 @@ export default {
       this.number =  skuItem.SaleNumber != 0 ? skuItem.SaleNumber : 1
       this.saleNumber = skuItem.SaleNumber != 0 ? skuItem.SaleNumber : 1
       // 1031性能调优
-      this.skuPrice = skuItem.Price 
+      this.skuPrice = skuItem.Price
       // 1114需求单，取消乘以数量,1211要求改回来
       this.detailInfo.Price = util.accMul(skuItem.Price , this.number)
       // this.detailInfo.Price = skuItem.Price
@@ -562,7 +562,7 @@ export default {
         }
       }
     },
-    
+
     // 打开商品规格选择弹窗
     switchAttrPop () {
         this.isInit = false
@@ -603,31 +603,31 @@ export default {
             if (res2.success) {
               this.collectStatus = false;
             this.$wx.showSuccessToast('取消成功')
-          } else {        
+          } else {
             this.$wx.showErrorToast('取消失败')
-          }                                
-        } else {//添加收藏          
+          }
+        } else {//添加收藏
           const openId = wx.getStorageSync('openId')
-          const res1 = await api.AddFavoriteProduct({ ProductId: this.id , openId: openId }) 
+          const res1 = await api.AddFavoriteProduct({ ProductId: this.id , openId: openId })
           if (res1.success) {
-            this.collectStatus = true;                 
+            this.collectStatus = true;
             this.$wx.showSuccessToast('收藏成功')
-          }else {        
+          }else {
             this.$wx.showErrorToast('请先登录')
-          }             
-      } 
+          }
+      }
     },
    // 判断商品是否已收藏
      async IsCollection () {
          const openId = wx.getStorageSync('openId')
-         const res = await api.IsCollection({ ProductId: this.id , openId: openId }) 
-         let data = JSON.parse(res.data)   
+         const res = await api.IsCollection({ ProductId: this.id , openId: openId })
+         let data = JSON.parse(res.data)
          this.collectStatus = data;
     },
     stopPageScroll(){
     return
     },
-    
+
     // 跳转到购物车页面
     openCartPage () {
       wx.switchTab({
@@ -664,7 +664,7 @@ export default {
             openId: openId,
             skuIds: this.detailInfo.ProductId + '_0_0_0_0_0_0_0',
             counts: 1,
-            regionId: isYinXun ? 0 : this.userInfo.RegionId,
+            regionId: this.isYinXun ? 0 : this.userInfo.RegionId,
             // YjUse: this.YjUse,//是否印捷配送
             Yjtype: this.Yjtype,
             price: this.ListPriceInfo.res.SumPrice,
@@ -677,13 +677,15 @@ export default {
         this.openAttr = false
         this.SubmitByProductId2(par)
       } catch (error) {
+        console.log(error);
+
         this.$wx.showErrorToast('下单失败')
       }
-        
+
     },
     // 标准品立即购买
     buyGood () {
-   
+
       if(this.checkStock()) return
       var par = {
         skuIds: this.skuId,
@@ -693,7 +695,7 @@ export default {
       }
       this.openAttr = false
       this.submitByProductId(par)
-      
+
     },
     // 加入购物车，多种判断哦~
     async addToCart () {
@@ -701,8 +703,8 @@ export default {
         // 打开规格选择弹窗
         this.switchAttrPop()
       } else {
-        
-        const openId = wx.getStorageSync('openId') 
+
+        const openId = wx.getStorageSync('openId')
         var par = {
           openId: openId,
           productId: this.id,
@@ -712,7 +714,7 @@ export default {
           Yjtype: this.Yjtype
           // YjUse: this.YjUse
         }
-        
+
         if(this.detailInfo.IsCustom) {
           // 如果是定制品
           // 重定义非标品的skuId和数量
@@ -722,10 +724,10 @@ export default {
           this.ListPriceInfo.paraArr.map(item => {
             paraArr += item.paraStr + ','
           })
-          par = Object.assign(par , 
-            { 
-              dataStr : this.proSearchParam.dataStr , 
-              quoteJson: JSON.stringify(this.ListPriceInfo.Data.GroupJson) , 
+          par = Object.assign(par ,
+            {
+              dataStr : this.proSearchParam.dataStr ,
+              quoteJson: JSON.stringify(this.ListPriceInfo.Data.GroupJson) ,
               paraStr : util.delLastStr(paraArr , ','),
               Price: util.addNum(this.ListPriceInfo.sprice , this.detailInfo.RemindPrice)
             }
@@ -781,14 +783,14 @@ export default {
     checkStock() {
       let check = false
       if(this.number > this.Stock) {
-        this.$wx.showErrorToast('超出库存') 
+        this.$wx.showErrorToast('超出库存')
         check = true
       }
       return check
     },
     // 减少数量
     cutNumber () {
-      this.number = this.number - 1 
+      this.number = this.number - 1
       this.getSkuInfoPirce()
     },
     // 增加数量
@@ -849,7 +851,7 @@ export default {
         showCancel: true
       }).then(res => {
         this.$router.push({
-          path: '../pages/ucenter/login' 
+          path: '../pages/ucenter/login'
         })
       })
     },
@@ -891,7 +893,7 @@ export default {
           skuName: util.delLastStr(str , '+'),
           imgUrl: this.baseUrl + this.gallery[0]
         }
-      
+
       this.$router.push({
         path: '../wxchat/userList',
         query: {
@@ -921,7 +923,7 @@ export default {
         this.getOpenQuote()
       }
     }
-  }, 
+  },
   onPullDownRefresh: function() {
     // this.refresh()
     wx.stopPullDownRefresh()
@@ -932,7 +934,7 @@ export default {
       ProductId: this.detailInfo.ProductId,
       ProductName: this.detailInfo.ProductName,
       code: this.code != 0 ? this.code : 0,
-      IsCustom: this.detailInfo.IsCustom , 
+      IsCustom: this.detailInfo.IsCustom ,
       dataStr: this.proSearchParam.dataStr,
       skuId: this.skuId
     })
@@ -950,7 +952,7 @@ export default {
 
 page{
   height: 100%;
-} 
+}
 .container-scroll{
   height: 100%;
 }
@@ -961,7 +963,7 @@ page{
  .scroll-lock{
   height: 100%;
   overflow-y: auto;
-} 
+}
 
 .container {
   background-color: #f1f1f1;
@@ -1064,7 +1066,7 @@ page{
   height: 50rpx;
   line-height: 50rpx;
 }
-.goods-info .c-price{ 
+.goods-info .c-price{
   color: #dc2121;
   font-size: 42rpx;
   float: left;
@@ -1196,7 +1198,7 @@ page{
   color: #282828;
   padding-left: 25rpx;
   box-sizing: border-box
-  
+
 }
 
 .address-nav .i {

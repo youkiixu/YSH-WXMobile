@@ -28,7 +28,7 @@
                 <div class="name">{{item.Name}}</div>
             </div>
         </div>
-    </div>    
+    </div>
   </div>
 
   <div :class="[navList.length != 0 ? 'search-result' : 'search-result-nopadding']">
@@ -38,7 +38,7 @@
       <loadingComponent v-if="loading"></loadingComponent>
   </div>
 
-  <div class="scollTop"  @click="toTop" :hidden="!floorstatus">顶部</div> 
+  <div class="scollTop"  @click="toTop" :hidden="!floorstatus">顶部</div>
 </div>
 </template>
 
@@ -81,7 +81,7 @@ export default {
       title: '',
       more: false
     }
-  }, 
+  },
   // onLoad () {
   //   this.goodsList = []
   // },
@@ -117,7 +117,7 @@ export default {
      // 三个排序条件的点击事件
     openSortFilter: function (event) {
       let currentId = event.currentTarget.id;
-      switch (currentId) {        
+      switch (currentId) {
         case 'salesSort':
           let tmpSortOrderSales = 'asc';
           if (this.currentSortOrder === 'asc') {
@@ -164,17 +164,17 @@ export default {
       }
     },
     //回到顶部
-    toTop() {       
-        //this.scrollTop = 0  
+    toTop() {
+        //this.scrollTop = 0
         wx.pageScrollTo({
           scrollTop: 0,
           duration: 300
-        })          
+        })
     },
     async searchGoods() {
-      
+
       const res = await api.search({ cid: this.Id , pageNo: this.page , pageSize : this.size , orderKey: this.orderKey , orderType:this.currentSortOrder == 'desc' ? 2 : 1});
-      
+
       if(res.success) {
         var tableData = JSON.parse(res.data)
         this.goodsList = this.goodsList.concat(tableData.Table)
@@ -190,13 +190,13 @@ export default {
       var clientX = event.clientX;
       var currentTarget = event.currentTarget;
       // if (clientX < 60) {
-      //   this.scrollLeft = 0 
+      //   this.scrollLeft = 0
       // } else if (clientX > 330) {
         this.scrollLeft = currentTarget.offsetLeft - 130
       // }
       // console.log(event.clientX)
-      // console.log(this.scrollLeft)  
-      
+      // console.log(this.scrollLeft)
+
       this.Id = event.currentTarget.dataset.id
       // 重新请求数据
       this.refresh();
@@ -206,7 +206,7 @@ export default {
       this.loading = true
       this.page = 1
       this.goodsList = []
-      this.searchGoods()  
+      this.searchGoods()
     },
     setTitle (text) {
         wx.setNavigationBarTitle({
@@ -218,12 +218,12 @@ export default {
     onPageScroll : function(e){
       // console.log('e的值：',e)
       // console.log('滚动位置：',e.scrollTop)
-      if (e.scrollTop > 100) {     
-          this.floorstatus = true   
+      if (e.scrollTop > 100) {
+          this.floorstatus = true
       } else {
-       this.floorstatus = false     
-      }  
-     
+       this.floorstatus = false
+      }
+
     },
 
   //小程序原生上拉加载
@@ -246,7 +246,7 @@ export default {
     console.log(urlPath)
     return {
       title: this.$route.query.title ? this.$route.query.title : '分类',
-      desc: '印生活',
+      desc: '商城',
       path: urlPath
     }
   }
@@ -256,8 +256,8 @@ export default {
 <style scoped>
 @import "../../css/sortGoods.css";
 .container{
-    width: 100%;   
-    background: #f1f1f1; 
+    width: 100%;
+    background: #f1f1f1;
 }
 .clear:after{
     display: block;
@@ -324,7 +324,7 @@ export default {
 }
 .cate-nav{
     width: 100%;
-}  
+}
 
 .cate-nav-body{
     width: 100%;
@@ -332,21 +332,21 @@ export default {
     white-space: nowrap;
     background: #fff;
     border-top: 1px solid rgba(0,0,0,.15);
-    overflow-x: auto;    
+    overflow-x: auto;
 }
 
 .cate-nav .item{
-    display: inline-block; 
+    display: inline-block;
     height: 84rpx;
     min-width: 130rpx;
-    padding: 0 15rpx;    
+    padding: 0 15rpx;
 }
 
 .cate-nav .item .name{
     display: block;
     height: 84rpx;
     padding: 0 20rpx;
-    line-height: 84rpx; 
+    line-height: 84rpx;
     color: #333;
     font-size: 30rpx;
     width: auto;
@@ -378,7 +378,7 @@ export default {
   right: 20rpx;
   z-index: 1000;
   background: url(http://www.kiy.cn/Areas/wxMobile/Content/img/up-arrow.png) center 25% no-repeat;
-  background-size: 38rpx; 
+  background-size: 38rpx;
   background-color: #fff;
 }
 </style>

@@ -13,7 +13,7 @@
     <div class="cart-address clear" v-if="cartGoods.length != 0 && !loading">
        <div class="from">此购物车价格仅供参考</div>
        <div class="to">请以下单的价格为标准</div>
-       <div class="edit" @click="editCart">{{!isEditCart ? '编辑商品' : '完成'}}</div>       
+       <div class="edit" @click="editCart">{{!isEditCart ? '编辑商品' : '完成'}}</div>
     </div>
 
      <div class="list" v-if="cartGoods.length != 0 && !loading">
@@ -52,7 +52,7 @@
     </div>
     <loadingComponent v-if="loading"></loadingComponent>
 
-     
+
     <div class="cart-bottom" v-if="cartGoods.length != 0 && !loading">
       <div :class="checkedAllStatus ? 'checked checkbox' : 'checkbox'" @click="checkedAll">全选</div>
       <div class="total" ><text v-if="!isEditCart">总金额：</text><text class="total-price" v-if="allPrice != undefined && !isEditCart">{{'￥'+ allPrice}}</text></div>
@@ -88,7 +88,7 @@
         </selectComponent>
       </div>
     </div>
-    
+
 </div>
 </div>
 
@@ -128,7 +128,7 @@ function newEditInfo() {
         },
         selectSku: {
           Color: 0,
-          Size: 0, 
+          Size: 0,
           Version: 0,
           Material: 0,
           Fashion: 0,
@@ -185,7 +185,7 @@ export default {
       this.getCartList()
     ])
     this.loading = false
-    
+
   },
   computed: {
     ...mapState([
@@ -273,7 +273,7 @@ export default {
           // if(v.Stock && v.SaleNumber) {
             v.checked = !_this.checkedAllStatus;
           // }
-          
+
           return v;
       });
       this.cartGoods = tmpCartList
@@ -295,12 +295,12 @@ export default {
       let shopCartIds = ''
       let downGoods = 0;
       this.cartGoods.map(function (element) {
-        
+
         if (element.checked) {
           // 判断库存和当前产品数量
           // 标品
           if(!element.IsCustom){
-            // 印生活，//11.12添加检查库存和最低销售数量不为Null的检测，判断这个skuId是否还存在
+            // 商城，//11.12添加检查库存和最低销售数量不为Null的检测，判断这个skuId是否还存在
             if(element.Stock && element.SaleNumber && !_this.isYinXun) {
               if(element.Quantity <= element.Stock) {
                 shopCartIds += `${element.Id},`
@@ -315,7 +315,7 @@ export default {
           // 非标品直接通过
             shopCartIds += `${element.Id},`
           }
-          
+
         }
         if(!element.Stock && !element.SaleNumber) {
           downGoods++
@@ -329,7 +329,7 @@ export default {
       let par = {
         shopCartIds: shopCartIds
       }
-      
+
       this.submitByShoppingCart(par)
 
     },
@@ -339,7 +339,7 @@ export default {
         if(item.checked) {
           this.deleteCartApi(item.Id)
         }
-      })  
+      })
     },
     async deleteCartApi (id) {
       const openId = wx.getStorageSync('openId')
@@ -380,7 +380,7 @@ export default {
         ProductId: item.ProductId,
         ProductName: item.ProductName,
         code: item.QitemCode,
-        IsCustom: item.IsCustom , 
+        IsCustom: item.IsCustom ,
         dataStr: item.DataStr,
         skuId: item.Stock && item.SaleNumber ? item.SkuId : null //增加库存和最低销售量判断
       })
@@ -405,17 +405,17 @@ export default {
         skuInfo.sort(function(a , b){
           var a1 = a.Price
           var b1 = b.Price
-          if(a1<b1){  
-            return -1;  
-          }else if(a1>b1){  
-            return 1;  
-          }  
-          return 0; 
+          if(a1<b1){
+            return -1;
+          }else if(a1>b1){
+            return 1;
+          }
+          return 0;
         })
 
         this.setSkuInfo(skuInfo[0])
       }
-      
+
       this.getSkuPrice()
       this.$wx.hideLoading()
 
@@ -423,7 +423,7 @@ export default {
 
     },
     // 关闭规格弹窗
-    closeAttr (e) {     
+    closeAttr (e) {
       if(e != 'no') {
         this.openAttr = false;
       }
@@ -477,7 +477,7 @@ export default {
       this.edit.number = skuItem.SaleNumber != 0 ? skuItem.SaleNumber : 1
       this.edit.saleNumber = skuItem.SaleNumber != 0 ? skuItem.SaleNumber : 1
       // 1031性能调优
-      this.edit.skuPrice = skuItem.Price 
+      this.edit.skuPrice = skuItem.Price
       this.edit.detailInfo.Price = skuItem.Price * this.edit.number
       this.getDefalutSelect()
     },
@@ -544,7 +544,7 @@ export default {
     },
     // 减少数量
     cutNumber () {
-      this.edit.number = this.edit.number - 1 
+      this.edit.number = this.edit.number - 1
       this.getSkuInfoPirce()
     },
     // 增加数量
@@ -587,7 +587,7 @@ export default {
     checkStock() {
       let check = false
       if(this.edit.number > this.edit.Stock) {
-        this.$wx.showErrorToast('超出库存') 
+        this.$wx.showErrorToast('超出库存')
         check = true
       }
       return check
@@ -603,7 +603,7 @@ export default {
       if(oldval.length == 0 || newval.length == 0) {
         return
       }
-      const len = newval.length 
+      const len = newval.length
       let num = 0
       newval.map((item) => {
         if(item.checked) {
@@ -880,7 +880,7 @@ page{
 
 .cart-view .item .attr{
     width: 400rpx;
-    max-height: 72rpx; 
+    max-height: 72rpx;
     margin-top: 10rpx;
     margin-bottom: 15rpx;
     line-height: 25rpx;
@@ -893,7 +893,7 @@ page{
     -webkit-box-orient: vertical;
 }
 
-.cart-view .item .b{   
+.cart-view .item .b{
     line-height: 30rpx;
     font-size: 32rpx;
     color: #dc2121;
@@ -1077,7 +1077,7 @@ page{
   background: rgba(0, 0, 0, .5);
   z-index: 8;
   bottom: 0;
-  
+
 }
 
 .attr-pop {
